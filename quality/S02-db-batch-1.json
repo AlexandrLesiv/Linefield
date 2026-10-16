@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-16",
+  "scope": "documentation-only",
+  "ownerAnswers": {
+    "DB1": "A",
+    "DB2": "A",
+    "DB3": "A",
+    "DB4": "B"
+  },
+  "hosted": {
+    "url": "https://dbdocs.io/AlexandrLesiv/Linefield-S02-proposal-v1",
+    "version": 5,
+    "cliPublish": "passed",
+    "browserVerification": "selected decision notes and 105 fields",
+    "sharingChanged": false
+  },
+  "checks": {
+    "officialCliValidation": "passed",
+    "canonicalCombinedFieldParity": "passed: 14 tables, 105 fields",
+    "rustAgentToml": "passed",
+    "independentReview": "s02_packet_review: no actionable findings",
+    "runtimeTests": "not run; not implemented"
+  },
+  "sha256": {
+    "docs/database/catalog.dbml": "5ffaab616073e8914576325251e975db0b2096f332dd9fa4239e2b6bc722231a",
+    "docs/database/drawing.dbml": "677d74e4e126b44fbde817b302c91406113ef508b3159a4ffacc9113944258a8",
+    "docs/database/jobs.dbml": "4c409e2e306e1237085b2a48f50303cec9a255a09d3538397e1cb2a19cbce110",
+    "docs/database/review.dbml": "23eb07c1ba1b2806ebd7de4245c9787cdfc8c321d891fb86e7ee1f3de0705370",
+    "docs/database/review.dbdiagram": "f2203e806455b04fb8435dc77f450f02c4f58621443b2c61e4d7885892a5fb03",
+    "docs/reviews/S02-db-batch-1.md": "ad826773e0098ed1f425be1423547a77a06d8f8f236a69d561592fc2a11d0226",
+    "docs/reviews/S02-db-batch-2.md": "f7ab57a24a907b6cfd73d388e5cb6bc5c5c3ca7f610f83221c992805a1310094",
+    "docs/interfaces/native-v1.md": "0fb5206a948a1aeb012d98cf5542af703ab7bad174328c1205774b93c033193c",
+    "docs/architecture/storage-transitions-v1.md": "ca69031d84ddfadf1ea572c917bbeba4688376b3f179c2d2828fc3e54e5776e2",
+    "docs/architecture/ownership-rename-v1.md": "b218a86a09094de1a8ecc9e306493e6bd85d4c084eb5120a81eae33df71ffa85",
+    "docs/internationalization.md": "c85f713d8c694cf2495ffa46e8d20d7d83801d0ae4b32c267537554aebf196d5",
+    "quality/S02-contract-review.md": "14bb7ccdf70f00741c8bfef89832b986349c46834d8d8f6d3f260f4d18907c72",
+    ".codex/agents/rust_engine.toml": "230d1fcf5149d27761710042f766f7034208b3e15d41883b12979d7bf96d019a"
+  }
+}

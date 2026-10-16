@@ -1,0 +1,31 @@
+# Apple channels — S00G research v1
+
+Checked 2026-10-16 against official sources. Channel applicability is conditional on future distribution;
+local preview is not a store submission. Requirements below are planning constraints, not verified compliance.
+Owners: macos_ui for AppKit; ios_ui for UIKit/assigned visionOS; lead assigns TV/watch engineering;
+build_reliability for signed artifacts and dependency evidence. UX/UI own associated flows/design.
+All rows need recheck at affected feature/SDK changes and immediately before submission.
+
+| ID / applicability | Requirement and Linefield consequence | Evidence needed / current status |
+| --- | --- | --- |
+| APPLE-01 all App Store families | Complete accurate app/listing, rights, support, public APIs, privacy-policy link in app and metadata. Mac Store requires sandbox/self-contained packaging; TV must support normal remote navigation. [Review Guidelines](https://developer.apple.com/app-store/review/guidelines/) | Actual family builds, metadata/age answers, review walkthrough; pending |
+| APPLE-02 macOS preview and Mac Store | Sandbox already owner-selected; verify library, import/export user access, restart destination access and signed multi-instance coordination. Don't add broad exceptions or App Groups without need/review. [Sandbox access](https://developer.apple.com/documentation/security/accessing-files-from-the-macos-app-sandbox), [App Groups](https://developer.apple.com/documentation/xcode/configuring-app-groups) | Reviewed entitlements/signing identity and denied/revoked/restart tests; not implemented |
+| APPLE-03 direct Mac distribution | Separate Developer ID/hardened-runtime/notarization path; inspect nested code, secure timestamp and release entitlements, staple and test Gatekeeper. Store signing is a different route. [Notarization](https://developer.apple.com/documentation/security/notarizing-macos-software-before-distribution), [signing](https://developer.apple.com/documentation/xcode/creating-distribution-signed-code-for-the-mac/) | Release archive/notary receipt/clean-host launch; channel unselected |
+| APPLE-04 all Store data declarations | Audit actual app and dependency data flows. Device-only processing is not collected under Apple's definition; no-data-collected must follow evidence, not the offline label. Public privacy policy still required. [App privacy](https://developer.apple.com/app-store/app-privacy-details/) | Data inventory, network/log audit, policy and matching labels; pending |
+| APPLE-05 manifests/dependencies | Inventory native/Rust/Skia transitive APIs and PrivacyInfo manifests. Covered API reasons explicitly apply to iOS/iPadOS/tvOS/visionOS/watchOS; do not assume identical macOS enforcement. Listed SDKs, including repackaging, have specific manifest/signature duties; do not assume Skia is itself on that list. [Manifests](https://developer.apple.com/documentation/bundleresources/privacy-manifest-files), [SDK requirements](https://developer.apple.com/support/third-party-SDK-requirements/) | Selected build audit and required declarations; no dependencies installed |
+| APPLE-06 mobile/TV/vision/watch uploads | Central dated rules state Xcode 26+ / SDK 26+ since 2026-04-28; iOS/iPadOS deployment target at least 13 since 2026-09-09. Store floors do not choose Linefield minimum OS. macOS is not included in that SDK list. [Dated requirements](https://developer.apple.com/news/upcoming-requirements/) | Pin supported actual tools and validate archive at release; pending. A visionOS landing page still states SDK 2: recheck discrepancy, prefer dated central requirement |
+| APPLE-07 independent watch | Independent watch must acquire data independently; Watch Connectivity can supplement but cannot be its main source. iPhone-preferred proposal must mean opportunistic transfer, not a requirement for usable standalone viewing. [Independent watch](https://developer.apple.com/documentation/watchos-apps/creating-independent-watchos-apps) | Phone-absent install/acquisition/view tests; standalone claim blocked until source exists; network scope remains deferred |
+| APPLE-08 compatible availability | Audit native versus compatible iPad/iPhone availability on Vision Pro rather than accidentally advertising an untested family. Review Mac-compatible availability separately too. [Vision availability](https://developer.apple.com/help/app-store-connect/manage-your-apps-availability/manage-availability-of-iphone-and-ipad-apps-on-apple-vision-pro/) | Explicit availability record, supported-device tests; pending |
+| APPLE-09 export declarations | No app-level encryption does not determine export-compliance answers; inspect linked crypto/TLS and applicable exemptions. [Export compliance](https://developer.apple.com/help/app-store-connect/manage-app-information/overview-of-export-compliance) | Owner-reviewed factual declaration based on binary/dependencies; pending |
+| APPLE-10 accessibility claims | Linefield accessibility tests remain required. Store accessibility labels are currently optional initially; any claimed support needs device-specific evidence. [Accessibility labels](https://developer.apple.com/help/app-store-connect/manage-app-accessibility/overview-of-accessibility-nutrition-labels) | Per-family AX results and truthful metadata; pending, recheck label policy |
+
+Accounts, paid digital features, tracking, public sharing and protected-hardware use would trigger new
+login/deletion, payment, consent, moderation or purpose-string reviews as applicable. None is approved
+or needed merely to build the local sketcher. Recheck storefront-specific rules when proposed.
+Open-source license and dependency obligations remain owner decisions; do not assert blanket license/
+Store compatibility. Account/legal identity, territories, support/privacy hosting, pricing and channel
+choice belong to the owner before release. No enrollment, certificates, uploads or fees authorized.
+
+Day-zero priorities are sandbox/access/identity feasibility, privacy-safe diagnostics and dependency
+provenance, capability-accurate viewer/independent scope. Screenshots, ratings and submission forms
+come later. Notarization and App Review are different checks; neither proves application security.

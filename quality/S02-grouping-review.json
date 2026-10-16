@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-16",
+  "scope": "Presentation only",
+  "schemaParity": "Exact definitions unchanged after removing presentation annotations",
+  "cliValidation": "Passed; no issues",
+  "cliPull": "Succeeded after owner login",
+  "cliPublication": "Succeeded to previously authorized private project",
+  "privacy": "Private: Only invited people confirmed in browser",
+  "limitation": "Table Group paid feature blocked by current plan; source preserved, no subscription change",
+  "files": [
+    {
+      "path": "docs/database/review.dbml",
+      "sha256": "a06ac7c55af54403ab2ccdced30cf3224bb8e0476d78fc08ce6b019aba22a2a2"
+    },
+    {
+      "path": "docs/database/review.dbdiagram",
+      "sha256": "f2203e806455b04fb8435dc77f450f02c4f58621443b2c61e4d7885892a5fb03"
+    },
+    {
+      "path": "docs/database/diagram-presentation.md",
+      "sha256": "a0dd5415e9396a674ed2ab8ff7c06eaa2fbd00b5c77ffde0e362fc5ef317f11e"
+    }
+  ],
+  "hostedVersion": 3,
+  "visualInspection": "All 14 tables visible; deliberate clusters and same-file connections; floating notes removed after overlap found",
+  "visualArtifactRetention": "Owner requested removal of local diagram screenshots; hosted review only",
+  "retentionAmendment": "2026-10-16: local rendered images removed at owner request; prior checks remain historical."
+}

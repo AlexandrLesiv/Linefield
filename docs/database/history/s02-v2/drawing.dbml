@@ -1,0 +1,64 @@
+Project drawing_proposal_v2 {
+  Note: 'S02 v2 PENDING OWNER REVIEW. One SQLite file per drawing; all owned tables STRICT. user_version is top-level format version. Generic command receipt rows are private service metadata and removed from portable snapshots.'
+}
+Table document {
+  singleton INTEGER [pk, not null, note: 'CHECK(singleton = 1)']
+  document_id BLOB [not null, unique, note: '16-byte UUIDv4']
+  database_incarnation BLOB [not null, note: '16-byte instance UUID; changes on controlled replacement, not coordinator restart']
+  display_name TEXT [not null]
+  content_revision INTEGER [not null]
+  metadata_revision INTEGER [not null]
+  created_utc_us INTEGER [not null]
+  content_edited_utc_us INTEGER [not null]
+  color_space TEXT [not null, note: 'srgb only initially']
+}
+Table tools {
+  tool_key INTEGER [pk, not null]
+  tool_id BLOB [not null, unique, note: '16-byte stable UUID']
+  name_key TEXT [not null, unique, note: 'Stable machine key, not localized display text']
+}
+Table strokes {
+  stroke_key INTEGER [pk, not null]
+  stroke_id BLOB [not null, unique, note: '16-byte UUIDv4']
+  mutation_revision INTEGER [not null, note: 'Resulting content revision of last stroke mutation; fresh on Undo restoration']
+  tool_key INTEGER [not null]
+  paint_order INTEGER [not null, unique]
+  base_width REAL [not null]
+  red REAL [not null]
+  green REAL [not null]
+  blue REAL [not null]
+  alpha REAL [not null]
+  translation_x REAL [not null]
+  translation_y REAL [not null]
+  uniform_scale REAL [not null]
+}
+Table samples {
+  stroke_key INTEGER [not null]
+  sample_index INTEGER [not null]
+  x REAL [not null]
+  y REAL [not null]
+  pressure REAL [note: 'NULL unavailable, otherwise 0..1']
+  indexes {
+    (stroke_key, sample_index) [pk]
+  }
+}
+Table command_receipts {
+  operation_id BLOB [pk, not null, note: '16-byte command UUID; private committed outcome only']
+  client_session_id BLOB [not null, note: '16-byte authenticated-session binding; not itself a credential']
+  client_sequence INTEGER [not null]
+  owner_generation BLOB [not null, note: '16-byte generation under which command was admitted']
+  database_incarnation BLOB [not null]
+  command_kind TEXT [not null, note: 'add_stroke, move_stroke, scale_stroke, delete_stroke, undo, redo, rename']
+  argument_fingerprint BLOB [not null, note: '32-byte private validated-argument digest, never exported or logged']
+  base_content_revision INTEGER [not null]
+  base_metadata_revision INTEGER [not null]
+  result_content_revision INTEGER [not null]
+  result_metadata_revision INTEGER [not null]
+  committed_utc_us INTEGER [not null]
+  indexes {
+    (owner_generation, client_session_id, client_sequence) [unique]
+    (committed_utc_us, operation_id)
+  }
+}
+Ref: strokes.tool_key > tools.tool_key [delete: restrict, update: restrict]
+Ref: samples.stroke_key > strokes.stroke_key [delete: cascade, update: restrict]

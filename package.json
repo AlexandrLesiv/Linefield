@@ -1,0 +1,27 @@
+{
+  "name": "linefield",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node scripts/check.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint --deny-warnings scripts",
+    "format": "oxfmt package.json tsconfig.json .oxlintrc.json .oxfmtrc.json pnpm-workspace.yaml scripts",
+    "format:check": "oxfmt --check package.json tsconfig.json .oxlintrc.json .oxfmtrc.json pnpm-workspace.yaml scripts",
+    "dbdiagram": "dbdiagram",
+    "db:validate": "dbdiagram validate docs/database/review.dbml"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "dbdiagram": "0.6.3",
+    "oxfmt": "0.73.0",
+    "oxlint": "1.88.0",
+    "typescript": "7.0.2"
+  },
+  "engines": {
+    "node": ">=24.12.0 <25",
+    "pnpm": "10.26.0"
+  },
+  "packageManager": "pnpm@10.26.0"
+}

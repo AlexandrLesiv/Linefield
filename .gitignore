@@ -1,0 +1,20 @@
+/artifacts/
+/target/
+/.build-cache/
+/.worktrees/
+/node_modules/
+/apps/macos/.build/
+/apps/macos/.swiftpm/
+.DS_Store
+.env
+.env.*
+!.env.example
+*.xcuserstate
+xcuserdata/
+
+# Project-local documentation tools
+node_modules/
+
+# Never commit CLI authentication material
+**/.dbdiagram/.credentials.json
+**/.dbdiagram/.telemetry.json

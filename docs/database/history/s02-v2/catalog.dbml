@@ -1,0 +1,75 @@
+Project catalog_proposal_v2 {
+  Note: 'S02 v2 PENDING OWNER REVIEW. Separate device-local catalog SQLite database, all owned tables STRICT. user_version is catalog schema version. Cross-file references are logical only; owner selected conservative recovery when catalog authority is lost; no fourth database.'
+}
+Table library {
+  singleton INTEGER [pk, not null, note: 'CHECK(singleton = 1)']
+  library_id BLOB [not null, unique]
+  catalog_incarnation BLOB [not null, note: 'Fresh 16-byte UUID after rebuild/replacement']
+  catalog_generation INTEGER [not null]
+  automatic_name_highwater INTEGER [not null]
+  activity_highwater INTEGER [not null, note: 'Local monotonic gallery activity allocator; never use wall-clock time']
+  sequence_recovery_state TEXT [not null]
+}
+Table tools {
+  tool_key INTEGER [pk, not null]
+  tool_id BLOB [not null, unique]
+  name_key TEXT [not null, unique]
+}
+Table drawings {
+  drawing_key INTEGER [pk, not null]
+  document_id BLOB [not null, unique]
+  database_incarnation BLOB [not null, note: 'Last observed drawing incarnation; repairable projection']
+  managed_file_id BLOB [not null, unique, note: 'Opaque app-managed locator; not a display name or source path']
+  display_name TEXT [not null]
+  content_revision INTEGER [not null]
+  metadata_revision INTEGER [not null]
+  created_utc_us INTEGER [not null]
+  content_edited_utc_us INTEGER [not null]
+  added_utc_us INTEGER [not null]
+  activity_order INTEGER [not null, note: 'Persistent local activity ordinal; descending order, timestamps remain independent']
+  availability TEXT [not null]
+  indexes {
+    (activity_order, document_id)
+  }
+}
+Table local_view {
+  drawing_key INTEGER [pk, not null]
+  preference_revision INTEGER [not null]
+  center_x REAL [not null]
+  center_y REAL [not null]
+  zoom REAL [not null]
+  active_tool_key INTEGER [not null]
+}
+Table pen_preferences {
+  drawing_key INTEGER [not null]
+  tool_key INTEGER [not null]
+  preference_revision INTEGER [not null]
+  width REAL [not null]
+  red REAL [not null]
+  green REAL [not null]
+  blue REAL [not null]
+  alpha REAL [not null]
+  indexes {
+    (drawing_key, tool_key) [pk]
+  }
+}
+Table lifecycle {
+  operation_id BLOB [pk, not null]
+  document_id BLOB [not null]
+  managed_file_id BLOB [not null]
+  operation_kind TEXT [not null]
+  phase TEXT [not null]
+  expected_database_incarnation BLOB [note: 'Required for existing-file operations; nullable before new-file staging']
+  expected_content_revision INTEGER
+  expected_metadata_revision INTEGER
+  automatic_name_number INTEGER
+  confirmed_utc_us INTEGER
+  updated_utc_us INTEGER [not null]
+  indexes {
+    (document_id, operation_kind)
+  }
+}
+Ref: drawings.drawing_key - local_view.drawing_key [delete: cascade, update: restrict]
+Ref: local_view.active_tool_key > tools.tool_key [delete: restrict, update: restrict]
+Ref: pen_preferences.drawing_key > drawings.drawing_key [delete: cascade, update: restrict]
+Ref: pen_preferences.tool_key > tools.tool_key [delete: restrict, update: restrict]
