@@ -1,61 +1,55 @@
-# UX and UI responsibilities
+# Combined UI/UX design responsibility
 
-Status: owner requested the split on 2026-10-16. The combined role is replaced by ux_designer
-and ui_designer. This changes responsibility, not product scope or implementation authority.
-No additional design coordinator: the lead schedules work, integrates artifacts and escalates
-scope decisions to the owner. Existing concurrency limits remain unchanged.
+Status: owner restored one ui_ux_designer (decision 213, 2026-10-17), superseding the earlier
+split. The lead coordinates assignments and native feasibility; concurrency limits are unchanged.
 
-| Work | Accountable role | Required partner |
+| Work | Accountable role | Required partners |
 | --- | --- | --- |
-| User goals, competitor synthesis and workflow priorities | UX | Owner, researcher, UI |
-| Navigation/routes, Back/dirty guards, interaction state diagrams | UX | Rust and native engineers validate semantics/feasibility |
-| Low-fidelity flows, error/recovery wording and glossary | UX | UI for fit, native engineers for conventions |
-| Keyboard/IME, input/focus, accessibility semantics and acceptance scenarios | UX | Native engineers and build reliability implement/verify |
-| Native visual foundations, typography/color/spacing, icons and components | UI | UX and platform engineers |
-| Adaptive high-fidelity Figma layouts, theme/RTL/text-scale presentation | UI | UX validates flow and reading order |
-| Motion purpose, interrupt/commit/cancel behavior and focus timing | UX | UI designs presentation; engineers validate native behavior |
-| Motion choreography, visual easing/timing and reduced-motion appearance | UI | UX validates semantic equivalence |
-| Runtime usability/interaction review | UX | UI for integrated review; actual user studies separately identified |
-| Runtime visual/adaptive/motion fidelity review | UI | UX, platform and performance engineers |
-| Native code, tests, logging and platform API selection | Platform engineers | UX/UI specify intent, not implementation ownership |
-| Rust command/document invariants and concrete boundary contracts | Rust engineer | UX supplies expected observable behavior |
-| Scope, identified Figma approval and final acceptance | Owner | Lead presents one coherent review packet |
+| User goals, competitor synthesis, journeys and information architecture | ui_ux_designer | Owner and competitor_researcher |
+| Routes, input/focus/IME, accessibility semantics, interruption and recovery | ui_ux_designer | Rust/native engineers validate contracts and feasibility |
+| Native foundations, adaptive Figma, themes, typography and components | ui_ux_designer | Platform engineers validate actual controls |
+| Motion purpose, state timing, choreography and reduced-motion equivalents | ui_ux_designer | Native/rendering engineers validate behavior and performance |
+| Locale glossary, en/uk layouts and terminology review coordination | ui_ux_designer | Proficient language reviewer; engineers own resources/tests |
+| Running-interface usability, visual, adaptive and motion review | ui_ux_designer | Platform engineers and independent reviewer |
+| Native implementation, tests, logging and platform API feasibility | Platform engineers | Designer supplies observable acceptance criteria |
+| Shared commands/document invariants and typed contracts | rust_engine | Designer supplies user-visible outcomes |
+| Runners, evidence, packaging and coverage reporting | build_reliability | Implementers own feature tests |
+| Independent correctness/security/performance assessment | Fresh reviewer and relevant specialists | Lead scopes review; designer does not replace independence |
+| Scope, identified Figma approval and final acceptance | Owner | Lead presents the integrated packet |
 
-## Small, explicit handoff
+## One feature packet, no designer-to-designer handoff
 
-Research evidence -> UX interaction brief/low-fidelity flows -> UI foundations/adaptive screens
-and motion -> joint consistency check -> one owner review packet -> authorized implementation
--> UX behavior and UI visual review. Foundations and screen versions still have separate owner
-approval checkpoints; no automatic extra sign-off ceremony is added for each small change.
+Research -> combined interaction/visual design -> native feasibility check -> owner approval
+of identified Figma -> engineer implementation -> combined running-interface design review
+and independent technical review. Foundations and actual screen versions retain their existing
+approval gates. Do not add an extra coordinator or designer per platform.
 
-UX brief includes scope, task/contract/scenario IDs, route/state graph, edge cases, input/focus/
-accessibility/locale rules and pending decisions. UI returns exact Figma versions, component
-mappings, resize/motion evidence, reduced-motion variants and annotated native limitations.
-After approval, behavioral changes return to UX; visual changes stay with UI unless they affect
-interaction or approved scope. Lead resolves ownership conflicts; owner decides material changes.
+For each scoped feature, the same designer maintains both checklists:
 
-Use the same design brief/glossary and one Figma project with separately owned sections. Do not
-write the same frame concurrently. Involve both roles for substantial new flows; route minor
-visual fixes to UI and behavioral clarifications to UX with a focused partner review as needed.
-The UI role covers all planned platforms with native engineer input, not a designer per OS.
+- Behavior: goals, route/state graph, input/focus, accessibility, error/recovery, locale wording,
+  motion interruption, acceptance/invariant/test IDs and unresolved choices.
+- Presentation: native components, resizable Figma, minimum/intermediate/maximum windows,
+  tablet orientations/split windows, light/night/contrast, en/uk/text expansion, motion and
+  reduced-motion variants, exact versions and native limitations.
 
-Benefits: narrower context, explicit behavioral specification and independent design cross-check.
-Costs: handoff drift, extra coordination/tokens and possible slow iterations. Mitigate with short
-linked briefs, one accountable owner per artifact and no duplicated specification. The split
-is not permission to run more concurrent agents or delegate implementation to designers.
+Use one linked brief and Figma project; never edit a frame concurrently. Small fixes need a
+focused review; substantial flows require both checklists. Preserve implementation boundaries:
+shared Rust commands remain authoritative; designers neither implement native adapters nor
+certify runtime security, accessibility or performance from mockups.
 
-Role files follow the existing project configuration. Parsing proves syntax only; availability
-must be confirmed in a new Linefield-scoped session. Existing running agents are not renamed by
-editing files. No runtime discovery or new Figma artifact is claimed.
+The benefit is one accountable feature owner with less handoff drift and duplicated context.
+The risk is a broad workload and less internal design cross-checking: mitigate with small
+assignments, the two checklists, platform feasibility and fresh independent review.
 
-## Pending cross-platform input and distribution reviews
+## Input, stores and evidence
 
-S00F requires UX to coordinate a device/shortcut/gesture/focus-context matrix with Rust and each
-native engineer; UI presents discoverability and adaptive native affordances in approved Figma.
-Shared semantic behavior can live in Rust without replacing native event acquisition, OS shortcuts
-or text/IME priority. Exact declarative binding profile is still a reviewed contract.
+S00F uses the input inventory per feature. The designer proposes behavior and discoverable
+native affordances together; engineers check acquisition, OS shortcuts and native text/IME
+priority. Exact behavior and Figma require owner approval before implementation.
+S00G keeps technical store compliance with platform engineers, packaging/provenance with
+build reliability, applicable disclosures/flows with the designer, and scope with the lead.
+Security findings inform both design and engineering; owner responsibilities are unchanged.
 
-S00G evaluates store requirements: native engineers own technical feasibility/compliance evidence,
-build reliability packaging/signing checks, UX/UI user-facing flows/disclosures and lead applicability/
-scope. Designers alone do not certify SDK, entitlement, signing, privacy-data or distribution rules.
-New roles remain for review. S00E security findings inform both designs and engineering contracts.
+This is project-local configuration. Existing running agents are not renamed by file edits;
+new role discovery must be checked in a Linefield-scoped session. No new Figma artifact or
+native acceptance is implied. Earlier role-split decisions and review evidence remain history.

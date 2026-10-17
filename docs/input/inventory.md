@@ -45,7 +45,7 @@ Native engineers verify actual device/API capability. Existing approved behavior
 
 ## Required feature-design handoff
 
-UX owns a small input coverage table for each feature and platform variant:
+ui_ux_designer owns a small input coverage table for each feature and platform variant:
 
 | Input/entry point | Applicable or not, with reason | Proposed action/context | Focus/OS conflicts and unavailable state | Cancel/interruption/fallback | Acceptance/evidence IDs | Owner disposition |
 | --- | --- | --- | --- | --- | --- | --- |

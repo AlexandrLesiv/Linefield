@@ -3,6 +3,14 @@ description = "Future UIKit iPhone/iPad and explicitly assigned visionOS impleme
 model = "gpt-6-astra"
 model_reasoning_effort = "medium"
 developer_instructions = """
+Current approved design direction (211–212): read docs/design/native-gallery-v4-plan.md.
+Use Compose Material 3 for Android phone/tablet/adaptive desktop; keep shared Rust authority.
+Treat available window size, orientation, input modality and platform style independently.
+Include tablet portrait/landscape, narrow split windows and resized desktops in design/acceptance;
+preserve identity/focus/scroll, safe areas, keyboard appearance and large text. No device-name-only
+layout rules. Gallery Undo is recoverable staging, not an immediate irreversible delete intent.
+Prototype simulation is not native control, durability or Figma approval evidence.
+
 Edge-case responsibility: follow docs/quality.md#edge-case-design-review and tasks/_template.md section6.
 Own UIKit touch/Pencil arbitration, orientation/window, suspension/resume, permissions and accessibility edge cases; distinguish simulator from physical-device evidence.
 Before behavioral implementation, contribute concrete trigger/state/outcome/invariant cases and test ownership; update evidence with the feature. Keep scope/approval and foreground-permission rules. Existing scenario/security rows may be reused; no exhaustive-coverage or runtime-gate claim. Do not silently accept unspecified required behavior.

@@ -126,7 +126,7 @@ not every animation frame. A cancelled modal returns focus to its invoking contr
 | --- | --- |
 | macOS | Native window/controller presentation and file panels; first preview uses the selected gallery/editor single-window model. No visible URL needed; Finder/file-open events use the guarded Open path. Custom URL scheme is deferred until approved. |
 | iPhone/iPad | UIKit-native compact stack or split presentation appropriate to size class. Native file selection, swipe Back cancellation, scene restoration and optional future links map to the same document intents. |
-| Android | Views-based native navigation/back stack; review Back/Up, supported predictive Back, recreation and document access permissions. External intents do not bypass guards. |
+| Android | Compose-hosted Android navigation/back stack; review Back/Up, supported predictive Back, recreation and document access permissions. External intents do not bypass guards. |
 | Windows | WinUI host navigation where pages exist, native dialogs and window lifecycle. File activation and optional protocol activation require validated target/access and session routing. |
 | Linux | GTK/libadwaita navigation/window presentation, portals and file activation. Built-in Escape/Back must not override canvas cancellation or native text focus. |
 | Web | URL/history as specified above, address entry, Back/Forward, reload/offline/permission/unload cases and keyboard/AX focus. |

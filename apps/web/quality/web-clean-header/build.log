@@ -1,0 +1,19 @@
+
+> linefield@0.0.0 web:build /Users/oleksandr/projects/linefield
+> pnpm --filter @linefield/web build
+
+
+> @linefield/web@0.0.0 build /Users/oleksandr/projects/linefield/apps/web
+> node ../../scripts/localization.ts && tsc --noEmit && vite build
+
+{"check":"localization","status":"passed","messages":26}
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 58 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                  0.46 kB │ gzip:  0.29 kB
+dist/assets/index-GUGOXPPH.css  17.52 kB │ gzip:  3.97 kB
+dist/assets/index-BpimB366.js   46.43 kB │ gzip: 13.88 kB
+
+✓ built in 250ms

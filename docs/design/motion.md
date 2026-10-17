@@ -52,7 +52,7 @@ No animated camera flight or drawing replay is included implicitly.
 | --- | --- |
 | macOS | AppKit-native menus, sheets, controls and window behavior; restrained content changes. Canvas should remain stable while controls change. Do not mimic a phone navigation stack by default. |
 | iPhone/iPad | UIKit-native navigation/presentation and interactive cancellation; adapt compact versus split layouts. Coordinate touch/Pencil capture and system gestures. |
-| Android | Views/Material-native transitions and feedback; review Back/predictive Back for the supported API levels, including cancelled gestures. No Compose migration implied. |
+| Android | Compose Material 3 transitions and feedback; review Back/predictive Back for the supported API levels, including cancelled gestures. Compose Material 3 is owner-selected in decision 211; pin stable APIs at implementation. |
 | Windows | WinUI native page/control transitions where appropriate; system animation/accessibility preferences and desktop focus. |
 | Linux | GTK/libadwaita native containers/transitions; respect system animation settings and resolve built-in Escape/Back actions against editor cancellation. |
 | Web | Semantic navigation/focus with optional CSS/browser animation enhancement; honor prefers-reduced-motion and remain usable when animation APIs are unavailable. |
@@ -91,7 +91,7 @@ Reference [Apple motion guidance](https://developer.apple.com/design/human-inter
 and [browser reduced motion](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion).
 Use compatible stable platform APIs; a live documentation example is not a pinned dependency.
 
-ux_designer specifies behavioral motion rules; ui_designer specifies and reviews visual motion; native engineers implement platform behavior;
+ui_ux_designer specifies and reviews behavioral and visual motion together; native engineers implement platform behavior;
 rust_engine protects semantic transitions; rendering_performance measures interference and
 resource use; build_reliability records scenario evidence; reviewer checks cancellation, privacy,
 accessibility and approval. Competitor research includes motion with its evidence limitations.

@@ -1,10 +1,11 @@
 # Independent project setup and future agent brief
 
 Linefield exists at `/Users/oleksandr/projects/linefield` as an independent local Git
-repository with documentation/configuration and folder placeholders only. Do not recreate
+repository with documentation/configuration, shared catalogs and a live web gallery prototype. Do not recreate
 or initialize over it. Read [resume state](../RESUME.md) and [decisions](../decisions.md).
-Application code, build manifests and dependencies remain unimplemented and unauthorized
-by the scaffold request.
+The original scaffold request alone did not authorize application implementation. Later decisions
+authorize the web prototype and tooling; decision 231 places web before macOS. Full editor
+contracts and implementation slices retain their review gates.
 
 ## Foundation work after implementation approval
 
@@ -15,7 +16,7 @@ by the scaffold request.
    Preserve source cap, Figma, architecture review, diagnostics, E2E and merge gates.
 3. Record the old reference commit and approved reuse ledger. Read old source at that
    commit; do not modify or silently import later old-repository work.
-4. Create only dependencies needed by the first macOS slice. Copy selected source with
+4. Create only dependencies needed by the first approved web/shared slice. Copy selected source with
    license/provenance records and rewritten local imports; do not copy build artifacts,
    task statuses, cached evidence, credentials, absolute paths or all agent history.
 5. Use new application/bundle/document identifiers. Set up a stable test-runner identity;
@@ -27,7 +28,7 @@ Proposed initial layout (within the independent new root):
 ```text
 AGENTS.md                    product boundaries and workflow gates
 .codex/agents/               selected specialist responsibilities
-apps/                       All planned host placeholders; macOS implementation first
+apps/                       Web prototype and planned native hosts; web implementation first
 crates/editor-engine/       model, commands, history, codec, geometry, scene
 crates/editor-services/     file worker, recovery and diagnostics sinks
 crates/editor-renderer/     Skia/Metal integration and caches
@@ -41,8 +42,7 @@ artifacts/                  ignored local builds, traces and reports
 
 Generated headers are reproducibly generated from reviewed Rust declarations and checked
 for drift. Choose their location during S01; do not maintain competing handwritten copies.
-Keep all planned host placeholders under apps/ from day one; implement their features
-after macOS. Follow ../platforms.md for portable boundaries. Tooling may emit portable
+Keep all planned host placeholders under apps/ from day one; implement web first, macOS next, then other native features. Follow ../platforms.md for portable boundaries. Tooling may emit portable
 machine-readable reports for later CI/workbench reuse without implementing that dashboard.
 
 ## Future starting prompt template
@@ -69,7 +69,9 @@ the decision record, task dependencies and acceptance registry. Reuse selected
 Rust behavior and test intent with provenance; do not copy packet protocols,
 competing session owners or unverified acceptance claims.
 
-macOS first: actual AppKit controls, shared Rust commands and behavior, Skia.
+Web first: semantic HTML/TypeScript, shared Rust/Wasm behavior and Skia CanvasKit.
+macOS remains the primary product target and next implementation host, with actual AppKit
+controls and Skia. iPhone/iPad follows macOS.
 Use typed FFI/generated declarations under the reviewed concrete contract.
 No implementation of new UI/tools before the identified Figma approval.
 Ask for review before material ABI/schema/thread/framework/security changes.

@@ -94,9 +94,10 @@ E2E, accessibility checks, resizing tests and running-app designer review on eac
 ## Sequence and review packet
 
 S00A first defines shared principles, semantic roles and a lightweight mapping for every
-planned platform. Fully detail the macOS component set and adaptive preview screens next in
-S00, with macos_ui feasibility and owner approval. Do not make exhaustive designs for every
-future OS a prerequisite to building the first macOS preview. Each later platform deepens its
+planned platform. Detail the next authorized web slice first, then the macOS component set
+and adaptive preview screens in S00, with macos_ui feasibility and owner approval. macOS
+remains the primary product target (decision 231). Exhaustive designs for every future OS
+are not a prerequisite to either milestone. Each later platform deepens its
 foundation/components before its own screen approval and implementation.
 
 Deliver: versioned foundation/component sheets, native mappings, variables/mode documentation,
@@ -105,7 +106,7 @@ approval record. Show a few meaningful visual-direction options before polishing
 Ask the owner to select/approve; do not assume the current system theme settles product choices.
 
 No additional design coordinator is needed. competitor_researcher supplies bounded evidence;
-ui_designer owns visual foundations, ux_designer supplies behavior, and lead coordinates; platform engineers verify native
+ui_ux_designer owns visual foundations and behavior, and lead coordinates; platform engineers verify native
 feasibility; rust_engine checks shared action semantics; reviewer checks traceability and
 approval. Follow workflow.md for missing access, exact version/frame records and drift.
 
@@ -135,7 +136,7 @@ Decision 52 disables native-document and PNG export during active stroke/move/sc
 Menus, controls and shortcut availability reflect shared Rust state. Show disabled/accessible
 states without queuing an export or interrupting the gesture. Availability returns after end/
 cancel subject to other guards; the user must request export again. Review destination-panel
-lifetime/focus with UX and the S02 capture contract. No new pan/zoom restriction is implied.
+lifetime/focus with ui_ux_designer and the S02 capture contract. No new pan/zoom restriction is implied.
 
 ## Gallery preview framing
 
@@ -161,4 +162,6 @@ completion and error/retry substitution must not shift existing items or scroll 
 stable item/focus/AX identities and native view recycling/windowing. Do not impose one fixed pixel
 layout across platforms: respond deliberately to window size, locale and accessibility text size.
 Figma must demonstrate placeholder/loading/loaded/error transitions at relevant sizes and locales.
-Implementation follows macOS first; later hosts require their own real loading/scroll evidence.
+Implementation starts on web, then macOS; every host requires its own real loading/scroll evidence.
+
+Cross-platform material accessibility: [reduced transparency policy and host acceptance](accessibility-materials.md). Shared authoring status and TypeScript migration proposal: [shared resources](shared-resources-plan.md).

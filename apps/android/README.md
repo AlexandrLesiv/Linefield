@@ -2,7 +2,7 @@
 
 Status: documentation placeholder; no app implementation.
 
-Technology direction: Kotlin + Android Views and Material controls.
+Technology direction: Kotlin + Jetpack Compose Material 3.
 
 Scope: Phone/tablet editor; Android desktop behavior shared with the ChromeOS route.
 

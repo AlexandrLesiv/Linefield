@@ -9,7 +9,7 @@ the first preview. No Intel or older-macOS compatibility requirement. Pin exact 
 deployment target and compatible verified toolchain when implementation begins; beta OS
 versions are not required and future updates do not silently move a pinned baseline.
 
-Scope: Editable desktop app; first implementation milestone.
+Scope: Editable desktop app; primary product target and first native milestone after web.
 
 Owner: macos_ui. Task: S00–S08.
 

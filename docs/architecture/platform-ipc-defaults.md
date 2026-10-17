@@ -14,7 +14,7 @@ One execution owner mutates each document. OS callbacks validate/copy/enqueue; t
 | Linux | GTK/Rust → shared Rust directly | User-session D-Bus, named methods and generated bindings from versioned introspection definitions; first eligible app hosts document coordinator |
 | iOS/iPadOS | UIKit scenes → one in-process shared Rust coordinator per document | No desktop-style general app-to-app editing service. Future extensions use Apple's approved extension/App Group mechanisms under their own scoped contract |
 | visionOS | Same-process scene/native adapter → Rust | Same conservative Apple-mobile rule; no imported macOS helper architecture |
-| Android | Views/activity → JNI → Rust; activities share in-process service/state as needed | Private bound service with generated AIDL/Binder only when an approved feature actually needs another process |
+| Android | Compose/activity → typed JNI → Rust; activities share in-process service/state as needed | Private bound service with generated AIDL/Binder only when an approved feature actually needs another process |
 | ChromeOS | Reuse Android or web route | Inherit that route's communication/security model; no third IPC implementation |
 | Browser | Main UI ↔ dedicated Rust/Wasm coordinator/storage worker using postMessage | Same-origin/partition BroadcastChannel typed structured-clone records; coordinator worker holds Web Lock for its writable lifetime |
 | tvOS/watchOS | In-process read-only Rust/viewer calls | No editable IPC endpoint; approved document acquisition stays separate. iPhone↔WatchConnectivity is cross-device transfer, not local editor RPC |

@@ -9,7 +9,7 @@ approval record and the linked specifications for details.
 | Choice discussed | Status and location |
 | --- | --- |
 | Separate Linefield project, old repo read-only, selective reuse with provenance | Confirmed; README, AGENTS, reuse-ledger and successor/reuse |
-| Multiplatform from day one; apps/ hosts present; macOS first, iPhone/iPad next | Confirmed planning direction; platforms and P01–P12 |
+| Multiplatform from day one; web implementation first, macOS primary target and next, then iPhone/iPad | Owner-selected sequence (231); platforms and P01–P12 |
 | Focused editable preview, single-stroke move/scale/delete; no rotation/multiselect | Confirmed; objectives and successor/README |
 | Local developer preview, distribution separately | Confirmed; objectives and S09 |
 | Shared Rust commands/behavior; native controls/layout; future agents use same semantic boundary | Confirmed direction; AGENTS, contracts CT-01–CT-03; agent execution deferred |

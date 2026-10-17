@@ -1,3 +1,161 @@
+# Handoff snapshot — 2026-10-17
+
+Use /Users/oleksandr/projects/linefield, not the historical native-sketch checkout. Read AGENTS.md, this snapshot, docs/design/live-web-prototype.md, docs/design/shared-resources-plan.md and tasks/P05.md before continuing. Older entries below are dated evidence, not current instructions.
+
+- Develop web first, then macOS; macOS remains the primary product target. Shared Rust document/editing/persistence semantics, Skia/CanvasKit and native host controls remain selected. Concrete engine/storage/binding contracts and native designs still need their specified approval; the current app is a memory-only gallery prototype, not an editable drawing app.
+- apps/web uses Vite, strict TypeScript, semantic HTML and Vanilla Extract. Normal entry shows no review controls; /?preview=1 or a valid /?platform=ios exposes them. Selection never changes URL/history. Drawings use /drawing/<id>; New is transient and does not add tiles.
+- Preserve centered responsive desktop cards, single-column mobile artwork cards, dashed New tile, overlay scrolling, theme/locale from browser preferences, and no WebKit tap flash. Web uses ellipsis; native desktop previews use pointer-positioned context menus; iPad uses ellipsis; phone previews swipe only in single-column layouts. No long-press or full-swipe deletion. iPhone uses a bottom-right glass compose button with opaque accessibility fallbacks.
+- Motion preserves whole-tile/artwork geometry, color and elevation; no animated menu blur. One backdrop starts with Rename/Delete and persists through anchored Rename. Web Delete morphs to Undo; Undo fades restored artwork and morphs to ellipsis. Mobile Delete/Undo slides the entire artwork/action rail; Rename fades a compact form. Latest fix retains source tile shadow while the menu is open and through dismissal/Rename handoff.
+- Shared trusted data-only TypeScript catalogs author en/uk localization and primitive → semantic → platform theme layers. Preserve current colors. Web consumes shared resources; locale and color generators emit native resources. Native host consumption/device validation is still pending. See shared resource plan for further sharing candidates and boundaries.
+- Verification: previous complete browser run passed 126 cases (web-clean-header). Latest menu-shadow change passed 12 focused cases, root checks (24 catalog/resource tests), web lint/format and production build; independent code review found no issue. Full browser suite was not rerun after adding the three menu-elevation cases. Exact latest hashes/evidence: apps/web/quality/web-menu-shadow/README.md. Latest bundles: index-BSv1zgB7.js and index-s1DoqqA6.css.
+- Start/check from root: pnpm install --ignore-scripts --frozen-lockfile; pnpm web:dev (http://127.0.0.1:65142/); pnpm check; pnpm web:build; pnpm web:test. Chrome and pinned Playwright WebKit are required for the full browser suite.
+- Working tree has extensive intentional uncommitted/untracked implementation and documentation, based on fa38072da22015a965da145d6635e4e6da8ba8d7. Preserve it; do not reset/clean or recreate the prototype. Before a merge, inspect and organize a reviewed checkpoint and rerun the full suite on that snapshot. No merge/publication is authorized. Generated resources, dependencies, build outputs and disposable browser captures are ignored; authored catalogs, app fixtures, intentional design references and small evidence reports belong in Git.
+
+No implementation task is currently in flight. Continue with the owner's next scoped request; this handoff is not authorization to begin the full editor.
+
+# Current direction: web first, macOS primary — 2026-10-17
+
+Decision231 supersedes macOS-first development sequencing: implement web first because of the owner’s stronger web experience, then macOS; macOS remains the primary product target and iPhone/iPad the next native priority. P05 no longer depends on macOS S08. Shared Rust semantics, Skia/CanvasKit, native controls and contract/review boundaries remain. Active instructions, platform roadmap and tasks reflect this order; dated approvals/history remain unchanged. Normal web entry now omits the entire review-controls section, including Reset samples and Browser simulation; explicit preview links retain it.126browser tests,24catalog tests, sourcechecks/build and independent design/code review pass. Evidence:apps/web/quality/web-clean-header. Preview http://127.0.0.1:65142/. Existing memory-only prototype is not yet a drawing editor. Earlierentries historical.
+
+# Current native theme resources and opt-in preview controls — 2026-10-17
+
+Decision230:29 deterministic ignored native theme outputs (Apple namedcolors, Android day/night, WinUI Light/Dark, GTK namedcolors) share23semanticroles with the web. Generation/stale checks and missing-only bootstrap are installed; source colors unchanged. Normal web entry omits platformpicker; ?preview=1 orvalid?platform optsin without selector URL/history changes.126browser tests,24catalog/resource tests, sourcegates/build and actualXML/Androidresourcecompile pass; independent code/design review passed. Evidence:quality/theme-resources and apps/web/quality/web-preview-controls. Apple/WinUIcompile,GTKruntime and nativeappconsumers remain pending. Preview http://127.0.0.1:65142/. Earlierentries historical.
+
+# Current layered theme and action elevation — 2026-10-17
+
+Decision229: shared primitive palette → semantic light/dark roles → web adapter, preserving all44 prior color values. One backdrop begins with Rename/Delete and stays through Rename; native context-menu retargeting remains intact. Hover shadow persists while drawing/New tiles expand and fades near full-screen.123 browser tests,20 catalog tests, source checks and production build pass; independent design/code review passed. Initial right-click regression and repair retained in apps/web/quality/web-theme-layers. Native theme adapters and device acceptance remain pending. Preview http://127.0.0.1:65142/. Earlier entries historical.
+
+# Current touch feedback and app-local evidence — 2026-10-17
+
+Decision228: WebKit tap highlight disabled explicitly including native selects; keyboard focus/pressed feedback retained. New drawing gets the same soft fine-pointer hover shadow as drawing cards. All13 browser evidence folders moved to apps/web/quality with original176files preserved; active links/capturepaths/ignores updated, shared rootquality remains.115browser tests (including actual headlessWebKit),18catalog tests, sourcechecks and productionbuild pass; independentreview passed. Evidence:apps/web/quality/web-touch-feedback. Preview http://127.0.0.1:65142/. Earlierentries historical.
+
+# Current typed catalogs and compose perimeter — 2026-10-17
+
+Decision227: authored locales/theme now use trusted data-only TypeScript with runtime validation and unchanged generated resource bytes. iPhone compose expansion/collapse has a decorative perimeter while moving, with borderless steady canvas and interruption/reduced-motion cleanup.112 browser tests,14 locale/authoring tests,4 theme tests, source gates, clean-output bootstrap and production build pass; independent review and sampled designer review passed. See apps/web/quality/web-typed-catalogs for exact source/build evidence. Native theme generators/host integration remain pending. Preview http://127.0.0.1:65142/. Earlier entries historical.
+
+# Current Undo paper continuity — 2026-10-17
+
+Decision226: desktop Undo blends deletion surface to themed paper over300ms with matched artwork/title backing, preserving opaque shell and immediate focus. Theme changes/interruption settle presentation; mobile slide unchanged. Final frozen107/107 browser tests,12locale tests,4theme tests, type/lint/format/size checks and production build pass. Independent17-case review and designer finalcaptures passed. Evidence:apps/web/quality/web-undo-paper. Cross-platform reduced-transparency policy documented; shared source/web theme integrated, native themegeneration/consumption pending. TypeScript authoring proposal documented; JSON restriction relaxed but no formatmigration performed. Preview http://127.0.0.1:65142/. Earlier entries historical.
+
+# Current shared theme and Apple compose — 2026-10-17
+
+Decisions224–225: owner-selected bottom-right glass compose replaces temporary topNew on iPhone. Dialog hover/pressed feedback, semantic shared theme catalog, softer charcoal night surfaces/off-white display paper and opaque accessibility fallbacks are implemented. Final101 browser tests,12locale tests,4theme tests, type/lint/format/size checks and production build pass. Independent review resolved the reduced-transparency toolbar precedence issue and reported no remaining findings; combined designer accepted final captures. Exact-source/build evidence: apps/web/quality/web-header-theme. Preview http://127.0.0.1:65142/. Browser approximation only; native material/device validation remains pending. Earlier entries are historical.
+
+# Current Undo return and artifact policy — 2026-10-17
+
+Decision223: desktop Undo fades artwork/title with an opaque card/focus surface. Settled mobile Undo returns both artwork and action rail, then closes the rail; early Undo and rerender fallback remain continuous. Generated locales and apps/web/quality/web-* image/video captures are Git-ignored, while authored catalogues/generators, reports/hashes, app assets and design references remain versioned. Commands regenerate missing locale outputs; existing stale outputs still fail check. 86 browser tests, 12 locale tests, code checks and production build pass. Evidence: apps/web/quality/web-undo-return. Preview http://127.0.0.1:65142/. Memory-only browser prototype; native implementation/device testing remains pending. Earlier entries are historical.
+
+# Current direct swipe and shared locales — 2026-10-17
+
+Decision 222: Delete preserves the full visible card/action rail; swipe follows the active finger and handles interruption/cancellation. iPad always uses ellipsis; iPhone/Android swipe only with one actual grid column, otherwise ellipsis. Shared en/uk catalog generates web, Apple, Android, Windows and Linux resources with validation. All 82 browser tests, 11 localization tests, strict checks and production build pass; independent review passed 22 focused browser cases. Eight XML and four gettext actual/synthetic resources validated. Exact-source evidence: apps/web/quality/web-shared-locales-swipe. Review http://127.0.0.1:65142/. Native resource integration/device E2E and linguistic review remain pending; memory-only browser prototype. Earlier entries are historical.
+
+# Current paths and mobile motion — 2026-10-17
+
+Decision 221: preview platform changes no longer alter URL/history; drawings use /drawing/<id> with direct entry/reload/Back support. Mobile Delete slides artwork away to reveal same-slot Undo, Undo slides it back, and Rename retracts swipe actions and fades a compact anchored form in/out. All 73 browser tests, strict checks and production build pass. Fresh independent review found no actionable issues. Exact-source evidence: apps/web/quality/web-mobile-routes. Review http://127.0.0.1:65142/; memory-only prototype with no actual editing/native implementation. Earlier entries are historical.
+
+# Current blank-preview and Undo fixes — 2026-10-17
+
+Decision 220: New opens a transient blank preview without adding gallery entries; Web Undo morphs back to the restored ellipsis and safely takes over unfinished Delete motion. 63 browser tests, strict checks and production build pass. Fresh independent review passed 8 scoped cases and 2 native-preview gesture regressions with no findings. Exact-source evidence: apps/web/quality/web-preview-undo. Mobile Delete push-out and Rename fade-form are proposals pending owner review, not implemented. Review at http://127.0.0.1:65142/. Samples remain memory-only.
+
+# Current platform-action refinement — 2026-10-17
+
+Decision219: centered three-column desktop gallery with420px cap; Delete menu morphs into same-slot Undo with one opaque visual handoff; native mobile previews use swipe-only actions; native desktop context menu follows the pointer; ellipsis is Web-only; animated menu blur removed. All55 browser tests, strict checks and production build pass. Fresh review findings corrected and independently reverified. Exact-source evidence: apps/web/quality/web-platform-actions. Review at http://127.0.0.1:65142/; samples remain memory-only. Earlier entries are historical.
+
+# Current return-motion fixes — 2026-10-17
+
+Decision 218: Rename dismisses on outside press and morphs back to its live ellipsis after Cancel, Escape or successful Save. New drawing color, plus/name and dashed border transition gradually in both directions. All 44 browser tests, strict tooling checks and production build pass. Exact-source evidence: apps/web/quality/web-return-motion. Review at http://127.0.0.1:65142/; samples remain memory-only. Earlier entries are historical.
+
+# Current continuity fixes — 2026-10-17
+
+Decision 217: compact document-plus/New iPhone toolbar, Rename anchored near its source menu with keyboard/viewport clamping, and independently measured artwork geometry within whole-card transitions. 34 browser tests, strict tooling checks and production build pass. Current exact-source evidence: apps/web/quality/web-continuity. Review remains at http://127.0.0.1:65142/; samples are memory-only. Earlier iteration evidence below is historical.
+
+# Current feedback fixes — 2026-10-17
+
+Decision 216: iPhone/narrow iPad creation is now an attached bottom toolbar; the custom scrollbar overlays content with no reserved width. Hover uses a soft shadow; committed Delete fades the full menu and crossfades artwork into same-slot Undo. Preview remains http://127.0.0.1:65142/. 25/25 browser tests, tooling checks and production build pass; fresh independent and combined designer reviews found no blockers. Current verification: apps/web/quality/web-feedback. Samples remain memory-only; native implementation is not included. Earlier iteration evidence below is historical.
+
+# Current refinement — 2026-10-17
+
+Decision 215: apps/web now uses Vanilla Extract typed styles, en/uk JSON catalogues with semantic IDs, bounded auto-fill/minmax gallery tracks and stable scrollbar gutters. Web uses overflow only; native-platform previews retain gestures. Rename morphs directly from menu; Android corners are consistent and New has a subtle dashed border. Same http://127.0.0.1:65142/ preview. 18 browser tests plus tooling/build checks pass; independent and designer reviews complete. See apps/web/quality/web-refinements. All changes remain uncommitted and samples memory-only.
+
+# Current: Vite live gallery prototype — 2026-10-17
+
+Owner decision 214 replaces the gallery experiments with apps/web. Read docs/design/live-web-prototype.md and apps/web/README.md. Run pnpm web:dev and open http://127.0.0.1:65142/. Monochrome, mobile artwork cards, platform selector, full-viewport whole-tile transitions and anchored menu morph are current. Browser/OS controls theme and viewport. Sample mutations are memory-only. Native/Figma, drawing engine and persistence remain gated. Original v3 watch references are in docs/design/references. Old gallery-v1–v4 directories and their server were removed at owner request. Current tests/review evidence: apps/web/quality/web-prototype. No commit/push/merge requested.
+
+## Historical work log
+
+The entries below describe superseded experiments, not current deliverables or executable instructions. Their old local links/ports are retired.
+
+# Current prototype repairs — 2026-10-17
+
+Native Gallery v4 owner feedback repaired at the existing localhost65141/gallery-v4/ URL.
+Read docs/design/gallery-v4/repairs.md and repair-evidence.json for current hashes, tests and limits.
+Watch sizing/paging, swipe actions, menu state, blank/New/Back animation, Monochrome palettes,
+FAB/New feedback and native scrollbar styling are updated. Seven focused and twelve regression
+suites pass; three independent findings fixed/retested; combined designer reviewed stills.
+Native/Figma approval and application implementation remain pending. No commit/push/merge.
+
+# Current agent configuration — 2026-10-17
+
+Decision 213 restores one ui_ux_designer; the separate UX/UI role files are retired.
+Read docs/design/roles.md and .codex/agents/ui_ux_designer.toml. One designer owns the
+feature flow, native visuals, adaptive Figma, motion and integrated design review.
+Engineers, fresh reviewer and owner Figma approval retain their responsibilities.
+Older split-role entries below are historical. Runtime discovery in a new Linefield-scoped
+session remains unverified; no existing running agent was renamed. Gallery v4 work below
+remains the current design deliverable, with Figma/native verification still pending.
+
+# Current: Native Gallery v4 — 2026-10-17
+
+Owner authorized recommended redesign plus Compose Material 3 Android plan (211–212).
+Review docs/design/gallery-v4/index.html and docs/design/native-gallery-v4-plan.md.
+Run node scripts/serve-design.ts; open http://127.0.0.1:65141/gallery-v4/.
+Ten platform Light/Night pairs use the live renderer; controls vary platform, viewport, input,
+four neutral palettes, contrast, motion and scenarios. Tablet windows/orientations are explicit.
+12 browser behavior suites passed; 25 captures; four independent review findings fixed/retested.
+Evidence/source hashes: docs/design/gallery-v4/review-evidence.json. No native UI claims.
+Plan/agent/task references now use Android Compose Material 3; shared Rust commands unchanged.
+Deletion UX now stages removal with per-item Undo; concrete durable staging/finalization contract
+must be reviewed before real file deletion. Historical approved DBML snapshots unchanged.
+Next: owner visual feedback, editable adaptive en/uk Figma and native component feasibility,
+then identified design approval before application implementation. Work remains uncommitted;
+no push/merge/runtime app. Older entries below describe historical stages.
+
+# Gallery exploration 02 delivered — 2026-10-17\n\nOwner authorized six complete Procreate-led variants after reviewing the improvement plan.\nSee docs/design/gallery-v2/README.md and review-evidence.json. Review at\nhttp://127.0.0.1:65140/gallery-v2/ (ephemeral loopback server). Each variant includes all nine\nplatforms in Light/Night, equal fixtures/content coverage, state/motion boards and a semi-interactive\nWeb gallery. 108 base PNGs + 54 state boards + 30 extras. No v2 SVG exports.\nUX/UI and fresh reviewer participated; corrected findings and verification limits are recorded.\nAwait owner preference, adaptive Figma/native feasibility and identified approval. No app code,\ncommit, push or merge. Older pending-production notes below are historical and superseded.\n\n# Gallery visual preference — 2026-10-17
+
+Owner prefers Procreate's uncluttered gallery. Treat artwork-first, restrained chrome as the
+primary direction for all six alternatives; retain full New tile, native platform patterns,
+light/night pairs, watch paging and semi-interactive Web. Not a final design approval.
+Read docs/design/gallery-improvement-plan.md and gallery-competitor-screens.md.
+
+# Gallery redesign requirements and research — 2026-10-17
+
+Owner found v1 insufficiently native and varied. Read docs/design/gallery-improvement-plan.md.
+Next design package: six complete variant pages, each all nine hosts and Light/Night pairs,
+identical fixtures and coverage; PNG only, no SVG deliverables needed. First square New tile
+on editors; one drawing per snapped watch page. Include state/motion examples and semi-interactive
+Web prototype per variant with disposable samples and external review controls.
+Competitor screenshot research and UX/UI synthesis completed: eight official visual references,
+observations separated from inferred rationale. See docs/design/gallery-competitor-screens.md
+and http://127.0.0.1:65139/references/index.html (ephemeral local server). All eight images
+loaded in the browser. New variant PNGs and semi-interactive Web prototypes remain to be produced;
+the current handoff is the revised plan and source-reference board. Current v1 files remain historical, not newly approved.
+No new application implementation or Figma approval. The plan remains for owner review before the redesigned artifact batch.
+
+# Gallery design exploration delivered — 2026-10-17
+
+User committed plan at fa38072, then authorized competitor/UX/UI collaboration and gallery
+screen designs. Decision210. See docs/design/gallery-v1/README.md and review-evidence.json.
+Delivered27baseconcepts (3directions ×9hosts),6macOSlocale/stateextras,33SVG/PNGpairs,
+4comparison sheets and overview.png. Local review index at http://127.0.0.1:65139/
+(loopback ephemeralserver); persistent files under docs/design/gallery-v1/.
+A Quiet Studio, B Structured Workshop, C Warm Archive. Watch/Wear/TV viewonly.
+Research/UX/UI completed scoped work; fresh independent review findings resolved.
+All5review-page sources formatted/under200lines; lint/syntax and all9browserselectors pass.
+Await owner preference/traitselection. These are NOT approved Figma or appimplementation.
+Next deepen selected foundation/gallery into editable adaptiveFigma, en/uk, states/motion,
+with native feasibility and identified owner approval. Otherhost deepstates stillpending.
+All work is uncommitted after user's plancommit; no push/merge/applicationcode.
+
 # S02 v3 approved — 2026-10-17
 
 Owner approved hosted Version8 and the exact six-file reviewed schema/defaults snapshot

@@ -1,4 +1,5 @@
-packages: []
+packages:
+  - apps/web
 engineStrict: true
 ignoreScripts: true
 saveExact: true

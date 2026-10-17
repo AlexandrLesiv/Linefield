@@ -18,3 +18,22 @@ node_modules/
 # Never commit CLI authentication material
 **/.dbdiagram/.credentials.json
 **/.dbdiagram/.telemetry.json
+
+/apps/web/dist/
+/apps/web/test-results/
+/apps/web/playwright-report/
+
+# Reproducible locale output; authored catalogues remain versioned.
+/shared/localization/generated/
+
+# Local visual verification captures; retain small reports and source manifests.
+/apps/web/quality/web-*/**/*.png
+/apps/web/quality/web-*/**/*.jpg
+/apps/web/quality/web-*/**/*.jpeg
+/apps/web/quality/web-*/**/*.webp
+/apps/web/quality/web-*/**/*.gif
+/apps/web/quality/web-*/**/*.webm
+/apps/web/quality/web-*/**/*.mp4
+
+# Reproducible native theme resources.
+/shared/theme/generated/

@@ -2,7 +2,7 @@
 
 Planned registry fields: feature/acceptance/invariant ID, task, discovered executable test IDs, test layer, platform/device, applicability, exact source revision/build, execution result and artifact links. Keep automated coverage separate from whether the test was run successfully.
 
-SU-01 through SU-20 are defined in docs/successor/delivery.md. Nothing has executed for the successor yet. Do not copy Native Sketch pass statuses. Build_reliability installs the registry and discovery/reporting checks when S01 is authorized.
+SU-01 through SU-20 are defined in docs/successor/delivery.md. The planned native acceptance registry has not executed. Browser prototype and shared resource checks have separate executed evidence linked below. Do not copy Native Sketch pass statuses. Build_reliability installs the registry and discovery/reporting checks when S01 is authorized.
 
 The [contract catalog](../docs/contracts.md) defines CT/INV IDs; the [shared E2E plan](../docs/testing/shared-e2e.md)
 defines scenario IDs. Registry records also include scenario/fixture versions and hashes,
@@ -25,3 +25,7 @@ This records document review only; no native/physical-input/store-compliance pas
 S00G channel-strategy assessment: [store strategy review](store-strategy-review.md), exact documentation snapshots only.
 
 Milestone-command setup: [workflow validation](milestone-workflow-review.md), including independent scenario walkthroughs and explicit discovery/validator limits.
+
+## Browser prototype evidence
+
+Browser-only prototype reports and captures live in [apps/web/quality](../apps/web/quality/README.md), alongside the application that owns them. This root directory retains shared contracts, cross-platform reviews and repository-tooling evidence. See the browser evidence index for retention policy and the relocation of historical web-* records.

@@ -1,0 +1,10 @@
+
+Running 3 tests using 1 worker
+
+(node:39678) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/apple-material.spec.ts:4:3 › WEB-GL01 light compose feedback and opaque accessibility fallbacks (411ms)
+  ✓  2 tests/apple-material.spec.ts:4:3 › WEB-GL01 dark compose feedback and opaque accessibility fallbacks (289ms)
+  ✓  3 tests/apple-material.spec.ts:46:1 › WEB-GL02 compose cannot activate behind Rename and restores after dismissal (317ms)
+
+  3 passed (1.7s)

@@ -1,0 +1,7 @@
+{
+  "fixture": "/var/folders/wr/_kg6tchj2xv2rkv3rs8qbylm0000gn/T/linefield-clean-review-SKJMEG",
+  "missingGeneratedCheck": 0,
+  "staleRejected": 1,
+  "build": 0,
+  "dependencies": "reused installed node_modules through disposable fixture symlinks; not fresh dependency installation"
+}

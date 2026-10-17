@@ -1,10 +1,16 @@
 # Successor implementation and acceptance plan
 
-All tasks below are planned, not executed. Product scope decisions are recorded in
+The macOS implementation tasks below remain planned; S01 tooling is partial and the separate P05 web gallery prototype is implemented. Product scope decisions are recorded in
 [the review overview](README.md). No existing test result certifies the successor.
 Each task ends with runnable evidence and a focused independent review, not just smaller files.
 
-## Ordered implementation tasks
+## Development order and macOS task chain
+
+Decision 231 places web (P05) first, followed by macOS; macOS remains the primary product
+target. The owner’s web experience drives this order. The table below retains the macOS
+preview task chain, not a requirement to complete macOS before P05. Shared contracts and
+Rust work serve both hosts. P05 requires its own reviewed browser/Wasm/storage slices and
+real browser acceptance; existing prototype tests do not certify an editable drawing app.
 
 | Task | Deliverable and ownership | Depends on | Completion gate |
 | --- | --- | --- | --- |
@@ -114,7 +120,7 @@ free of private drawing data by using disposable fixtures.
 ## Agent workflow and stopping conditions
 
 Lead owns scope/contracts/integration; rust_engine owns shared semantics and typed boundary;
-macos_ui owns AppKit implementation; UX owns behavior/flow review; UI owns visual Figma and fidelity review;
+macos_ui owns AppKit implementation; ui_ux_designer owns behavior, visual Figma and fidelity review;
 rendering_performance owns measurement validity; build_reliability owns runners/evidence;
 fresh reviewer checks correctness, security, maintainability and evidence independently.
 ios_ui/android_ui/windows_ui may review portability/design now; feature implementation
@@ -141,7 +147,7 @@ explicitly outside this preview. No “all platforms complete” claim is permit
 Apply [contract catalog](../contracts.md) and [shared E2E plan](../testing/shared-e2e.md).
 S01 installs registry/discovery only when authorized; S02 reviews contracts/scenarios; S03
 proves core/boundary conformance; S04–S06 implement actual macOS E2E with each feature; P01
-refines shared helpers against the second platform. S08 cannot substitute replay or another
+refines shared helpers against the next native platform after macOS. S08 cannot substitute replay or another
 host's results for applicable native tests. Exact task briefs under tasks/ carry these duties.
 
-Design planning supplement: S00A establishes semantic foundations/native mappings and adaptive Figma components before S00 detailed screen approval. macOS is detailed first; other platforms do not require exhaustive upfront designs. P10/P11 add Android TV/Google TV and Android XR placeholders, not implemented apps.
+Design planning supplement: S00A establishes semantic foundations/native mappings and adaptive Figma components before S00 detailed screen approval. the next approved web slice is detailed first, then macOS; other platforms do not require exhaustive upfront designs. P10/P11 add Android TV/Google TV and Android XR placeholders, not implemented apps.

@@ -172,8 +172,7 @@ S02L owns LIBRARY-CREATE-001, LIBRARY-RENAME-001, LIBRARY-OPEN-001, LIBRARY-DELE
 LIBRARY-FAILURE-001 and LIBRARY-NAV-001 for SU-21; task S02L defines outcomes and dependencies.
 Keep native create/rename/restart/navigation evidence separate from later drawing/autosave tests.
 Synthetic thumbnails/temporary editor destination cannot certify actual artwork rendering.
-Deletion policy is confirmed permanent deletion (decision 8); test confirmation/cancel, restart,
-write races and interrupted/failed cleanup against the concrete S02 contract. Native-file roundtrip scenarios must use the reviewed
+Decision 212 supersedes ordinary confirmed deletion: test recoverable removal, same-slot Undo, multiple pending items, failed/cancelled navigation, resize/background persistence and exact restoration. Production requires reviewed staging/finalization and crash recovery contracts; prototype evidence is not storage evidence. Native-file roundtrip scenarios must use the reviewed
 library import/export-copy semantics rather than assume editing an external source in place.
 
 FILE-IMPORT-COPY-001 (S06, SU-09/11, CT-01/05) verifies an external Linefield document becomes
@@ -303,7 +302,9 @@ and retry/interruption; assert no source changes, automatic new IDs, merge or wi
 Same-name/different-ID controls remain valid. Native E2E verifies honest conflict presentation and
 access to unrelated recovered items; do not claim resolution tooling exists or has been approved.
 
-## Resuming confirmed deletion (decision 85)
+## Historical confirmed-delete recovery and decision 212 amendment
+
+Decision 212: the initial Delete tap is recoverable staging, never the irreversible intent below. Do not implement or test the old confirmed-delete flow as the current UI. A future reviewed finalization contract must distinguish staged, restored and finalized operations; crash/quit behavior, owner fencing and export consent remain review requirements.
 
 LIBRARY-DELETE-001/LIBRARY-FAILURE-001: interrupt before durable intent and at each subsequent
 reviewed deletion phase; restart repeatedly. Destructive continuation requires the exact valid

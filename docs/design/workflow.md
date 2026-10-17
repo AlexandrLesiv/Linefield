@@ -78,17 +78,16 @@ Use native panels for the initial macOS file workflow unless a separate chooser 
 
 ## UX/UI ownership
 
-Follow [role split](roles.md): UX owns interaction briefs, routes and usability; UI owns visual
-foundations, adaptive components and motion styling. Lead coordinates one shared handoff;
-platform engineers validate feasibility. Use separately owned Figma sections and require both
-behavior and visual review for substantial flows. Existing foundation/screen owner gates stay.
+Follow [combined ownership](roles.md): ui_ux_designer owns interaction briefs, routes, usability,
+visual foundations, adaptive components and motion together. Lead coordinates one review packet;
+platform engineers validate feasibility. Use both behavior and visual checklists for substantial flows. Existing foundation/screen owner gates stay.
 
 ## Per-feature input coverage (decision 151)
 
-UX uses [input inventory](../input/inventory.md) for each feature and platform; include OS/app menus
+ui_ux_designer uses [input inventory](../input/inventory.md) for each feature and platform; include OS/app menus
 and Services, not only canvas gestures. Specify applicability, proposed action/context, native focus/
 IME conflicts, availability, cancellation/interruption, alternatives and test IDs. Engineers check
-feasibility; UI annotates these behaviors in the exact Figma handoff, including non-prototypable
+feasibility; the same designer annotates these behaviors in the exact Figma handoff, including non-prototypable
 hardware/system interactions. Owner approves the feature's interactions and design before code.
 Do not make global shortcut/stylus decisions an up-front prerequisite or silently adopt old proposals.
 watchOS/tvOS/Wear OS/Android TV are view-only; their designs cannot introduce editing behavior.

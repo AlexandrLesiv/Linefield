@@ -4,17 +4,21 @@
 
 Read docs/RESUME.md, docs/objectives.md, docs/decisions.md and the assigned task first. This project's instructions govern Linefield; old repository tasks and ancestry rules are historical reference, not successor requirements. Human instructions take precedence.
 
-Current authorization covers documentation/folder scaffold plus the owner-requested root Node.js/TypeScript/pnpm development tooling and dbdiagram CLI. Application code, native/web app build manifests and runtime implementation still require explicit authorization. Never interpret a task file or this plan as application implementation approval.
+Current authorization covers documentation/folder scaffold, root Node.js/TypeScript/pnpm development tooling, dbdiagram CLI, and the explicitly owner-requested apps/web Vite/TypeScript live gallery prototype (decision 214). Prototype UI, manifests and browser tests are authorized within docs/design/live-web-prototype.md. Real drawing engine, persistence, native applications and additional product behavior still require explicit authorization. Never interpret a task file as broader implementation approval.
 
-macOS first: Swift/AppKit native controls, custom Skia canvas, shared Rust document/geometry/editing/persistence semantics. First preview includes pen, pan/zoom, single-stroke select/move/uniform-scale/delete, undo/redo, open/save/recovery. No legacy document compatibility. Multiplatform planning and apps/ placeholders are authorized from day one; platform features follow macOS. See docs/platforms.md. Distribution, rotation/multi-select, agents/network features and exports require their own scope approval. Platform implementation still needs its reviewed task/design and implementation authorization. Preserve existing macOS-style color control in the proposed design; do not extend it to new platforms incidentally.
+macOS remains the primary product target: Swift/AppKit native controls and a custom Skia canvas. Develop web first because the owner has the most web experience, then macOS, with iPhone/iPad the next native priority. Shared Rust document/geometry/editing/persistence semantics and Skia/CanvasKit remain selected. First preview includes pen, pan/zoom, single-stroke select/move/uniform-scale/delete, undo/redo, open/save/recovery. No legacy document compatibility. Multiplatform planning and apps/ placeholders are authorized from day one; other platform features follow macOS, except web which leads implementation. See docs/platforms.md. Distribution, rotation/multi-select, agents/network features and exports require their own scope approval. Platform implementation still needs its reviewed task/design and implementation authorization. Preserve existing macOS-style color control in the proposed design; do not extend it to new platforms incidentally.
 
 ## Design and architecture gates
 
-The owner approves an identified Figma version/frames before new screens/tools are implemented. ux_designer owns behavior/navigation; ui_designer owns visual/adaptive/motion presentation. The lead coordinates their handoff and platform feasibility per docs/design/roles.md. Missing Figma access blocks that UI slice, not all independent authorized work.
+The owner approves an identified Figma version/frames before new native/product screens/tools are implemented. The explicitly requested live web design prototype is authorized before Figma; it is a review artifact, not native implementation approval. ui_ux_designer owns behavior/navigation and visual/adaptive/motion design together. The lead coordinates the integrated review and platform feasibility per docs/design/roles.md. Missing Figma access blocks that UI slice, not all independent authorized work.
 
 Typed FFI with generated declarations is the selected direction; shared Rust commands remain authoritative. Concrete ABI, document schema, state ownership/thread topology, framework/security changes require explicit owner review before implementation. General scaffold/refactor authorization is not that review. No custom binary command protocol or speculative transport.
 
 Input adapters translate system input/shortcuts/control actions into shared Rust commands. Native text editing keeps first-responder priority. One execution owner mutates each editor; immutable snapshots cross worker boundaries. Separate durable document, session, viewport, native presentation and disposable rendering caches.
+
+## Live web prototype conventions
+
+Within apps/web, author styles in Vanilla Extract .css.ts with semantic theme tokens; do not reintroduce parallel plain CSS styling. Keep English and Ukrainian in separate catalogues using stable semantic IDs and typed named placeholders. Author trusted data-only TypeScript catalogues; see docs/design/shared-resources-plan.md for generation invariants and platform boundaries. Browser/OS selects locale/theme. Web preserves browser context-menu/long-press behavior; native preview gestures are separate capabilities. See decision 215 and docs/design/live-web-prototype.md.
 
 ## Quality requirements
 
@@ -30,7 +34,7 @@ Require ordered actual samples, transient predictions, atomic batch validation, 
 
 ## Agent workflow
 
-Lead owns scope, architecture coordination and integration. Use configured specialists for scoped work. ux_designer specifies/reviews interactions and ui_designer specifies/reviews visual design; rust_engine owns shared semantics and typed boundary; macos_ui owns AppKit; rendering_performance owns measurements; build_reliability owns runners/evidence; fresh reviewer independently reviews substantive changes. Platform roles may review portability/design now; their feature implementation follows macOS and the approved task/design. Keep shared semantics native/Wasm compatible, isolate OS storage/executor/render backends, and never make AppKit/Metal assumptions part of universal contracts.
+Lead owns scope, architecture coordination and integration. Use configured specialists for scoped work. ui_ux_designer specifies and reviews interactions, native visual design, adaptive Figma and motion; rust_engine owns shared semantics and typed boundary; macos_ui owns AppKit; rendering_performance owns measurements; build_reliability owns runners/evidence; fresh reviewer independently reviews substantive changes. Platform roles may review portability/design now; web leads implementation, while other native hosts follow macOS and their approved task/design. Keep shared semantics native/Wasm compatible, isolate OS storage/executor/render backends, and never make AppKit/Metal assumptions part of universal contracts.
 
 At most three concurrent subagents and two implementation writers; one feature in flight. Assign outcome, base commit, owned paths, dependencies/contracts, acceptance IDs, required evidence and stopping condition. Freeze contracts before parallel writers; one contract owner. Use isolated worktrees within this repository, not the reference repository. Do not delegate recursively without a specific approved independent task and capacity.
 
@@ -78,11 +82,11 @@ mutable links alone do not prove approval. No Figma design, task runner or workb
 
 ## Adaptive design foundations
 
-ui_designer owns S00A with UX behavior input, following docs/design/foundations.md: shared semantic foundations,
+ui_ux_designer owns S00A including behavioral requirements, following docs/design/foundations.md: shared semantic foundations,
 platform-native control mappings, reusable Figma components/variables and verified resizable
 frames. Approve identified foundations and screen versions separately. Native system controls
 retain platform behavior; UI theme colors must not alter saved drawing colors. Map future
-platforms now, detail macOS first; no need to finish every platform screen before macOS.
+platforms now; detail the next authorized web slice first, then macOS. Exhaustive designs for all future platforms are not a prerequisite.
 Android TV/Google TV (apps/android-tv) and Android XR (apps/android-xr) are planned hosts;
 folders/tasks only, no implementation. TV is view-only; XR starts with reviewed 2D scope.
 
@@ -112,7 +116,7 @@ Require I18N-LAUNCH-002/I18N-UK-002. No new permanent localization agent is intr
 
 Use competitor_researcher for bounded workflow research before substantial new design choices.
 Follow docs/research/README.md and S00C. It provides sourced observations and ranked options to
-the owner, ux_designer and ui_designer through the lead; it cannot add features or approve designs.
+the owner and ui_ux_designer through the lead; it cannot add features or approve designs.
 Designer records adaptation/rejection reasoning; platform engineers assess native feasibility.
 Research is not a benchmark, user validation or implementation review. Keep existing agent
 concurrency limits and owner scope/Figma gates. Do not create recurring monitoring implicitly.
@@ -129,15 +133,15 @@ Do not add a gallery, custom URL scheme or routing framework from an example alo
 cannot delay ink, decide document mutation or be required for semantic completion. Test real
 Back/Forward/gestures, races, focus and normal/reduced motion per shared scenarios.
 
-## Wear OS and design-role split
+## Wear OS and combined design ownership
 
 Wear OS apps/wearos is a planned target (P12), owned by android_ui for engineering. View-only
 is owner-selected (decision 152); toolkit, standalone/acquisition and any network scope still need review.
-The combined design role is replaced by ux_designer and ui_designer; follow docs/design/roles.md.
-UX owns journeys/navigation/interaction acceptance; UI owns native visual foundations/adaptive
-Figma/motion styling. Lead coordinates; no third design coordinator or higher concurrency cap.
-For generic mentions of designer, assign the accountable role from that matrix. Both assess
-substantial flows and share the existing owner approval packet; engineers still own code/tests.
+Decision 213 restores ui_ux_designer; follow docs/design/roles.md. One designer owns journeys,
+navigation, interaction acceptance, native visual foundations, adaptive Figma and motion.
+Lead coordinates platform feasibility; no additional coordinator or higher concurrency cap.
+Use behavior and visual checklists in one owner review packet. Engineers still own code/tests;
+fresh reviewer remains independent. Earlier split-role records are historical.
 
 Autosave to the document is owner-selected; follow docs/autosave.md. Ordinary edits persist
 in the background with revision-safe status. Resolve pending/failed writes on navigation;
@@ -166,8 +170,7 @@ Owner selected a Procreate-like app-managed library on 2026-10-16. Plan/design S
 product UI milestone before S04 canvas: gallery entry, unnamed durable drawings, create/open/
 rename and reviewed deletion flow. Figma version and concrete library/schema approval still
 precede implementation. Keep one window/editor, shared Rust commands and native presentation.
-Permanent library deletion after explicit confirmation is owner-selected (decision 8); no trash/
-restore workflow. Test cancellation, failures and pending-save races. Do not infer stacks/folders,
+Decision 212 supersedes decision 8 ordinary deletion UX: stage recoverable removal with in-place Undo until successful departure. Review durable staging/recovery/finalization before code; no general Trash screen. Test cancellation, failures and pending-save races. Do not infer stacks/folders,
 bulk tools, sync or external-file write-through.
 Minimal library persistence belongs in S02L; S06 extends it. See decision 7 and tasks/S02L.md.
 
@@ -377,8 +380,7 @@ owns future local Node gate actions/reporting; current documentation is not inst
 
 Read docs/input/README.md and docs/distribution/README.md for affected tasks. New default bindings,
 touch arbitration and profiles remain proposals until owner approval; preserve selected active-tool
-and native focus/IME guards. UX owns behavior, engineers feasibility/shared commands, UI identified
-Figma. Record actual native/hardware coverage separately from replay and accessibility claims.
+and native focus/IME guards. ui_ux_designer owns behavior and identified Figma; engineers own feasibility/shared commands. Record actual native/hardware coverage separately from replay and accessibility claims.
 
 Platform engineers own technical channel requirements; build reliability owns artifacts/provenance;
 UX/UI own necessary user flows/disclosures, lead current applicability and reviewer independent checks.
@@ -537,3 +539,17 @@ source bytes; pending wording inside the snapshot is historical, not an unanswer
 Do not re-ask RC1–RC11. Exact revised ABI, numerical evidence and feature Figma are separate.
 Proceed with delegated engineering defaults and coordinated UX/UI review proposals;
 schema approval alone is not application implementation authorization.
+
+## Current gallery and Android direction (211–212)
+
+Owner approved Native Gallery redesign artifacts and Android Compose Material 3 planning.
+Follow docs/design/native-gallery-v4-plan.md. This supersedes phone/tablet Views references and
+ordinary confirmation-based gallery deletion UX above; immutable approval snapshots remain history.
+Do not implement production deletion by reusing the old irreversible confirmed-delete intent.
+Require concrete staged-removal/recovery/ownership/export contracts before runtime implementation.
+Native controls remain platform-owned; Compose observes shared Rust projections and dispatches typed
+intent, with no duplicate editor model. Wear/TV/XR toolkit validation remains separate.
+Design/test window size independently of platform and device: tablets may be windowed, portrait or
+landscape; desktops may have narrow windows. Preserve identity/focus/scroll through adaptation.
+Prototype HTML materials are simulations; require native component feasibility and identified Figma
+approval before app implementation. No native desktop reservation is granted by design work.

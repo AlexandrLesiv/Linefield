@@ -1,8 +1,8 @@
 # Linefield
 
-An editable vector sketching app: responsive, offline-first, open-source in intended distribution, and cross-platform. Plan all hosts from day one; implement macOS first, with native AppKit controls, shared Rust behavior and Skia rendering. See [platform plan](docs/platforms.md) and [apps](apps/README.md).
+An editable vector sketching app: responsive, offline-first, open-source in intended distribution, and cross-platform. macOS remains the primary product target, with native AppKit controls. Develop web first, then macOS, because the owner has the most experience with web; iPhone/iPad remains the next native priority. Shared Rust behavior and Skia rendering (CanvasKit on web) remain selected. See [platform plan](docs/platforms.md) and [apps](apps/README.md).
 
-Status: planning scaffold plus root Node.js/TypeScript/pnpm development tooling. No application code or runnable drawing app yet.
+Status: a runnable, memory-only web gallery design prototype plus shared catalogs and development tooling. The editable Rust/Wasm drawing app, durable storage and native applications remain planned; the prototype is not a working drawing editor.
 
 Start with [AGENTS.md](AGENTS.md), [objectives](docs/objectives.md), [decisions](docs/decisions.md), [task board](tasks/README.md), [quality requirements](docs/quality.md) and [resume instructions](docs/RESUME.md).
 

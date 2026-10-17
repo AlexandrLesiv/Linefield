@@ -38,7 +38,7 @@ A diagram or specialist recommendation is not approval. Keep diagrams, dictionar
 DDL synchronized; later verify against schema introspection and migration fixtures when authorized.
 Rust owns editing commands, live state and persistence implementation; SQL is not a second editor
 state owner. Preserve selected main-thread macOS editing and bounded background storage topology.
-UX owns draft lifecycle behavior; UI owns native presentation. Surface unresolved product decisions
+ui_ux_designer owns draft lifecycle behavior and native presentation. Surface unresolved product decisions
 without choosing them implicitly. Do not add galleries, persisted undo, cloud sync, ORMs or codecs.
 Use CT/INV/SU/scenario IDs. Define migration/reopen/corruption/disk-full/lock/interruption/stale-write
 and draft-preservation checks. Coordinate measurements with rendering_performance and test evidence

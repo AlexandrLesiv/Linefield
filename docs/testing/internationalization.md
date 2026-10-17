@@ -3,7 +3,7 @@
 Status: planned, no executable tests/catalogs/translations. Implements the test requirements
 for [i18n architecture](../internationalization.md), CT-09/INV-11 and SU-20.
 
-Both English (en) and Ukrainian (uk) are required from the first macOS UI and at each later
+Both English (en) and Ukrainian (uk) are required from the first web UI and at each native
 host launch. Use real reviewed catalogs plus artificial expanded LTR/RTL resources; these
 pseudo-locales supplement rather than replace either real language. Additional languages
 remain separately scoped. No resource or runtime pass is claimed yet.

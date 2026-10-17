@@ -1,0 +1,50 @@
+{"check":"localization","status":"passed","messages":26}
+{"check":"shared-theme","status":"passed"}
+✔ THEME-01 shared catalog has exact semantic keys and readable state pairs (0.428083ms)
+✔ THEME-02 malformed modes, unknown/missing tokens and invalid hex are rejected (0.21925ms)
+✔ THEME-03 unreadable normal, pressed and destructive text is rejected (0.698125ms)
+✔ THEME-04 light palette is unchanged and authorized dark palette uses soft graphite (0.459958ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 69.944625
+{"check":"localization","status":"passed","messages":26}
+(node:50203) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ CAT-01 authoring modules contain only literal serializable exports (15.71225ms)
+✔ CAT-02 TypeScript rejects missing locale IDs and missing theme roles (129.795209ms)
+✔ LOC-01 rejects schema, missing/extra translation and placeholder mismatch (3.529834ms)
+✔ LOC-02 requires complete bounded plurals and integer selector (1.800167ms)
+✔ LOC-03 overrides are complete, validated and platform-specific (0.36675ms)
+✔ LOC-04 native escaping preserves Unicode, literals and reordered arguments (0.37375ms)
+✔ LOC-06 plain percent stays literal and invalid XML scalars are rejected (1.280209ms)
+✔ LOC-07 plural expansion cannot collide with a plain Windows resource (0.291166ms)
+✔ LOC-10 carriage returns survive XML newline normalization (0.803375ms)
+✔ LOC-05 deterministic generation and stale/missing/unexpected output rejection (21.350167ms)
+✔ LOC-11 generation rejects symlink files, subdirectories and root without touching target (2.637708ms)
+✔ LOC-12 unchanged generation preserves files so preparation does not reload the preview (2.133375ms)
+✔ LOC-08 browser consumes generated plural contracts with locale-specific categories (11.996708ms)
+✔ LOC-09 integer domain, argument shape, Unicode and literal substitutions (0.26175ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 213.955292
+{"check":"typecheck","status":"passed"}
+{"check":"web-typecheck","status":"passed"}
+{"check":"lint","status":"passed"}
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 74ms on 104 files using 12 threads.
+{"check":"format","status":"passed"}
+{"check":"script-source-size","status":"passed"}
+(node:50184) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)

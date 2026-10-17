@@ -3391,3 +3391,152 @@ are retained in quality/S02-v3-review.json. See docs/reviews/S02-v3-approval-202
 This settles the regional schema amendment; it does not approve unseen revised generated
 ABI, unmeasured stroke-span guarantees, application implementation or Figma designs.
 Preserve exact reviewed source bytes and historical approvals. Do not reopen RC1–RC11.
+
+## Decision 210 — gallery visual exploration across requested platforms
+
+On 2026-10-17 the owner requested competitor/UX/UI collaboration and many visual alternatives,
+then directed design to start with the documents/gallery screen. Authorized design exploration
+covers macOS, web, Android, iPadOS, iOS, watchOS, Wear OS, tvOS and Windows, with native traits
+and transferable shared theme. PNG examples are allowed before later Figma reconstruction.
+Prepare three distinct gallery families using identical scope/content; viewer hosts stay read-only.
+This is design-artifact authorization, not app implementation, extra features, exact design approval
+or a bypass of identified editable/adaptive Figma before implementation.
+
+## Decision 211 — Native Gallery revision and Compose Material 3
+
+On 2026-10-17 the owner authorized the recommended Native Gallery redesign: connected interactive
+transitions, neutral light/night palettes, native platform-specific controls and responsive tablet
+windows/orientations. Native Showcase is no longer active. The owner explicitly selected Kotlin
++ Jetpack Compose Material 3 for Android phone/tablet and its adaptive desktop route, replacing
+the prior Views direction. Shared Rust command authority, typed boundary and Skia remain unchanged.
+Compose state presents shared projections; do not create a second editing model or adopt a new
+executor/transport. Android application implementation still follows macOS and approved feature scope.
+Wear/TV/XR component and capability feasibility remain separate. Read native-gallery-v4-plan.md.
+
+## Decision 212 — Gallery removal with persistent in-screen Undo
+
+Owner requested no ordinary delete confirmation; replace each removed item with a same-size
+Deleted NAME / Undo placeholder until leaving the gallery. This supersedes ordinary confirmation
+UX in decision 8. Approved redesign direction: preserve independent Undo per item, no countdown,
+no gallery reflow, and no finalization after failed/cancelled navigation or mere backgrounding.
+The prototype simulates staged removal in memory only. Before production, review durable staged
+removal, crash/restart and quit handling, ownership fencing, exports, restoration failure and
+finalization retries. Old decision 85 confirmed-delete recovery intent must not be reused for the
+initial recoverable tap. Busy-owner rejection and export cancellation consent are not waived.
+Preserve historical schema/approval snapshots; any concrete schema/ABI amendment needs review.
+
+
+## Decision 213 — restore one combined UI/UX designer
+
+On 2026-10-17 the owner requested undoing the designer-role split. Configure ui_ux_designer
+as the single accountable owner of interaction flows, native visual foundations, adaptive
+Figma, motion, accessibility/locale design and running-interface design review. Retire the
+separate ux_designer and ui_designer configurations; earlier split records remain historical.
+Use behavior and visual checklists within one feature packet. Lead coordinates feasibility;
+platform engineers retain implementation/tests and fresh reviewer retains independent review.
+Identified Figma owner approval, architecture gates, scope and concurrency limits are unchanged.
+See docs/design/roles.md. This configuration update does not rename already running agents.
+
+## Decision 214 — selected gallery and live Vite prototype
+
+On 2026-10-17 the owner selected mobile artwork cards (A), Monochrome with a distinct New tile, whole-card edge-to-edge drawing transitions and reference-style menu morph. Owner explicitly authorized a production-quality Vite/TypeScript live prototype in apps/web, browser-controlled resize/theme and a platform selector, replacing and deleting gallery-v1–v4 experiments. Preserve original watch references. This authorizes prototype code/manifests/tests, not Rust/native implementation, persistent deletion or a new storage/FFI architecture. Read docs/design/live-web-prototype.md; identified native Figma approval remains required.
+
+## Decision 215 — live web refinement and typed styling/locales
+
+Owner requested separate JSON locale files with stable IDs, Vanilla Extract styling, smaller adaptive minmax tiles, no scrollbar layout shifts, web overflow-only actions (native gestures remain native-platform work), continuity from menu to Rename/Delete, coherent Android shapes and a quieter dashed New tile. Implemented within the authorized live prototype. This supersedes the fixed three-column preference and web context-menu interception in decision 214. It changes no Rust, storage or native framework boundary. Current behavior and verification: docs/design/live-web-prototype.md and apps/web/quality/web-refinements.
+
+## Decision 216 — attached Apple creation control and overlay scrolling
+
+Owner rejected the iPhone floating action button, reserved scrollbar gutter, dark hover outline and Delete collapsing back into its removed trigger. Within the authorized prototype, use an edge-attached Apple bottom toolbar, zero-width custom overlay scrollbar with native scroll behavior, soft pointer-hover shadow and preserved keyboard focus ring. Committed Delete fades the menu in place while artwork crossfades into same-slot Undo; cancellation retains the ordinary anchor-collapse animation. Android keeps its FAB. This supersedes decision 215’s gutter implementation only, without changing native/engine/storage scope. See apps/web/quality/web-feedback for exact-source evidence.
+
+## Decision 217 — nearby Rename and artwork continuity
+
+Owner explicitly approved all three refinements: compact iPhone document-plus/New toolbar; Rename anchored near its action menu; smooth artwork sizing throughout whole-tile expansion/collapse. The prototype keeps menu-corner placement after morph cleanup and clamps to keyboard-visible bounds. Shell and artwork animate independent geometry on a shared clock; the underlying source stays hidden until the handoff. This corrects a mismatch between full-surface artwork and the padded gallery image, while preserving an edge-to-edge drawing view. Native controls, persistence and engine scope are unchanged. See apps/web/quality/web-continuity.
+
+## Decision 218 — reversible Rename and creation appearance
+
+Owner requested outside-press dismissal and a Rename-to-ellipsis return for Cancel and successful Save, plus gradual New drawing background/text transitions in both directions. All Rename exits now share the same current-bounds morph, including Escape; Save commits once immediately and resolves the replacement live trigger. Outside dismissal cancels without click-through. New tile plus/name/dashed border fade while its neutral surface blends to white, reversing on return. Interrupted motion starts from current presentation; reduced motion settles immediately. This is a routine refinement within the authorized prototype, with no new native, storage or engine scope. See apps/web/quality/web-return-motion.
+
+## Decision 219 — centered gallery and platform action paths
+
+Owner requested three moderately larger centered desktop tiles, Delete menu-to-Undo continuity, swipe-only mobile actions, pointer-positioned desktop context menus, Web-only ellipsis and removal of animated menu blur. Desktop now uses three minmax columns capped at420px within1372px, then two/one as width narrows. Native mobile previews reveal explicit Rename/Delete actions on horizontal swipe; no long press or full-swipe deletion. Native desktop previews use pointer context menus, with keyboard fallback. Web retains ellipsis and browser context gestures. Delete commits immediately, then its menu morphs to the live same-slot Undo button; one opaque surface owns the visual handoff. This supersedes decisions214–218 only where these presentation choices differ. No native framework, persistence or drawing-engine scope was added.
+
+## Decision 220 — disposable blank preview and Undo return
+
+Owner requested that opening/closing New drawing without changes never adds gallery tiles, and that Web Undo morphs back to the ellipsis. New now opens one transient preview outside the sample collection; repeated entry, history traversal and reload create no gallery record. This prototype cannot edit yet. This does not change future durable draft policy. Undo restores immediately, then the current Undo/Delete presentation morphs to the restored Web ellipsis with a single visual handoff. Interruption, focus and reduced motion remain safe.
+
+Mobile Delete/Rename changes are proposals only: continue the artwork card left out of its slot after explicit Delete, reveal same-slot Undo, and slide the card back on Undo; Rename closes the swipe rail and reveals a compact form with a short fade rather than stretching the action. Owner review is pending. See apps/web/quality/web-preview-undo.
+
+## Decision 221 — clean drawing paths and mobile action motion
+
+Owner authorized ordinary drawing paths, platform selection without URL changes, and the mobile proposals from decision 220. Drawings use /drawing/<id>; the blank preview uses /drawing/preview-new. Known direct links and reloads reopen their sample/preview, with a gallery Back destination. Unknown initial paths return to the gallery. Platform selection remains in memory and does not rewrite the address/history; an initial platform query remains supported for review links.
+
+Native mobile previews continue the artwork left out of the clipped card slot on explicit Delete, revealing same-slot Undo. Undo slides artwork back, taking over an unfinished outgoing slide. Rename retracts swipe actions and fades a compact keyboard-safe form in/out without a geometry morph. Web retains its menu/ellipsis morphs. Mutations remain immediate and memory-only; reduced motion settles immediately. No native framework, persistence, actual drawing edits or additional screens were introduced.
+
+## Decision 222 — complete mobile Delete, direct swipe and shared catalogs
+
+Owner approved repairing the entire Delete presentation (shifted artwork plus visible action rail), finger-following swipe, and shared locale authoring with generated platform resources and validation. iPad is an explicit exception to prior Web-only ellipsis: it always uses ellipsis. iPhone/Android swipe actions apply only when one tile fits across the gallery; wider grids use ellipsis. The owner's phrase “one row fits” is interpreted as one tile across, stated before implementation. Desktop pointer menus and Web browser gestures remain unchanged.
+
+Delete preserves the complete current visible surface before moving it left as one clipped layer with gentler timing. Undo stays immediately available and reverses/settles current presentation safely. Direct swipe tracks horizontal displacement, preserves native vertical pan, and never deletes on full swipe. Layout changes cancel transient gesture state and update action availability.
+
+The shared authoring catalog owns semantic message IDs, translator context, typed arguments, en/uk translations and explicit platform overrides. Deterministic generators emit web JSON, Apple String Catalogs, Android string/plural XML, Windows resources and gettext sources. Hosts retain native locale selection/formatting; Rust domain semantics and stored user names remain unchanged. Generated resources are preparation for native hosts, not proof of native integration. Validate source completeness, argument/plural compatibility, escaping, ID collisions and stale outputs. Existing native app implementation/FFI/storage gates are unchanged.
+
+## Decision 223 — Undo restoration continuity and generated artifact retention
+
+Owner requested a desktop artwork fade on Undo, consistent rail travel on settled mobile Undo, and review of generated/local visual artifacts in Git. Non-swipe restoration fades artwork/name while retaining the existing overflow-control morph where applicable. Mobile return includes artwork and action rail even after Delete has completed or the gallery has rerendered; rail closure follows the visible return. Restored data/focus remains immediate; reduced motion and interruptions settle safely. No new product behavior is added.
+
+shared/localization/generated is reproducible and Git-ignored. Web dev/build/typecheck/test and root typecheck prepare resources; check bootstraps only when the generated folder is absent, retaining stale-output rejection otherwise. Unchanged generation does not rewrite timestamps. apps/web/quality/web-* screenshots/videos are ignored and kept locally; small test/review reports and source hashes remain versioned. Source artwork and retained design references stay included. Historical binary links require retained/uploaded run artifacts; this change does not create artifact hosting.
+
+## Decision 224 — iPhone creation placement, button feedback and shared colors
+
+Owner approved the recommended top-right + New action for iPhone, replacing its bottom action strip. The product title/action row remains distinct from wrapping prototype controls. Keep a minimum44px target, localizable label/accessibility name, reliable creation origin/return focus, portrait/landscape behavior and no duplicate creation action in the empty state. iPad retains its previously selected controls. Cancel/Rename receive neutral hover and stronger pressed feedback with stable geometry and visible keyboard focus.
+
+Owner requested shared color schemes across packages. A framework-neutral semantic color catalog under shared/theme becomes the single authoring source consumed by the web theme adapter and available to future hosts. Preserve existing light/dark colors; proposed lighter night palettes are not selected. Native controls/materials and platform mapping remain host responsibilities. This data extraction adds no native application, renderer, transport or cross-language runtime. Validate mode/key parity, color syntax and critical foreground/state contrast.
+
+## Decision 225 — softer night appearance and Apple compose material
+
+Owner explicitly approved the softer night scheme and an Apple Notes-like glass treatment. After rejecting retention of the top + New action, the owner selected a bottom-right glass compose button. This supersedes decision224's iPhone placement and palette-preservation restriction. iPhone uses a 56px icon-only circle with the localized accessible name New drawing, safe-area offsets and sufficient final-row clearance. No full-width bottom strip or duplicate top creation action; empty galleries retain the centered creation tile. Existing iPad placement remains.
+
+Use restrained translucent backing, a fine rim, subtle local shadow and opaque foreground for Apple creation/Back controls. Existing card ellipses stay quiet. Dialog actions retain readable fill-only hover/pressed feedback. No animated blur or content blur is added; opaque fallbacks support reduced transparency, increased contrast and forced colors. The browser treatment illustrates the reference and is not native Liquid Glass.
+
+The shared dark palette shifts from near-black to charcoal; display paper softens to #eeeeec across gallery, preview and motion endpoints. White-backed sample images use isolated darken compositing without editing assets or inverting colors. Darker strokes retain their values; very pale highlights can be capped by the display paper. This is prototype presentation, not a document/export transformation or an accepted color-critical editor policy. Light appearance remains unchanged apart from the explicitly requested control refinements.
+
+## Decision 226 — Undo paper continuity and shared-resource follow-up
+
+Owner requested gradual dark deletion-surface to restored-paper transition on Undo. Keep restored semantics/focus immediate and the tile opaque; blend its paper and artwork-area backing on the same300ms timeline as content/Undo-control presentation. Reduced motion restores immediately; interrupted/appearance-changing presentation settles cleanly. Mobile keeps its already-selected slide treatment.
+
+Owner requested documentation of reduced transparency on other platforms. docs/design/accessibility-materials.md records implemented browser scope and separately planned native signals, fallbacks and acceptance. No native implementation is claimed.
+
+Owner relaxed mandatory JSON catalog authoring and requested a TypeScript recommendation. docs/design/shared-resources-plan.md proposes trusted data-only typed modules, validated deterministic platform generation and byte-identical locale migration. Current JSON sources remain; this is a plan, not an implemented format change. Shared theme authoring/web consumption exists; native color resource generation/consumption remains pending. No new universal runtime or domain-model ownership is introduced.
+
+## Decision 227 — typed catalogs and compose transition separation
+
+Owner approved the shared-resource plan following decision226. Migrate theme and locale authoring to trusted data-only TypeScript, preserving semantic IDs, wording, palette and generated resource bytes. Retain runtime validation and deterministic/stale-output checks; include shared source in type/lint/format/size gates. Remove superseded authored JSON; generated resources remain ignored. This is build-time authoring, not a new host runtime or native theme rollout. Other shared behavior remains subject to existing Rust contracts and implementation scope.
+
+Owner reported the iPhone blank canvas visually merging with gallery cards during collapse. Add a fine decorative perimeter during the compose-to-canvas transition; preserve independent artwork geometry, exact return target and clean borderless steady canvas. Reversal samples the current visual edge; resize/reduced motion settle cleanly. Scope to the iPhone compose origin, without changing other card hover or canvas framing.
+
+## Decision 228 — browser feedback and application-owned evidence
+
+Owner requested removal of WebKit touch tap highlights; set transparent tap-highlight color on prototype elements, including native selects whose user-agent styles override inheritance while preserving explicit pressed and keyboard-focus feedback. New drawing uses the same restrained hover shadow as drawing cards on fine pointers that support hover, preserving its dashed border and geometry; touch interaction does not acquire a sticky hover treatment.
+
+Move browser-only quality/web-* evidence into apps/web/quality, preserving historical report/capture bytes. Shared contracts, cross-platform reviews and repository tooling evidence remain at root quality. Update active links/capture destinations and Git ignores; historical paths in immutable reports describe their original runs and are interpreted through the relocation note.
+
+## Decision 229 — layered themes and continuous action elevation
+
+Owner approved separating primitive colors, semantic light/dark roles and platform adapters while preserving current colors. Shared palette data and semantic references resolve through a validated one-hop mapping; web retains existing CSS names and values. Numbered shades describe available values, not a uniform scale or contrast guarantee. Components use semantic roles. Native theme generation and host consumption remain pending; no new native runtime or universal control system is introduced.
+
+Owner requested dimming as soon as Rename/Delete opens, continuous through Rename. One shared backdrop owns that dimming, using the previous dialog scrim color; the native browser dialog backdrop is transparent to prevent double dimming. Dismissal and Delete fade the shared layer, and outside presses dismiss without activating content underneath. Mobile Rename still supports its existing compact fade. No animated blur is added.
+
+Owner requested persistent tile elevation during expansion. Capture the current source shadow before hiding the card or New tile, retain elevation during detached travel, and fade it only near the full-screen destination. Reverse motion samples current presentation and returns to the live source appearance. Steady drawing surfaces remain borderless/shadowless, existing iPhone compose perimeter remains, and reduced motion/interruption cleanup applies.
+
+## Decision 230 — native theme resource generation and opt-in web previews
+
+Owner authorized native theme resource generation from the shared semantic scheme, following the locale generation workflow. Emit Apple named-color assets with appearance variants, Android light/night XML, WinUI Light/Dark dictionaries and GTK light/dark named colors. Preserve every existing resolved channel and alpha value, validate resource names/collisions, and generate deterministically. Generated resources are ignored by Git; the root check bootstraps only when the entire output directory is absent and otherwise rejects stale or unexpected files. Native app inclusion, system accessibility mappings and actual-host rendering remain separate from resource generation. This adds no native application or TypeScript runtime to native hosts.
+
+Owner requested removing or hiding the web platform picker. Normal web entry omits the picker and its label; explicit review links using ?preview=1 or an existing valid ?platform=<id> retain it for design review/testing. Selecting a platform still changes neither URL nor history. Invalid/unrelated query values do not expose the picker. Reset samples and the prototype notice remain unchanged.
+
+## Decision 231 — web-first implementation, macOS primary target, clean normal header
+
+Owner clarified that macOS remains the primary product target, but web will be developed first because it is the platform they know best and can review most effectively. Implementation order is web, then macOS, followed by the native platform backlog with iPhone/iPad retaining the next native priority. This supersedes prior macOS-first sequencing and the P05 dependency on macOS S08 acceptance. It does not replace shared Rust editing/document/persistence semantics, Skia/CanvasKit or platform-native controls. Browser storage, Wasm bindings and execution need their own concrete reviewed contracts where not already approved; a development-order change does not itself implement those systems or launch a new feature slice in this turn.
+
+Owner clarified that the entire review-controls section is unnecessary in normal web use. Omit the platform picker, Reset samples and Browser simulation together from normal entry, without leaving an empty controls row or keyboard stop. Existing explicit preview links retain the section for review/testing; product title and gallery remain. This supersedes decision230's retention of Reset samples and simulation text on normal entry.

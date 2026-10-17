@@ -1,5 +1,6 @@
+import { validateCatalogSources } from "./catalog-source.ts";
 import { spawnSync } from "node:child_process";
-import { readdir, readFile } from "node:fs/promises";
+import { access, readdir, readFile } from "node:fs/promises";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -11,14 +12,23 @@ const formatTargets = [
   ".oxfmtrc.json",
   "pnpm-workspace.yaml",
   "scripts",
+  "shared/theme",
+  "shared/localization",
+  "apps/web/src",
+  "apps/web/tests",
+  "apps/web/package.json",
+  "apps/web/tsconfig.json",
+  "apps/web/vite.config.ts",
+  "apps/web/playwright.config.ts",
+  "apps/web/index.html",
 ];
 
 async function checkSourceSize(directory: string): Promise<void> {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const location = join(directory, entry.name);
-    if (entry.isDirectory()) {
+    if (entry.isDirectory() && entry.name !== "generated") {
       await checkSourceSize(location);
-    } else if (entry.isFile() && entry.name.endsWith(".ts")) {
+    } else if (entry.isFile() && /\.(ts|css|html)$/.test(entry.name)) {
       const source = await readFile(location, "utf8");
       const lines = source.split("\n").length - (source.endsWith("\n") ? 1 : 0);
       if (lines > 200) {
@@ -30,11 +40,59 @@ async function checkSourceSize(directory: string): Promise<void> {
 
 const checks: ReadonlyArray<readonly [string, string, readonly string[]]> = [
   ["typecheck", "typescript/bin/tsc", ["--noEmit"]],
-  ["lint", "oxlint/bin/oxlint", ["--deny-warnings", "scripts"]],
+  ["web-typecheck", "typescript/bin/tsc", ["--noEmit", "-p", "apps/web/tsconfig.json"]],
+  [
+    "lint",
+    "oxlint/bin/oxlint",
+    [
+      "--deny-warnings",
+      "scripts",
+      "shared/theme",
+      "shared/localization",
+      "apps/web/src",
+      "apps/web/tests",
+    ],
+  ],
   ["format", "oxfmt/bin/oxfmt", ["--check", ...formatTargets]],
 ];
 
 try {
+  await validateCatalogSources();
+  for (const catalog of ["localization", "theme"]) {
+    const generator =
+      catalog === "theme" ? "scripts/theme-resources.ts" : "scripts/localization.ts";
+    const generatedExists = await access(join(root, "shared", catalog, "generated")).then(
+      () => true,
+      (error: unknown) => {
+        if (error instanceof Error && "code" in error && error.code === "ENOENT") return false;
+        throw error;
+      },
+    );
+    if (!generatedExists) {
+      const generated = spawnSync(process.execPath, [generator], {
+        cwd: root,
+        stdio: "inherit",
+        shell: false,
+        timeout: 120_000,
+      });
+      if (generated.error || generated.status !== 0) throw Error(`${catalog} bootstrap failed`);
+    }
+  }
+  for (const args of [
+    ["scripts/theme-validation.ts"],
+    ["--test", "scripts/theme-validation.test.ts", "scripts/theme-resources/*.test.ts"],
+    ["scripts/theme-resources.ts", "--check"],
+    ["scripts/localization.ts", "--check"],
+    ["--test", "scripts/localization/*.test.ts"],
+  ]) {
+    const result = spawnSync(process.execPath, args, {
+      cwd: root,
+      stdio: "inherit",
+      shell: false,
+      timeout: 120_000,
+    });
+    if (result.error || result.status !== 0) throw Error(`Catalog check failed: ${args.join(" ")}`);
+  }
   for (const [name, executable, args] of checks) {
     const result = spawnSync(process.execPath, [join(root, "node_modules", executable), ...args], {
       cwd: root,
@@ -48,6 +106,9 @@ try {
     console.log(JSON.stringify({ check: name, status: "passed" }));
   }
   await checkSourceSize(join(root, "scripts"));
+  await checkSourceSize(join(root, "shared"));
+  await checkSourceSize(join(root, "apps/web/src"));
+  await checkSourceSize(join(root, "apps/web/tests"));
   console.log(JSON.stringify({ check: "script-source-size", status: "passed" }));
 } catch (error: unknown) {
   console.error(error instanceof Error ? error.message : "Tooling check failed");

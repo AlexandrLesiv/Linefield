@@ -1,0 +1,47 @@
+
+> linefield@0.0.0 check /Users/oleksandr/projects/linefield
+> node scripts/check.ts
+
+{"check":"shared-theme","status":"passed"}
+✔ THEME-01 shared catalog has exact semantic keys and readable state pairs (0.446334ms)
+✔ THEME-02 malformed modes, unknown/missing tokens and invalid hex are rejected (0.225417ms)
+✔ THEME-03 unreadable normal, pressed and destructive text is rejected (0.665125ms)
+✔ THEME-04 light palette is unchanged and authorized dark palette uses soft graphite (0.39225ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 70.2095
+{"check":"localization","status":"passed","messages":26}
+✔ LOC-01 rejects schema, missing/extra translation and placeholder mismatch (1.953459ms)
+✔ LOC-02 requires complete bounded plurals and integer selector (1.152375ms)
+✔ LOC-03 overrides are complete, validated and platform-specific (0.286708ms)
+✔ LOC-04 native escaping preserves Unicode, literals and reordered arguments (0.264709ms)
+✔ LOC-06 plain percent stays literal and invalid XML scalars are rejected (1.296167ms)
+✔ LOC-07 plural expansion cannot collide with a plain Windows resource (0.448833ms)
+✔ LOC-10 carriage returns survive XML newline normalization (0.653084ms)
+✔ LOC-05 deterministic generation and stale/missing/unexpected output rejection (22.177875ms)
+✔ LOC-11 generation rejects symlink files, subdirectories and root without touching target (2.433625ms)
+✔ LOC-12 unchanged generation preserves files so preparation does not reload the preview (1.589583ms)
+✔ LOC-08 browser consumes generated plural contracts with locale-specific categories (11.977916ms)
+✔ LOC-09 integer domain, argument shape, Unicode and literal substitutions (0.272792ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 103.254333
+{"check":"typecheck","status":"passed"}
+{"check":"web-typecheck","status":"passed"}
+{"check":"lint","status":"passed"}
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 86ms on 95 files using 12 threads.
+{"check":"format","status":"passed"}
+{"check":"script-source-size","status":"passed"}

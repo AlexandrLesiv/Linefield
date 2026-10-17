@@ -84,7 +84,7 @@ while a write completes, close during pending work, disk/lock failure and indepe
 Test abrupt termination separately from orderly close; state which revision was durable and
 which pending edits were lost. Native status/focus/exit flows need actual E2E after Figma approval.
 
-UX owns lifecycle wording/flows; UI owns status presentation; Rust owns revision/command policy;
+ui_ux_designer owns lifecycle wording, flows and status presentation; Rust owns revision/command policy;
 services delegate database mechanisms to SQLite; host engineers own dialogs/access. Follow
 [format review](successor/formats.md). No runtime tests or app behavior exist yet.
 

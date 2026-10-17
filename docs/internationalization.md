@@ -1,8 +1,6 @@
 # Internationalization from day one
 
-Status: owner requested architectural/design/test preparation on 2026-10-16. Documentation
-only: no resource catalogs, translation libraries, localized builds or language support have
-been implemented. Concrete contracts remain subject to S02 review.
+Status: native localization planning began 2026-10-16. Decision 222 authorizes shared en/uk catalog authoring and deterministic platform resource generation/validation, consumed by the live web prototype. Native resource generation is not native runtime integration or linguistic approval. Concrete native runtime contracts remain subject to S02 review.
 
 Internationalization (i18n) makes the app work across languages, regions and writing systems.
 Localization (l10n) supplies and verifies particular translations. Preparing i18n now does not
@@ -25,8 +23,7 @@ Shared action/error IDs are never translated or derived from display labels. Typ
 preserve numeric values and error arguments, not formatted strings. A shared semantic message
 inventory/glossary maps to each host's native resources. Platform wording may differ naturally;
 do not duplicate editing policy or force every platform into one runtime localization library.
-Review inventory/resource ownership and any generation pipeline before implementation; no
-universal catalog compiler or localization service is introduced by this plan.
+Decision 222 approves a constrained shared catalog and build-time resource generators. Shared authoring avoids translation drift while each host retains its native runtime. See shared/localization/README.md for the exact supported message subset, resource mappings and validation commands; no external localization service is introduced.
 
 ```mermaid
 flowchart LR
@@ -159,7 +156,7 @@ text and numeric-locale examples. Demonstrate actual adaptive resizing with nati
 mappings, preserving the identical drawing in LTR/RTL frames. Pseudotext is test material, not
 approved translations. Platform-specific focus/AX/IME still requires runtime evidence.
 
-Plan shared semantic keys/glossary early, implement native resources with the first macOS UI,
+Plan shared semantic keys/glossary early, implement web resources with the first web UI and native resources with each native host,
 and validate pseudo-locales before translating many languages. Each later platform maps the
 same meanings to native resources and repeats the locale matrix. TV/watch compact and remote
 layouts, and XR surfaces, need their own readability/focus tests. Workbench/report presentation
@@ -168,14 +165,13 @@ uses the same separation between localized labels and stable evidence identifier
 Track locale readiness independently for every platform: catalog completeness, translation
 review, layout/AX verification, execution evidence and shipped status. A translated catalog or
 Figma mockup is not proof of a supported locale. Both en and uk are required for launch on each
-host; English remains source/fallback. No catalogs or translations are implemented. Concrete
-resource mappings, glossary and translation-review evidence remain S00B/S02 deliverables.
+host; English remains source/fallback. Shared en/uk catalog resources are implemented for the prototype and generated native resources. Native integration, glossary and translation-review evidence remain S00B/S02 deliverables.
 
 ## Two-language launch contract (owner update, 2026-10-16)
 
 Both en and uk apply to macOS, iOS/iPadOS, visionOS, Windows, Linux, Android, ChromeOS,
 web, watchOS, tvOS, Wear OS, Android TV/Google TV and Android XR as each host is implemented.
-Viewer capability does not exempt localization. The macOS-first delivery order is unchanged.
+Viewer capability does not exempt localization. Development starts on web, then macOS, which remains the primary product target (decision 231).
 Use native supported-language negotiation, including OS per-app preferences. Web follows the
 browser's preferred languages (it cannot reliably read a separate OS language). No language
 selector or persisted in-app language override. Resolve at launch; native configuration-triggered
@@ -188,8 +184,8 @@ fallback rather than forcing one handmade locale parser. Missing Ukrainian trans
 readiness even though runtime English fallback prevents a broken screen.
 OS-owned dialogs may use OS-controlled wording; app-owned controls/AX require both languages.
 
-No additional permanent i18n agent is recommended now. UX owns the terminology/context glossary
-and coordinates proficient Ukrainian review; UI owns both language variants in adaptive Figma.
+No additional permanent i18n agent is recommended now. ui_ux_designer owns the terminology/context glossary, coordinates proficient Ukrainian review
+and provides both language variants in adaptive Figma.
 Platform engineers own catalogs, selection, plurals, numeric parsing and native E2E. Rust owns
 locale-independent typed messages and domain semantics. Build reliability owns resource gates
 and per-platform evidence; independent reviewer checks gaps. The lead names a locale reviewer
@@ -206,3 +202,9 @@ Source: [language codes](https://www.loc.gov/standards/iso639-2/php/code_list).
 Owner decision 159 makes localized default-name creation a narrow Rust responsibility. The host resolves the effective app language at launch (en/uk with English fallback) and passes it through a reviewed typed bootstrap contract. Rust owns complete default-name messages and formatting; no native formatting effect/reply. UX coordinates Ukrainian wording review. Use the durable allocation: first English name “Untitled”, then “Untitled 2”; numbers are never reused and gaps remain valid. Validate before publication and store the resulting name once. Later OS-language changes do not rename existing drawings.
 
 All other UI labels, accessibility text, errors and region-aware field parsing remain native. No new localization library is selected. Test both languages, unsupported-language fallback, ordinal boundaries, failed creation, concurrent allocation and reopening after an OS-language change. Share naming fixtures across hosts; localized names are user-visible content, not locale-dependent IDs or schema encodings. Exact translation and runtime language DTO remain pre-code review items.
+
+## Shared resource authoring (decision 222)
+
+Author translations and message metadata in shared/localization, never in generated platform outputs. Preserve stable semantic IDs and allow explicit, validated host wording overrides. Generation and validation reject missing translations, incompatible arguments/plurals, invalid resource names and stale output. Native adapters consume their normal resources; no cross-platform runtime localization library or Rust UI-string transport is added. Generated artifacts are not evidence of Apple/Android/Windows/Linux UI behavior. Windows plural-category resources need a reviewed host selector adapter; native build/locale negotiation and linguistic review remain separate acceptance. Existing DB4-B default-name creation still belongs in Rust through its reviewed contract; this UI catalog migration does not change stored names or implement that contract.
+
+Decision227: trusted data-only TypeScript is the authoring format for the shared locale and theme catalogs. Build-time generators retain their existing native/web output formats, runtime validation and deterministic output checks. Native host integration remains separate; see [shared resource plan](design/shared-resources-plan.md).

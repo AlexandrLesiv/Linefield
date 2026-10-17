@@ -1,8 +1,8 @@
 # Objectives and first preview
 
-Deliver an editable vector sketching app: responsive, offline-first and cross-platform, with actual native controls and shared Rust behavior. Plan portability from day one, implement macOS features first. Responsiveness claims require measurements.
+Deliver an editable vector sketching app: responsive, offline-first and cross-platform, with actual native controls and shared Rust behavior. macOS remains the primary product target; implement web first, then macOS, with iPhone/iPad the next native priority. The owner’s greater web experience motivates the development order, not a replacement of the native product direction. Responsiveness claims require measurements.
 
-Confirmed scope: local macOS developer preview; pen, pan/zoom, single-stroke selection/move/uniform scaling/deletion, undo/redo, an app-managed gallery/library, autosave and native file exchange/recovery. New document format, no legacy compatibility. Skia renderer, Swift/AppKit host, typed Rust FFI with generated declarations. Working name Linefield; root /Users/oleksandr/projects/linefield.
+Selected macOS preview scope (delivered after the first web implementation): local developer preview; pen, pan/zoom, single-stroke selection/move/uniform scaling/deletion, undo/redo, an app-managed gallery/library, autosave and native file exchange/recovery. New document format, no legacy compatibility. Skia renderer, Swift/AppKit host, typed Rust FFI with generated declarations. Working name Linefield; root /Users/oleksandr/projects/linefield.
 
 Selected preview window model: one document in one window, with independent session ownership; tabs and multiwindow deferred.
 
@@ -12,17 +12,17 @@ Selected macOS compatibility (decision 186): Apple Silicon only; latest stable m
 
 Selected macOS starting topology: main-thread editor/Skia ownership with bounded background storage/logging and an early performance checkpoint.
 
-Selected native document container: SQLite; no legacy document compatibility. Autosave to the document is selected, with background revision-aware persistence; new untitled drawings use app-managed SQLite drafts, retained as library documents without requiring names or destinations. Gallery is the normal entry point; S02L precedes the canvas. Permanent library deletion requires explicit confirmation; no trash/restore workflow. Naming, deletion failure handling and file-exchange details require policy/design review.
+Selected native document container: SQLite; no legacy document compatibility. Autosave to the document is selected, with background revision-aware persistence; new untitled drawings use app-managed SQLite drafts, retained as library documents without requiring names or destinations. Gallery is the normal entry point; S02L precedes the canvas. Gallery deletion now uses an immediate recoverable removal with an in-place Undo until successful navigation away (decision 212); concrete durable recovery/finalization contracts must be reviewed before implementation. Naming, deletion failure handling and file-exchange details require policy/design review.
 
 Proposed details still under review: concrete scheduling/queue budgets, ABI, SQLite schema/save/recovery lifecycle and concrete native/PNG export behavior. Native snapshot + PNG export is selected for the preview (decision 18); SVG/PDF are deferred. Review docs/decisions.md before implementing.
 
-Defer rotation, multi-selection, layers, eraser, imported images, text, document clipboard, accounts/sync, agent transport, plugins, workbench, other platform applications and distribution. A clean architecture is not permission to add those features.
+Defer rotation, multi-selection, layers, eraser, imported images, text, document clipboard, accounts/sync, agent transport, plugins, workbench, later platform applications and distribution. Web now leads implementation through P05; concrete Rust/Wasm, storage and execution contracts still require review. A clean architecture is not permission to add those features.
 
 Preview success means an actual running app, complete required acceptance matrix, native E2E, designer assessment, independent review, reproducible build instructions and explicit limitations. Software timing is not a physical pen-to-screen measurement.
 
 Planned platform hosts already have documentation placeholders under apps/: macOS, iPhone/iPad, Android, Windows, Linux, web, visionOS, tvOS, watchOS and ChromeOS integration. See [platform plan](platforms.md). Deferring platform application features does not defer their architectural requirements.
 
-Additional planned hosts: Android TV/Google TV (view-only) and Android XR (initially reviewed 2D scope). Their placeholders do not change the macOS-first implementation sequence.
+Additional planned hosts: Android TV/Google TV (view-only) and Android XR (initially reviewed 2D scope). Their placeholders do not change the web → macOS → later native platforms development sequence.
 
 Wear OS is also a planned host under apps/wearos (P12); view-only capability is owner-selected (decision 152), with watch-specific toolkit and acquisition policy reviewed before implementation.
 
@@ -53,7 +53,7 @@ Document geometry and PNG export scaling remain independent of display density.
 
 ## Owner's product direction (decision 148)
 
-Concepts-inspired, open-source, cross-platform infinite-canvas vector sketching, MacBook first.
+Concepts-inspired, open-source, cross-platform infinite-canvas vector sketching, with MacBook as the primary product target. Development now starts on web (decision 231), then macOS.
 Natural freehand input and later editable strokes are complementary: vector geometry does not
 require CAD-style construction. Responsiveness means predictable low-latency interaction under
 real workloads, not an unmeasured millisecond guarantee. Correction initially means the selected

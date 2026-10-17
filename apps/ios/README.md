@@ -4,7 +4,7 @@ Status: documentation placeholder; no app implementation.
 
 Technology direction: Swift + UIKit; SwiftUI where appropriate.
 
-Scope: iPhone and iPad editor with touch/Pencil-specific design; second platform priority.
+Scope: iPhone and iPad editor with touch/Pencil-specific design; next native priority after macOS; web leads the overall development sequence.
 
 Owner: ios_ui. Task: P01.
 

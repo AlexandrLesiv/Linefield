@@ -1,0 +1,156 @@
+import type { Catalog } from "./types.ts";
+export const catalog = {
+  version: 1,
+  sourceLanguage: "en",
+  messages: {
+    "app.name": {
+      kind: "plain",
+      context: "Product name; keep Linefield unchanged.",
+      arguments: {},
+    },
+    "preview.simulation": {
+      kind: "plain",
+      context:
+        "Review toolbar badge explaining that selected native platforms are browser simulations.",
+      arguments: {},
+    },
+    "preview.platform": {
+      kind: "plain",
+      context: "Label for browser prototype platform selector; not a production app setting.",
+      arguments: {},
+    },
+    "preview.reset": {
+      kind: "plain",
+      context: "Button restoring disposable example drawings in the browser prototype.",
+      arguments: {},
+    },
+    "preview.disclaimer": {
+      kind: "plain",
+      context: "Accessible description of the memory-only prototype; no persistent saving.",
+      arguments: {},
+    },
+    "preview.resetAnnouncement": {
+      kind: "plain",
+      context: "Screen reader announcement after example drawings are restored.",
+      arguments: {},
+    },
+    "drawing.create": {
+      kind: "plain",
+      context: "Accessible name and full label for creating a new blank drawing preview.",
+      arguments: {},
+    },
+    "drawing.untitled": {
+      kind: "plain",
+      context: "Default display title when a drawing has no user-provided name.",
+      arguments: {},
+    },
+    "gallery.label": {
+      kind: "plain",
+      context: "Accessible name for the collection of drawing cards.",
+      arguments: {},
+    },
+    "drawing.open": {
+      kind: "plain",
+      context:
+        "Accessible button name. name is a literal user-provided drawing title; preserve it verbatim.",
+      arguments: {
+        name: "string",
+      },
+    },
+    "drawing.actions": {
+      kind: "plain",
+      context:
+        "Accessible name for drawing action controls. name is a literal user-provided title.",
+      arguments: {
+        name: "string",
+      },
+    },
+    "drawing.deleted": {
+      kind: "plain",
+      context:
+        "In-place recoverable deletion status. name is a literal user-provided title; retain quotation punctuation.",
+      arguments: {
+        name: "string",
+      },
+    },
+    "action.undo": {
+      kind: "plain",
+      context: "Restores a recoverably deleted drawing. Distinct from cancelling a rename form.",
+      arguments: {},
+    },
+    "gallery.emptyViewer": {
+      kind: "plain",
+      context: "Empty state for read-only wearable viewer with no offline downloads.",
+      arguments: {},
+    },
+    "navigation.back": {
+      kind: "plain",
+      context: "Returns from drawing preview to gallery; leading arrow indicates navigation.",
+      arguments: {},
+    },
+    "rename.title": {
+      kind: "plain",
+      context: "Title of the form editing a drawing title.",
+      arguments: {},
+    },
+    "rename.label": {
+      kind: "plain",
+      context: "Accessible label for drawing-title text input.",
+      arguments: {},
+    },
+    "action.cancel": {
+      kind: "plain",
+      context:
+        "Dismisses rename form without applying changes; distinct from restoring deleted drawing.",
+      arguments: {},
+    },
+    "action.rename": {
+      kind: "plain",
+      context: "Applies edited drawing title; also labels action opening the rename form.",
+      arguments: {},
+    },
+    "action.delete": {
+      kind: "plain",
+      context:
+        "Immediately removes drawing from active gallery with in-place Undo; recoverable action.",
+      arguments: {},
+    },
+    "rename.required": {
+      kind: "plain",
+      context: "Validation error for blank or whitespace-only drawing title.",
+      arguments: {},
+    },
+    "drawing.restored": {
+      kind: "plain",
+      context: "Screen reader announcement after successful deletion Undo.",
+      arguments: {},
+    },
+    "drawing.removedAnnouncement": {
+      kind: "plain",
+      context: "Screen reader announcement after deletion; explains same-slot Undo availability.",
+      arguments: {},
+    },
+    "gallery.toolbar": {
+      kind: "plain",
+      context: "Accessible name for compact drawing-creation toolbar.",
+      arguments: {},
+    },
+    "gallery.scroll": {
+      kind: "plain",
+      context: "Accessible name for gallery overlay scrollbar.",
+      arguments: {},
+    },
+    "drawing.createShort": {
+      kind: "plain",
+      context: "Compact iPhone toolbar creation label, beside a plus/document icon.",
+      arguments: {},
+    },
+  },
+} satisfies Catalog;
+
+export type MessageId = keyof typeof catalog.messages;
+export type Translation = {
+  [Id in MessageId]: (typeof catalog.messages)[Id]["kind"] extends "plural"
+    ? Record<string, string>
+    : string;
+};

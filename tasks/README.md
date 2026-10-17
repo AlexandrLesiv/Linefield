@@ -1,18 +1,22 @@
+Current 2026-10-17: decision 214 and [live prototype](../docs/design/live-web-prototype.md) supersede the old gallery experiments below. apps/web is the active review surface. Native/Figma implementation gates remain.
+
+Current gallery work: apps/web live prototype, decision 214; see ../docs/design/live-web-prototype.md. Android P02 targets Compose Material 3. Native application implementation remains pending.
+
 # Task board
 
-Planning scaffold with root Node/TypeScript/pnpm tooling installed. S01 is partial; app implementation remains unauthorized.
+Root Node/TypeScript/pnpm tooling and the authorized web gallery prototype are implemented. Development order is web → macOS → iPhone/iPad, with macOS still the primary product target (decision 231). S01 is partial; full editor/native implementation remains gated by concrete contracts and approved slice designs.
 
 | Task | State |
 | --- | --- |
-| [S00A Design foundations](S00A.md) | Planned; precedes detailed screen approval |
+| [S00A Design foundations](S00A.md) | Six complete gallery variants delivered; owner selection/adaptive Figma pending |
 | [S00B Internationalization](S00B.md) | English + Ukrainian launch selected; OS-selected language; resource contracts planned |
-| [S00C Competitor research](S00C.md) | Planned; sourced handoff to owner and designer |
+| [S00C Competitor research](S00C.md) | Bounded gallery study delivered with official sources; full feature studies follow scope |
 | [S00D Navigation and motion](S00D.md) | Planned; native routes/web URLs and interactive motion handoff |
 | [S00 Review and design](S00.md) | Awaiting remaining decisions/design approval |
 | [S01 Independent foundation](S01.md) | Root tooling installed; native/app gates pending |
 | [S02 Concrete contracts](S02.md) | Regional DBML v3 approved (209); revised exact ABI, numerical and native feasibility evidence pending |
 | [S02M Multi-client coordination](S02M.md) | Direction selected; exact contracts/Figma/probes pending |
-| [S02L Gallery and library first](S02L.md) | Scope/sequence approved; Figma/contracts pending; before canvas |
+| [S02L Gallery and library first](S02L.md) | 108 base PNGs + 54 state boards + 30 extras and six Web prototypes delivered; Figma/implementation pending |
 | [S03 Pure editor](S03.md) | Planned; not started |
 | [S04 First native stroke](S04.md) | Planned; not started |
 | [S05 Navigation and editing](S05.md) | Planned; not started |
@@ -26,13 +30,13 @@ See ../docs/successor/delivery.md for detailed acceptance and dependencies. Old 
 
 ## Platform backlog
 
-Portability planning is required now; feature implementation follows macOS. iPhone/iPad is second priority. These placeholders do not certify platform support.
+Portability planning is required now. P05 leads implementation; the macOS milestones follow, then P01 as the next native priority. Other platform tasks retain their macOS acceptance dependencies. These placeholders do not certify platform support.
 
 - [P01 ios](P01.md): planned; no implementation.
 - [P02 android](P02.md): planned; no implementation.
 - [P03 windows](P03.md): planned; no implementation.
 - [P04 linux](P04.md): planned; no implementation.
-- [P05 web](P05.md): planned; no implementation.
+- [P05 web](P05.md): first implementation platform; live gallery prototype implemented, full Rust/Wasm editor and persistence planned/gated.
 - [P06 visionos](P06.md): planned; no implementation.
 - [P07 tvos](P07.md): planned; no implementation.
 - [P08 watchos](P08.md): planned; no implementation.

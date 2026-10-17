@@ -453,7 +453,9 @@ No automatic winner, merge, new IDs or ambiguous open. Define identity-safe cand
 scan/publication ordering and idempotent retry in S02. Equal names alone are not conflicts.
 Typed outcomes must distinguish conflict from successfully recovered or ordinary missing content.
 
-Decision 85 refines CT-05: resume permanent deletion after restart only from a valid durable
+Current amendment (decision 212): initial gallery Delete creates recoverable staging with in-screen Undo. CT-05 must distinguish staging, restore and eventual finalization; exact typed outcomes and durable schema changes require review. Never create the historical irreversible intent at the initial tap. Preserve failure/crash recovery, ownership fencing and export consent.
+
+Historical decision 85 (not authority for the new initial tap) refines CT-05: resume permanent deletion after restart only from a valid durable
 record of the user's confirmed operation and exact target, persisted before destructive work.
 No repeated confirmation solely for restart, no inference from missing files/corrupt catalog.
 S02 reviews concrete representation, cancellation/completion boundaries, writer fencing and

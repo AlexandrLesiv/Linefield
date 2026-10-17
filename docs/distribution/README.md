@@ -1,5 +1,9 @@
 # Distribution readiness review — S00G proposal v1
 
+Current sequence note (decision 231): development starts on web, then macOS; macOS remains
+the primary product target. The dated review below retains its original research scope.
+No distribution authorization follows from the implementation-order change.
+
 Checked 2026-10-16 from official primary sources with Apple, Android and Windows specialist research.
 Lead covered Linux/web/alternative channels. Documentation only: no app, package, account action,
 submission, compliance certification or distribution approval. Preview remains local/macOS-first.
@@ -38,8 +42,8 @@ already-approved sandbox/privacy/quality constraints apply to the preview indepe
 | Browser/ChromeOS web | HTTPS web/PWA; optional store wrapper separately reviewed | Lead assigns web engineer; build_reliability | Origin/storage/offline/update proof; no universal browser-store certification |
 
 Native engineers implement technical requirements; Rust/rendering specialists own shared/native
-libraries; build reliability owns artifact and provenance evidence. UX owns necessary disclosures,
-permission/recovery/navigation flows; UI owns their approved Figma/adaptive presentation. Lead owns
+libraries; build reliability owns artifact and provenance evidence. ui_ux_designer owns necessary disclosures, permission/recovery/navigation flows and their
+approved Figma/adaptive presentation. Lead owns
 applicability and current source versions; independent reviewer checks claims and gaps. Owner chooses
 license, channels, territories, legal/account/commercial matters and authorizes distribution. No new
 permanent store agent is recommended or configured. Legal uncertainties are not resolved by an agent

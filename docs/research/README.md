@@ -9,7 +9,7 @@ Study how other products solve an identified user problem, then recommend choice
 Concepts.app, ProDrafts and Apple Freeform for macOS are the owner-selected initial references. See the [competitor catalog](competitors.md)
 for sourced infinite-canvas notes and adjacent spatial-note candidates; choose others per workflow.
 Do not turn a competitor checklist into Linefield scope or assume all their platforms are equal.
-Research informs the owner, ux_designer and ui_designer. It does not approve features, architecture or UI.
+Research informs the owner and ui_ux_designer. It does not approve features, architecture or UI.
 
 The lead assigns a bounded brief, starting document revision, target platforms, source/evidence
 requirements, owned report path and stop condition. A focused initial report belongs in S00C;

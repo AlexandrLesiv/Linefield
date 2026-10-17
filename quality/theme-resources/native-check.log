@@ -1,0 +1,9 @@
+
+> linefield@0.0.0 theme:native-check /Users/oleksandr/projects/linefield
+> node scripts/theme-resources/native-check.ts
+
+{"check":"theme-xml","status":"passed","detail":"3 Android XML/WinUI XAML files parsed","scope":"resource syntax/compilation; not application linking or runtime"}
+{"check":"theme-android","status":"passed","detail":"Android Asset Packaging Tool (aapt) 2.20-13193326","scope":"resource syntax/compilation; not application linking or runtime"}
+{"check":"theme-apple","status":"not-run","detail":"asset compilation is not included in this portable check","scope":"resource syntax/compilation; not application linking or runtime"}
+{"check":"theme-winui","status":"not-run","detail":"WinUI resource compiler/application consumer not configured","scope":"resource syntax/compilation; not application linking or runtime"}
+{"check":"theme-gtk","status":"not-run","detail":"GTK CSS runtime consumer not configured","scope":"resource syntax/compilation; not application linking or runtime"}

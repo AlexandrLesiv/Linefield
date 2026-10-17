@@ -7,7 +7,7 @@ Android typed boundary. View-only is owner-selected (decision 152); network serv
 and phone-companion requirements remain separate decisions. Editing is out of scope.
 
 Review a watch-specific UI toolkit separately. Google recommends Compose for Wear OS; adopting
-it would be an explicit exception to the Android phone/tablet Views direction, not an incidental
+it would be a separate Wear-specific toolkit selection beyond phone/tablet Compose Material 3, not an incidental
 migration. Select supported toolkit/device versions before implementation. See [P12](../../tasks/P12.md)
 and [platform plan](../../docs/platforms.md).
 

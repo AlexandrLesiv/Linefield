@@ -1,0 +1,236 @@
+{
+  "light": {
+    "background": {
+      "role": "surface.canvas",
+      "before": "#e8e8e8",
+      "after": "#e8e8e8"
+    },
+    "surface": {
+      "role": "surface.panel",
+      "before": "#ffffff",
+      "after": "#ffffff"
+    },
+    "text": {
+      "role": "text.primary",
+      "before": "#171717",
+      "after": "#171717"
+    },
+    "line": {
+      "role": "border.default",
+      "before": "#aaaaaa",
+      "after": "#aaaaaa"
+    },
+    "muted": {
+      "role": "text.secondary",
+      "before": "#555555",
+      "after": "#555555"
+    },
+    "new": {
+      "role": "surface.creation",
+      "before": "#ededed",
+      "after": "#ededed"
+    },
+    "buttonHover": {
+      "role": "action.secondary.hover",
+      "before": "#ededed",
+      "after": "#ededed"
+    },
+    "buttonPressed": {
+      "role": "action.secondary.pressed",
+      "before": "#dedede",
+      "after": "#dedede"
+    },
+    "primaryHover": {
+      "role": "action.primary.hover",
+      "before": "#353535",
+      "after": "#353535"
+    },
+    "primaryPressed": {
+      "role": "action.primary.pressed",
+      "before": "#4a4a4a",
+      "after": "#4a4a4a"
+    },
+    "paper": {
+      "role": "artwork.paper",
+      "before": "#ffffff",
+      "after": "#ffffff"
+    },
+    "paperText": {
+      "role": "artwork.text",
+      "before": "#171717",
+      "after": "#171717"
+    },
+    "paperMuted": {
+      "role": "artwork.secondary",
+      "before": "#555555",
+      "after": "#555555"
+    },
+    "paperHover": {
+      "role": "artwork.control.hover",
+      "before": "#dedede",
+      "after": "#dedede"
+    },
+    "paperLine": {
+      "role": "artwork.border",
+      "before": "#dddddd",
+      "after": "#dddddd"
+    },
+    "paperTitle": {
+      "role": "artwork.title.overlay",
+      "before": "#ffffffdb",
+      "after": "#ffffffdb"
+    },
+    "paperControl": {
+      "role": "artwork.control.overlay",
+      "before": "#ffffffe0",
+      "after": "#ffffffe0"
+    },
+    "destructiveSurface": {
+      "role": "action.destructive.surface",
+      "before": "#b42332",
+      "after": "#b42332"
+    },
+    "onDestructive": {
+      "role": "action.destructive.onSurface",
+      "before": "#ffffff",
+      "after": "#ffffff"
+    },
+    "focus": {
+      "role": "focus.ring",
+      "before": "#005fcc",
+      "after": "#005fcc"
+    },
+    "destructive": {
+      "role": "action.destructive.foreground",
+      "before": "#b42323",
+      "after": "#b42323"
+    },
+    "error": {
+      "role": "status.error.foreground",
+      "before": "#ba2736",
+      "after": "#ba2736"
+    },
+    "scrim": {
+      "role": "overlay.scrim",
+      "before": "#00000055",
+      "after": "#00000055"
+    }
+  },
+  "dark": {
+    "background": {
+      "role": "surface.canvas",
+      "before": "#2d2d2f",
+      "after": "#2d2d2f"
+    },
+    "surface": {
+      "role": "surface.panel",
+      "before": "#39393c",
+      "after": "#39393c"
+    },
+    "text": {
+      "role": "text.primary",
+      "before": "#eeeeef",
+      "after": "#eeeeef"
+    },
+    "line": {
+      "role": "border.default",
+      "before": "#747478",
+      "after": "#747478"
+    },
+    "muted": {
+      "role": "text.secondary",
+      "before": "#c2c2c5",
+      "after": "#c2c2c5"
+    },
+    "new": {
+      "role": "surface.creation",
+      "before": "#343437",
+      "after": "#343437"
+    },
+    "buttonHover": {
+      "role": "action.secondary.hover",
+      "before": "#49494d",
+      "after": "#49494d"
+    },
+    "buttonPressed": {
+      "role": "action.secondary.pressed",
+      "before": "#57575c",
+      "after": "#57575c"
+    },
+    "primaryHover": {
+      "role": "action.primary.hover",
+      "before": "#dedede",
+      "after": "#dedede"
+    },
+    "primaryPressed": {
+      "role": "action.primary.pressed",
+      "before": "#c6c6c6",
+      "after": "#c6c6c6"
+    },
+    "paper": {
+      "role": "artwork.paper",
+      "before": "#eeeeec",
+      "after": "#eeeeec"
+    },
+    "paperText": {
+      "role": "artwork.text",
+      "before": "#171717",
+      "after": "#171717"
+    },
+    "paperMuted": {
+      "role": "artwork.secondary",
+      "before": "#555555",
+      "after": "#555555"
+    },
+    "paperHover": {
+      "role": "artwork.control.hover",
+      "before": "#dedede",
+      "after": "#dedede"
+    },
+    "paperLine": {
+      "role": "artwork.border",
+      "before": "#dddddd",
+      "after": "#dddddd"
+    },
+    "paperTitle": {
+      "role": "artwork.title.overlay",
+      "before": "#eeeeecdb",
+      "after": "#eeeeecdb"
+    },
+    "paperControl": {
+      "role": "artwork.control.overlay",
+      "before": "#eeeeece0",
+      "after": "#eeeeece0"
+    },
+    "destructiveSurface": {
+      "role": "action.destructive.surface",
+      "before": "#b42332",
+      "after": "#b42332"
+    },
+    "onDestructive": {
+      "role": "action.destructive.onSurface",
+      "before": "#ffffff",
+      "after": "#ffffff"
+    },
+    "focus": {
+      "role": "focus.ring",
+      "before": "#005fcc",
+      "after": "#005fcc"
+    },
+    "destructive": {
+      "role": "action.destructive.foreground",
+      "before": "#ff8989",
+      "after": "#ff8989"
+    },
+    "error": {
+      "role": "status.error.foreground",
+      "before": "#ff8989",
+      "after": "#ff8989"
+    },
+    "scrim": {
+      "role": "overlay.scrim",
+      "before": "#00000055",
+      "after": "#00000055"
+    }
+  }
+}

@@ -86,8 +86,7 @@ cloud or thread designs. Existing owner-approved policy remains; material mechan
 | macos_ui / ios_ui / android_ui / windows_ui | Platform API/permissions/capability feasibility, native negative tests and actual family acceptance; no unapproved security exceptions |
 | rust_engine + rendering_performance | Shared viewer/command enforcement; native-library compatibility and measured resource behavior; dependency help, no store policy inside document model |
 | build_reliability | Reproducible packages, identity/signature/license inventory, clean install/update/uninstall and exact-artifact reports; source/build restrictions per channel |
-| ux_designer | Applicable disclosure/consent/refusal/recovery/navigation behavior and input coverage in feature proposal |
-| ui_designer | Native adaptive visual/AX/motion presentation and identified Figma handoff for those approved flows |
+| ui_ux_designer | Disclosure/consent/refusal/recovery/navigation and input coverage, together with native adaptive visual/AX/motion presentation and identified Figma handoff |
 | Independent reviewer | Check sensitive design and artifact/evidence/declarations; distinguish source research from verified compliance |
 | Owner | License, channels, identity/accounts, territories/commercial decisions, material architecture/design approval and publication permission |
 
