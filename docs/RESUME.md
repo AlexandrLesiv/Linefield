@@ -10,7 +10,7 @@ main merge or release. Read AGENTS.md, objectives, latest decisions and the assi
 Current executable task: [P05-S01 local styles](../tasks/P05-S01.md), branch
 codex/p05-s01-local-styles, stacked on PR #2 at b0cb531. Verified locally: 106 root tests and 121 browser tests pass; 32 visual pairs are unchanged.
 Component styles are local; globals cover document/reset integration only. Evidence and reviews:
-quality/local-styles-v1. Owner PR review/integration remains pending.
+quality/local-styles-v1. [PR #3](https://github.com/AlexandrLesiv/Linefield/pull/3) awaits owner review/integration.
 
 Parent [DX-G02 shared documentation](../tasks/DX-G02.md), branch
 codex/dx-g02-shared-documentation; [PR #2](https://github.com/AlexandrLesiv/Linefield/pull/2) is
