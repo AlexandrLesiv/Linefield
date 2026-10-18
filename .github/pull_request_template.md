@@ -1,6 +1,7 @@
 ## Outcome
 
-Task ID and brief:
+Task-ID: <stable task ID>
+Task-Package: <link to tasks/ID/task.json, or legacy brief during migration>
 Concrete problem and resulting behavior:
 
 ## Scope and authority
@@ -15,6 +16,7 @@ Architecture/UI SVGs, if applicable:
 
 Tested commit/tree or exact source hashes:
 Checks, results and retained evidence:
+Acceptance/test IDs and linked result records (planned tests labelled separately):
 Independent review and finding disposition:
 Designer review, if applicable:
 Missing/skipped evidence and limitations:

@@ -1,0 +1,56 @@
+{
+  "browser": "155.0.8059.80",
+  "host": {
+    "platform": "darwin",
+    "release": "27.0.0",
+    "arch": "arm64"
+  },
+  "results": [
+    {
+      "id": "TASK-05-index-1280",
+      "status": "passed",
+      "screenshot": "index-1280.png",
+      "sha256": "9ed5d14fa96d631a1bb5e70929b9fcc7a2ee08a9d22d376bd0080571d0bef307"
+    },
+    {
+      "id": "TASK-05-P05-S01-1280",
+      "status": "passed",
+      "screenshot": "P05-S01-1280.png",
+      "sha256": "abe3d46c5f2e842a5fc97df31970b6f03b084387f4e0df7f5e1ec0fde3988b4f"
+    },
+    {
+      "id": "TASK-05-S02L-1280",
+      "status": "passed",
+      "screenshot": "S02L-1280.png",
+      "sha256": "26237377ee5ba6caa21713b27bad8bd49af6cc2cf7ab788bbde68468984e7706"
+    },
+    {
+      "id": "TASK-05-index-390",
+      "status": "passed",
+      "screenshot": "index-390.png",
+      "sha256": "6ae0b75483ec6b389e2e78e27f277b76b058f1ef40574b4df84b7d9e55a1eb45"
+    },
+    {
+      "id": "TASK-05-expanded-keyboard-focus",
+      "status": "passed",
+      "screenshot": "P05-S01-expanded-390.png",
+      "sha256": "89aa5adf58a1c09c836d2825e2a081fb7ca7168681abe18b06007544353d08ac"
+    },
+    {
+      "id": "TASK-05-P05-S01-390",
+      "status": "passed",
+      "screenshot": "P05-S01-390.png",
+      "sha256": "0746ab041ee552f4a9e54f4b195fb3daa672e9c83b39067b9f0b58a80b04c6c1"
+    },
+    {
+      "id": "TASK-05-S02L-390",
+      "status": "passed",
+      "screenshot": "S02L-390.png",
+      "sha256": "69393d0345f6f05f42fcc8a423e56f487bbc1d4047d1ad6a726549e96b6b1300"
+    },
+    {
+      "id": "TASK-05-untrusted-text-and-route-boundary",
+      "status": "passed"
+    }
+  ]
+}

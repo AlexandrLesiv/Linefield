@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>Task review · Linefield tasks</title><style>
+* { box-sizing: border-box; }
+body { margin: 0; background: #F7F8FA; color: #233148; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; font-size: 16px; line-height: 1.6; overflow-wrap: anywhere; }
+.page { max-width: 1360px; padding: 32px 48px; margin: auto; }
+a { color: inherit; text-underline-offset: 4px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible, summary:focus-visible { outline: 3px solid #233148; outline-offset: 5px; border-radius: 3px; }
+.skip { position: absolute; top: -100px; padding: 12px; background: #FFFFFF; }
+.skip:focus { top: 8px; z-index: 2; }
+.mast { display: flex; justify-content: space-between; gap: 20px; padding-bottom: 28px; border-bottom: 1px solid #E1E6ED; }
+.eyebrow, .label { font-size: 14px; text-transform: uppercase; letter-spacing: .12em; font-weight: 600; }
+.eyebrow { margin-top: 32px; color: #59677C; }
+h1 { font-size: 40px; line-height: 1.15; letter-spacing: -.025em; margin: 14px 0 18px; max-width: 900px; }
+h2 { font-size: 26px; line-height: 1.25; margin: 0 0 22px; letter-spacing: -.02em; }
+h3 { font-size: 20px; line-height: 1.4; margin: 22px 0 10px; }
+p { margin: 0 0 16px; }
+.lead { font-size: 18px; max-width: 850px; color: #59677C; }
+.muted, .meta { color: #59677C; }
+.meta { font-size: 14px; }
+.attention { margin: 30px 0 0; background: #F5F9FD; border: 1px solid #E1E6ED; border-radius: 20px; padding: 24px 28px; }
+.attention.blocked { background: #FFFAEF; }
+.attention h2 { font-size: 20px; margin-bottom: 8px; }
+.attention p { margin: 0; }
+.facts { display: grid; grid-template-columns: repeat(3, 1fr); margin: 26px 0 36px; border-block: 1px solid #E1E6ED; }
+.fact { padding: 18px 22px 18px 0; }
+.fact + .fact { border-left: 1px solid #E1E6ED; padding-left: 22px; }
+.fact strong { display: block; font-size: 18px; }
+.layout { display: grid; grid-template-columns: 180px minmax(0,1fr); gap: 40px; }
+.section-nav { align-self: start; position: sticky; top: 24px; }
+.section-nav a { display: block; margin: 0 0 14px; color: #59677C; }
+.panel { background: #FFFFFF; border: 1px solid #E1E6ED; border-radius: 24px; padding: 32px; margin-bottom: 24px; scroll-margin-top: 24px; }
+.tag { display: inline-block; border: 1px solid #E1E6ED; padding: 2px 9px; border-radius: 6px; font-size: 14px; font-weight: 600; }
+.item { padding-block: 18px; border-top: 1px solid #E1E6ED; }
+.item:first-of-type { border-top: 0; padding-top: 0; }
+.item p:last-child { margin-bottom: 0; }
+.row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+.warning { background: #FFFAEF; padding: 16px; border-radius: 12px; }
+code, .digest { font-family: ui-monospace, monospace; font-size: 14px; overflow-wrap: anywhere; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; line-height: 1.6; background: #F7F8FA; padding: 18px; border-radius: 12px; max-height: 440px; overflow-y: auto; }
+summary { cursor: pointer; padding-block: 10px; font-weight: 600; }
+details { border-top: 1px solid #E1E6ED; margin-top: 12px; }
+.document { padding: 16px 0; }
+ul { padding-left: 22px; margin: 8px 0 18px; }
+.cards { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 24px; margin-top: 36px; }
+.card { display: flex; flex-direction: column; align-items: start; margin-bottom: 0; }
+.card h2 { margin-top: 20px; }
+.card .open { margin-top: auto; padding-top: 24px; font-weight: 600; }
+footer { border-top: 1px solid #E1E6ED; margin-top: 32px; padding-top: 24px; font-size: 14px; color: #59677C; }
+@media (max-width: 760px) {
+  .page { padding: 20px; }
+  h1 { font-size: 32px; }
+  .layout, .cards { grid-template-columns: 1fr; gap: 12px; }
+  .panel { padding: 22px; }
+  .section-nav { position: static; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+  .section-nav a { margin-bottom: 8px; }
+  .facts { grid-template-columns: 1fr; }
+  .fact + .fact { border-left: 0; border-top: 1px solid #E1E6ED; padding-left: 0; }
+  .attention { padding: 22px; }
+  .mast { flex-wrap: wrap; padding-bottom: 18px; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+@media print { .page { padding: 0; } .section-nav, .skip { display: none; } .layout { display: block; } }
+</style></head>
+<body><a class="skip" href="#main">Skip to task content</a><div class="page"><header><div class="mast"><strong>LINEFIELD / TASKS</strong><span class="meta">Documentation pilot · v1</span></div>
+<p class="eyebrow">A single place to review the work</p><h1>From intent to evidence.</h1>
+<p class="lead">Scope, design, verification and pull requests — connected in one readable task record.</p></header>
+<main id="main"><div class="cards"><article class="panel card"><span class="label">P05-S01 · leaf</span>
+<h2>Local styles, unchanged interface</h2><p>Component styles are local. Verification is recorded; owner review and integration remain.</p><span class="tag">owner review</span>
+<p class="meta">5 acceptance criteria · 5 evidence records</p>
+<a class="open" href="P05-S01.html">Review task →</a></article><article class="panel card"><span class="label">S02L · milestone</span>
+<h2>Durable library</h2><p>The gallery prototype exists. Durable implementation is blocked by storage safety and concrete scope review.</p><span class="tag">blocked</span>
+<p class="meta">6 acceptance criteria · 3 evidence records</p>
+<a class="open" href="S02L.html">Review task →</a></article></div>
+<p class="meta">Pilot packages preserve existing task documents and evidence. PR state is a dated observation; the preview never runs checks or changes approval.</p></main>
+<footer>Linefield · Task documentation pilot v1 · Read-only review snapshot<br>
+Artifact hashes verify preserved records. They do not certify current code or a future merge.</footer></div></body></html>

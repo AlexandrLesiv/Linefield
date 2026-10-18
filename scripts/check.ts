@@ -16,6 +16,7 @@ const formatTargets = [
   "shared/theme",
   "shared/diagrams",
   "shared/schema",
+  "shared/tasks",
   "shared/localization",
   "apps/web/src",
   "apps/web/tests",
@@ -82,6 +83,8 @@ try {
     }
   }
   for (const args of [
+    ["scripts/tasks/generate.ts", "--check"],
+    ["--test", "scripts/tasks/*.test.ts"],
     ["scripts/diagrams/generate.ts", "--check"],
     ["scripts/schema/generate.ts", "--check"],
     [

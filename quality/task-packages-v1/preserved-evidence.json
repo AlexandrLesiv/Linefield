@@ -1,0 +1,80 @@
+{
+  "result": "unchanged",
+  "references": [
+    {
+      "path": "tasks/P05-S01.md",
+      "revision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a",
+      "sha256": "9af15ebd4b053ad93f23dcdba1933b0d88c0c9e02bade2e554bf197e8a478619"
+    },
+    {
+      "path": "quality/local-styles-v1/README.md",
+      "revision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a",
+      "sha256": "e4e928350343a766b2ea34a5775a469094273d51213e3d84c56b374fbfe3045c"
+    },
+    {
+      "path": "quality/local-styles-v1/visual-review.md",
+      "revision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a",
+      "sha256": "311e29416e51dbe6d2d94e8097b11f7b7aedf702d45c512b5eb19b599dfc17ee"
+    },
+    {
+      "path": "quality/local-styles-v1/independent-review.md",
+      "revision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a",
+      "sha256": "fedfe465de7b1de9554f5f4cc7bc1a596639e98303d2c490d00d60c787f61669"
+    },
+    {
+      "path": "quality/local-styles-v1/browser-results.json",
+      "revision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a",
+      "sha256": "b179004e49e372adf46009993194a51c046d389f14c55da2cd1b3d9d62455e7d"
+    },
+    {
+      "path": "quality/local-styles-v1/root-check.log",
+      "revision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a",
+      "sha256": "6773d02b2d77cbffb2352ac1045f83e455793f31064e9828c32042b17734155b"
+    },
+    {
+      "path": "quality/local-styles-v1/visual-manifest.json",
+      "revision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a",
+      "sha256": "7ff93e0209b0cfdf914d9feb535aa0de94a066d3a785025a2b89cca6564deb81"
+    },
+    {
+      "path": "quality/local-styles-v1/independent-review.md",
+      "revision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a",
+      "sha256": "fedfe465de7b1de9554f5f4cc7bc1a596639e98303d2c490d00d60c787f61669"
+    },
+    {
+      "path": "quality/local-styles-v1/tested-source.json",
+      "revision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a",
+      "sha256": "899b8b68d895d28a7cd613e1b87d173690b4cf1a6cea3d9db50112564dfae6af"
+    },
+    {
+      "path": "tasks/S02L.md",
+      "revision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a",
+      "sha256": "4423082b753ed838ab3ce93a359f22d67203f4a7561a2ac42b5dffd994d4b4d8"
+    },
+    {
+      "path": "docs/reviews/durable-library-implementation-scope-v1.md",
+      "revision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a",
+      "sha256": "c65250be7ce42afcfa251c348755beb40e8bec0a9b166ae439de9a82c8d8ec2c"
+    },
+    {
+      "path": "quality/browser-storage-v1/README.md",
+      "revision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a",
+      "sha256": "5fd83ae7a90a1681a99ede0275946abd8b174e828ba39626074b1312e43d6997"
+    },
+    {
+      "path": "quality/browser-storage-v1/pool-results.json",
+      "revision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a",
+      "sha256": "20218cc3508f090acacec7f91c34682d6958db02fb9f5670c2526518bc16308c"
+    },
+    {
+      "path": "quality/browser-storage-v1/synthetic-canary-before.bin",
+      "revision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a",
+      "sha256": "24cac60e7ba65467e015ac4e01e82b2ea49e316f55a664253f7dd25689fc3039"
+    },
+    {
+      "path": "quality/browser-storage-v1/synthetic-canary-after.bin",
+      "revision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a",
+      "sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7"
+    }
+  ]
+}

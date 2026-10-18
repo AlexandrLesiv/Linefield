@@ -30,7 +30,12 @@
     "diagrams:test": "node --test scripts/diagrams/*.test.ts",
     "schema:generate": "node scripts/schema/generate.ts",
     "schema:check": "node scripts/schema/generate.ts --check",
-    "schema:test": "node --test scripts/schema/*.test.ts scripts/probes/library-schema/constraints.test.ts"
+    "schema:test": "node --test scripts/schema/*.test.ts scripts/probes/library-schema/constraints.test.ts",
+    "tasks:generate": "node scripts/tasks/generate.ts",
+    "tasks:check": "node scripts/tasks/generate.ts --check",
+    "tasks:test": "node --test scripts/tasks/*.test.ts",
+    "tasks:browser": "node scripts/tasks/preview-browser.ts",
+    "tasks:preview": "node scripts/tasks/serve.ts"
   },
   "devDependencies": {
     "@types/node": "24.19.2",

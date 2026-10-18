@@ -3641,3 +3641,11 @@ terminology; original review bytes remain in Git history. Schema fixture changes
 metadata only and must prove all semantic fields unchanged before updating their pinned hash.
 Keep unresolved failure fixtures, current source/test evidence and approval scope. No history
 rewrite, account deletion, schema behavior change or production implementation is authorized.
+
+## Decision 241 — consolidated task packages and review preview
+
+On2026-10-19 the owner approved JSON task metadata with authored Markdown, generated visual and
+agent-readable views, beginning with the schema and two pilot conversions. PR and applicable
+automated-test links are required. DX-T02 owns this slice on one branch/PR; preserve existing
+evidence. The visual preview is for owner review. No command service, task editor, automatic
+merging/publishing, storage adoption or product feature is authorized. See workflow/task-packages-v1.md.

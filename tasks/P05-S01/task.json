@@ -1,0 +1,253 @@
+{
+  "schemaVersion": 1,
+  "id": "P05-S01",
+  "title": "Local styles, unchanged interface",
+  "kind": "leaf",
+  "stage": "owner-review",
+  "summary": "Component styles are local. Verification is recorded; owner review and integration remain.",
+  "outcome": "Preserve the gallery and drawing prototype while scoping component styles and simplifying evidence.",
+  "nonGoals": ["No drawing engine or persistence", "No visual redesign", "No merge or release"],
+  "ownership": {
+    "branch": "codex/p05-s01-local-styles",
+    "baseRevision": "b0cb531b331371493792355a3baaddca61632709",
+    "paths": ["apps/web/src", "apps/web/tests", "quality/local-styles-v1"],
+    "role": "Lead with scoped UI implementation and independent review"
+  },
+  "pr": {
+    "repository": "AlexandrLesiv/Linefield",
+    "number": 3,
+    "url": "https://github.com/AlexandrLesiv/Linefield/pull/3",
+    "observedState": "open",
+    "observedAt": "2026-10-18T23:40:00Z",
+    "headRevision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a",
+    "baseBranch": "codex/dx-g02-shared-documentation",
+    "mergeRevision": null
+  },
+  "integration": null,
+  "dependencies": [
+    {
+      "kind": "hard",
+      "taskId": "DX-G02",
+      "reason": "Stacked parent PR #2 must integrate first.",
+      "revision": "b0cb531b331371493792355a3baaddca61632709"
+    }
+  ],
+  "authority": {
+    "implementation": "authorized",
+    "basis": "Owner-requested local styling correction and retirement of obsolete tooling.",
+    "refs": ["original-task"]
+  },
+  "security": {
+    "classification": "no-boundary-change",
+    "summary": "Style scoping and editorial cleanup only; no schema or persistence behavior changed."
+  },
+  "documents": [
+    {
+      "id": "brief",
+      "title": "Task overview",
+      "kind": "brief",
+      "path": "tasks/P05-S01/brief.md",
+      "sha256": "86505cf8888b53154140690d98853f53da9abae95824e6634a9d4be20abfeef0",
+      "artifactRevision": null
+    },
+    {
+      "id": "original-task",
+      "title": "Original task and acceptance",
+      "kind": "contract",
+      "path": "tasks/P05-S01.md",
+      "sha256": "9af15ebd4b053ad93f23dcdba1933b0d88c0c9e02bade2e554bf197e8a478619",
+      "artifactRevision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a"
+    },
+    {
+      "id": "verification",
+      "title": "Verification handoff",
+      "kind": "handoff",
+      "path": "quality/local-styles-v1/README.md",
+      "sha256": "e4e928350343a766b2ea34a5775a469094273d51213e3d84c56b374fbfe3045c",
+      "artifactRevision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a"
+    },
+    {
+      "id": "design-review",
+      "title": "Visual preservation review",
+      "kind": "design",
+      "path": "quality/local-styles-v1/visual-review.md",
+      "sha256": "311e29416e51dbe6d2d94e8097b11f7b7aedf702d45c512b5eb19b599dfc17ee",
+      "artifactRevision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a"
+    },
+    {
+      "id": "independent-review",
+      "title": "Independent implementation review",
+      "kind": "review",
+      "path": "quality/local-styles-v1/independent-review.md",
+      "sha256": "fedfe465de7b1de9554f5f4cc7bc1a596639e98303d2c490d00d60c787f61669",
+      "artifactRevision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a"
+    }
+  ],
+  "acceptance": [
+    {
+      "id": "STYLE-01",
+      "statement": "Component styling uses exported local classes; globals remain document-wide.",
+      "required": true,
+      "scenarioIds": ["WEB-STYLE-01"],
+      "testIds": ["WEB-STYLE-01"],
+      "evidenceIds": ["browser-run", "independent"]
+    },
+    {
+      "id": "STYLE-02",
+      "statement": "Preserve gallery/drawing layout, interaction, themes, localization and navigation.",
+      "required": true,
+      "scenarioIds": ["WEB-STYLE-02"],
+      "testIds": ["WEB-STYLE-02", "WEB-SUITE"],
+      "evidenceIds": ["browser-run", "visual"]
+    },
+    {
+      "id": "STYLE-03",
+      "statement": "Verify isolation, browser behavior, build and before/after visual preservation.",
+      "required": true,
+      "scenarioIds": ["WEB-STYLE-01", "WEB-STYLE-02"],
+      "testIds": ["WEB-STYLE-01", "WEB-STYLE-02", "ROOT-CHECK"],
+      "evidenceIds": ["browser-run", "root-run", "visual"]
+    },
+    {
+      "id": "CLEAN-02",
+      "statement": "Retired tooling references removed; original history and storage failure fixtures preserved.",
+      "required": true,
+      "scenarioIds": [],
+      "testIds": ["REVIEW-CLEANUP"],
+      "evidenceIds": ["independent"]
+    },
+    {
+      "id": "QUALITY-01",
+      "statement": "Evidence index distinguishes current checks, unresolved failures and history.",
+      "required": true,
+      "scenarioIds": [],
+      "testIds": ["REVIEW-CLEANUP"],
+      "evidenceIds": ["independent"]
+    }
+  ],
+  "tests": [
+    {
+      "id": "WEB-STYLE-01",
+      "kind": "browser",
+      "status": "implemented",
+      "path": "apps/web/tests/style-isolation.spec.ts",
+      "selector": "WEB-STYLE-01",
+      "description": "Component classes remain isolated from legacy query hooks."
+    },
+    {
+      "id": "WEB-STYLE-02",
+      "kind": "browser",
+      "status": "implemented",
+      "path": "apps/web/tests/style-isolation.spec.ts",
+      "selector": "WEB-STYLE-02",
+      "description": "Touch dialog keeps secondary and primary backgrounds in both themes."
+    },
+    {
+      "id": "WEB-SUITE",
+      "kind": "browser",
+      "status": "implemented",
+      "path": "apps/web/playwright.config.ts",
+      "selector": "full suite",
+      "description": "Recorded full run: 121 cases, zero failures/skips/flaky. Not rerun by this viewer."
+    },
+    {
+      "id": "ROOT-CHECK",
+      "kind": "static",
+      "status": "implemented",
+      "path": "scripts/check.ts",
+      "selector": "root-check",
+      "description": "Recorded aggregate: 106 tests plus type, lint, formatting and generated consistency checks."
+    },
+    {
+      "id": "REVIEW-CLEANUP",
+      "kind": "manual",
+      "status": "manual",
+      "path": null,
+      "selector": null,
+      "description": "Independent source/reference and historical provenance review."
+    }
+  ],
+  "evidence": [
+    {
+      "id": "browser-run",
+      "title": "121 browser cases passed",
+      "path": "quality/local-styles-v1/browser-results.json",
+      "sha256": "b179004e49e372adf46009993194a51c046d389f14c55da2cd1b3d9d62455e7d",
+      "kind": "report",
+      "outcome": "passed",
+      "runId": "browser-run",
+      "sourceRevision": null,
+      "sourceManifest": "quality/local-styles-v1/tested-source.json",
+      "recordedAt": null,
+      "limitations": [
+        "Recorded historical evidence; artifact integrity is checked, current code equivalence is not inferred."
+      ],
+      "artifactRevision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a"
+    },
+    {
+      "id": "root-run",
+      "title": "106 root tests passed",
+      "path": "quality/local-styles-v1/root-check.log",
+      "sha256": "6773d02b2d77cbffb2352ac1045f83e455793f31064e9828c32042b17734155b",
+      "kind": "log",
+      "outcome": "passed",
+      "runId": "root-run",
+      "sourceRevision": null,
+      "sourceManifest": "quality/local-styles-v1/tested-source.json",
+      "recordedAt": null,
+      "limitations": [
+        "Recorded historical evidence; artifact integrity is checked, current code equivalence is not inferred."
+      ],
+      "artifactRevision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a"
+    },
+    {
+      "id": "visual",
+      "title": "32 identical screen pairs",
+      "path": "quality/local-styles-v1/visual-manifest.json",
+      "sha256": "7ff93e0209b0cfdf914d9feb535aa0de94a066d3a785025a2b89cca6564deb81",
+      "kind": "manifest",
+      "outcome": "passed",
+      "runId": "visual",
+      "sourceRevision": null,
+      "sourceManifest": null,
+      "recordedAt": null,
+      "limitations": [
+        "Recorded historical evidence; artifact integrity is checked, current code equivalence is not inferred."
+      ],
+      "artifactRevision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a"
+    },
+    {
+      "id": "independent",
+      "title": "Independent review: findings resolved",
+      "path": "quality/local-styles-v1/independent-review.md",
+      "sha256": "fedfe465de7b1de9554f5f4cc7bc1a596639e98303d2c490d00d60c787f61669",
+      "kind": "review",
+      "outcome": "passed",
+      "runId": "independent",
+      "sourceRevision": null,
+      "sourceManifest": null,
+      "recordedAt": null,
+      "limitations": [
+        "Recorded historical evidence; artifact integrity is checked, current code equivalence is not inferred."
+      ],
+      "artifactRevision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a"
+    },
+    {
+      "id": "source",
+      "title": "Exact tested source/build identities",
+      "path": "quality/local-styles-v1/tested-source.json",
+      "sha256": "899b8b68d895d28a7cd613e1b87d173690b4cf1a6cea3d9db50112564dfae6af",
+      "kind": "manifest",
+      "outcome": "informational",
+      "runId": "source",
+      "sourceRevision": null,
+      "sourceManifest": null,
+      "recordedAt": null,
+      "limitations": [
+        "Recorded historical evidence; artifact integrity is checked, current code equivalence is not inferred."
+      ],
+      "artifactRevision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a"
+    }
+  ],
+  "handoff": "Owner review: merge #1, then #2, then #3 after retargeting and affected integration verification. Do not mark Done from this snapshot."
+}
