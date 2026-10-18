@@ -8,7 +8,8 @@ recovery copies remain preserved. No reset/clean,
 main merge or release. Read AGENTS.md, objectives, latest decisions and the assigned task.
 
 Current executable task: [DX-G02 shared documentation](../tasks/DX-G02.md), branch
-codex/dx-g02-shared-documentation, explicitly stacked on [DX-G01 / PR #1](https://github.com/AlexandrLesiv/Linefield/pull/1)
+codex/dx-g02-shared-documentation; [PR #2](https://github.com/AlexandrLesiv/Linefield/pull/2) is
+open for owner review, explicitly stacked on [DX-G01 / PR #1](https://github.com/AlexandrLesiv/Linefield/pull/1)
 at e08f304. PR #1 is owner-review, not merged. Decision239 permits independent ready tasks while
 other PRs await review and replaces the hosted schema diagram workflow with generated native SVG.
 [Parallel task policy](workflow/parallel-tasks.md) and [task board](../tasks/README.md) define hard,
