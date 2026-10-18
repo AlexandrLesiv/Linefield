@@ -1,9 +1,9 @@
 # DX-T02 — task packages and read-only review pilot
 
-Type: executable leaf. Status: verified locally; preparing owner review. Owner: lead/current chat.
+Type: executable leaf. Status: owner review. Owner: lead/current chat.
 Branch: codex/dx-t02-task-packages. Base: afb82c5deb4cfa3d3e9a641659a20887b9689b8a.
 Stacked on P05-S01 / PR #3 because the pilot references its exact retained evidence.
-Owner merges parents first; retarget and verify integration afterward. PR: not opened.
+Owner merges parents first; retarget and verify integration afterward. PR: [#4](https://github.com/AlexandrLesiv/Linefield/pull/4).
 
 ## Scope and authority
 
