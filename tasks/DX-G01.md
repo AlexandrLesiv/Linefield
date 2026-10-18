@@ -1,10 +1,10 @@
 # DX-G01 — repository and workflow bootstrap
 
 Type: executable bootstrap/documentation task. Parent: DX00/developer workflow.
-Status: in progress. Owner: lead; specialists: build reliability, UI/UX designer; fresh reviewer.
+Status: owner review. Owner: lead; specialists: build reliability, UI/UX designer; fresh reviewer.
 Authority: decision238 and docs/reviews/workflow-style-approval-2026-10-19.md.
 Base: fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7 plus the verified preserved working tree.
-Branch: codex/dx-g01-workflow-bootstrap. PR: pending reviewed publication.
+Branch: codex/dx-g01-workflow-bootstrap. PR: https://github.com/AlexandrLesiv/Linefield/pull/1.
 Repository: https://github.com/AlexandrLesiv/Linefield (public, owner-authorized).
 
 ## Outcome and boundaries
@@ -50,3 +50,6 @@ browser118, schema6, DBML validation and the SVG render inventory. Original comm
 fbcc30c was published as remote main; task changes remain separate for owner PR review. After owner
 merge notification, verify merge identity/checks and provide a next-task prompt. Next candidate:
 bounded synthetic storage preservation investigation; production storage still blocked.
+
+Publication: bootstrap commit7083fb4 is the reviewed candidate; this status-only follow-up records
+the actual PR. Owner merge is pending. No subsequent implementation task has started.

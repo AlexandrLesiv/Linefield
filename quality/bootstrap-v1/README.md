@@ -51,3 +51,10 @@ storage failure evidence is retained, including damaged SAH-pool metadata trunca
 proxy retirement. Physical assistive/input/IME, native hosts, actual Zed UI and unavailable compiler
 lanes are not passes. Owner PR review and merge remain required; subsequent integration must verify
 the actual merged SHA/content before a next-task chat handoff.
+
+## Publication receipt
+
+[PR #1](https://github.com/AlexandrLesiv/Linefield/pull/1) is open against main at
+fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7. Reviewed consolidation commit:7083fb4.
+The subsequent handoff commit only records the actual PR/status; tested application inputs remain
+identical to tested-source.json. Owner review/merge pending; no next implementation task started.

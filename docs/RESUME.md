@@ -3,7 +3,8 @@
 ## Authorization and workspace
 
 Repository `/Users/oleksandr/projects/linefield`; base HEAD `fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7`.
-Substantial intentional uncommitted source/tests/docs/research exist. Preserve them; no reset/clean,
+Delivered source/tests/docs are consolidated in the bootstrap PR; ignored local research and
+recovery copies remain preserved. No reset/clean,
 main merge or release. Read AGENTS.md, objectives, latest decisions and the assigned task.
 
 Current executable task: [DX-G01 bootstrap](../tasks/DX-G01.md), branch
@@ -11,7 +12,9 @@ Current executable task: [DX-G01 bootstrap](../tasks/DX-G01.md), branch
 workflow. Owner configured public origin `https://github.com/AlexandrLesiv/Linefield.git` and
 explicitly authorized reviewed source/documentation publication. Private captures/backups stay
 local. Full9295-entry pre-edit recovery copy verified under .build-cache/bootstrap-preservation-2026-10-19.
-No bootstrap merge is authorized; PR preparation and owner review precede integration.
+[Bootstrap PR #1](https://github.com/AlexandrLesiv/Linefield/pull/1) is open for owner review.
+Reviewed candidate commit7083fb4 contains source/docs/evidence; the follow-up records this status.
+No bootstrap merge is authorized; owner review precedes integration.
 
 The decision235 away-work window ended2026-10-18; its heartbeat remains PAUSED.
 Decision236 records owner approval of D1–D3. Current work prepares concrete storage/deletion/engine
