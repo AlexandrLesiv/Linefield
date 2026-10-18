@@ -20,12 +20,12 @@ approval record and the linked specifications for details.
 | Main-thread macOS editor/Skia plus file/log workers | Owner selected A on 2026-10-16, with early performance checkpoint; not measured or universal; successor/architecture |
 | f64 world coordinates/transform calculations, viewport rebasing and bounded geometry caches | Selected in decisions 13/33; exact limits, conversion and performance remain reviewed/measured |
 | New native document, no Native Sketch compatibility | Confirmed; CT-05 and successor/formats; SQLite container owner-selected; concrete schema/lifecycle pending |
-| Native snapshot + PNG export | Owner selected decision 18; SVG/PDF deferred; concrete export contracts/Figma pending |
+| Native snapshot + PNG export | Owner selected decision 18; SVG/PDF deferred; concrete export contracts/design review pending |
 | Structured action/outcome logging with correlation, privacy and bounds | Required; CT-07, AGENTS and quality |
 | Shared contract conformance plus native E2E, same scenarios/fixtures/assertions | Documentation approach requested; contracts and testing/shared-e2e; no executable tests yet |
 | 200 physical lines per handwritten source/test/script; no cosmetic splitting | Confirmed; AGENTS and quality |
 | Node native .ts automation, Oxc tools, native language tooling, no owned shell/PowerShell/Python orchestration | Confirmed direction; quality; exact supported versions selected when tooling is installed |
-| Figma owner approval before new screens/tools, platform-specific design coordination | Required; AGENTS, roles and S00; no approved frames yet |
+| design review owner approval before new screens/tools, platform-specific design coordination | Required; AGENTS, roles and S00; no approved frames yet |
 | Existing specialists own quality; fresh independent review; no extra permanent quality agent | Required workflow; AGENTS and role files |
 | Real host evidence, reserved foreground checks, no inherited permissions or old passes | Required; AGENTS and quality; no current reservation |
 | TV/Watch view-only; Watch standalone-capable with iPhone preferred and later network fallback | Planned direction; platforms/P07/P08; server/account/credential model remains deferred |
@@ -65,7 +65,7 @@ persistence/WAL on 2026-10-16. No implementation or browser storage runtime was 
    checks, minimum macOS target and browser persistence feasibility plan. Rusqlite is selected;
    browser VFS, journal mode, worker arrangement and durability capability still need review.
 
-Figma is a separate required approval: foundations and gallery/editor/export/recovery flows,
+design review is a separate required approval: foundations and gallery/editor/export/recovery flows,
 resizing/AX/i18n/motion and remaining details such as default names and PNG settings. These
 can be proposed together; do not restart settled scope choices or invent extra features.
 The available Mac/Cintiq is the selected verification baseline, not evidence of tests run.
@@ -76,7 +76,7 @@ macOS preview on fully designing those systems, but preserve required portabilit
 
 Review one material choice at a time when the owner requests it. Specialists prepare concrete
 interfaces, diagrams and test cases for approval rather than expanding an unbounded list of
-abstract settings. Exact schema/ABI/Figma approval remains required before implementation.
+abstract settings. Exact schema/ABI/design review approval remains required before implementation.
 
 Audit repairs also removed stale name/path/setup instructions, restored the agreed exact
 TypeScript subset and added tooling-selection requirements for Kotlin/Android, C#/WinUI,
@@ -85,9 +85,9 @@ are scaffold checks, not proof of product behavior or installed-client agent com
 
 ## Later clarification in this session
 
-Zed tasks are now selected; a custom extension is not planned. Node .ts/Vite/Oxc responsibilities, optional shell-based zx, detailed logging and Figma approval records have dedicated documents. Day-one reusable action/report planning is included in DX00; executable task launchers follow S01, and rich workbench UI remains a later approved slice.
+Zed tasks are now selected; a custom extension is not planned. Node .ts/Vite/Oxc responsibilities, optional shell-based zx, detailed logging and design review approval records have dedicated documents. Day-one reusable action/report planning is included in DX00; executable task launchers follow S01, and rich workbench UI remains a later approved slice.
 
-Additional explicit requests: Android TV/Google TV and Android XR placeholders are tracked by P10/P11. S00A now requires shared design foundations/native mappings and real resizable Figma mockups before detailed screen approval. Visual choices/Figma versions remain unapproved; no universal custom widget system or new product feature is implied.
+Additional explicit requests: Android TV/Google TV and Android XR placeholders are tracked by P10/P11. S00A now requires shared design foundations/native mappings and real resizable design review mockups before detailed screen approval. Visual choices/design versions remain unapproved; no universal custom widget system or new product feature is implied.
 
 ## Internationalization gap closed
 
@@ -109,9 +109,9 @@ and planning-review.md's current outstanding inventory rather than reopening tho
 
 Remaining review packets: S00E security/role recommendation; S00F platform input and shared binding
 matrix; S00G store/day-zero requirements; concrete S02 DBML/ABI/coordination/lifecycle/budgets/toolchain;
-and identified Figma foundations/screens/motion. Product-emphasis and OS-selected-language details
+and identified design foundations/screens/motion. Product-emphasis and OS-selected-language details
 remain UX/i18n proposals. These need owner review with evidence/options, not an invented target
-number of further questions. No implementation, Figma approval or security/compliance pass is implied.
+number of further questions. No implementation, design review approval or security/compliance pass is implied.
 
 Decisions 147/148 close the language-at-launch and product-direction questions: OS-selected supported
 language with English fallback; Concepts-inspired open-source editable vector sketcher, MacBook first.

@@ -71,7 +71,7 @@ none is introduced just to satisfy a hypothetical checklist.
    Rust. Test them with real navigation/input. Independent acquisition is needed before standalone
    claims; compatible platform availability must not silently expand supported products.
 7. **Plan required UX within features.** Permission refusal, native panels, privacy access, errors,
-   update/migration states and device controls belong in feature briefs and identified Figma where
+   update/migration states and device controls belong in feature briefs and identified design where
    applicable. Follow the input inventory; do not decide global shortcuts or add settings/services
    just because another app has them.
 
@@ -86,7 +86,7 @@ cloud or thread designs. Existing owner-approved policy remains; material mechan
 | macos_ui / ios_ui / android_ui / windows_ui | Platform API/permissions/capability feasibility, native negative tests and actual family acceptance; no unapproved security exceptions |
 | rust_engine + rendering_performance | Shared viewer/command enforcement; native-library compatibility and measured resource behavior; dependency help, no store policy inside document model |
 | build_reliability | Reproducible packages, identity/signature/license inventory, clean install/update/uninstall and exact-artifact reports; source/build restrictions per channel |
-| ui_ux_designer | Disclosure/consent/refusal/recovery/navigation and input coverage, together with native adaptive visual/AX/motion presentation and identified Figma handoff |
+| ui_ux_designer | Disclosure/consent/refusal/recovery/navigation and input coverage, together with native adaptive visual/AX/motion presentation and identified design handoff |
 | Independent reviewer | Check sensitive design and artifact/evidence/declarations; distinguish source research from verified compliance |
 | Owner | License, channels, identity/accounts, territories/commercial decisions, material architecture/design approval and publication permission |
 

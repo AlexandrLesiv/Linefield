@@ -2,7 +2,7 @@
 
 Status: review proposal copied into Linefield on 2026-10-16. The owner selected the name
 Linefield and root /Users/oleksandr/projects/linefield and authorized documentation/folder
-scaffolding only. No application implementation, Figma approval or runtime verification.
+scaffolding only. No application implementation, design review approval or runtime verification.
 The current approval record is [decisions](../decisions.md). This packet is maintained
 for the existing Linefield scaffold; application implementation remains unstarted.
 Reference audit: Native Sketch at `3b580873ded3fea63d0220a53d7c5ece66c5d897`.
@@ -40,7 +40,7 @@ to that refactor; they are not requirements for a separately approved new reposi
 | Files | Open/save and recovery; new document format, no old-file compatibility |
 | Boundary direction | Typed FFI with generated declarations; no custom command packets |
 | Project isolation | Separate local project, old repository referenced read-only |
-| Design gate | Owner approves identified Figma design before new UI/tools are implemented |
+| Design gate | Owner approves identified design before new UI/tools are implemented |
 | Source policy | Maximum 200 physical lines per handwritten source/test/script file |
 
 ## Proposed preview boundary
@@ -70,14 +70,14 @@ Exports are a separate scope choice below; asking about their options does not a
 | --- | --- | --- |
 | Working name and path | Selected: Linefield at `/Users/oleksandr/projects/linefield` | Documentation scaffold exists; no app implementation |
 | Native format | Selected C: SQLite application document; concrete schema/lifecycle pending | Supersedes ZIP/JSON proposal; transaction, backup and provider behavior need review |
-| Export scope | Native snapshot + PNG selected for preview (decision 18), after reliable save/recovery | SVG/PDF deferred; concrete contracts and Figma pending |
+| Export scope | Native snapshot + PNG selected for preview (decision 18), after reliable save/recovery | SVG/PDF deferred; concrete contracts and design review pending |
 | Runtime | Selected A for macOS: main-thread editor/Skia, bounded background storage/logging and early measurement | Dedicated render/editor thread requires additional synchronization and new measured justification |
 | Project structure | Selected B: four Rust crates with distinct responsibilities; concrete types/lifetimes still reviewed | Split further only for a demonstrated responsibility or build requirement |
 | Preview environment | Available Apple Silicon Mac and its installed macOS; record exact versions | Intel and older-macOS certification belong to an explicitly expanded matrix |
-| Interaction details | Single window; cancel active gestures on focus loss; Escape cancels or clears selection | Final controls, scale anchor and keyboard movement behavior need Figma handoff; keyboard nudging is not assumed |
+| Interaction details | Single window; cancel active gestures on focus loss; Escape cancels or clears selection | Final controls, scale anchor and keyboard movement behavior need design review handoff; keyboard nudging is not assumed |
 
 Review of this packet can authorize the proposed architecture and scope. It does not approve
-a future unshown ABI/schema or Figma version. S02 presents concrete contracts before their
+a future unshown ABI/schema or design version. S02 presents concrete contracts before their
 implementation. Track approval by decision, document version and any conditions.
 
 ## Project identity

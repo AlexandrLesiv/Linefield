@@ -10,7 +10,7 @@ Lead integrates scoped database, Rust boundary and macOS coordination reviews. T
 has no commit yet; the review manifest records exact document hashes.
 
 This packet makes existing choices concrete. It does not authorize application code, migrations,
-dependencies, Figma implementation, accounts, a resident service or another renderer.
+dependencies, design review implementation, accounts, a resident service or another renderer.
 
 ## Read in this order
 
@@ -79,14 +79,14 @@ canvas/file-exchange names are staged, not advertised as a complete compilable A
 
 The NSXPC feasibility probe requires separate implementation authorization. Failure must return
 to review; it does not authorize custom packets, mailbox fallback, broad entitlements or a daemon.
-Figma remains a separate review gate for gallery/editor behavior and appearance.
+design review remains a separate review gate for gallery/editor behavior and appearance.
 
 ## Delivery slices after approval and implementation authorization
 
 1. S02A: disposable typed-header/Swift compile and sandbox coordination probes; record failures.
 2. S02B: schema migrations, hostile-file validation and crash-injection fixture harness.
 3. S02C: gallery command/effect conformance, fake storage races and bounded readiness/shutdown.
-4. S02L: approved Figma gallery through real native controls, create/open/rename/delete E2E.
+4. S02L: approved design review gallery through real native controls, create/open/rename/delete E2E.
 5. S04/S06: extend approved commands to canvas/autosave; S07E adds durable export.
 6. Fresh review of actual code and exact-build evidence. Documentation review is not runtime proof.
 

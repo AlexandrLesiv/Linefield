@@ -1,0 +1,67 @@
+{
+  "version": "3.0.0",
+  "darkMode": false,
+  "gridEnabling": false,
+  "currentViewName": null,
+  "defaultView": {
+    "detailLevel": "All",
+    "relationshipMode": "All",
+    "tablePositions": [
+      {
+        "name": "library",
+        "schemaName": "public",
+        "x": 0,
+        "y": 0
+      },
+      {
+        "name": "tools",
+        "schemaName": "public",
+        "x": 0,
+        "y": 550
+      },
+      {
+        "name": "drawings",
+        "schemaName": "public",
+        "x": 0,
+        "y": 1100
+      },
+      {
+        "name": "local_view",
+        "schemaName": "public",
+        "x": 650,
+        "y": 0
+      },
+      {
+        "name": "pen_preferences",
+        "schemaName": "public",
+        "x": 650,
+        "y": 550
+      },
+      {
+        "name": "lifecycle",
+        "schemaName": "public",
+        "x": 650,
+        "y": 1100
+      },
+      {
+        "name": "removal_scopes",
+        "schemaName": "public",
+        "x": 1300,
+        "y": 0
+      },
+      {
+        "name": "removals",
+        "schemaName": "public",
+        "x": 1300,
+        "y": 550
+      },
+      {
+        "name": "departures",
+        "schemaName": "public",
+        "x": 1300,
+        "y": 1100
+      }
+    ]
+  },
+  "views": []
+}

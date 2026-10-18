@@ -1,0 +1,23 @@
+{
+  "baseCommit": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7",
+  "recordedAt": "2026-10-18T02:39:44.518Z",
+  "scope": "Documentation proposal only; no executable changes or owner numerical/ABI approval",
+  "source": "docs/reviews/regional-precision-followup.md",
+  "sha256": "ffa59dd4a6c9764ef3163a92f568d4ff1932e6b80e3ee9f7abc43811bb31ec5c",
+  "localLinksChecked": 3,
+  "specialist": {
+    "role": "rust_engine",
+    "result": "input incorporated"
+  },
+  "independentReview": {
+    "role": "reviewer",
+    "result": "pass",
+    "resolvedFinding": "Interior half-spacing bound excludes upper-address endpoint; exact counterexample and unselected policies recorded"
+  },
+  "runtimeEvidence": "No new runtime tests; future REG-PREC-01 through REG-PREC-06 remain unrun",
+  "unchangedConstraints": [
+    "No production rounding algorithm selected",
+    "No supported stroke span selected",
+    "No schema or ABI declaration changed"
+  ]
+}

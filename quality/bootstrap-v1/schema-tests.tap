@@ -1,0 +1,48 @@
+TAP version 13
+# (node:41223) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: DLIB-SQL-01: exact DBML column parity and STRICT tables
+ok 1 - DLIB-SQL-01: exact DBML column parity and STRICT tables
+  ---
+  duration_ms: 8.799791
+  type: 'test'
+  ...
+# Subtest: DLIB-SQL-02: identity, name and scalar constraints reject invalid records
+ok 2 - DLIB-SQL-02: identity, name and scalar constraints reject invalid records
+  ---
+  duration_ms: 1.047083
+  type: 'test'
+  ...
+# Subtest: DLIB-SQL-03: failed receipt rolls back rename and preserves content
+ok 3 - DLIB-SQL-03: failed receipt rolls back rename and preserves content
+  ---
+  duration_ms: 1.49775
+  type: 'test'
+  ...
+# Subtest: DLIB-SQL-04: active removal uniqueness and Undo nullability
+ok 4 - DLIB-SQL-04: active removal uniqueness and Undo nullability
+  ---
+  duration_ms: 0.811792
+  type: 'test'
+  ...
+# Subtest: DLIB-SQL-05: departure cannot cross scopes or erase referenced authority
+ok 5 - DLIB-SQL-05: departure cannot cross scopes or erase referenced authority
+  ---
+  duration_ms: 0.753625
+  type: 'test'
+  ...
+# Subtest: DLIB-SQL-06: legacy deletion and gallery departure authority stay distinct
+ok 6 - DLIB-SQL-06: legacy deletion and gallery departure authority stay distinct
+  ---
+  duration_ms: 0.594959
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 102.564917

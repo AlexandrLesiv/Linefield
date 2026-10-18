@@ -48,7 +48,7 @@ Owned Node .ts automation uses erasable types, explicit .ts imports and import t
 runtime enums, parameter properties, decorators, any casts or type-check suppressions.
 Tooling cannot add broad exceptions merely to make existing source pass.
 
-Detailed requirements: [structured diagnostics](logging.md), [Node/Vite/Oxc tooling](tooling.md), [Figma handoff](design/workflow.md) and [Zed task/report reuse](developer-experience.md). No installed-tool or implementation claim is made by these plans.
+Detailed requirements: [structured diagnostics](logging.md), [Node/Vite/Oxc tooling](tooling.md), [design review handoff](design/workflow.md) and [Zed task/report reuse](developer-experience.md). No installed-tool or implementation claim is made by these plans.
 
 ## Internationalization readiness
 
@@ -134,7 +134,7 @@ combinatorial exhaustive list or pad a quota with irrelevant hypothetical failur
 | Lead/integrator | Require the table in task handoff; identify affected domains, independent reviewers and decisions; reconcile findings and evidence |
 | Feature implementer (Rust/platform/DB/rendering) | Challenge own assumptions before code; specify outcomes and add relevant tests/diagnostics with implementation |
 | UX designer | Design interruption, unavailable/error/retry and recovery journeys; input/focus/accessibility/lifecycle expectations with owner-approved scope |
-| UI designer | Represent relevant states in adaptive Figma, en/uk, focus/AX and motion; no layout shifts; no invented features to fill edge cases |
+| UI designer | Represent relevant states in adaptive design, en/uk, focus/AX and motion; no layout shifts; no invented features to fill edge cases |
 | Reviewer | Independently challenge material design before code and implementation before acceptance; inspect actual state transitions/diff/tests, not just authored table |
 | Build reliability | Support deterministic fixtures, fault injection where reviewed, discovery and honest result/coverage reporting; implementers still own feature tests |
 | Competitor researcher | Identify documented failure/limit behavior as evidence and label unknowns; cannot decide Linefield policy or certify safety |

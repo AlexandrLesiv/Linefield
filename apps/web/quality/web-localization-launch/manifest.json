@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-18T01:33:01.181Z",
+  "baseCommit": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7",
+  "appEvidence": "../web-drawing-v2/manifest.json",
+  "appEvidenceSha256": "1d7b6f6e120c0317aa1ea955394839d914a79c7e2ec4f64ba135e6242bb27c59",
+  "test": "apps/web/tests/localization-launch.spec.ts",
+  "testSha256": "00d8e403f9f7db0be7573a294c6145e8006ace7c3cb1d71933e22503800537cd",
+  "statistics": {
+    "startTime": "2026-10-18T01:32:10.371Z",
+    "duration": 16487.887,
+    "expected": 9,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "browser": "Chrome155.0.8059.80",
+  "productionChanges": false
+}

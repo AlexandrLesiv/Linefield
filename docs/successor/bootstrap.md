@@ -13,7 +13,7 @@ contracts and implementation slices retain their review gates.
    files and local Git history. Do not create a worktree, submodule or symlink to the old repo.
 2. Maintain the approved plan, decision/approval record, existing AGENTS.md and specialist
    instructions in Linefield before delegating implementation work.
-   Preserve source cap, Figma, architecture review, diagnostics, E2E and merge gates.
+   Preserve source cap, design review, architecture review, diagnostics, E2E and merge gates.
 3. Record the old reference commit and approved reuse ledger. Read old source at that
    commit; do not modify or silently import later old-repository work.
 4. Create only dependencies needed by the first approved web/shared slice. Copy selected source with
@@ -54,7 +54,7 @@ The template is not current authorization to implement unapproved decisions.
 Act as lead/integrator for Linefield at /Users/oleksandr/projects/linefield.
 Follow this project's approved AGENTS.md and successor plan.
 Approval record: <APPROVED_PLAN_REVISION_AND_DECISIONS>.
-Figma approval: <APPROVED_VERSION_AND_FRAMES_OR_PENDING_UI_GATE>.
+design review approval: <APPROVED_VERSION_AND_FRAMES_OR_PENDING_UI_GATE>.
 
 The old project at /Users/oleksandr/projects/native-sketch is read-only reference.
 Reference commit: 3b580873ded3fea63d0220a53d7c5ece66c5d897.
@@ -73,7 +73,7 @@ Web first: semantic HTML/TypeScript, shared Rust/Wasm behavior and Skia CanvasKi
 macOS remains the primary product target and next implementation host, with actual AppKit
 controls and Skia. iPhone/iPad follows macOS.
 Use typed FFI/generated declarations under the reviewed concrete contract.
-No implementation of new UI/tools before the identified Figma approval.
+No implementation of new UI/tools before the identified design approval.
 Ask for review before material ABI/schema/thread/framework/security changes.
 Assign scoped specialists; freeze contracts before parallel writers and use
 isolated worktrees. Keep handwritten source/tests/scripts <=200 physical lines.

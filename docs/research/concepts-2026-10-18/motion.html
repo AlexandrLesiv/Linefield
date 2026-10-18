@@ -1,0 +1,147 @@
+<!doctype html>
+<!-- Generated from trusted local research Markdown by build.ts. -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><title>Motion evidence</title>
+<link rel="stylesheet" href="report.css"><link rel="stylesheet" href="report-media.css"><script src="report.js" defer></script></head>
+<body><a class="skip" href="#main">Skip to report</a>
+<header><a class="brand" href="index.html">Linefield <span>/ Research</span></a><span>18 October 2026 · Private local study</span></header>
+<div class="layout"><aside><details open><summary>On this page</summary><nav aria-label="Report sections"><a href="#what-the-recording-establishes">What the recording establishes</a>
+<a href="#capture-provenance-and-limits">Capture provenance and limits</a>
+<a href="#method-and-uncertainty">Method and uncertainty</a>
+<a href="#summary-by-operation">Summary by operation</a>
+<a href="#watch-the-actual-transitions">Watch the actual transitions</a>
+<a href="#width-and-opacity-preset-response">Width and opacity preset response</a>
+<a href="#color-mode-switching-and-a-value-discrepancy">Color mode switching and a value discrepancy</a>
+<a href="#animation-interpretation-and-linefield-implications">Animation interpretation and Linefield implications</a>
+<a href="#reproduction-and-retained-evidence">Reproduction and retained evidence</a>
+<a href="#per-trial-wheel-and-property-presentation-measurements">Per-trial wheel and property presentation measurements</a>
+<a href="#per-trial-preset-changes">Per-trial preset changes</a></nav></details><nav class="related" aria-label="Evidence documents"><a href="index.html">Concepts — a study for Linefield</a><a href="observations.html">Device observation ledger</a><a href="sources.html">Official sources</a><a href="adaptation.html">Designer adaptation proposal</a><a href="motion.html" aria-current="page">Motion evidence</a></nav></aside>
+<main id="main" tabindex="-1"><h1 id="concepts-circle-motion-recorded-timing-study">Concepts circle motion — recorded timing study</h1>
+<p>Status: measured USB video observations, 2026-10-18. This is competitor research, not Linefield performance acceptance or a measurement of physical pen latency. Times below describe recorded visible changes with explicit sampling limits; they do not reveal Concepts' internal animation constants.</p>
+<h2 id="what-the-recording-establishes">What the recording establishes</h2>
+<p>The property strip is visually much faster than the color interface. Its rectangular body appears almost entirely in the first changed captured frame. The smaller hub highlight continues changing afterward. Across repeated trials, the combined property presentation reaches the image-comparison settling threshold in approximately 150–167 ms when opened and 83–100 ms when closed. The RGB color interface is a staged expansion with a longer background-control fade: approximately 700–734 ms to reach that threshold when opened, and 350 ms when closed. These are different operations and should not receive one universal animation duration.</p>
+<p>The source movies contain 42 wheel/property/color actions and 12 measured preset changes. Three further HSL/RGB round trips are retained as qualitative interruption evidence; the first incoming HSL presentation is interrupted, and the remaining presentations have insufficient stable hold time for the same endpoint criterion. No completed wheel-collapse/open or Apple Pencil squeeze animation was recorded.</p>
+<h2 id="capture-provenance-and-limits">Capture provenance and limits</h2>
+<p>Device: physical iPhone 15 Pro Max, iOS 27.0, Concepts 6.36.1 (5415). Input: Device Hub remote UI actions after the owner enabled Developer Mode. Capture: QuickTime Movie Recording, High quality, direct USB iPhone screen feed. This is a different route from the earlier iPhone Mirroring screenshot sequences. The earlier sequences remain unsuitable for timing and are not mixed into this dataset.</p>
+<p>Host metadata in the movies identifies Mac14,10 running macOS 27.0.1 (26A434). Both movies contain 1290 × 2796 H.264 video, full-range YUV420, a 1/60000-second timestamp time base, and AAC stereo audio. A numeric FFmpeg volume scan returned mean and maximum at its 16-bit silence floor of −91 dB for both audio tracks. All report excerpts explicitly remove audio. Original files remain unchanged and local.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Capture provenance and limits table"><table><thead><tr>
+<th scope="col">Source</th><th scope="col">Duration</th><th scope="col">Decoded frames / container frame count</th><th scope="col">Median frame gap</th><th scope="col">Largest gap</th><th scope="col">Gaps above 25 ms</th>
+</tr></thead><tbody>
+<tr><td>concepts-usb-motion-2026-10-18.mov</td><td>154.188850 s video</td><td>9,128 / 9,138</td><td>16.667 ms</td><td>69.333 ms</td><td>109</td></tr>
+<tr><td>concepts-usb-property-changes-2026-10-18.mov</td><td>199.649933 s video</td><td>11,864 / 11,877</td><td>16.667 ms</td><td>83.566 ms</td><td>73</td></tr>
+</tbody></table></div>
+<p>Both captures are variable cadence. The first stream advertises nominal 60 fps and the second approximately 59.94 fps; neither is evidence of a constant frame delivery interval or the phone display's instantaneous refresh rate. Decoded-frame counts agree between FFprobe's frame listing and FFmpeg's raw decode, but differ from the container's frame-count field. The analysis uses decoded frames and their presentation timestamps, not the container count or frame-number divided by 60. It does not attribute capture gaps to Concepts rendering performance.</p>
+<p>Source SHA-256 values: first movie <code>7a92c351173bd5706dad76dbd25fd63d7da217d3788e6c78f513db4452b26163</code>; second movie <code>e8b86d431bbc4292dfca5c5ff1185a18fd7302892e358185f2702f1041f460d0</code>. Repository base is <code>fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7</code>; that is the report's base, not a Concepts source revision.</p>
+<p>Brightness, thermal state, battery/power mode, adaptive refresh behavior, Reduce Motion, Reduce Transparency, and competing device workloads were not controlled or measured. The exact iOS build number was not recorded. No callback/CPU/GPU/presentation trace, physical contact marker, or synchronized hardware clock was available. Host action timestamps establish order only; subtracting them from video timestamps would not produce valid input latency.</p>
+<h2 id="method-and-uncertainty">Method and uncertainty</h2>
+<p>The analysis preserves native decoded-frame order and PTS. A fixed research-UI region at source coordinates x=0, y=320, width=1290, height=1290 is downscaled to 320 × 320 grayscale for repeatable image comparison. It contains the wheel, strip, palette, color arcs and affected background controls, excluding the system clock and unrelated content. Full-size and contact-sheet inspection identifies the actions and checks the gross visual behavior; the numerical endpoints remain explicitly operational image thresholds, not a human-perception ground truth.</p>
+<p>Start is the first frame where more than 0.05% of the analysis pixels differ by more than 8/255 luminance levels from the pre-action reference. Settled is the first frame where at most 0.01% differ by more than 8/255 from the final reference, with that condition maintained through the remaining observation window. The preset-change study uses 0.05% for settling. The stricter 0.01% threshold retained isolated residual pixel changes and produced tails up to600 ms after the major visible update. Codec/noise contribution is possible, not proven. The immediate-update interpretation therefore depends on the stated threshold; this sensitivity and the separate criterion are retained rather than treating either threshold as perceptual ground truth.</p>
+<p>The observed span is settled PTS minus first-changed PTS. A sampling bracket runs from the previous-settled-frame PTS minus first-changed PTS to settled PTS minus previous-unchanged PTS. It expresses endpoint sampling uncertainty under the stated threshold. It is not a confidence interval, and it excludes further uncertainty from compression, scaling, USB transport, the threshold choice and an unobserved physical display. A span of zero means the first changed frame already satisfies the endpoint criterion; it never proves a zero-duration operation. The shortest retained hold after the threshold endpoint is only66.7 ms, so these bounded windows do not establish long-term stability or performance acceptance.</p>
+<p>Property bodies appear already extended before the smaller hub highlight reaches its final appearance. Consequently the property totals include hub feedback and must not be described as 167 ms of strip travel. Similarly color-opening totals include the fade of palette/precision controls after the arcs have largely arrived. The first event called <code>width-retarget</code> in each logged sequence actually opens width from a closed strip; only the subsequent opacity and smoothing actions retarget an already open strip. Repeated <code>smoothing-close / 1–3</code> labels denote the independent second set of closes; event ordering and PTS disambiguate them.</p>
+<h2 id="summary-by-operation">Summary by operation</h2>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Summary by operation table"><table><thead><tr>
+<th scope="col">Visible operation</th><th scope="col">Trials</th><th scope="col">Median observed span</th><th scope="col">Observed range</th><th scope="col">Interpretation</th>
+</tr></thead><tbody>
+<tr><td>Open width</td><td>3</td><td>166.7 ms</td><td>151.3–166.7 ms</td><td>Body appears immediately in captured samples; hub feedback settles afterward</td></tr>
+<tr><td>Close width</td><td>3</td><td>100.0 ms</td><td>83.4–100.0 ms</td><td>Body disappears before remaining hub feedback settles</td></tr>
+<tr><td>Open opacity</td><td>3</td><td>152.3 ms</td><td>150.0–166.7 ms</td><td>Same presentation family as width</td></tr>
+<tr><td>Close opacity</td><td>3</td><td>83.4 ms</td><td>83.4–83.4 ms</td><td>Sampling precision does not establish an exact internal constant</td></tr>
+<tr><td>Open smoothing</td><td>3</td><td>166.7 ms</td><td>166.7–166.8 ms</td><td>Same stable hub and overlaid strip</td></tr>
+<tr><td>Close smoothing</td><td>6</td><td>83.4 ms</td><td>83.3–83.4 ms</td><td>Includes closes after the retarget sequences</td></tr>
+<tr><td>Width → opacity</td><td>3</td><td>166.7 ms</td><td>166.7–166.7 ms</td><td>Contents change while the strip footprint remains fixed</td></tr>
+<tr><td>Opacity → smoothing</td><td>3</td><td>166.7 ms</td><td>166.7–166.7 ms</td><td>Hub highlight changes; tools remain underneath</td></tr>
+<tr><td>Open RGB color interface</td><td>3</td><td>725.1 ms</td><td>700.1–733.5 ms</td><td>Arc expansion plus background/palette fade</td></tr>
+<tr><td>Close RGB color interface</td><td>3</td><td>350.1 ms</td><td>350.1–350.1 ms</td><td>Faster retreat/restore than opening</td></tr>
+<tr><td>Pencil → Select</td><td>3</td><td>108.4 ms</td><td>108.4–116.7 ms</td><td>Tool, hub capabilities and palette presentation change</td></tr>
+<tr><td>Select → Pencil</td><td>3</td><td>266.7 ms</td><td>250.0–266.7 ms</td><td>Different restoration timing; do not average both directions</td></tr>
+</tbody></table></div>
+<p>The per-trial table below includes local gaps of up to 50.1 ms. Small differences such as 151 versus 167 ms are not sufficient to infer separate intended durations. Three repetitions are a small descriptive sample, not a statistically validated performance distribution.</p>
+<h2 id="watch-the-actual-transitions">Watch the actual transitions</h2>
+<figure><video controls muted playsinline preload="metadata" src="assets/motion-width-trials.mp4"></video><figcaption>Three width open/close cycles, original movie approximately 31.6–37.2 s. Cropped, resized, audio removed. Playback is for inspection; measurements use original PTS.</figcaption></figure>
+<figure><img src="assets/motion-strip-contact.jpg" alt="Six recorded frames showing the width strip appearing before the hub highlight finishes changing"><figcaption>Read left to right, then down. Original decoded frames 1910, 1911, 1912, 1913, 1917, 1920; the first changed frame is 1911 at32.022633s. The circular hub border remains visible, and the strip overlays outer tools rather than enlarging a tool sector.</figcaption></figure>
+<figure><video controls muted playsinline preload="metadata" src="assets/motion-color-trials.mp4"></video><figcaption>RGB close/open repetitions, original movie approximately113.4–118.7s. Arc movement and background-control fades have different phases.</figcaption></figure>
+<figure><img src="assets/motion-color-contact.jpg" alt="Six recorded frames of the RGB color arcs expanding while other controls fade"><figcaption>Original decoded frames5921,5922,5928,5934,5945,5961. First detected change99.814083s; threshold-settled100.539233s. This is a sequence of captured frames, not a reconstruction of the proprietary easing curve.</figcaption></figure>
+<figure><video controls muted playsinline preload="metadata" src="assets/motion-tool-switch.mp4"></video><figcaption>Select/Pencil switching, approximately134.6–140.6s. Returning to Pencil restores a different hub/palette state from entering Select.</figcaption></figure>
+<h2 id="width-and-opacity-preset-response">Width and opacity preset response</h2>
+<p>Changing width between8 and19.5 or opacity between50% and100% changes the number, preset highlight, thumb and visible brush feedback together within one or two captured changed frames. Observed spans are0–19.8ms; local sampling brackets extend up to66.9ms. This supports an immediate-update interpretation rather than a decorative value tween, but does not prove the internal command or physical display latency. The width and opacity operations are separate: changing width does not progressively increase opacity.</p>
+<figure><video controls muted playsinline preload="metadata" src="assets/motion-width-values.mp4"></video><figcaption>Three width preset round trips. Actual temporary brush feedback changes with the preset; the slider itself is not a thickness-preview ramp.</figcaption></figure>
+<h2 id="color-mode-switching-and-a-value-discrepancy">Color mode switching and a value discrepancy</h2>
+<p>Switching RGB/HSL first removes the previous arcs and then introduces the next set. It is not just a static label swap. The first HSL presentation starts around193.242900s in movie2 and is superseded by the RGB action around193.94s before a stable HSL endpoint. Later cycles have about one second between requests, with visible changes continuing near the next request; no uncensored exact duration is assigned from this recording. A follow-up should leave at least two seconds of stable destination state per mode and separate press feedback from arc movement.</p>
+<figure><video controls muted playsinline preload="metadata" src="assets/motion-color-modes.mp4"></video><figcaption>RGB/HSL switching and final close. The early reversal is useful interruption evidence but unsuitable for a completed-animation median.</figcaption></figure>
+<p>There is a visible numeric discrepancy worth investigating independently. Before mode switching, RGB displaysR246/G93/B87. After the round trips, it displaysR246/G91/B85. The initial and final frames both show RGB selected. This report does not establish whether the cause is conversion rounding, an unintended input, a retained value, or another behavior; it does not infer the saved drawing color or claim a confirmed Concepts defect. Linefield should explicitly require that merely changing a color representation cannot mutate the chosen canonical color.</p>
+<figure><img src="assets/motion-color-values.jpg" alt="RGB values before, during and after color mode switching"><figcaption>Movie2 frames11486(193.006900s),11588(194.860133s),11814(198.811000s). The middle frame is transitional and has HSL highlighted while RGB arcs remain visible. Compare the first and last stable RGB presentations for87/93 versus85/91; red remains246.</figcaption></figure>
+<h2 id="animation-interpretation-and-linefield-implications">Animation interpretation and Linefield implications</h2>
+<p>Verified visual behavior: stable wheel geometry; a constant-size hub; foreground property strip over the tool sectors; hub outline retained; fast strip-content updates; smaller hub emphasis changes; separately staged color arcs; fading of controls behind the color interface. The property strip's translucency is visible, but its exact alpha, material/blur implementation and blend color are not recoverable from this recording alone. Do not report the owner's desired half-opacity as a measured50% Concepts constant.</p>
+<p>Inference: the color motion visually accelerates and then settles, and the phases overlap. No fitted cubic Bézier, spring stiffness, damping, delay or animation framework is established. Compression, sparse frame gaps and multiple simultaneously changing layers make a single easing fit misleading. A future controlled capture could track a specified arc endpoint and opacity reference separately; that would still estimate visible motion rather than disclose internal parameters.</p>
+<p>For the next Linefield design review, keep tool and property semantics immediate, keep the five illustrated sector geometries fixed, and design host presentation separately from shared Rust commands. Use the research as evidence for hierarchy and timing order, not a requirement to copy every duration. Initial drawing scope still excludes smoothing and additional tools; showing them in a research comparison is not approval to implement them.</p>
+<p>Planned validation ownership: ui_ux_designer specifies normal/reduced-motion states and interruption; platform implementers test focus, clipping, pointer capture and edge placement; rendering_performance reviews CT-06/SU-14/SU-16 and INV-08/INV-11 with bounded surface/cache work. Proposed scenarios MOTION-RESEARCH-01(property open/close),02(retarget),03(color open/close),04(tool switch),05(preset change),06(mode interruption) identify this evidence only. They are not passed Linefield runtime acceptance IDs. Future release checks must separately measure frame/main-thread/memory behavior while drawing and loading, exact host/build/display/scale/refresh, surface loss, stale scenes and cold/warm/evicted parity. No GPU benchmark or physical pen-to-screen measurement was performed here.</p>
+<h2 id="reproduction-and-retained-evidence">Reproduction and retained evidence</h2>
+<p>Analysis uses FFmpeg/FFprobe7.1.1 extracted from the existing Android Studio bundle <code>ffmpeg-7.1.1-1.5.12-macosx-arm64.jar</code>, not an installed project dependency. The helper expects the extracted binaries at <code>/tmp/linefield-motion-tools/org/bytedeco/ffmpeg/macosx-arm64/</code>. Run <code>node motion-analysis.ts</code> and <code>node motion-analysis.ts --properties</code> from this folder, then <code>node motion-summary.ts</code>. The first two decode original media; the last applies the documented thresholds and produces the per-trial tables and JSON. Frames are identified with zero-based indices. Movie metadata creation dates are not used as a timing origin.</p>
+<p>Retained local evidence includes original movies, action-order logs, full frame PTS and comparison values in <code>assets/motion-frame-analysis.json</code> and <code>assets/motion-property-frame-analysis.json</code>, plus <code>assets/motion-timing-summary.json</code> and <code>assets/motion-property-timing-summary.json</code>. The excerpts are software-encoded H.264 with no audio; they are viewing aids and must not replace the originals for timing. All derived media show only the research drawing/UI. Raw captures remain excluded from publication by the report's local-only policy.</p>
+<p>The two helpers passed explicit strict TypeScript, Oxlint and formatting checks; each is below200physical lines after formatting. These are research-script checks, not app tests. No app code, drawing semantics, renderer choice or gallery transition changed.</p>
+<h2 id="per-trial-wheel-and-property-presentation-measurements">Per-trial wheel and property presentation measurements</h2>
+<p>PTS values are seconds from the beginning of movie1. Extra decimal places preserve the recorded timestamps; they do not imply microsecond measurement accuracy. Sampling brackets use the definition above.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Per-trial wheel and property presentation measurements table"><table><thead><tr>
+<th scope="col">Event</th><th scope="col">Operation / trial</th><th scope="col">First changed PTS</th><th scope="col">Settled PTS</th><th scope="col">Observed ms</th><th scope="col">Sampling bracket ms</th><th scope="col">Largest gap ms</th>
+</tr></thead><tbody>
+<tr><td>M1-01</td><td>width-open / 1</td><td>32.022633</td><td>32.173900</td><td>151.3</td><td>134.6–167.9</td><td>50.0</td></tr>
+<tr><td>M1-02</td><td>width-close / 1</td><td>32.690683</td><td>32.790700</td><td>100.0</td><td>83.4–133.5</td><td>33.4</td></tr>
+<tr><td>M1-03</td><td>width-open / 2</td><td>33.707567</td><td>33.874267</td><td>166.7</td><td>150.0–200.1</td><td>33.4</td></tr>
+<tr><td>M1-04</td><td>width-close / 2</td><td>34.707783</td><td>34.807817</td><td>100.0</td><td>83.4–133.5</td><td>33.5</td></tr>
+<tr><td>M1-05</td><td>width-open / 3</td><td>35.708017</td><td>35.874717</td><td>166.7</td><td>150.0–200.2</td><td>33.5</td></tr>
+<tr><td>M1-06</td><td>width-close / 3</td><td>36.708233</td><td>36.791583</td><td>83.4</td><td>66.7–116.8</td><td>33.5</td></tr>
+<tr><td>M1-07</td><td>opacity-open / 1</td><td>51.159233</td><td>51.311483</td><td>152.3</td><td>135.6–168.9</td><td>50.0</td></tr>
+<tr><td>M1-08</td><td>opacity-close / 1</td><td>51.828250</td><td>51.911617</td><td>83.4</td><td>66.7–116.8</td><td>33.4</td></tr>
+<tr><td>M1-09</td><td>opacity-open / 2</td><td>52.828483</td><td>52.978517</td><td>150.0</td><td>133.4–183.5</td><td>33.5</td></tr>
+<tr><td>M1-10</td><td>opacity-close / 2</td><td>53.828700</td><td>53.912050</td><td>83.4</td><td>66.7–116.8</td><td>33.5</td></tr>
+<tr><td>M1-11</td><td>opacity-open / 3</td><td>54.828917</td><td>54.995617</td><td>166.7</td><td>150.0–200.2</td><td>33.5</td></tr>
+<tr><td>M1-12</td><td>opacity-close / 3</td><td>55.829133</td><td>55.912483</td><td>83.4</td><td>66.7–116.8</td><td>33.5</td></tr>
+<tr><td>M1-13</td><td>smoothing-open / 1</td><td>56.846033</td><td>57.012733</td><td>166.7</td><td>150.0–200.2</td><td>33.5</td></tr>
+<tr><td>M1-14</td><td>smoothing-close / 1</td><td>57.846250</td><td>57.929600</td><td>83.4</td><td>66.7–116.8</td><td>33.5</td></tr>
+<tr><td>M1-15</td><td>smoothing-open / 2</td><td>58.863133</td><td>59.029883</td><td>166.8</td><td>150.1–200.2</td><td>33.5</td></tr>
+<tr><td>M1-16</td><td>smoothing-close / 2</td><td>59.913400</td><td>59.996750</td><td>83.3</td><td>66.7–116.9</td><td>33.5</td></tr>
+<tr><td>M1-17</td><td>smoothing-open / 3</td><td>60.896950</td><td>61.063650</td><td>166.7</td><td>150.0–200.2</td><td>33.5</td></tr>
+<tr><td>M1-18</td><td>smoothing-close / 3</td><td>61.897167</td><td>61.980533</td><td>83.4</td><td>66.7–116.9</td><td>33.5</td></tr>
+<tr><td>M1-19</td><td>width-open (retarget sequence) / 1</td><td>76.050283</td><td>76.217067</td><td>166.8</td><td>150.1–186.5</td><td>33.4</td></tr>
+<tr><td>M1-20</td><td>opacity-retarget / 1</td><td>76.750517</td><td>76.917217</td><td>166.7</td><td>150.0–200.1</td><td>33.4</td></tr>
+<tr><td>M1-21</td><td>smoothing-retarget / 1</td><td>77.734067</td><td>77.900767</td><td>166.7</td><td>150.0–200.2</td><td>33.5</td></tr>
+<tr><td>M1-22</td><td>smoothing-close / 1</td><td>78.717617</td><td>78.800967</td><td>83.3</td><td>66.7–116.8</td><td>33.5</td></tr>
+<tr><td>M1-23</td><td>width-open (retarget sequence) / 2</td><td>79.701167</td><td>79.867867</td><td>166.7</td><td>150.0–200.2</td><td>33.5</td></tr>
+<tr><td>M1-24</td><td>opacity-retarget / 2</td><td>80.668050</td><td>80.834750</td><td>166.7</td><td>150.0–200.2</td><td>33.5</td></tr>
+<tr><td>M1-25</td><td>smoothing-retarget / 2</td><td>81.668317</td><td>81.835017</td><td>166.7</td><td>150.0–216.8</td><td>50.1</td></tr>
+<tr><td>M1-26</td><td>smoothing-close / 2</td><td>82.651867</td><td>82.735217</td><td>83.4</td><td>66.7–116.8</td><td>33.5</td></tr>
+<tr><td>M1-27</td><td>width-open (retarget sequence) / 3</td><td>83.652083</td><td>83.818817</td><td>166.7</td><td>150.1–200.2</td><td>33.5</td></tr>
+<tr><td>M1-28</td><td>opacity-retarget / 3</td><td>84.669000</td><td>84.835700</td><td>166.7</td><td>150.0–200.2</td><td>33.5</td></tr>
+<tr><td>M1-29</td><td>smoothing-retarget / 3</td><td>85.669217</td><td>85.835933</td><td>166.7</td><td>150.0–200.2</td><td>33.5</td></tr>
+<tr><td>M1-30</td><td>smoothing-close / 3</td><td>86.652767</td><td>86.736133</td><td>83.4</td><td>66.7–116.8</td><td>33.5</td></tr>
+<tr><td>M1-31</td><td>color-open / 1</td><td>99.814083</td><td>100.539233</td><td>725.1</td><td>691.8–741.8</td><td>33.3</td></tr>
+<tr><td>M1-32</td><td>color-close / 1</td><td>113.925500</td><td>114.275583</td><td>350.1</td><td>333.4–384.7</td><td>34.6</td></tr>
+<tr><td>M1-33</td><td>color-open / 2</td><td>114.725683</td><td>115.425833</td><td>700.1</td><td>683.5–716.8</td><td>33.3</td></tr>
+<tr><td>M1-34</td><td>color-close / 2</td><td>115.692600</td><td>116.042667</td><td>350.1</td><td>333.4–383.4</td><td>33.4</td></tr>
+<tr><td>M1-35</td><td>color-open / 3</td><td>116.776167</td><td>117.509667</td><td>733.5</td><td>700.1–750.2</td><td>33.4</td></tr>
+<tr><td>M1-36</td><td>color-close / 3</td><td>117.693033</td><td>118.043117</td><td>350.1</td><td>333.4–383.4</td><td>33.4</td></tr>
+<tr><td>M1-37</td><td>select-tool / 1</td><td>135.121967</td><td>135.230317</td><td>108.4</td><td>91.7–133.5</td><td>25.1</td></tr>
+<tr><td>M1-38</td><td>pencil-tool / 1</td><td>135.830500</td><td>136.097233</td><td>266.7</td><td>250.1–283.4</td><td>33.4</td></tr>
+<tr><td>M1-39</td><td>select-tool / 2</td><td>136.830733</td><td>136.947417</td><td>116.7</td><td>100.0–133.4</td><td>25.0</td></tr>
+<tr><td>M1-40</td><td>pencil-tool / 2</td><td>137.814217</td><td>138.064267</td><td>250.0</td><td>233.4–266.7</td><td>16.7</td></tr>
+<tr><td>M1-41</td><td>select-tool / 3</td><td>138.822767</td><td>138.931133</td><td>108.4</td><td>91.7–133.4</td><td>25.0</td></tr>
+<tr><td>M1-42</td><td>pencil-tool / 3</td><td>139.797983</td><td>140.064717</td><td>266.7</td><td>250.1–300.2</td><td>33.4</td></tr>
+</tbody></table></div>
+<h2 id="per-trial-preset-changes">Per-trial preset changes</h2>
+<p>PTS values are seconds from the beginning of movie2. Zero observed span means unresolved within a single changed frame, not zero internal duration.</p>
+<div class="table-scroll" tabindex="0" role="region" aria-label="Per-trial preset changes table"><table><thead><tr>
+<th scope="col">Event</th><th scope="col">Operation / trial</th><th scope="col">First changed PTS</th><th scope="col">Settled PTS</th><th scope="col">Observed ms</th><th scope="col">Sampling bracket ms</th><th scope="col">Largest gap ms</th>
+</tr></thead><tbody>
+<tr><td>M2-01</td><td>width-19.5 / 1</td><td>17.104133</td><td>17.104133</td><td>0.0</td><td>0.0–36.9</td><td>36.9</td></tr>
+<tr><td>M2-02</td><td>width-8 / 1</td><td>17.754350</td><td>17.771017</td><td>16.7</td><td>0.0–50.2</td><td>33.5</td></tr>
+<tr><td>M2-03</td><td>width-19.5 / 2</td><td>18.737967</td><td>18.754633</td><td>16.7</td><td>0.0–66.9</td><td>50.3</td></tr>
+<tr><td>M2-04</td><td>width-8 / 2</td><td>19.688183</td><td>19.688183</td><td>0.0</td><td>0.0–50.2</td><td>50.2</td></tr>
+<tr><td>M2-05</td><td>width-19.5 / 3</td><td>20.671733</td><td>20.688400</td><td>16.7</td><td>0.0–50.2</td><td>33.5</td></tr>
+<tr><td>M2-06</td><td>width-8 / 3</td><td>21.655283</td><td>21.671950</td><td>16.7</td><td>0.0–66.9</td><td>50.2</td></tr>
+<tr><td>M2-07</td><td>opacity-50 / 1</td><td>36.391833</td><td>36.391833</td><td>0.0</td><td>0.0–50.2</td><td>50.2</td></tr>
+<tr><td>M2-08</td><td>opacity-100 / 1</td><td>37.125333</td><td>37.142000</td><td>16.7</td><td>0.0–66.8</td><td>50.1</td></tr>
+<tr><td>M2-09</td><td>opacity-50 / 2</td><td>38.092217</td><td>38.108883</td><td>16.7</td><td>0.0–66.9</td><td>50.2</td></tr>
+<tr><td>M2-10</td><td>opacity-100 / 2</td><td>39.075767</td><td>39.095600</td><td>19.8</td><td>0.0–53.4</td><td>33.5</td></tr>
+<tr><td>M2-11</td><td>opacity-50 / 3</td><td>40.075983</td><td>40.075983</td><td>0.0</td><td>0.0–47.0</td><td>47.0</td></tr>
+<tr><td>M2-12</td><td>opacity-100 / 3</td><td>41.059383</td><td>41.076067</td><td>16.7</td><td>0.0–66.5</td><td>49.9</td></tr>
+</tbody></table></div><footer>Research and design proposal. No Linefield product code changed. Screenshots © their respective owners; retained locally for this review.</footer></main></div></body></html>

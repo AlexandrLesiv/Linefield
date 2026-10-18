@@ -164,7 +164,7 @@ reviews now. This is a role recommendation, not a new configured agent or securi
 Lead integrates the threat register and owner approval packets; rust_engine owns shared validation/
 authority, native engineers capabilities, DB specialist persistence design, build_reliability checks/
 provenance, UX/UI honest permission/failure flows. Implementers add security cases with their feature.
-Reviewer independently challenges boundaries and evidence. Security findings do not bypass Figma
+Reviewer independently challenges boundaries and evidence. Security findings do not bypass design review
 or expand features. External expert assessment may be appropriate before strong cloud/privacy claims.
 
 See [security gates and response](gates-and-response.md) for traceability and evidence requirements.

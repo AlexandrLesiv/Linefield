@@ -1,5 +1,4 @@
 import { acquireBackdrop } from "./action-backdrop.ts";
-import { fadeMobileRename, closeMobileRename } from "./mobile-rename-motion.ts";
 import { t } from "./locale.ts";
 import { exitRename } from "./rename-exit.ts";
 import { morphRename } from "./rename-motion.ts";
@@ -10,7 +9,6 @@ export function renameDrawing(
   restore: () => void,
   sourceBounds: DOMRect,
   sourceCard: HTMLElement | null,
-  mobile = false,
 ): void {
   const backdrop = acquireBackdrop();
   const dialog = element("dialog", "rename-dialog");
@@ -35,7 +33,7 @@ export function renameDrawing(
   const close = () => {
     if (closed) return;
     closed = true;
-    backdrop.close(mobile ? 130 : 260);
+    backdrop.close(260);
     const trigger = liveCard()?.querySelector<HTMLElement>(".more") ?? null;
     const done = () => {
       sourceCard?.removeAttribute("data-renaming");
@@ -47,8 +45,7 @@ export function renameDrawing(
       if (currentTrigger) currentTrigger.focus({ preventScroll: true });
       else restore();
     };
-    if (mobile) closeMobileRename(dialog, disposeMotion, done);
-    else exitRename(dialog, form, trigger, disposeMotion, done);
+    exitRename(dialog, form, trigger, disposeMotion, done);
   };
   const submit = element("button", "primary", t("action.rename"));
   submit.type = "submit";
@@ -93,9 +90,7 @@ export function renameDrawing(
   });
   sourceCard?.setAttribute("data-renaming", "true");
   dialog.showModal();
-  disposeMotion = mobile
-    ? fadeMobileRename(dialog, sourceBounds)
-    : morphRename(dialog, form, sourceBounds);
+  disposeMotion = morphRename(dialog, form, sourceBounds);
   input.focus({ preventScroll: true });
   input.select();
 }

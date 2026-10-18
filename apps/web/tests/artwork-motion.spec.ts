@@ -88,18 +88,3 @@ test("WEB-M02 interrupted close and resize restore the current artwork layout", 
     await card.locator("img").evaluate((node) => node.getBoundingClientRect().toJSON()),
   );
 });
-
-test("WEB-M03 iPhone compose is a round safe-area control with final-card clearance", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/?platform=ios");
-  const create = page.getByRole("button", { name: "New drawing", exact: true });
-  await expect(create).toHaveText("");
-  await expect(create.locator('svg[aria-hidden="true"]')).toBeVisible();
-  expect((await create.boundingBox())?.height).toBeGreaterThanOrEqual(44);
-  await expect(page.locator(".mobile-actions, .mobile-create, .new-tile")).toHaveCount(0);
-  await expect(page.locator(".drawing-grid")).toHaveCSS("padding-bottom", "88px");
-  await create.click();
-  await expect(page.locator(".canvas-title")).toHaveText("Untitled");
-});

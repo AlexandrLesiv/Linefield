@@ -1,3 +1,6 @@
+
+> Working-copy terminology was normalized by owner decision235 on2026-10-18. Historical approval hashes below still identify their recorded approval artifacts, not these normalized bytes. The pinned base preserves a pre-normalization working copy and is an exact approval snapshot only where its hash matches. See [normalization provenance](design-workflow-normalization-2026-10-18.md).
+
 # Linefield S02 v2 — consolidated owner review
 Prepared 2026-10-16. Status: OWNER APPROVED on 2026-10-16 (decision 181), documentation only. See [approval scope](S02-v2-approval-2026-10-16.md). Current tree has no committed baseline; evidence uses exact file hashes. Policies DB1–DB22 are selected (DB16 cloud retention deliberately deferred); the concrete fields/signatures/transitions and provisional starting limits below are now explicitly approved; implementation and feasibility evidence remain separate.
 
@@ -27,12 +30,12 @@ Prepared 2026-10-16. Status: OWNER APPROVED on 2026-10-16 (decision 181), docume
 | Bootstrap | macOS approved library directory descriptor duplicated by runtime; explicit en/uk launch language | Removes hidden generic service-config token; sandbox/native feasibility needs probe |
 | Recovery | Identity-fenced state machines and cross-file durable intents | SQLite handles transactions, Rust coordinates files/databases/consent; no fictitious cross-DB atomicity |
 | Limits | Proposed bounded capacities and admitted-resource accounting | Finite overload behavior; starting values are owner-approved; measurements and reviewed material revisions remain required |
-| Presentation | Typed conflict/reconnect/history-reset effects | Semantic contract only; exact native UI still needs identified Figma approval |
+| Presentation | Typed conflict/reconnect/history-reset effects | Semantic contract only; exact native UI still needs identified design approval |
 
 The source schema may evolve while under review; historical Version 3/5 approval remains scoped to those snapshots. New proposal version is not an automatic document user_version bump because no released Linefield format exists.
 
 ## Approval scope and remaining feasibility gates
-Approval can cover the schema/semantic/lifetime/budget proposal with conditions. It does not authorize application implementation, Figma UI, platform releases or cloud.
+Approval can cover the schema/semantic/lifetime/budget proposal with conditions. It does not authorize application implementation, design review UI, platform releases or cloud.
 Before code, exact macOS signed/sandboxed peer discovery and allowed native IPC classes must be proven in a separately authorized disposable probe. No arbitrary fallback transport or broad entitlement.
 File import/export access-grant persistence and destination identity still need a concrete native adapter contract; existing semantic lifecycle is specified here but native bookmarks/capabilities are not implemented. Other native hosts and web VFS/worker/flush support remain explicit future feasibility gates.
 No numeric latency guarantee or all-platform parity proof. No data-loss-free promise for uncommitted RAM after all holders die, misbehaving external writers, storage faults or hardware that misreports flush.
@@ -43,4 +46,4 @@ Threat delta: edit-capable authenticated peers, replay/pruning, raw/native capab
 No runtime tests or migration checks executed during planning. Static DBML validation/layout/link/definition checks and hosted visual review are documentation evidence only.
 
 ## After your review
-Resolve concrete findings/conditions, then authorize scoped compile/rendezvous/storage probes; do not begin app implementation from this packet alone. Gallery Figma/native milestone remains first product implementation. S02/S02M remain open for their required feasibility evidence; concrete v2 contract approval is recorded in decision 181; schema diagram publication is not completion.
+Resolve concrete findings/conditions, then authorize scoped compile/rendezvous/storage probes; do not begin app implementation from this packet alone. Gallery design review/native milestone remains first product implementation. S02/S02M remain open for their required feasibility evidence; concrete v2 contract approval is recorded in decision 181; schema diagram publication is not completion.

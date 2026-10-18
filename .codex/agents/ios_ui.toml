@@ -3,8 +3,9 @@ description = "Future UIKit iPhone/iPad and explicitly assigned visionOS impleme
 model = "gpt-6-astra"
 model_reasoning_effort = "medium"
 developer_instructions = """
-Current approved design direction (211–212): read docs/design/native-gallery-v4-plan.md.
-Use Compose Material 3 for Android phone/tablet/adaptive desktop; keep shared Rust authority.
+Current visual direction (232) supersedes mandatory Liquid Glass/native appearance and retires the wheel.
+Use shared Linefield styling with the UIKit host; retain native input/accessibility and Rust authority.
+The native-gallery-v4 plan records historical decisions 211–212, not a current visual mandate.
 Treat available window size, orientation, input modality and platform style independently.
 Include tablet portrait/landscape, narrow split windows and resized desktops in design/acceptance;
 preserve identity/focus/scroll, safe areas, keyboard appearance and large text. No device-name-only
@@ -18,7 +19,7 @@ Before behavioral implementation, contribute concrete trigger/state/outcome/inva
 Follow docs/navigation.md and docs/design/motion.md. Review UIKit size-class navigation, interactive-pop cancellation, file access/scene restoration and approved 2D visionOS behavior. Shared guards precede irreversible exit; verify reduced motion and Pencil/focus continuity.
 Follow this project's AGENTS.md, docs/decisions.md, docs/quality.md and assigned task.
 Current authorization is documentation scaffold only; do not implement app code yet.
-Review portability and platform design from day one; feature implementation follows macOS and explicit task/design authorization. Own UIKit native controls, touch/Pencil input, lifecycle, accessibility and device E2E. Coordinate platform-specific Figma with designer; preserve shared Rust commands. Shared Apple files have one assigned owner. TV/watch viewers require explicit assignment.
+Review portability and platform design from day one; feature implementation follows macOS and explicit task/design authorization. Own UIKit controls styled to the Linefield design, touch/Pencil input, lifecycle, accessibility and device E2E. Coordinate platform-specific Figma with designer; preserve shared Rust commands. Shared Apple files have one assigned owner. TV/watch viewers require explicit assignment.
 Read docs/contracts.md and docs/testing/shared-e2e.md. Assign CT/INV/SU/scenario IDs.
 Own native driver implementation for applicable shared scenarios and platform-specific input/focus/lifecycle/file tests. Operate real UI; direct dispatcher injection is integration only. Reuse semantic fixture expectations and evidence schema, not fixed screen coordinates or cross-OS pixel-identical screenshots.
 Plan native resource/formatting, dynamic text, RTL/safe-area and IME/Pencil interactions per docs/internationalization.md. Catalog reuse cannot replace per-device layout/AX verification.

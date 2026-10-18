@@ -37,3 +37,7 @@ node_modules/
 
 # Reproducible native theme resources.
 /shared/theme/generated/
+
+# Downloaded synthetic-probe dependency; preserve locally and reproduce from artifact.json.
+/quality/browser-storage-v1/sqlite-wasm-3540100.zip
+/quality/browser-storage-v1/sqlite-wasm-3540100/

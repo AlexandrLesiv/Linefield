@@ -22,7 +22,7 @@ EB1–EB5 policy choices are recorded above. Remaining concrete geometry bounds 
 
 Question: how much viewport zoom is justified for the existing infinite-canvas sketching scope?
 Method: public-source research by the lead and assigned competitor researcher; no installed-app
-inspection, benchmark or Figma approval. This is a bounded EB1 review, not completion of S00C.
+inspection, benchmark or design review approval. This is a bounded EB1 review, not completion of S00C.
 
 | Evidence | Product/platform and source | Finding and confidence |
 | --- | --- | --- |
@@ -48,7 +48,7 @@ Panning can still reach content; zoom does not define document size. Zoomed-out 
 can remain expensive, so narrowing the range does not establish performance by itself.
 Do not add navigation pins, new Fit controls or competitor features implicitly. UX should
 review orientation and endpoint feedback within the approved pan/zoom design; UI supplies
-identified Figma, and the owner approves behavior before implementation.
+identified design, and the owner approves behavior before implementation.
 
 Historical, superseded EB1 envelope suggestions (not approvals): finite coordinates
 ±2^30 logical units, positive uniform stroke scale 1/1024–1024, and untransformed width
@@ -106,7 +106,7 @@ Existing approved zoom, persistence, history, export pixel scale and active-tool
 | --- | --- | --- |
 | EB6 coordinate envelope | Original coordinates and transformed painted bounds within ±1,048,576 logical units per axis (±2^20), including stroke radius. View navigation remains finite and validated against this envelope; exact edge presentation needs UX review. | Retain original ±2^30 proposal: much larger workspace, more demanding numerical/culling validation with little established preview need. |
 | EB7 stored uniform transformation scale | Cumulative positive scale 1/64–64 relative to original stroke; never zero/negative and never rewrite original samples to evade the cap. Validate resulting painted bounds too. | Original 1/1024–1024: more extreme resizing; harder geometry/width/hit-test fixtures. Neither choice changes 10%–800% viewport zoom. |
-| EB8 base pen width | 0.1–256 logical units before pressure and stored transformation; apply already-selected pressure curve and width-scaling rules. This is engine admission, not a prescribed slider range. | Original 0.1–1024: permits broader marks but increases extreme geometry cases. Figma still determines native presentation within the selected engine limit. |
+| EB8 base pen width | 0.1–256 logical units before pressure and stored transformation; apply already-selected pressure curve and width-scaling rules. This is engine admission, not a prescribed slider range. | Original 0.1–1024: permits broader marks but increases extreme geometry cases. design review still determines native presentation within the selected engine limit. |
 | EB9 cache accounting | Count 64 MiB disposable CPU render cache inside 128 MiB projection/geometry, both inside 512 MiB aggregate; shared physical allocations counted once. | Separate 64 MiB and 128 MiB category ceilings, still inside the same 512 MiB total. More cache headroom competes with pending/history/model allocations. |
 | EB10 initial PNG raster budget | Target at most 16,777,216 pixels total and 8,192 pixels on either axis; reserve up to 128 MiB aggregate temporary PNG raster/encoder memory within the existing 512 MiB ceiling, separate from retained source charge. Start with a bounded full-surface implementation feasibility check. | Plan tiled/streamed export first, then choose a larger output cap from measurements. More renderer/encoder seam, cancellation and memory-accounting work before preview acceptance. |
 | EB11 gallery thumbnail budget | Up to 32 MiB decoded CPU thumbnail cache, nested inside the 64 MiB disposable cache; load visible items first and at most one viewport of items before/after. Keep approved stable-size placeholders and lazy gallery. | Visible-items-only requests with up to 16 MiB decoded cache inside the same parent budget: lower memory, potentially more placeholders/reloads during scrolling. |
@@ -128,7 +128,7 @@ Approved output is opaque 8-bit sRGB PNG at the selected fixed pixel scale; nati
 For EB11, GPU texture copies are separately charged to the existing GPU target; encoded data,
 in-flight decode buffers and decoded images must not become uncharged memory. Prefetch is
 cancellable and lower priority than visible/ink work. Do not introduce a new thread topology
-through this budget. Exact thumbnail raster dimensions follow approved Figma sizes/display
+through this budget. Exact thumbnail raster dimensions follow approved design review sizes/display
 density plus measured admission checks, rather than guessing a platform-wide fixed pixel size.
 
 Planned tests: all endpoints, invalid finite/nonfinite values, cumulative scale, radius-aware
@@ -225,7 +225,7 @@ Owner selected EB6-B, EB12-A and WV1-A; see decisions 193–195. The option desc
 
 The owner's request to proceed to decisions does not select a watch architecture. Present
 these together; EB7–EB11 are settled by decisions 188–192. This batch approves directions
-and provisional profiles only, not application implementation, Figma or measured support.
+and provisional profiles only, not application implementation, design review or measured support.
 
 - EB6 revised A (recommended): practically infinite, pageless canvas using existing finite
   f64 document coordinates and view-relative rendering; establish the largest validated
@@ -249,7 +249,7 @@ and provisional profiles only, not application implementation, Figma or measured
   revision until a replacement is installed safely; reserve replacement storage first.
   Explicit offline downloads are managed persistent data, not disposable cache, and ordinary
   cache eviction must not remove them. Disk quotas/removal/revocation and exact prepared
-  detail/zoom guarantees need a bounded follow-up contract and owner-approved Figma.
+  detail/zoom guarantees need a bounded follow-up contract and owner-approved design review.
   B: investigate a native watchOS vector renderer so downloaded native documents can be
   viewed independently at arbitrary permitted zoom. More geometry/render parity, parser,
   memory and device work; requires a concrete architecture review, not automatic coding.
@@ -484,5 +484,5 @@ selection/render/export parity and native flipped/unflipped adapter checks as ap
 The owner subsequently selected RC11-A (decision 207). The earlier empty entry was not approval.
 Prepare the consolidated DBML/exact ABI/ownership/test packet; exact tested
 stroke span still needs numerical evidence. Handle dragging/click offset/scale-factor UX belongs
-to feature-specific UX and identified Figma review, not an incidental architecture selection.
+to feature-specific UX and identified design, not an incidental architecture selection.
 No schema changes, executable probes, app implementation or publication authorized here.

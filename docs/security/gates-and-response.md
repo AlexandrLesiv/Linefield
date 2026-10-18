@@ -32,7 +32,7 @@ normal unit test; isolate intentional invalid-memory probes and document ABI cal
 ## Local development gates before later CI reuse
 
 Before implementing a boundary: link applicable SEC IDs to contract, proposed tests, resource bounds,
-owner and failure UX; obtain required schema/ABI/trust/Figma approval. Per relevant change, require
+owner and failure UX; obtain required schema/ABI/trust/design review approval. Per relevant change, require
 format/type/lint plus semantic and adversarial cases, unsafe/native review and secret/dependency
 checks as installed. Run deeper seeded fuzz/sanitizer campaigns for parser/ABI milestones; retain
 reproduction inputs and redacted evidence. Exact compatible pinned tooling belongs to S01.

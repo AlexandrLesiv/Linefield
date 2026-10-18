@@ -1,0 +1,104 @@
+{
+  "startedAt": "2026-10-18T22:13:38.400Z",
+  "completedAt": "2026-10-18T22:13:42.304Z",
+  "revision": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7",
+  "dirtyWorkingTree": true,
+  "host": {
+    "platform": "darwin",
+    "release": "27.0.0",
+    "arch": "arm64",
+    "node": "v24.12.0"
+  },
+  "sources": {
+    "acquire.ts": "a7e8ba6695818450d347666c5b1e85da49a682892226307c77e1797712cbbb67",
+    "fault.js": "b0a5037e1732391e2513b3ff28359b4ee45b14e4fcffb2a4165d64737e096df3",
+    "harness.js": "70d46e692640491658dd09ae484aa7de734d4912740da38229edc7b0fb326386",
+    "instrument.ts": "537f3c296cbc16ec3cb6b63d2a2f92af646f5d174fa699a6e5eda903bcd7b665",
+    "proxy-gate.js": "ecbfeb40e6b0dc26d12072deee67190219ec38731744a222eb5056e3c56f6fe9",
+    "run.ts": "c917c63edf3a16db177d11cb4a44ccb334346814f50a55d723c4c6df8c6cd813",
+    "scenarios.js": "9ee5f94ef234a22487ee758fbef1a1a5ac7cd9adb7a51e9530ff2c29546a383e",
+    "server.ts": "48837ca90d62110c6740b431e20a8c7095470e9505268e2c293752f233ba3254",
+    "worker.js": "432a46ac6c028d06ad5888521cdaa0f23ac8b780abe59f9c968b66ba67d2ca9e"
+  },
+  "results": [
+    {
+      "browser": "chromium",
+      "version": "155.0.8059.80",
+      "capabilities": {
+        "isolated": true,
+        "secure": true,
+        "opfs": true,
+        "locks": true,
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36"
+      },
+      "cases": [
+        {
+          "id": "PROBE-01",
+          "status": "failed",
+          "error": "Error: Expected [[\"delete\"],[\"delete\"],[2],[1]], got [[\"delete\"]]"
+        },
+        {
+          "id": "PROBE-02",
+          "status": "failed",
+          "error": "Error: SQLite3Error: SQLITE_ERROR: sqlite3 result code 1: no such table: marker"
+        },
+        {
+          "id": "PROBE-03",
+          "status": "failed",
+          "error": "Error: Expected [[1],[2],[\"ok\"]], got [[1],[2]]"
+        },
+        {
+          "id": "PROBE-04",
+          "status": "passed"
+        },
+        {
+          "id": "PROBE-05",
+          "status": "failed",
+          "error": "Error: Expected [[\"ok\"]], got []"
+        },
+        {
+          "id": "PROBE-06",
+          "status": "failed",
+          "error": "Error: Expected [[9],[\"ok\"]], got [[9]]"
+        }
+      ]
+    },
+    {
+      "browser": "chromium",
+      "status": "failed",
+      "error": "Error: page.evaluate: Error: SQLite3Error: SQLITE_ERROR: sqlite3 result code 1: no such table: marker\n    at worker.onmessage (http://127.0.0.1:65149/harness.js:17:36)"
+    },
+    {
+      "browser": "firefox",
+      "status": "unrun_browser_not_installed",
+      "error": "Error: browserType.launchPersistentContext: Executable doesn't exist at /Users/oleksandr/Library/Caches/ms-playwright/firefox-1555/firefox/Nightly.app/Contents/MacOS/firefox\n╔════════════════════════════════════════════════════════════╗\n║ Looks like Playwright was just installed or updated.       ║\n║ Please run the following command to download new browsers: ║\n║                                                            ║\n║     npx playwright install                                 ║\n║                                                            ║\n║ <3 Playwright Team                                         ║\n╚════════════════════════════════════════════════════════════╝"
+    },
+    {
+      "browser": "webkit",
+      "version": "27.2",
+      "capabilities": {
+        "isolated": true,
+        "secure": true,
+        "opfs": true,
+        "locks": true,
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15"
+      },
+      "cases": [
+        {
+          "id": "PROBE-01",
+          "status": "failed",
+          "error": "Error: Expected [[\"delete\"],[\"delete\"],[2],[1]], got [[\"delete\"]]"
+        },
+        {
+          "id": "PROBE-02",
+          "status": "failed",
+          "error": "Error: SQLite3Error: SQLITE_ERROR: sqlite3 result code 1: no such table: marker"
+        }
+      ]
+    }
+  ],
+  "diagnostics": [
+    "chromium: Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "limits": "Synthetic fixture only; no power-loss, product bridge, native E2E or universal proxy-fencing proof."
+}

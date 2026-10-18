@@ -14,22 +14,22 @@ real browser acceptance; existing prototype tests do not certify an editable dra
 
 | Task | Deliverable and ownership | Depends on | Completion gate |
 | --- | --- | --- | --- |
-| S00 Review and design | Lead records selected scope/name/path; designer prepares versioned macOS Figma with macos_ui feasibility input | Owner review of this packet | Architecture choices recorded; new UI blocked until its Figma approval |
+| S00 Review and design | Lead records selected scope/name/path; designer prepares versioned macOS design review with macos_ui feasibility input | Owner review of this packet | Architecture choices recorded; new UI blocked until its design review approval |
 | S01 Independent foundation | Lead/build_reliability create separate repo, minimal four-crate workspace, AppKit target, Node `.ts` runner, provenance and feature registry | S00 project/scope approval | Clean build with old checkout unavailable; source/lint/test gates actually installed |
 | S02 Concrete contracts | rust_engine + lead specify typed commands, ABI DTOs/lifetimes, thread ownership, schema, limits and failure cases | S01; can draft before creating project | Owner review of concrete ABI/schema/topology, generated-header compile probe and test design |
-| S02L Gallery and library first | macos_ui native host, Rust library services; UX/UI Figma and database specialist schema handoff | S01, approved library subset of S02, gallery Figma | Durable create/list/rename/reopen, approved deletion flow, native E2E and designer review; canvas pending |
+| S02L Gallery and library first | macos_ui native host, Rust library services; UX/UI design review and database specialist schema handoff | S01, approved library subset of S02, gallery design review | Durable create/list/rename/reopen, approved deletion flow, native E2E and designer review; canvas pending |
 | S03 Pure editor | rust_engine selectively ports model/geometry/transactions; implements move and tested native codec | Approved S02 | Engine invariant/property tests; no native/GPU/file dependencies in model; hostile decode tests |
-| S04 First native stroke | macos_ui + rust_engine integrate typed bridge; rendering_performance owns Skia review | S03, S02L, approved Figma and ABI | Native stroke, width/color state, cancellation, rendering/surface lifecycle and bridge tests |
+| S04 First native stroke | macos_ui + rust_engine integrate typed bridge; rendering_performance owns Skia review | S03, S02L, approved design review and ABI | Native stroke, width/color state, cancellation, rendering/surface lifecycle and bridge tests |
 | S05 Navigation and editing | macos_ui owns gestures/focus, rust_engine owns selection/move/scale/history semantics | S04 | Pan/zoom, move/scale/delete and one-operation undo; real native E2E and designer review |
 | S06 Files and recovery | rust_engine owns policy/service; macos_ui owns dialogs; build_reliability owns fault runner | S03–S05 | Autosave/flush/import/export-copy/close/recovery E2E, revision races and interrupted-write tests |
 | S07 Reliability and performance | rendering_performance measures; build_reliability wires stress/security evidence | S06 | Numeric budgets established and checked; bounded caches/logging; fault/fuzz/sanitizer results |
-| S07E PNG export | Owner-selected PNG slice and reviewed Figma handoff; SVG/PDF deferred | S06, reviewed contracts/Figma | Bounds/fidelity/cancellation/memory tests and independent consumer checks |
+| S07E PNG export | Owner-selected PNG slice and reviewed design review handoff; SVG/PDF deferred | S06, reviewed contracts/design review | Bounds/fidelity/cancellation/memory tests and independent consumer checks |
 | S08 Developer preview acceptance | Lead integrates; designer inspects; fresh reviewer audits evidence | All required tasks including S07E PNG export | All required acceptance IDs pass on declared host; known limitations and owner review packet |
 | S09 Distribution | Separate distribution plan; platform backlog is P01–P12 | Preview accepted and distribution authorization | Signing/notarization/update/privacy/support matrix |
 
 S01 may use an empty non-product test host for build/ABI probes; no unapproved tool or screen
-implementation. If Figma access is unavailable, finish authorized non-UI work and leave the
-UI dependency blocked. No HTML mockup or agent approval substitutes for owner Figma approval.
+implementation. If an identified design is not yet approved, finish authorized independent work and leave the
+UI dependency blocked. No HTML mockup or agent approval substitutes for owner design review approval.
 
 S02 includes class/module responsibility map, command/state diagrams, generated header example,
 allocation and result-ownership policy, serialization examples, limits, cancellation and
@@ -56,7 +56,7 @@ contract through implementation before the owner has reviewed it.
 | SU-14 | Cache eviction/device-scale/resize/undo never changes content | Reference rendering with defined tolerances, cold/warm tests and surface lifecycle checks |
 | SU-15 | Structured logs correlate action to outcome without sensitive data | Schema/redaction/sink-failure/overload tests and manual failure diagnosis from logs |
 | SU-16 | Memory, queues, frame work and latency stay within reviewed limits | Exact-build visible-host measurements, sustained workload and failure-path measurements |
-| SU-17 | Native controls are usable with keyboard and accessibility APIs | Figma-to-running-app designer review, keyboard/VoiceOver/manual checks and automated AX assertions |
+| SU-17 | Native controls are usable with keyboard and accessibility APIs | design review-to-running-app designer review, keyboard/VoiceOver/manual checks and automated AX assertions |
 | SU-18 | Source size, dependency direction, reproducibility and license policy hold | Format/lint/type/source checks, generated-declaration drift and dependency/license inventory |
 | SU-19 | PNG export preserves intended appearance and enforces memory limits | PNG pixel checks and independent decoding, huge/empty bounds and cancellation tests; required by decision 18 |
 | SU-20 | i18n-ready UI/input with unchanged canonical command/document semantics | Native resources/fallback, pseudo-LTR/RTL, numeric/IME/Unicode/AX and locale test matrix; real language rollout separate |
@@ -120,7 +120,7 @@ free of private drawing data by using disposable fixtures.
 ## Agent workflow and stopping conditions
 
 Lead owns scope/contracts/integration; rust_engine owns shared semantics and typed boundary;
-macos_ui owns AppKit implementation; ui_ux_designer owns behavior, visual Figma and fidelity review;
+macos_ui owns AppKit implementation; ui_ux_designer owns behavior, visual design review and fidelity review;
 rendering_performance owns measurement validity; build_reliability owns runners/evidence;
 fresh reviewer checks correctness, security, maintainability and evidence independently.
 ios_ui/android_ui/windows_ui may review portability/design now; feature implementation
@@ -150,4 +150,4 @@ proves core/boundary conformance; S04–S06 implement actual macOS E2E with each
 refines shared helpers against the next native platform after macOS. S08 cannot substitute replay or another
 host's results for applicable native tests. Exact task briefs under tasks/ carry these duties.
 
-Design planning supplement: S00A establishes semantic foundations/native mappings and adaptive Figma components before S00 detailed screen approval. the next approved web slice is detailed first, then macOS; other platforms do not require exhaustive upfront designs. P10/P11 add Android TV/Google TV and Android XR placeholders, not implemented apps.
+Design planning supplement: S00A establishes semantic foundations/native mappings and adaptive design components before S00 detailed screen approval. the next approved web slice is detailed first, then macOS; other platforms do not require exhaustive upfront designs. P10/P11 add Android TV/Google TV and Android XR placeholders, not implemented apps.

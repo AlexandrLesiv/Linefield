@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "date": "2026-10-18",
+  "decision": 235,
+  "base": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7",
+  "meaning": "Historical approval hashes remain authoritative for their recorded artifacts. The base commit identifies pre-normalization working copies, not necessarily exact approval snapshots. No technical contract is newly approved.",
+  "records": [
+    {
+      "path": "docs/reviews/S02-v2-approval-2026-10-16.md",
+      "normalizedSha256": "acafcb6d90a4cd06606d5c3162e7e7b7e8897974f42212d0057d955739099b56",
+      "preNormalizationRef": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7:docs/reviews/S02-v2-approval-2026-10-16.md",
+      "preNormalizationSha256": "ccfb38142b4993df7811bbaea9636748ca68d3b26a365feed28d64fd345afad6"
+    },
+    {
+      "path": "docs/reviews/S02-v3-approval-2026-10-17.md",
+      "normalizedSha256": "350549d75d2d3f38b1e8dd478f0ede35e7e04ab1389aabf588468d800fd37f18",
+      "preNormalizationRef": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7:docs/reviews/S02-v3-approval-2026-10-17.md",
+      "preNormalizationSha256": "074d3ca934614375f66cc1306b9921c303b39f346956d242d23a5cde6585c8cd"
+    },
+    {
+      "path": "docs/reviews/S02-consolidated-v2.md",
+      "normalizedSha256": "755465d3fb6b29210f71a8212273985ef1365d1b8f8130f14f4f3ee68a86b529",
+      "preNormalizationRef": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7:docs/reviews/S02-consolidated-v2.md",
+      "preNormalizationSha256": "f2f326744a8c712aa2930b9ba25ad32c13432a43fd53256d853a2ddb1e6b6127"
+    },
+    {
+      "path": "docs/database/schema-v3.md",
+      "normalizedSha256": "7a3893fb301a401f5b7c90a0c3ea5e134c2738d00e80bb5302d2ca18163ffdd2",
+      "preNormalizationRef": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7:docs/database/schema-v3.md",
+      "preNormalizationSha256": "60dd2299057bfa63d2fd802dcc9adea9b7ff4876ebafd0ea19609ccea37ded12"
+    },
+    {
+      "path": "quality/S02-v2-test-plan.md",
+      "normalizedSha256": "9a0e1e937c66d7a962c3b7fdf53510baff3cbbeaac90588feac057357bd5178a",
+      "preNormalizationRef": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7:quality/S02-v2-test-plan.md",
+      "preNormalizationSha256": "05736c68dd15b0a52ef14b4e41202909e90ebc310d621ffee7cb90db45eb3fcf"
+    },
+    {
+      "path": "quality/S02-contract-review.md",
+      "normalizedSha256": "2a57de822cb95f24f499e7a4756cb5c891f56d3f31c06b8d7e9e315d1ab3ae58",
+      "preNormalizationRef": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7:quality/S02-contract-review.md",
+      "preNormalizationSha256": "2282f72b2cdc8c108481d9315bc1b121d49c88465fcf6e4820c630727db8f843"
+    }
+  ]
+}

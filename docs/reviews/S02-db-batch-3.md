@@ -23,6 +23,6 @@ Neither selects persistent Undo history across restarts, AI permissions or an au
 
 A (recommended initial scope): validate relevant object/property preconditions at command acceptance. First valid incompatible change succeeds; later stale incompatible change is rejected and pending work retained for explicit resolution. Different objects need not conflict. No wall-clock winner or automatic geometric composition.
 B: reserve an object during an editing interaction (for example moving/scaling); other clients receive busy feedback for incompatible operations. Requires reviewed acquisition/release, disconnection, fairness and cancellation. Reservations are not database write transactions and must not be held across dialogs/long-running agents.
-Both still validate commands centrally; reservations cannot replace stale-result checks. Conflict/busy/Undo UI requires identified Figma approval.
+Both still validate commands centrally; reservations cannot replace stale-result checks. Conflict/busy/Undo UI requires identified design approval.
 
 Next continue storage recovery-copy retention, concrete budgets/configuration and cross-database recovery contracts. No runtime tests executed.

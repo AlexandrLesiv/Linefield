@@ -1,7 +1,20 @@
 # Competitor research and design handoff
 
-Status: workflow requested 2026-10-16. Role configured; no completed competitor study is claimed.
+Status: workflow requested 2026-10-16. Role configured; a bounded Concepts study is available
+from 2026-10-18. This does not complete the broader multi-product S00C agenda.
 The role is competitor_researcher, distinct from reviewer (implementation correctness/evidence).
+
+## Current study
+
+The [Concepts HTML report](concepts-2026-10-18/index.html) combines the
+[official-source packet](concepts-official-sources-2026-10-18.md), physical-device observations,
+motion evidence and [designer response](../design/concepts-study-linefield-adaptation-2026-10-18.md).
+Read its evidence limits before using a finding as a requirement. The source is
+[report.md](concepts-2026-10-18/report.md); regenerate local HTML with
+`node docs/research/concepts-2026-10-18/build.ts`.
+Private captures remain local under the study's ignored assets directory; do not publish it
+or version the gallery capture containing unrelated drawings. Product scope, design and
+implementation approvals remain separate.
 
 ## Purpose and authority
 
@@ -27,7 +40,7 @@ repeat research only for a meaningful new design question, not every bug fix or 
 5. Scope classification: adapt within existing scope, investigate, defer or reject. Attach
    relevant CT/INV/SU/scenario IDs, or mark proposed new scope; never invent approval.
 6. Handoff: designer response and platform feasibility; owner decision pending/accepted/rejected
-   with artifact/date/conditions recorded by the lead. Link later Figma versions and test cases.
+   with artifact/date/conditions recorded by the lead. Link later design versions and test cases.
 
 Prefer official manuals/release notes. Hands-on observations need an authorized device/session
 and identified build; public user reports are secondary evidence, not established product facts.
@@ -51,7 +64,7 @@ flowchart LR
     UX <--> Platform[Platform engineers: feasibility]
     UI <--> Platform
     Owner --> Scope[Recorded scope decision]
-    UI --> Proposal[Versioned Figma proposal]
+    UI --> Proposal[Versioned design review proposal]
     Proposal --> Check[UX and UI consistency review]
     Scope --> Proposal
     Check --> Approval[Owner: identified design approval]
@@ -60,7 +73,7 @@ flowchart LR
 ~~~
 
 New scope requires an owner decision before it enters implementation. Existing-scope design
-exploration can incorporate research, but still needs identified Figma approval before coding.
+exploration can incorporate research, but still needs identified design approval before coding.
 Designer may disagree with the researcher and must explain why. The owner receives the evidence
 and recommendations, not just the designer's final synthesis. Lead coordinates handoff within
 the current task; separate-chat messages still require explicit authorization.

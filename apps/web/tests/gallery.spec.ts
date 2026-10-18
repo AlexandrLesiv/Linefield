@@ -102,24 +102,14 @@ test("WEB-G04 browser theme, narrow artwork cards and distinct New tile", async 
   expect(
     await page.locator("html").evaluate((node) => getComputedStyle(node).backgroundColor),
   ).toBe("rgb(45, 45, 47)");
-  await page.getByLabel("Preview platform").selectOption("ios");
   await page.setViewportSize({ width: 390, height: 844 });
-  await expect(page.locator(".iphone-create")).toBeVisible();
+  await expect(page.locator(".mobile-create")).toBeVisible();
   expect(
     await page
       .locator(".drawing-grid")
       .evaluate((node) => getComputedStyle(node).gridTemplateColumns.split(" ").length),
   ).toBe(1);
   await expect(page.locator('[data-id="sample-0"] .artwork')).toHaveCSS("aspect-ratio", "4 / 3");
-});
-test("WEB-G05 viewer cannot create or modify drawings", async ({ page }) => {
-  await page.goto("/?preview=1");
-  for (const platform of ["watchos", "wearos", "tvos", "android-tv"]) {
-    await page.getByLabel("Preview platform").selectOption(platform);
-    await expect(page.locator(".more,.new-tile,.mobile-create")).toHaveCount(0);
-    await page.locator('[data-id="sample-0"]').click({ button: "right" });
-    await expect(page.getByRole("menu")).toHaveCount(0);
-  }
 });
 test("WEB-G06 reduced motion and browser Back/Forward", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });

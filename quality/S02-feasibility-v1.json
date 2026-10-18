@@ -148,6 +148,6 @@
     "persistent native file grants with reserved desktop",
     "browser SQLite/rusqlite/VFS and restart/quota conformance",
     "engineering decisions EB1–EB5",
-    "Figma and application implementation"
+    "design review and application implementation"
   ]
 }

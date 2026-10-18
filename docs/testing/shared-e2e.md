@@ -7,21 +7,9 @@ Share behavioral scenarios, fixture semantics, acceptance IDs and evidence schem
 platform execute them through its actual UI. Share meaning and expected outcomes rather than
 coordinates, screenshots or a universal custom widget system.
 
-```mermaid
-flowchart TD
-    Catalog[Shared scenario catalog and fixture definitions] --> Mac[macOS native driver]
-    Catalog --> Mobile[iOS and Android native drivers]
-    Catalog --> Desktop[Windows and Linux native drivers]
-    Catalog --> Web[Browser driver]
-    Catalog --> Viewers[TV and Watch viewer drivers]
-    Mac --> UI[Real controls, gestures and lifecycle]
-    Mobile --> UI
-    Desktop --> UI
-    Web --> UI
-    Viewers --> UI
-    UI --> Assertions[Shared semantic assertions plus platform checks]
-    Assertions --> Report[Common evidence report]
-```
+![Shared E2E scenarios and host drivers](../diagrams/v2/shared-e2e.svg)
+
+Native SVG, diagram style v2. The [migration index](../diagrams/migration-v2.md) records source, status and text equivalent.
 
 ## Scenario contract
 
@@ -151,7 +139,7 @@ Implementers own feature scenarios and tests; build_reliability owns runner/evid
 designer owns native interaction/visual expectations; rust_engine owns semantic fixtures and
 conformance; reviewer rejects mislabeled E2E, missing coverage and weakened expectations.
 
-Adaptive design evidence: docs/design/foundations.md defines Figma resizing checks, not runtime E2E. Platform drivers still test actual resizing/focus/accessibility. P10 adds Android TV/Google TV remote navigation and VIEWER-001; P11 adds approved Android XR 2D input/focus/surface lifecycle tests.
+Adaptive design evidence: docs/design/foundations.md defines design review resizing checks, not runtime E2E. Platform drivers still test actual resizing/focus/accessibility. P10 adds Android TV/Google TV remote navigation and VIEWER-001; P11 adds approved Android XR 2D input/focus/surface lifecycle tests.
 
 ## Locale variants
 
@@ -342,7 +330,7 @@ Scheduling tests inject preview backlog, save priority and completion bursts, ch
 atomicity, preserved order and bounded queues. Measure responsiveness on exact builds; no runtime
 claim from a mocked budget. Export fixtures cover bounded FIFO admission, count/bytes, immutable
 revision/destination intent, cancellation and same-target publication. Native queue/status/panel
-acceptance requires approved Figma; quit assertions wait for Q9. All cases are still planned.
+acceptance requires approved design review; quit assertions wait for Q9. All cases are still planned.
 
 ## Decisions 103-109 acceptance additions
 

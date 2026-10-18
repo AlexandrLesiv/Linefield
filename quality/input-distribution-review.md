@@ -1,7 +1,7 @@
 # S00F / S00G documentation review record
 
 2026-10-16. Linefield is an untracked documentation scaffold without a HEAD commit. Evidence below
-identifies document snapshots, not an app build. No application/SDK/device/store/Figma tests ran.
+identifies document snapshots, not an app build. No application/SDK/device/store/design review tests ran.
 
 ## Participants and disposition
 
@@ -9,7 +9,7 @@ identifies document snapshots, not an app build. No application/SDK/device/store
   Lead explicitly covered Linux/web, alternatives and integration. All specialist work was read-only.
 - Scoped UX interaction assessment was explicitly assigned using local UX responsibilities to the
   Apple specialist; its runtime role remained ios_ui. Do not claim the separately configured UX role
-  was launched or a Figma/user-study/runtime review happened.
+  was launched or a design review/user-study/runtime review happened.
 - UX findings: short-contact candidate handling (P2), accessible authoring versus accessible controls
   (P2), handedness/reduced-motion coverage (P3). Lead repaired; scoped follow-up confirmed all resolved.
 - Fresh independent reviewer input_distribution_review checked proposal/approval boundaries, native
@@ -44,7 +44,7 @@ this was structural inspection, not a full TOML parser or runtime role-discovery
 security packet/workflow hashes were checked and remain unchanged. No dependencies or runners installed.
 
 New binding profiles, touch arbitration, accessible authoring alternatives, S02 schemas/ABI/mechanisms,
-identified Figma and implementation still need their stated approvals. Store channel selection,
+identified design and implementation still need their stated approvals. Store channel selection,
 actual signed artifacts, privacy/license declarations and device evidence remain pending. Policy
 source verification is neither exhaustive legal advice nor a guarantee of future store acceptance.
 

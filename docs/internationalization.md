@@ -25,16 +25,9 @@ inventory/glossary maps to each host's native resources. Platform wording may di
 do not duplicate editing policy or force every platform into one runtime localization library.
 Decision 222 approves a constrained shared catalog and build-time resource generators. Shared authoring avoids translation drift while each host retains its native runtime. See shared/localization/README.md for the exact supported message subset, resource mappings and validation commands; no external localization service is introduced.
 
-```mermaid
-flowchart LR
-    Rust[Rust command result: stable kind and typed values] --> Presenter[Native or web presenter]
-    Resources[Platform message resources and locale] --> Presenter
-    Presenter --> UI[Localized text, numbers and accessibility]
-    Field[Localized numeric field] --> Parse[Host parser: full-string validation]
-    Parse --> Command[Typed numeric Rust command]
-    Command --> Rust
-    Rust --> File[Locale-independent document schema]
-```
+![Localization boundaries](diagrams/v2/localization-boundaries.svg)
+
+Native SVG, diagram style v2. The [migration index](diagrams/migration-v2.md) records source, status and text equivalent.
 
 ## Platform resource direction
 
@@ -149,7 +142,7 @@ No text drawing tool is added. If later approved, editable canvas text requires 
 Unicode shaping, bidi, font fallback/embedding/licensing and export design. Skia drawing alone
 is not a complete text-editing/i18n implementation.
 
-## Figma and rollout
+## design review and rollout
 
 S00A includes long pseudo-translated labels, LTR/RTL chrome, CJK/mixed-script examples, enlarged
 text and numeric-locale examples. Demonstrate actual adaptive resizing with native control
@@ -164,7 +157,7 @@ uses the same separation between localized labels and stable evidence identifier
 
 Track locale readiness independently for every platform: catalog completeness, translation
 review, layout/AX verification, execution evidence and shipped status. A translated catalog or
-Figma mockup is not proof of a supported locale. Both en and uk are required for launch on each
+design review mockup is not proof of a supported locale. Both en and uk are required for launch on each
 host; English remains source/fallback. Shared en/uk catalog resources are implemented for the prototype and generated native resources. Native integration, glossary and translation-review evidence remain S00B/S02 deliverables.
 
 ## Two-language launch contract (owner update, 2026-10-16)
@@ -185,7 +178,7 @@ readiness even though runtime English fallback prevents a broken screen.
 OS-owned dialogs may use OS-controlled wording; app-owned controls/AX require both languages.
 
 No additional permanent i18n agent is recommended now. ui_ux_designer owns the terminology/context glossary, coordinates proficient Ukrainian review
-and provides both language variants in adaptive Figma.
+and provides both language variants in adaptive design.
 Platform engineers own catalogs, selection, plurals, numeric parsing and native E2E. Rust owns
 locale-independent typed messages and domain semantics. Build reliability owns resource gates
 and per-platform evidence; independent reviewer checks gaps. The lead names a locale reviewer
@@ -208,3 +201,7 @@ All other UI labels, accessibility text, errors and region-aware field parsing r
 Author translations and message metadata in shared/localization, never in generated platform outputs. Preserve stable semantic IDs and allow explicit, validated host wording overrides. Generation and validation reject missing translations, incompatible arguments/plurals, invalid resource names and stale output. Native adapters consume their normal resources; no cross-platform runtime localization library or Rust UI-string transport is added. Generated artifacts are not evidence of Apple/Android/Windows/Linux UI behavior. Windows plural-category resources need a reviewed host selector adapter; native build/locale negotiation and linguistic review remain separate acceptance. Existing DB4-B default-name creation still belongs in Rust through its reviewed contract; this UI catalog migration does not change stored names or implement that contract.
 
 Decision227: trusted data-only TypeScript is the authoring format for the shared locale and theme catalogs. Build-time generators retain their existing native/web output formats, runtime validation and deterministic output checks. Native host integration remains separate; see [shared resource plan](design/shared-resources-plan.md).
+
+## Current web evidence
+
+See [S00B web readiness](localization-web-readiness.md) for current catalog/runtime coverage, language/region fixtures, terminology review queue and explicit native/linguistic gaps. The browser checks do not certify launch readiness on another host.

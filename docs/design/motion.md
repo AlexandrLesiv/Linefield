@@ -1,14 +1,17 @@
 # Motion and transition design
 
-Status: planning requirement requested 2026-10-16. No motion prototype or implementation exists.
-Motion is part of interaction design and Figma approval, not decoration added after coding.
+Status: partial. Authorized web gallery/drawing transitions, interruption, focus and reduced-motion
+behavior are implemented; see [P05-D01 browser evidence](../../apps/web/quality/web-drawing-v2/README.md).
+Native mappings, actual host gesture evidence and complete foundation approval remain pending.
+Motion is part of interaction design and design review approval, not decoration added after coding.
 Follow [navigation](../navigation.md), [handoff](workflow.md) and [test cases](../testing/navigation-motion.md).
 
 ## Principles
 
 Use motion to explain cause/effect, hierarchy, continuity and feedback. Every animation needs
-an identified purpose; instant change is a valid design. Prefer the native control/container
-behavior over a cross-platform animation engine or identical timing on every OS.
+an identified purpose; instant change is a valid design. Decision 232 requires common Linefield
+motion for app-owned components, with host adaptation for input, accessibility and performance.
+OS-owned surfaces keep their system behavior; no shared animation engine is selected implicitly.
 
 Actual ink, pointer feedback and direct manipulation follow input immediately. Do not animate
 stroke endpoints toward the pen or delay a command until an animation ends. Brush smoothing,
@@ -50,11 +53,11 @@ No animated camera flight or drawing replay is included implicitly.
 
 | Host | Motion and transition direction |
 | --- | --- |
-| macOS | AppKit-native menus, sheets, controls and window behavior; restrained content changes. Canvas should remain stable while controls change. Do not mimic a phone navigation stack by default. |
-| iPhone/iPad | UIKit-native navigation/presentation and interactive cancellation; adapt compact versus split layouts. Coordinate touch/Pencil capture and system gestures. |
-| Android | Compose Material 3 transitions and feedback; review Back/predictive Back for the supported API levels, including cancelled gestures. Compose Material 3 is owner-selected in decision 211; pin stable APIs at implementation. |
-| Windows | WinUI native page/control transitions where appropriate; system animation/accessibility preferences and desktop focus. |
-| Linux | GTK/libadwaita native containers/transitions; respect system animation settings and resolve built-in Escape/Back actions against editor cancellation. |
+| macOS | Common Linefield component motion in the AppKit host; native windows/OS panels and focus. Canvas stays stable while controls change. Do not impose a phone navigation stack. |
+| iPhone/iPad | Common Linefield component motion with UIKit navigation integration and interactive cancellation; adapt compact/split layouts, touch/Pencil and system gestures. |
+| Android | Common Linefield motion in Compose; mandatory Material feedback is superseded. Review system Back/predictive Back, including cancelled gestures, against supported SDKs. |
+| Windows | Common Linefield component motion in WinUI; retain system animation/accessibility preferences, OS surfaces and desktop focus. |
+| Linux | Common Linefield component motion in GTK; respect system animation settings and resolve built-in Escape/Back against editor cancellation. |
 | Web | Semantic navigation/focus with optional CSS/browser animation enhancement; honor prefers-reduced-motion and remain usable when animation APIs are unavailable. |
 | ChromeOS | Use the chosen Android or web route's motion system; review pointer/touch/keyboard and resizable desktop behavior. No third motion implementation. |
 | tvOS / Android TV / Google TV | Native remote-focus/navigation feedback, stable reading position and viewing-distance context; focus must not disappear during transitions. Read-only capabilities stay enforced. |
@@ -64,7 +67,7 @@ No animated camera flight or drawing replay is included implicitly.
 These are design directions, not assertions of identical APIs or completed host support. Platform
 engineers confirm available controls/preferences for the actual supported SDK before implementation.
 
-## Reduced motion, accessibility and Figma evidence
+## Reduced motion, accessibility and design review evidence
 
 Do not interpret reduced motion as simply making every animation faster. Remove nonessential
 translation/scale/parallax; use immediate updates or a gentle alternative only where appropriate.
@@ -72,10 +75,10 @@ Preserve clear state feedback and focus. Do not rely on motion alone to explain 
 If a preference changes mid-transition, settle safely to the current authoritative state.
 RTL may change navigation chrome direction, never artwork or world coordinates.
 
-Designer delivers interactive Figma prototypes and a transition/state table, not just still
+Designer delivers interactive design review prototypes and a transition/state table, not just still
 screens. Show normal and reduced-motion paths, forward/back, interruption/cancel, loading/error
 and responsive layout cases. Record exact version/frame/prototype links and native feasibility.
-When Figma cannot reproduce a native gesture/timing/interrupt, annotate the limitation and provide
+When a prototype cannot reproduce a native gesture/timing/interrupt, annotate the limitation and provide
 state/timeline specifications; do not claim the prototype proves runtime behavior or latency.
 
 Foundation approval includes motion principles/native mappings. Screen approval includes the

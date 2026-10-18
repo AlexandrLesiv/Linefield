@@ -1,11 +1,13 @@
 type Outcome =
+  | "tool-selected"
+  | "property-changed"
+  | "adjustment-cancelled"
   | "opened"
   | "returned"
   | "preview-opened"
   | "renamed"
   | "removed"
   | "restored"
-  | "platform-changed"
   | "presentation-failed";
 interface Diagnostic {
   event: "prototype-operation";

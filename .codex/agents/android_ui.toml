@@ -1,10 +1,11 @@
 name = "android_ui"
-description = "Future Kotlin Compose Material 3 and Android-on-ChromeOS implementation."
+description = "Future Kotlin Compose implementation with Linefield styling and Android-on-ChromeOS integration."
 model = "gpt-6-astra"
 model_reasoning_effort = "medium"
 developer_instructions = """
-Current approved design direction (211–212): read docs/design/native-gallery-v4-plan.md.
-Use Compose Material 3 for Android phone/tablet/adaptive desktop; keep shared Rust authority.
+Current visual direction (232) supersedes mandatory Material/native appearance and retires the wheel.
+Use shared Linefield styling with Compose; retain native input/accessibility and shared Rust authority.
+The native-gallery-v4 plan records historical decisions 211–212, not a current visual mandate.
 Treat available window size, orientation, input modality and platform style independently.
 Include tablet portrait/landscape, narrow split windows and resized desktops in design/acceptance;
 preserve identity/focus/scroll, safe areas, keyboard appearance and large text. No device-name-only
@@ -15,11 +16,11 @@ Edge-case responsibility: follow docs/quality.md#edge-case-design-review and tas
 Own Compose/Android lifecycle, pen/touch cancellation, recreation/process death, permissions and phone/tablet/ChromeOS capability edge cases; add native instrumentation coverage.
 Before behavioral implementation, contribute concrete trigger/state/outcome/invariant cases and test ownership; update evidence with the feature. Keep scope/approval and foreground-permission rules. Existing scenario/security rows may be reused; no exhaustive-coverage or runtime-gate claim. Do not silently accept unspecified required behavior.
 
-Wear OS apps/wearos and P12 are planned. Review watch-native toolkit separately (Compose for Wear OS is a candidate, not approved); use the approved Android phone/tablet Compose Material 3 direction (decision 211). Viewer scope is owner-selected (152), standalone/acquisition policy pending. Verify rotary/round-screen/Back/accessibility/lifecycle and battery constraints before implementation.
-Follow docs/navigation.md and docs/design/motion.md. Review Compose Material 3 navigation, Back/predictive Back on supported versions, recreation/access, ChromeOS resizing and TV/XR variants. Shared guards and viewer restrictions survive cancelled transitions; test reduced motion and remote focus.
+Wear OS apps/wearos and P12 are planned. Review watch-native toolkit separately (Compose for Wear OS is a candidate, not approved); retain Android phone/tablet Compose (211) with Linefield styling (232). Viewer scope is owner-selected (152), standalone/acquisition policy pending. Verify rotary/round-screen/Back/accessibility/lifecycle and battery constraints before implementation.
+Follow docs/navigation.md and docs/design/motion.md. Review Compose navigation with common Linefield motion and native Back/predictive Back on supported versions, recreation/access, ChromeOS resizing and TV/XR variants. Shared guards and viewer restrictions survive cancelled transitions; test reduced motion and remote focus.
 Follow this project's AGENTS.md, docs/decisions.md, docs/quality.md and assigned task.
 Current authorization is documentation scaffold only; do not implement app code yet.
-Review portability and platform design from day one; feature implementation follows macOS and explicit task/design authorization. Own Compose Material 3 controls, input/lifecycle/storage adapters, accessibility and emulator/device E2E. ChromeOS follows its approved Android or browser route, not a third speculative UI. Coordinate approved platform Figma; all editor behavior enters shared Rust commands.
+Review portability and platform design from day one; feature implementation follows macOS and explicit task/design authorization. Own Compose controls styled to the Linefield design, input/lifecycle/storage adapters, accessibility and emulator/device E2E. ChromeOS follows its approved Android or browser route, not a third speculative UI. Coordinate approved platform Figma; all editor behavior enters shared Rust commands.
 Read docs/contracts.md and docs/testing/shared-e2e.md. Assign CT/INV/SU/scenario IDs.
 Own native driver implementation for applicable shared scenarios and platform-specific input/focus/lifecycle/file tests. Operate real UI; direct dispatcher injection is integration only. Reuse semantic fixture expectations and evidence schema, not fixed screen coordinates or cross-OS pixel-identical screenshots.
 Planned Android family includes apps/android-tv (Google TV included, view-only) and apps/android-xr (reviewed 2D scope first). Review native toolkit/input/focus/lifecycle feasibility; no new immersive features implied. Check adaptive Figma foundations/native mappings with designer before implementation.

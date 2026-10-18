@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1180" viewBox="0 0 1600 1180" role="img" aria-labelledby="title desc">
+  <title id="title">Durable empty library v1 — gallery states</title>
+  <desc id="desc">Proposed composition board, not an implemented app. Desktop admission, creating and uncertain creation; narrow Ukrainian storage refusal.</desc>
+  <defs>
+    <style>text{font-family:Arial,sans-serif;fill:#171717;font-size:16px}.label{font-size:14px;fill:#555}.heading{font-size:22px;font-weight:600}.small{font-size:14px}.app{fill:#e8e8e8;stroke:#aaa}.panel{fill:white;stroke:#aaa}.button{fill:#171717}.white{fill:white}.line{stroke:#aaa;fill:none}.focus{fill:none;stroke:#005fcc;stroke-width:3}</style>
+    <g id="card"><rect width="190" height="190" rx="12" fill="white"/><text x="16" y="168">Untitled</text><text x="156" y="168">···</text></g>
+    <g id="new"><rect width="190" height="190" rx="12" fill="#ededed" stroke="#aaa" stroke-dasharray="5 4"/><text x="82" y="90" style="font-size:40px">+</text><text x="40" y="126">New drawing</text></g>
+  </defs>
+  <rect width="1600" height="1180" fill="#fafafa"/>
+  <text x="32" y="42" class="heading">Durable empty library · v1 / Gallery</text>
+  <text x="32" y="70" class="label">Identified static states · 2026-10-19 · Proposed for approval · No production persistence shown</text>
+  <text x="32" y="112" class="heading">DLW-01 / DLW-02 · Admission and loaded gallery</text>
+  <g transform="translate(32 132)">
+    <rect width="720" height="420" rx="12" class="app"/>
+    <text x="32" y="46" class="heading">Linefield</text>
+    <rect x="32" y="72" width="656" height="108" rx="8" class="panel"/>
+    <text x="48" y="98" class="small">Drawings are stored in this browser. Clearing site data or browser</text>
+    <text x="48" y="120" class="small">storage eviction can remove them.</text>
+    <rect x="48" y="132" width="222" height="36" rx="8" class="button"/>
+    <text x="60" y="155" class="small white">Request storage protection</text>
+    <use href="#new" x="32" y="204"/><use href="#card" x="246" y="204"/><use href="#card" x="460" y="204"/>
+    <rect x="474" y="352" width="124" height="28" fill="white"/><text x="476" y="372">Untitled 2</text>
+  </g>
+  <text x="32" y="578" class="label">Schematic three-column composition. Runtime uses 960px+ for three columns.</text>
+  <text x="32" y="600" class="label">Storage feedback has reserved space; same cards/anchors survive grant or refusal.</text>
+  <text x="792" y="112" class="heading">DLW-01b · Narrow uk / refusal</text>
+  <g transform="translate(792 132)">
+    <rect width="360" height="468" rx="12" class="app"/>
+    <text x="20" y="42" class="heading">Linefield</text>
+    <rect x="20" y="66" width="320" height="218" rx="8" class="panel"/>
+    <text x="36" y="92" class="small">Малюнки зберігаються в цьому</text>
+    <text x="36" y="114" class="small">браузері. Очищення даних сайту</text>
+    <text x="36" y="136" class="small">або автоматичне звільнення</text>
+    <text x="36" y="158" class="small">сховища браузером може</text>
+    <text x="36" y="180" class="small">видалити їх.</text>
+    <text x="36" y="216" class="small">Браузер не надав захист сховища.</text>
+    <text x="36" y="238" class="small">Малюнки все одно можна</text>
+    <text x="36" y="260" class="small">зберігати тут.</text>
+    <rect x="20" y="304" width="320" height="136" rx="12" fill="white"/>
+    <text x="36" y="420">Без назви</text><text x="304" y="420">···</text>
+  </g>
+  <text x="1180" y="164" class="label">Single-column existing pattern.</text>
+  <text x="1180" y="190" class="label">Copy wraps; no toast expiry.</text>
+  <text x="1180" y="216" class="label">No language/theme switch.</text>
+  <text x="1180" y="254" class="label">Full disclosure includes</text>
+  <text x="1180" y="280" class="label">browser storage eviction.</text>
+  <text x="1180" y="318" class="label">Ukrainian wording is draft;</text>
+  <text x="1180" y="344" class="label">proficient review is pending.</text>
+  <text x="32" y="652" class="heading">DLW-03a · Create pending</text>
+  <g transform="translate(32 674)">
+    <rect width="720" height="400" rx="12" class="app"/>
+    <text x="32" y="46" class="heading">Linefield</text>
+    <rect x="32" y="72" width="656" height="104" rx="8" class="panel"/>
+    <text x="48" y="100">Creating drawing…</text>
+    <text x="48" y="126" class="small">Cancelling opening does not remove a drawing already saved.</text>
+    <text x="48" y="156" class="small">Cancel opening</text>
+    <rect x="32" y="200" width="190" height="174" rx="12" fill="#ededed" stroke="#aaa" stroke-dasharray="5 4"/>
+    <rect x="28" y="196" width="198" height="182" rx="14" class="focus"/>
+    <text x="52" y="290">Creating drawing…</text>
+    <use href="#card" x="246" y="200"/>
+  </g>
+  <text x="32" y="1100" class="label">New retains focus and cannot submit twice. No navigation animation before acceptance.</text>
+  <text x="792" y="652" class="heading">DLW-03b · Unknown creation outcome</text>
+  <g transform="translate(792 674)">
+    <rect width="720" height="400" rx="12" class="app"/>
+    <text x="32" y="46" class="heading">Linefield</text>
+    <rect x="32" y="72" width="656" height="104" rx="8" class="panel"/>
+    <text x="48" y="102">Checking whether your drawing was created…</text>
+    <rect x="48" y="118" width="128" height="44" rx="8" class="button"/>
+    <text x="64" y="146" class="white">Check again</text>
+    <rect x="32" y="200" width="190" height="174" rx="12" fill="#ededed" stroke="#aaa" stroke-dasharray="5 4"/>
+    <text x="62" y="280" fill="#555">New unavailable</text>
+    <text x="62" y="306" class="small">Checking outcome</text>
+    <use href="#card" x="246" y="200"/>
+  </g>
+  <text x="792" y="1100" class="label">Check queries the same operation. An absent reply is neither failure nor permission to retry New.</text>
+  <text x="32" y="1146" class="label">Board diagrams are reduced compositions. Spec defines actual dimensions, wrapping, target sizes and acceptance; these are not screenshot baselines.</text>
+</svg>

@@ -14,7 +14,6 @@ type Menu = {
   card: HTMLElement | null;
   box: HTMLDivElement;
   content: HTMLDivElement;
-  contextual: boolean;
   opacity: string;
   controller: AbortController;
   backdrop: ReturnType<typeof acquireBackdrop>;
@@ -42,7 +41,7 @@ function dismiss(restoreFocus: boolean): void {
   finishClosing = closeMotion(
     menu.box,
     menu.content,
-    menu.contextual || !menu.origin.isConnected ? null : menu.origin.getBoundingClientRect(),
+    !menu.origin.isConnected ? null : menu.origin.getBoundingClientRect(),
     reveal,
     done,
   );
@@ -59,16 +58,6 @@ function listen(menu: Menu, buttons: HTMLButtonElement[]): void {
     "pointerdown",
     (event) => {
       if (!(event.target instanceof Node)) return;
-      if (
-        menu.contextual &&
-        event.button === 2 &&
-        event.target instanceof Element &&
-        event.target.matches(".action-backdrop") &&
-        document
-          .elementsFromPoint(event.clientX, event.clientY)
-          .some((node) => node.matches(".drawing-card"))
-      )
-        return;
       if (!menu.box.contains(event.target) && !menu.origin.contains(event.target)) dismiss(false);
     },
     options,
@@ -114,13 +103,8 @@ function listen(menu: Menu, buttons: HTMLButtonElement[]): void {
   window.addEventListener("blur", () => dismiss(false), options);
 }
 
-export function showMenu(
-  origin: HTMLElement,
-  items: readonly MenuItem[],
-  contextual = false,
-  point?: { x: number; y: number },
-): void {
-  if (active?.origin === origin && !contextual) {
+export function showMenu(origin: HTMLElement, items: readonly MenuItem[]): void {
+  if (active?.origin === origin) {
     closeMenu();
     return;
   }
@@ -144,7 +128,6 @@ export function showMenu(
     card: origin.closest<HTMLElement>(".drawing-card"),
     box,
     content,
-    contextual,
     opacity: origin.style.opacity,
     controller: new AbortController(),
     backdrop,
@@ -184,13 +167,13 @@ export function showMenu(
     return button;
   });
   document.body.append(box);
-  const anchor = placeMenu(box, content, origin, point);
+  const anchor = placeMenu(box, content, origin);
   active = menu;
   menu.card?.setAttribute("data-menu-open", "true");
   origin.setAttribute("aria-haspopup", "menu");
   origin.setAttribute("aria-expanded", "true");
-  if (!contextual) origin.style.opacity = "0";
+  origin.style.opacity = "0";
   listen(menu, buttons);
-  openMotion(box, content, anchor, contextual);
+  openMotion(box, content, anchor);
   buttons[0]?.focus({ preventScroll: true });
 }

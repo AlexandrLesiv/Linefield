@@ -128,4 +128,4 @@ Every Web variant is to include the semi-interactive disposable-fixture prototyp
 - No native app testing, purchases, sign-ins, private uploads or user studies performed.
 - Read-only specialist participation: gallery_competitor_screens, gallery_v2_ux_handoff, gallery_v2_ui.
 - Initial plan revision fa38072; this research and the improvement plan are uncommitted design documents.
-- Owner approval of identified Figma remains required before application implementation.
+- Owner approval of identified design remains required before application implementation.

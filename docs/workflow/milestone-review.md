@@ -37,7 +37,7 @@ Delegate read-only specialist assessments in waves within the existing three-sub
 | Applicable macos_ui / ios_ui / android_ui / windows_ui | Native adapter/focus/lifecycle/permissions, host feasibility and actual input/device evidence; assigned Apple viewers explicitly included |
 | rendering_performance | Skia/cache/GPU lifetime, resource limits and measurement validity; no unmeasured latency claims |
 | build_reliability | Reproducibility, dependency/licenses, exact artifact/test/coverage freshness, packaging/signing/update evidence and missing gates |
-| ui_ux_designer | Feature input inventory, routes, recovery and accessible task completion together with identified Figma/adaptive/motion/i18n/native-control fidelity; static planning is not a running-app review |
+| ui_ux_designer | Feature input inventory, routes, recovery and accessible task completion together with identified design/adaptive/motion/i18n/native-control fidelity; static planning is not a running-app review |
 | database_designer when affected | DBML/schema approval, SQLite transactions/migrations/ownership/recovery and cross-channel/library implications |
 | Fresh reviewer | Independent assessment of material findings and actual boundary/evidence; must not be the author of the change under assessment |
 

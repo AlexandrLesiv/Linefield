@@ -3,11 +3,23 @@
 Template only. Copy/adapt for new tasks; existing tasks must add these fields before implementation.
 An empty checkbox or default text is not evidence. No application implementation authorized yet.
 
-Status: planned / design-review / ready-for-authorized-implementation / implementing /
-implementation-review / blocked / complete. Current status: planned.
+Type: executable leaf / milestone (milestones aggregate child tasks; no single implementation branch).
+Parent milestone: pending. Task ID/title: pending.
+Status: planned / ready / in-progress / internal-review / owner-review / changes-requested /
+blocked / integration-pending / done / cancelled. Current status: planned.
+Branch: codex/TASK-ID-purpose. PR URL: not opened. Intended repository/base: pending.
+Current writer/chat/worktree: pending; transfer only after previous writer is stopped/idle.
+Dependency task IDs and verified merged revisions: pending.
+Scoped entry reading: pending. See docs/workflow/task-pr-chat-plan.md and decision238.
 Owner: unassigned. Scope/non-goals: pending. Dependencies: pending.
 Base revision or exact uncommitted snapshot: pending. Owned paths: pending.
 CT/INV/SU/SEC acceptance IDs: pending. Independent reviewer: unassigned.
+
+Completion handoff: PR/merge SHA and required integration verification pending; next eligible
+task and150–300-word fresh-chat prompt supplied after owner notification and verified integration.
+Before merge keep the task owner-review; GitHub supplies its future merge identity. Never push
+a post-merge status-only change directly to main to fill this template. Record nonblocking gaps;
+required unresolved verification blocks dependent tasks. A closed-unmerged PR is not Done.
 
 ## 1. Security impact — completed before implementation
 
@@ -27,7 +39,7 @@ CT/INV/SU/SEC acceptance IDs: pending. Independent reviewer: unassigned.
 - Findings and disposition: pending; no silent waivers.
 - Owner approval of material architecture/security choices: pending; link actual approval and version.
 - For unchanged approved mechanisms: link that approval and explain why scope stays within it.
-- Required Figma approval reference: pending or justified not applicable.
+- Required design review approval reference: pending or justified not applicable.
 - General implementation authorization: pending; design approval alone is not this authorization.
 
 Lead may mark ready only when applicable reviews/approvals are real and outstanding blockers resolved.

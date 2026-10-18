@@ -4,7 +4,7 @@ Current scope update (2026-10-16, decision 154): launch requires en and uk on ev
 
 Review packet dated 2026-10-16. All recommendations below are pending owner review.
 This consolidates choices; it does not supersede [recorded approvals](decisions.md), authorize
-code, approve Figma or claim competitor research complete. R IDs are discussion references,
+code, approve design review or claim competitor research complete. R IDs are discussion references,
 not new acceptance IDs. Keep CT/INV/SU and task traceability in concrete decisions.
 
 ## What is already settled
@@ -18,9 +18,9 @@ width/color controls in the design; other-platform color UI is not implicitly ap
 
 Also settled: 200 physical source-line cap, structured local redacted logs, native and shared
 behavior tests, day-one i18n, Node .ts/Vite/Oxc direction, Zed tasks rather than a custom extension,
-and owner approval of identified Figma versions before new UI implementation.
+and owner approval of identified design versions before new UI implementation.
 
-## Decide before detailed Figma screens
+## Decide before detailed design review screens
 
 ### R01 Product priorities and reference workflows
 
@@ -47,13 +47,13 @@ is product scope, not a process-wide document singleton that prevents later mult
 
 Recommend restrained, canvas-first native appearance: system fonts, semantic UI colors/accent,
 standard menus/toolbar and visible Pen/Select controls; compact persistent settings initially.
-Compare a compact toolbar/settings strip with a narrow inspector in Figma before selecting the
+Compare a compact toolbar/settings strip with a narrow inspector in design specifications before selecting the
 layout. The strip preserves canvas space; the inspector scales better to future settings but
 uses width now. Keep future tools out of current mockups. No radial palette or custom glass
 framework is implied by referencing Concepts or Apple's current visual language.
 
 Foundation approval chooses roles, hierarchy and platform mappings. Screen approval chooses
-actual compositions/states. Native controls retain OS behavior; Figma is a specification,
+actual compositions/states. Native controls retain OS behavior; design review is a specification,
 not generated production widgets. Have the designer show two scoped directions, not a large
 style exploration. Accessibility, resizing and i18n variants accompany both directions.
 
@@ -71,7 +71,7 @@ reviews minimum width, normalization and zero/contact handling under the top-lev
 Decision 35 selects no movement filtering, with continuous geometry and round joins/caps;
 review interpolation accuracy and corner preservation separately from antialiasing. Evaluate tuning
 with the Cintiq; do not silently inherit old defaults. Predictions remain transient, never saved
-input. Identified Figma approval and implementation authorization remain separate.
+input. Identified design review approval and implementation authorization remain separate.
 
 ### R05 Selection, navigation and transformations
 
@@ -88,7 +88,7 @@ transforms add none. Native text fields retain normal shortcut/IME priority.
 
 Exact hit tolerances, handle sizes, scale/zoom limits and device gesture mappings remain reviewed
 S00/S02 specifications. Rotation, multi-select, keyboard nudging and a numeric scale field remain
-out of scope. Identified Figma approval and implementation authorization are still required.
+out of scope. Identified design review approval and implementation authorization are still required.
 
 ### R06 Saving, recovery and export expectations
 
@@ -103,7 +103,7 @@ Owner selected native document + PNG export for the preview (decision 18), corre
 C response. Native export is an independent consistent snapshot without library relocation or
 synchronization. S07E PNG follows reliable S06 persistence and is required for S08 acceptance.
 SVG/PDF are deferred. Bounds, resolution, transparency/background, memory limits and fidelity UI
-still need contracts/Figma review. Export does not imply image import or implementation authority.
+still need contracts/design review. Export does not imply image import or implementation authority.
 
 ### R07 Language and accessibility scope
 
@@ -251,7 +251,7 @@ these features must not block the first preview or be implemented incidentally.
 
 Exact pixels, padding and class filenames need not be preselected by the owner. Detailed designs
 and engineering packets are proposed by specialists and reviewed at their appropriate gate.
-No actual Figma design or competitor report was produced by adding this document.
+No actual design or competitor report was produced by adding this document.
 
 ## R14 Navigation and motion supplement
 
@@ -280,7 +280,7 @@ The owner requested numbered batches,
 with answers such as 1 A, 2 B, 3 clarify. Record each answered choice separately; clarification,
 omission or approval of another question is not approval. Recommendations below are proposals,
 not implementation authorization. Approved directions are recorded in decisions 86-94; exact
-schema/ABI/Figma review remains required.
+schema/ABI/design review remains required.
 
 1. **Autosave SQL updates:** A (recommended) change only affected rows inside a transaction;
    B rewrite the full drawing contents each save. A reduces unnecessary work but needs explicit
@@ -401,7 +401,7 @@ Both need the same cooperative cancellation/publication contract: before publica
 safe boundary and preserve an existing destination; after publication, do not delete the finished
 file or promise rollback. Cancellation itself may need time. Partial staging cleanup and output
 success/failure remain honest; autosave/unsaved-exit guards are independent. A default must never
-silently discard edits. Concrete Figma wording and cancellation implementation remain for review.
+silently discard edits. Concrete design review wording and cancellation implementation remain for review.
 
 ## Architecture batch 3 — approved choices B03-Q19 through B03-Q24
 
@@ -409,7 +409,7 @@ Updated 2026-10-16: Q19 A, Q20 A, Q21 B, Q22 A, Q23 A and Q24 A are approved as 
 104-109. Original alternatives below remain review history. Package: input, geometry and
 rendering semantics. Numbering continues globally to avoid mixing batches. No implementation or new input/
 format mechanism is authorized by these proposals; preserve prior selection/scope and exact
-schema/geometry/Figma gates. Recommendations require fixtures and device review, not performance
+schema/geometry/design review gates. Recommendations require fixtures and device review, not performance
 claims. Q19 concerns invalid actual batches, not normal user-correctable setting rejection.
 
 19. **Malformed actual input batch during a gesture:** A (recommended) reject the whole batch and
@@ -505,7 +505,7 @@ Original alternatives below remain review history. Package: document lifecycle/r
 output encoding. Batch 4 is approved as decisions 110-115.
 Previously selected SQLite, lossless migration with
 recovery copies, source-preserving import, library ownership and floating-point sRGB are retained.
-These are policy alternatives, not concrete locking/schema/ABI/security/Figma implementation approval.
+These are policy alternatives, not concrete locking/schema/ABI/security/design review implementation approval.
 
 31. **Multiple processes accessing one managed library:** A (recommended initially) one writable
     application process owns the library; another launch reuses/activates that instance where
@@ -556,7 +556,7 @@ concrete durability/queue-limit scope/security/schema still requiring review.
 Keep selected bounded FIFO, latest completed artwork at capture,
 active-edit guards, native replacement confirmation, immutable snapshots and finish-on-Quit with
 explicit safe cancellation. Choices below refine remaining admission/capture/lifetime semantics;
-exact contract/schema/Figma approval still precedes implementation. No new parallel export worker.
+exact contract/schema/design review approval still precedes implementation. No new parallel export worker.
 
 36. **Export snapshot capture time:** A (recommended) capture completed artwork when the Export
     command is accepted, before its destination panel; B capture when the user confirms the
@@ -589,7 +589,7 @@ exact contract/schema/Figma approval still precedes implementation. No new paral
     B finish/cancel that drawing's exports before leaving its editor. A avoids tying the editor to
     a background operation but needs app-scoped status/cancellation and strict resource ownership;
     B simplifies lifetime but delays navigation. Existing unsaved-edit guards always apply. This
-    does not settle deletion of a source drawing or add a new progress screen without Figma review.
+    does not settle deletion of a source drawing or add a new progress screen without design review.
 41. **Initial export queue count limit:** A (recommended) three accepted exports total (active plus
     waiting/reserved jobs); B ten total. Both require an additional aggregate byte/work cap, explicit
     admission failure and bounded handling of destination panels/snapshots. A provides a modest
@@ -604,7 +604,7 @@ Q45 A, Q46 A and Q47 A are approved as decisions 127-131. Following the portabil
 Q44 A is now approved as decision 139. Original alternatives below are retained for history.
 Package: multi-process coordination and proactive migration. Keep multiple processes/different drawings,
 one mutable owner per drawing and current thread topology. These choices specify policy only;
-exact OS mechanisms, database claims/locks, privacy/trust and Figma require review. No new custom
+exact OS mechanisms, database claims/locks, privacy/trust and design review require review. No new custom
 IPC protocol, daemon or background agent is approved by proposing these alternatives.
 
 42. **Opening a drawing already owned by another process:** A (recommended initially) report
@@ -776,7 +776,7 @@ S00E/F/G agenda. Only ask further policy questions where those reviews reveal a 
 
 Then stop generating small implementation-choice questionnaires. Specialists should consolidate
 concrete proposals for owner review: DBML/schema and storage state transitions; typed ABI/ownership/
-platform mechanisms; numeric resource/performance budgets backed by probes; and identified Figma
+platform mechanisms; numeric resource/performance budgets backed by probes; and identified design
 foundations/screens/motion. These are separate approval packets, not counted as A/B questions or
 already approved work. Later-platform features/distribution/network choices remain deferred. Detailed
 values such as control dimensions, retry timing and SQL indexes belong in those proposals, not an
@@ -869,7 +869,7 @@ no implementation or encryption framework is authorized by discussing safe pract
 
 After remaining current policy decisions, execute S00E security, S00F cross-platform input and S00G
 store/distribution requirements reviews. Review their cross-cutting findings before freezing relevant
-Figma/contracts. Q60 remains unanswered; this agenda does not choose encryption. Do not manufacture
+design review/contracts. Q60 remains unanswered; this agenda does not choose encryption. Do not manufacture
 additional questions to reach earlier count estimates. Prepare concrete review packets rather than
 an unbounded series of details.
 
@@ -901,7 +901,7 @@ No numbered batch question remains unanswered. Do not claim that all architectur
    cache/export caps; retry/scheduling/checkpoint policy; performance targets; actual toolchain and
    minimum macOS; browser persistence feasibility. Specialists propose grouped justified defaults
    and probes, preserving already selected numbers. No arbitrary demand for the owner to invent them.
-7. Figma: foundations and gallery/editor/export/recovery flows, native controls/layout, exact fixed
+7. design review: foundations and gallery/editor/export/recovery flows, native controls/layout, exact fixed
    light canvas color, adaptive/i18n/AX/motion and identified versions. Decision 147 now selects
    OS-selected supported language at launch; English source/fallback remains selected.
 
@@ -924,10 +924,10 @@ Runtime protections are unverified. S00F/S00G remain queued.
 Read [input proposal](input/README.md) and [distribution register](distribution/README.md), checked
 2026-10-16. Platform engineers researched feasibility; scoped UX findings were incorporated. Review
 records are linked from the packets. Owner has not selected the new binding/touch defaults or channels.
-Next: review input defaults as one coherent package, then prepare UX briefs/Figma foundations/gallery
+Next: review input defaults as one coherent package, then prepare UX briefs/design review foundations/gallery
 and concrete S02 contracts. Store chores do not require another long micro-question batch now.
-No implementation, Figma artifact, store compliance test or native device execution occurred.
+No implementation, design review artifact, store compliance test or native device execution occurred.
 
-Latest owner direction (151–152): use docs/input/inventory.md during feature design, with UX proposing behavior for owner approval alongside Figma. Do not seek global binding approval now. watchOS/tvOS/Wear OS/Android TV are view-only; Wear capability is no longer undecided.
+Latest owner direction (151–152): use docs/input/inventory.md during feature design, with UX proposing behavior for owner approval alongside design review. Do not seek global binding approval now. watchOS/tvOS/Wear OS/Android TV are view-only; Wear capability is no longer undecided.
 
 S00G current review: [channel strategy](distribution/channel-strategy.md) separates the selected local preview from recommended public channels, current requirements, early architectural constraints and existing-agent responsibilities. No channel/publication/packaging implementation approval inferred.

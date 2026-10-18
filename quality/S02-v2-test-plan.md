@@ -1,3 +1,6 @@
+
+> Working-copy terminology was normalized by owner decision235 on2026-10-18. Historical approval hashes below still identify their recorded approval artifacts, not these normalized bytes. The pinned base preserves a pre-normalization working copy and is an exact approval snapshot only where its hash matches. See [normalization provenance](../docs/reviews/design-workflow-normalization-2026-10-18.md).
+
 # S02 v2 acceptance and negative-test matrix
 Status: PLANNED / NOT EXECUTED. Documentation parsing/review is separate evidence. No SQLite fixtures, generated header, native app or device run is claimed. Exact future revision/build, host/device, discovered IDs, attempts/skips and artifacts required.
 
@@ -37,7 +40,7 @@ Synthetic fixtures: empty; one pressure/missing-pressure stroke; overlapping tra
 1. Approve concrete contracts/limits and platform feasibility scope.
 2. Authorized typed-header compile/layout and two-process native rendezvous probe; failures return to review, not custom transport fallback.
 3. SQLite migration/transaction crash harness + core conformance/property tests.
-4. Real gallery and canvas UI E2E after identified Figma approval; reserve desktop explicitly.
+4. Real gallery and canvas UI E2E after identified design approval; reserve desktop explicitly.
 5. Independent code/security review and measured release evidence; no platform marked complete from Rust-only replay.
 
 For crashes insert fault checkpoints before/after each durable intent, file publication, transaction commit, catalog projection, native confirmation and cleanup. Process kill proves process-crash behavior only; cannot claim physical power-loss testing. SQLite-reported failures and disk flush failure distinct from hostile format/capacity.

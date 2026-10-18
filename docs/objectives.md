@@ -1,6 +1,8 @@
 # Objectives and first preview
 
-Deliver an editable vector sketching app: responsive, offline-first and cross-platform, with actual native controls and shared Rust behavior. macOS remains the primary product target; implement web first, then macOS, with iPhone/iPad the next native priority. The owner’s greater web experience motivates the development order, not a replacement of the native product direction. Responsiveness claims require measurements.
+Deliver an editable vector sketching app: responsive, offline-first and cross-platform, with a consistent Linefield visual system and shared Rust behavior. Host implementations retain platform input, text editing, accessibility and OS integration; platform-native visual themes are not mandatory (decision 232). macOS remains the primary product target; implement web first, then macOS, with iPhone/iPad the next native priority. Responsiveness claims require measurements.
+
+The tool/preset wheel is retired. Desktop drawing design proceeds from a left tool rail and top contextual settings. Decision234 authorizes the selected screen as a UI-only web prototype under P05-D01; real behavior for additional tools/properties still needs its existing scope and contract approvals. Shared style definitions do not need to move to Rust: keep existing shared theme authoring and generated host resources; component-system expansion remains future work.
 
 Selected macOS preview scope (delivered after the first web implementation): local developer preview; pen, pan/zoom, single-stroke selection/move/uniform scaling/deletion, undo/redo, an app-managed gallery/library, autosave and native file exchange/recovery. New document format, no legacy compatibility. Skia renderer, Swift/AppKit host, typed Rust FFI with generated declarations. Working name Linefield; root /Users/oleksandr/projects/linefield.
 
@@ -39,7 +41,7 @@ remain contract work; physical measurement/print-scale features are not implied.
 
 Initial drawing experience is selected (decision 16): one solid round pen, pressure affecting
 width only, constant width without pressure, tilt ignored, width/color controls retained. Fixed
-light artwork background; native chrome follows the system theme without altering saved colors.
+light artwork background; Linefield chrome follows the system light/dark preference without altering saved colors.
 No brush library or adjustable stabilization. Linear pressure response is selected (decision 34);
 no movement filtering initially (decision 35). Minimum/contact and exact geometry rules await S02 review.
 

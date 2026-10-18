@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const formatTargets = [
+  ".zed/tasks.json",
   "package.json",
   "tsconfig.json",
   ".oxlintrc.json",
@@ -84,6 +85,8 @@ try {
     ["scripts/theme-resources.ts", "--check"],
     ["scripts/localization.ts", "--check"],
     ["--test", "scripts/localization/*.test.ts"],
+    ["--test", "scripts/actions/*.test.ts"],
+    ["--test", "scripts/probes/regional/*.test.ts"],
   ]) {
     const result = spawnSync(process.execPath, args, {
       cwd: root,

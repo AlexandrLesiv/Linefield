@@ -1,0 +1,13 @@
+{
+  "channel": "linefield-synthetic-c39976b1-6fb2-4f8d-8100-21e90238f3bd",
+  "originalSha256": "da5a37526ffba2401cc9a7f24ccc4bffc405825c6f36d8c7c226d010197ecac3",
+  "servedSha256": "0521e5b1bc8941deca37801e6f20637cf810151de899fb19e78d88014640db8f",
+  "prefixSha256": "ecbfeb40e6b0dc26d12072deee67190219ec38731744a222eb5056e3c56f6fe9",
+  "replacementCount": 1,
+  "patch": {
+    "target": "await fh.syncHandle.flush();",
+    "replacement": "await fixtureFlush(fh.syncHandle);"
+  },
+  "point": "before calling real syncHandle.flush, not during already-issued I/O",
+  "originalBytesModified": false
+}

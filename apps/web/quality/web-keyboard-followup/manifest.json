@@ -1,0 +1,9 @@
+{
+  "baseCommit": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7",
+  "recordedAt": "2026-10-18T02:08:13.316Z",
+  "testFile": "apps/web/tests/drawing-keyboard.spec.ts",
+  "sha256": "155f5e5b1db110a19184adca5622ec84b249a5fb53bb899c286d002dbf273379",
+  "historicalD01HashesVerified": 139,
+  "browserExecution": "unrun",
+  "blocker": "Configured local server failed listen EPERM on127.0.0.1:65142; no escalation attempted"
+}

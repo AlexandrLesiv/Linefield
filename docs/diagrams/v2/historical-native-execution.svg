@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1272" viewBox="0 0 1440 1272" role="img" aria-labelledby="title description">
+<title id="title">Native execution owners · historical view</title>
+<desc id="description">Original main-thread model and immutable worker crossings; not production scheduling evidence.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#718096" stroke-width="1.5"/></marker><style>text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;fill:#233148}.title{font-size:40px;font-weight:600;letter-spacing:-.7px}.section{font-size:26px;font-weight:600}.node{font-size:20px;font-weight:600}.body{font-size:16px}.meta{font-size:14px;fill:#59677C}.edge{fill:none;stroke:#718096;stroke-width:2;stroke-linejoin:round;stroke-linecap:round;marker-end:url(#arrow)}.guide{fill:none;stroke:#718096;stroke-width:1.5;stroke-dasharray:4 8}</style></defs>
+<rect width="1440" height="1272" fill="#F7F8FA"/>
+<text x="72" y="64" class="meta">LINEFIELD / DIAGRAM LANGUAGE v2</text>
+<text x="1368" y="64" class="meta" text-anchor="end">HISTORICAL PROPOSAL · NOT CURRENT IPC TOPOLOGY</text>
+<text x="72" y="123" class="title">Native execution owners · historical view</text>
+<text x="72" y="161" class="body">Original main-thread model and immutable worker crossings; not production scheduling</text>
+<text x="72" y="185" class="body">evidence.</text>
+<rect x="72" y="208" width="1296" height="560" rx="24" fill="#FFFFFF" stroke="#718096" stroke-width="1.5"/>
+<text x="104" y="248" class="section">macOS main thread</text>
+<path d="M384 338H536" class="edge"/>
+<path d="M840 338H1032" class="edge"/>
+<path d="M1184 420V536" class="edge"/>
+<path d="M1032 594H840" class="edge"/>
+<path d="M244 536V472H1080V420" class="edge"/>
+<path d="M960 456V488" fill="none" stroke="#FFFFFF" stroke-width="8"/>
+<path d="M960 578V610" fill="none" stroke="#FFFFFF" stroke-width="8"/>
+<path d="M1032 384H960V844H688V904" class="edge"/>
+<rect x="968" y="806" width="160" height="25" rx="8" fill="#F7F8FA"/>
+<text x="976" y="824" class="meta">immutable snapshot</text>
+<path d="M536 962H448V594H384" class="edge"/>
+<rect x="392" y="806" width="112" height="25" rx="8" fill="#F7F8FA"/>
+<text x="400" y="824" class="meta">typed result</text>
+<path d="M688 396V448H48V962H104" class="edge"/>
+<rect x="64" y="846" width="128" height="25" rx="8" fill="#F7F8FA"/>
+<text x="72" y="864" class="meta">bounded events</text>
+<path d="M944 728H976" fill="none" stroke="#FFFFFF" stroke-width="8"/>
+<path d="M688 652V728H1400V962H1336" class="edge"/>
+<rect x="1072" y="826" width="176" height="25" rx="8" fill="#F7F8FA"/>
+<text x="1080" y="844" class="meta">async command buffer</text>
+<rect x="104" y="280" width="280" height="116" rx="16" fill="#F7F7FE" stroke="#718096" stroke-width="1.5"/>
+<text x="128" y="308" class="meta">INPUT</text>
+<text x="128" y="340" class="node">AppKit input</text>
+<rect x="536" y="280" width="304" height="116" rx="16" fill="#F5F9FD" stroke="#718096" stroke-width="1.5"/>
+<text x="560" y="308" class="meta">COMMAND</text>
+<text x="560" y="340" class="node">Rust validation and</text>
+<text x="560" y="364" class="node">command</text>
+<rect x="1032" y="280" width="304" height="140" rx="16" fill="#F5F9FD" stroke="#718096" stroke-width="1.5"/>
+<text x="1056" y="308" class="meta">STATE</text>
+<text x="1056" y="340" class="node">Editor state and immutable</text>
+<text x="1056" y="364" class="node">revision</text>
+<rect x="1032" y="536" width="304" height="116" rx="16" fill="#F5F9FD" stroke="#718096" stroke-width="1.5"/>
+<text x="1056" y="564" class="meta">FRAME</text>
+<text x="1056" y="596" class="node">Scheduled frame</text>
+<text x="1056" y="620" class="node">preparation</text>
+<rect x="536" y="536" width="304" height="116" rx="16" fill="#F5F9FD" stroke="#718096" stroke-width="1.5"/>
+<text x="560" y="564" class="meta">RENDER</text>
+<text x="560" y="596" class="node">Skia encode and submit</text>
+<rect x="104" y="536" width="280" height="116" rx="16" fill="#F5F9FD" stroke="#718096" stroke-width="1.5"/>
+<text x="128" y="564" class="meta">COMPLETION</text>
+<text x="128" y="596" class="node">Apply matching</text>
+<text x="128" y="620" class="node">completion</text>
+<rect x="104" y="904" width="280" height="116" rx="16" fill="#F3FAF7" stroke="#718096" stroke-width="1.5"/>
+<text x="128" y="932" class="meta">LOG WORKER</text>
+<text x="128" y="964" class="node">Background diagnostics</text>
+<text x="128" y="988" class="node">drain</text>
+<rect x="536" y="904" width="304" height="116" rx="16" fill="#F3FAF7" stroke="#718096" stroke-width="1.5"/>
+<text x="560" y="932" class="meta">FILE WORKER</text>
+<text x="560" y="964" class="node">Bounded background file</text>
+<text x="560" y="988" class="node">worker</text>
+<rect x="1032" y="904" width="304" height="116" rx="16" fill="#F3FAF7" stroke="#718096" stroke-width="1.5"/>
+<text x="1056" y="932" class="meta">GPU</text>
+<text x="1056" y="964" class="node">Metal execution and</text>
+<text x="1056" y="988" class="node">display</text>
+<text x="72" y="1100" class="body">Worker crossings preserve owned snapshots and typed results. Logs drain in the background; GPU submission is asynchronous.</text>
+<path d="M72 1200H1368" stroke="#E1E6ED"/>
+<text x="72" y="1232" class="meta">Original topology preserved · Main thread is explicitly bounded</text>
+<text x="1368" y="1232" class="meta" text-anchor="end">2026-10-19 · Full-size SVG</text>
+</svg>

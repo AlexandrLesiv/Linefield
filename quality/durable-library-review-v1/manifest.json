@@ -1,0 +1,25 @@
+{
+  "recordedAt": "2026-10-18T22:27:26.631Z",
+  "base": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7",
+  "dirty": true,
+  "status": "proposal ready; storage adoption blocked; owner implementation approval pending",
+  "hashes": {
+    "docs/reviews/durable-library-implementation-scope-v1.md": "f084b9f7034221643e6f59e743a09ba4cbc0193c79eb2ce715e94c3747b77463",
+    "docs/interfaces/durable-library-v1.md": "3cc3b472c082a84e2945b319b7fad41174aa40cf1b78c7734ffb77ed32518235",
+    "docs/database/empty-library-v1.md": "a20319427ddac55fd7742d5fc58b3f47413ab20db0adf977bff57294c191b58f",
+    "docs/architecture/browser-storage-v1-proposal.md": "ad7a6127437b8cf24081f0e4b362314b37fdb3bff90420fbfd1350bc422aa3fb",
+    "docs/design/durable-library-empty-v1.md": "ee51d9e4a6f9a23283bd32a5322dcb7f49235b920bdd67b2a2cd731d281380fe",
+    "quality/library-schema-v1/manifest.json": "ad1a8eaf2b5131d8f3643bbe7666f99f4fb701c98e3f291e4470f03189aa0279",
+    "quality/browser-storage-v1/README.md": "5fd83ae7a90a1681a99ede0275946abd8b174e828ba39626074b1312e43d6997",
+    "quality/browser-storage-v1/pool-results.json": "20218cc3508f090acacec7f91c34682d6958db02fb9f5670c2526518bc16308c",
+    "quality/browser-storage-v1/attempt-06-results.json": "13e259f81b88337a3f71bceba45508472a14911ace470b99bfeda4b04b721239",
+    "quality/browser-storage-v1/firefox-results.json": "540217b545c4d7b7799f2f41dd796a29e8e77d2cf12bc11218e7d5f36e319756",
+    "quality/durable-library-review-v1/README.md": "f7e5d8716c39424387b3dde9f7a9ba393129b6e1051d97750e48519c4d511ef9",
+    "docs/design/durable-library-empty-v1/blank-shell.svg": "e7b9211ad9f0313b0f5729f59240ccd9c4d71bcf6aa149820655a65024ee0d2e",
+    "docs/design/durable-library-empty-v1/gallery-states.svg": "bc4f89f616a7ce03d90794aef4f0c33ef98bd91ccae290ea348c175081cf7ade",
+    "docs/design/durable-library-empty-v1/rename-recovery-states.svg": "7495a6f6c04923f3cb5a6bd98e7428d269b2d963ce052b30b20027263a5b784c",
+    "quality/durable-library-review-v1/linefield-blank-shell.png": "529eec08617b78e4a409c3cf11c6319df718dfe2b28b4a86f20e044426ab1551",
+    "quality/durable-library-review-v1/linefield-gallery-states.png": "73643111e5755d4b6845e7976d69dac5e18a0471bc215433836a28de20609716",
+    "quality/durable-library-review-v1/linefield-rename-recovery-states.png": "94e5c1d3ebb6d58be072b3128c8338de04013851c837c7f0587fd6d00f4d83a9"
+  }
+}

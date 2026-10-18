@@ -1,0 +1,4 @@
+Listing tests:
+  drawing-keyboard.spec.ts:3:1 › WEB-D2-02/05 narrow keyboard traversal skips unavailable controls and restores Pen context
+  drawing-keyboard.spec.ts:52:1 › WEB-D2-03/05 I18N-UK-002 keyboard values retain Ukrainian names in a German-region fixture
+Total: 2 tests in 1 file

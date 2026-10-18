@@ -1,4 +1,8 @@
-Current 2026-10-17: decision 214 and [live prototype](./live-web-prototype.md) supersede the old gallery experiments below. apps/web is the active review surface. Native/Figma implementation gates remain.
+Current policy, decision 232 (2026-10-18): mandatory Liquid Glass, Material and other native
+visual treatments in this plan are superseded. Use shared Linefield styling with adaptive layout
+and native input/accessibility/OS integration. The original study below remains historical.
+
+Current 2026-10-17: decision 214 and [live prototype](./live-web-prototype.md) supersede the old gallery experiments below. apps/web is the active review surface. Native/design review implementation gates remain.
 
 # Gallery design improvement plan
 
@@ -7,7 +11,7 @@ Date: 2026-10-17. Status: proposal for owner review; no revised mockups or appli
 The first round has useful scope and content fixtures, but insufficient native fidelity and variation.
 Replace the generic cross-platform template with recognizable platform compositions within three coherent visual families.
 The owner requested a full-size first gallery tile for creating drawings and one drawing per scroll step on watchOS and Wear OS.
-These requirements apply to the next design proposal; identified Figma approval still precedes application implementation.
+These requirements apply to the next design proposal; identified design approval still precedes application implementation.
 
 [Competitor screen references and UX/UI synthesis](gallery-competitor-screens.md) are now available.
 Eight official source images were checked in the review board; new variant/prototype production remains pending.
@@ -153,10 +157,10 @@ Animation must never delay commands, determine persistence success or become req
    Include Light and Night for every platform plus the same content/state sections in every package. Internal anchor reviews do not reduce owner handoff coverage.
 4. For all nine hosts, deliver component state strips and representative empty/loading/error/menu or viewer equivalents.
    Build selected-candidate adaptive frames in English/Ukrainian, light/dark, larger text and reduced transparency/motion.
-5. Provide interactive Figma examples or review-only motion prototypes, alongside PNG comparison boards and annotated fallback sequences.
-   PNG imports are references, not editable Auto Layout/component deliverables. No SVG export is required. Missing Figma access does not justify an implementation bypass.
+5. Provide interactive design review examples or review-only motion prototypes, alongside PNG comparison boards and annotated fallback sequences.
+   PNG imports are references, not editable Auto Layout/component deliverables. No SVG export is required. Use repository components and a running prototype for editable adaptive evidence.
 6. Fresh UX/UI and independent review challenge native fidelity, scope, variation, resize behavior, state coverage and motion.
-   Submit named Figma versions/frames and unresolved issues for owner approval before application code.
+   Submit named design versions/frames and unresolved issues for owner approval before application code.
 
 Competitor research supplies focused references and explicitly records what is adapted or rejected.
 Current ownership (decision 213): ui_ux_designer owns interaction/state semantics, visual families, native mappings, adaptive components and motion together.
@@ -185,7 +189,7 @@ Retain the requested first-square New tile, nine-platform Light/Night coverage a
 Contextual actions stay discoverable through native pointer/keyboard/accessibility alternatives; do not copy swipe-only actions.
 This preference does not approve Procreate feature parity, specific gestures, a final frame or application implementation.
 The owner is refining this plan. Competitor research and the semi-interactive web design approach are explicitly requested.
-The existing v1 mockups remain unchanged; this document does not claim new PNGs, interactive prototypes or Figma approval.
+The existing v1 mockups remain unchanged; this document does not claim new PNGs, interactive prototypes or design review approval.
 
 
 ## Equal review packages and interactive web examples

@@ -1,0 +1,220 @@
+{
+  "config": {
+    "argv": [
+      "/usr/local/bin/node",
+      "/Users/oleksandr/projects/linefield/node_modules/.pnpm/@playwright+test@1.64.1/node_modules/@playwright/test/cli.js",
+      "test",
+      "tests/drawing-keyboard.spec.ts"
+    ],
+    "configFile": "/Users/oleksandr/projects/linefield/apps/web/playwright.config.ts",
+    "rootDir": "/Users/oleksandr/projects/linefield/apps/web/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/Users/oleksandr/projects/linefield/apps/web/test-results/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/Users/oleksandr/projects/linefield/apps/web/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/Users/oleksandr/projects/linefield/apps/web/test-results/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "/Users/oleksandr/projects/linefield/apps/web/tests",
+        "snapshotDir": "/Users/oleksandr/projects/linefield/apps/web/tests",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 30000,
+        "use": {
+          "baseURL": "http://127.0.0.1:65142",
+          "browserName": "chromium",
+          "channel": "chrome",
+          "headless": true,
+          "viewport": {
+            "width": 1280,
+            "height": 900
+          },
+          "locale": "en-US"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": {
+      "command": "pnpm dev",
+      "url": "http://127.0.0.1:65142",
+      "reuseExistingServer": true
+    }
+  },
+  "suites": [
+    {
+      "title": "drawing-keyboard.spec.ts",
+      "file": "drawing-keyboard.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "WEB-D2-02/05 narrow keyboard traversal skips unavailable controls and restores Pen context",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 6936,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeInViewport\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('slider', { name: 'Opacity', exact: true })\nExpected: in viewport\nReceived: viewport ratio 0.2006250023841858\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeInViewport\" getByRole('slider', { name: 'Opacity', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('slider', { name: 'Opacity', exact: true })\u001b[22m\n\u001b[2m    14 × locator resolved to <input min=\"0\" class=\"\" step=\"1\" max=\"100\" type=\"range\" aria-label=\"Opacity\" aria-valuetext=\"100%\"/>\u001b[22m\n\u001b[2m       - unexpected value \"viewport ratio 0.2006250023841858\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeInViewport\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('slider', { name: 'Opacity', exact: true })\nExpected: in viewport\nReceived: viewport ratio 0.2006250023841858\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeInViewport\" getByRole('slider', { name: 'Opacity', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('slider', { name: 'Opacity', exact: true })\u001b[22m\n\u001b[2m    14 × locator resolved to <input min=\"0\" class=\"\" step=\"1\" max=\"100\" type=\"range\" aria-label=\"Opacity\" aria-valuetext=\"100%\"/>\u001b[22m\n\u001b[2m       - unexpected value \"viewport ratio 0.2006250023841858\"\u001b[22m\n\n    at /Users/oleksandr/projects/linefield/apps/web/tests/drawing-keyboard.spec.ts:46:27",
+                    "location": {
+                      "file": "/Users/oleksandr/projects/linefield/apps/web/tests/drawing-keyboard.spec.ts",
+                      "column": 27,
+                      "line": 46
+                    },
+                    "snippet": "  44 |     await page.keyboard.press(\"Shift+Tab\");\n  45 |     await expect(control).toBeFocused();\n> 46 |     await expect(control).toBeInViewport({ ratio: 1 });\n     |                           ^\n  47 |   }\n  48 |   await expect(page.locator(\".canvas-art\")).toHaveAttribute(\"src\", artwork ?? \"\");\n  49 |   expect(page.url()).toBe(url);"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/Users/oleksandr/projects/linefield/apps/web/tests/drawing-keyboard.spec.ts",
+                        "column": 27,
+                        "line": 46
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeInViewport\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator:  getByRole('slider', { name: 'Opacity', exact: true })\nExpected: in viewport\nReceived: viewport ratio 0.2006250023841858\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toBeInViewport\" getByRole('slider', { name: 'Opacity', exact: true }) with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('slider', { name: 'Opacity', exact: true })\u001b[22m\n\u001b[2m    14 × locator resolved to <input min=\"0\" class=\"\" step=\"1\" max=\"100\" type=\"range\" aria-label=\"Opacity\" aria-valuetext=\"100%\"/>\u001b[22m\n\u001b[2m       - unexpected value \"viewport ratio 0.2006250023841858\"\u001b[22m\n\n\n  44 |     await page.keyboard.press(\"Shift+Tab\");\n  45 |     await expect(control).toBeFocused();\n> 46 |     await expect(control).toBeInViewport({ ratio: 1 });\n     |                           ^\n  47 |   }\n  48 |   await expect(page.locator(\".canvas-art\")).toHaveAttribute(\"src\", artwork ?? \"\");\n  49 |   expect(page.url()).toBe(url);\n    at /Users/oleksandr/projects/linefield/apps/web/tests/drawing-keyboard.spec.ts:46:27"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T21:52:56.417Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/Users/oleksandr/projects/linefield/apps/web/test-results/artifacts/drawing-keyboard-WEB-D2-02-b2925-ls-and-restores-Pen-context/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/Users/oleksandr/projects/linefield/apps/web/tests/drawing-keyboard.spec.ts",
+                    "column": 27,
+                    "line": 46
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "b6a75d2016f61c6b2baf-e40cd70b18f23282436d",
+          "file": "drawing-keyboard.spec.ts",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "WEB-D2-03/05 I18N-UK-002 keyboard values retain Ukrainian names in a German-region fixture",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1127,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T21:53:04.643Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b6a75d2016f61c6b2baf-b3575ee34b15b0e848ec",
+          "file": "drawing-keyboard.spec.ts",
+          "line": 52,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-18T21:52:55.220Z",
+    "duration": 10863.122,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}

@@ -30,7 +30,7 @@ animations and claim motion acceptance. Record actual platform preference and te
 
 Record build/revision, route scenario, capability, window/layout, locale/direction, OS/device,
 refresh/scale, animation policy, expected/observed focus and evidence category. Use disposable
-files/IDs and redact addresses. Record foreground reservation and permitted recordings. Figma
+files/IDs and redact addresses. Record foreground reservation and permitted recordings. design review
 prototypes validate design intent only; actual native motion/latency needs runtime evidence.
 
 Phasing: S00A/S00D define motion/routes; S02 freezes guards and tests; S04/S05 verify implemented

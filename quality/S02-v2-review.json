@@ -48,7 +48,7 @@
     "macOS signed/sandboxed IPC discovery and allowed native classes",
     "native persistent file grants and destination identity",
     "future platform/browser VFS and lifecycle evidence",
-    "identified Figma approval",
+    "identified design approval",
     "runtime conformance, recovery and resource/performance validation"
   ],
   "currentSha256": {

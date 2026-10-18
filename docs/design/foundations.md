@@ -1,130 +1,129 @@
-# Design foundations and adaptive Figma requirements
+# Design foundations and adaptive review requirements
 
-Status: documented workflow requested 2026-10-16. No Figma file, component library or mockup
-has been created or approved. S00A prepares foundations before detailed macOS screen design.
-This is a design system specification, not permission to implement custom widgets or features.
+Status: repository-owned foundation specification, updated 2026-10-18. The authorized web gallery
+and drawing-shell prototype provide component and runtime evidence; no complete foundation
+version is owner-approved. [S00A](../../tasks/S00A.md) records a bounded existing-component inventory
+and readiness. Detail web first, followed by macOS and later platform slices. This specification
+does not authorize new widgets, product behavior, native applications or a universal UI engine.
 
-## What to establish first
+Decision232 selects one consistent Linefield visual system across hosts and retires the wheel.
+Decisions233–234 select the responsive Web gallery and slim left rail/top contextual settings
+prototype. Preserve those selected designs; older platform-style/wheel explorations remain
+historical. Do not restart direction selection to satisfy this foundation task.
 
-1. Product principles: canvas-first hierarchy, restrained chrome, native behavior, readable
-   state/feedback, accessibility and the intended visual character. Present a small set of
-   visual directions for owner selection, without treating a moodboard as final UI approval.
-2. Shared semantic roles: action names, typography roles, spacing relationships, icon meanings,
-   focus/selection/error/success states and UI color roles. Define meanings before raw values.
-3. Platform mapping: associate each role/control with actual native widgets, system metrics
-   and semantic colors; show which properties are system-owned versus app-owned.
-4. Figma reusable components and variants for the approved preview, then adaptive screen
-   compositions. Review foundations and screen designs as separate approval checkpoints.
+## Principles, resources and host mappings
 
-Suggested Figma sections: Brief and principles; Shared semantics; Native platform mappings;
-macOS foundations/components; macOS adaptive screens/flows; Future platform directions;
-Developer tool/report foundations; Approved versions. Keep unapproved explorations distinct.
+1. Canvas-first hierarchy, restrained chrome, readable feedback and visible focus support the
+   selected direction. Explore alternatives only for an unresolved, scoped choice.
+2. Define semantic color, text, spacing, shape and icon roles before introducing shared values.
+   Record normal, focused, pressed, selected, disabled and applicable error/loading states.
+3. Map common Linefield appearance to each selected host toolkit while preserving native text,
+   IME, focus, accessibility, lifecycle and OS-owned panels.
+4. Specify reusable components for authorized features, followed by adaptive compositions.
+   Foundation approval and screen/flow approval are separate checkpoints.
 
-## Shared semantics, native appearance
+Keep briefs, component/state inventories, host mappings, adaptive rules and approval snapshots
+under docs/design/. Link authorized executable web prototypes and exact quality evidence rather
+than flattening the design into screenshots. Keep future-host proposals and unapproved
+explorations distinct from current implementation and owner-approved records.
 
-| Foundation | Shared meaning | Platform-specific expression |
+| Foundation | Shared meaning | Host-specific responsibility |
 | --- | --- | --- |
-| Color | Surface, primary/secondary text, separator, focus, selection, destructive/error/success | Native semantic colors/accent/contrast settings; app-owned roles mapped separately |
-| Typography | UI/body/caption/title roles and hierarchy | Native font family, scaling and readable metrics; no universal hard-coded point size |
-| Spacing | Grouping, alignment and density intent | Desktop pointer, mobile touch, TV remote and XR target/context needs |
-| Buttons/actions | Primary/secondary/destructive, selected/disabled/busy intent | AppKit/UIKit, Android Material, WinUI, GTK and semantic HTML controls |
-| Input controls | Field validation, value editing and selection behavior | Native text field/stepper/segmented/menu/dialog conventions |
-| Feedback | Loading, saving, recoverable failure, cancel and retry | Native presentations and accessibility announcements |
-| Canvas overlays | Selection handles, active tool and pointer feedback | App-owned geometry/styles with platform input/touch target treatment |
+| Color | Surface, text, separator, focus, selection, destructive/error/success roles | Generated resources and high-contrast/system overrides |
+| Typography | Body, title, label and caption hierarchy | Font availability/shaping, metrics, readable scaling and fallback |
+| Spacing | Grouping, alignment and density | Actual window, input targets, safe areas and accessibility settings |
+| Buttons/actions | Shape, icon role and applicable states | Semantic activation, focus and accessibility through selected toolkit |
+| Input controls | Appearance, validation and value intent | Native text/IME, numeric parsing and keyboard/assistive behavior |
+| Feedback | Loading, recoverable failure, cancel/retry and status | Honest announcements and host-owned surfaces where required |
+| Canvas overlays | Approved selection/tool/preview roles | Geometry, target handling and rendering under shared command authority |
 
-Use official native design resources where available and permitted; record kit/version and
-license constraints. Show ordinary controls using their real platform appearance; do not
-redraw every OS control to force a universal look. Preserve native system accent, text sizing,
-contrast and reduced-transparency/motion behavior. System-provided Liquid Glass is an Apple
-platform treatment, not a custom blur effect to copy onto Android/Windows/Linux.
+Shared TypeScript resources define semantic theme and localization roles with deterministic
+host outputs. Geometry, spacing, typography and interaction states remain identified specification/
+code concerns until their shared representation is reviewed. Do not claim every value is tokenized.
+No Rust style migration, universal widget engine, all-Skia chrome or resource synchronization
+service is selected. No external design service, subscription, connector or account is required.
 
-Separate UI theme colors from saved artwork colors and export backgrounds. Changing light/
-dark mode must not recolor a drawing. Document sRGB/alpha decisions in the drawing contract,
-not infer them from a Figma theme palette. Color is never the only signal for a state.
+Use reviewed icons and record asset/font provenance and licenses. OS-native appearance is not
+mandatory; native behavior remains. Preserve text sizing, contrast, reduced transparency/motion
+and focus visibility. Separate UI theme values from saved artwork colors and export backgrounds.
+Theme or RTL changes must not alter artwork geometry/colors. Color alone must not convey state.
 
-Inventory only controls needed by approved features. A control library entry does not approve
-a new product tool or a color-picker rollout to another platform. Keep macOS color controls
-within existing scope. Foundation approval does not approve every future screen using them.
+Inventory only controls required by approved features. The existing unavailable color/settings
+entries do not authorize panels. Preserve current macOS color-control behavior until a concrete
+replacement is reviewed. A component inventory does not approve additional screens or tools.
 
-## Resizable mockups are a deliverable
+## Resizable specifications and prototypes
 
-Use nested Auto Layout for normal UI flow with suitable Hug/Fill/Fixed sizing, minimum/maximum
-bounds and wrapping where appropriate. Use constraints for overlays/ordinary frames where
-applicable; don't assume constraints operate the same way inside Auto Layout. Keep components
-reusable through properties/variants instead of flattened screenshots. Figma supports these
-responsive layout mechanisms. [Auto Layout](https://help.figma.com/hc/en-us/articles/360040451373-Guide-to-auto-layout-in-Figma),
-[constraints](https://help.figma.com/hc/en-us/articles/360039957734-Apply-constraints-to-define-how-layers-resize).
+Specify content sizing, flexible growth, minimum/maximum bounds, wrapping, truncation and
+scroll ownership for each component. Use normal document layout for controls and deliberate
+anchors for overlays. In the authorized web prototype, semantic HTML and Vanilla Extract
+implement those rules; verify them with actual viewport/container resizing. Other hosts receive
+behavior/layout mappings for their selected toolkits, not a promise of identical CSS.
 
-Use semantic variables and suitable modes for light/dark/platform treatments, within the
-available Figma plan capabilities. Record any library/mode limitations; no paid upgrade or
-new subscription is implicitly approved. [Variable modes](https://help.figma.com/hc/en-us/articles/15343816063383-Modes-for-variables).
+Distinguish fluid resizing from adaptive transitions. Define supported bounds, growth/anchors,
+overflow and any compact/regular/wide changes per screen. Fixed screenshots document samples;
+they do not prove automatic breakpoint behavior. Canvas content may use absolute positioning;
+control layout must preserve reachability without changing document world-space geometry.
 
-Distinguish fluid resizing from adaptive layout transitions. For each screen define supported
-minimum/maximum viewport, what grows/anchors/scrolls, overflow behavior and any compact/regular/
-wide mode changes. Use explicit alternate layouts when hierarchy changes. Do not claim that
-manually selecting a Figma variant demonstrates automatic breakpoint switching; document the
-intended runtime rule separately and verify the actual prototype behavior.
+For each scoped screen provide:
 
-Absolute positioning is appropriate for canvas content and deliberate overlays, not as a
-substitute for resize rules on every toolbar button. The canvas can grow without scaling
-native controls or changing the drawing's world-space geometry. A visual prototype cannot
-prove native layout engine behavior, pen physics, performance or accessibility implementation.
+- Minimum, intermediate, typical and maximum review dimensions, including narrow desktop/split
+  windows, portrait/landscape and short heights. Resize without manually repositioning children.
+- Every required control reachable without accidental overlap/clipping; explicitly identify
+  intentional title truncation, scrolling and wrapping. Preserve identity, focus and scroll.
+- English/Ukrainian, expanded text, mixed scripts, enlarged text and pseudo-RTL chrome; verify
+  focus indicators and relevant touch/remote target sizes. Preserve artwork orientation.
+- Light/dark, contrast and reduced-motion/transparency cases where applicable; inspect component
+  selected/disabled/pressed/focused and applicable empty/loading/partial/error/retry states.
+- Input/IME/accessibility expectations and CT/INV/SU/scenario IDs. Note unavailable physical
+  hardware, native panels and other behavior that a web artifact cannot demonstrate.
 
-## Resize and state acceptance
+Use authorized headless browser tests and local captures for web evidence. Record exact source/
+build, browser, dimensions, locale, theme, text scale and motion settings. Review screenshots
+alongside meaningful layout/focus/state assertions; do not auto-approve baselines. Label injected
+lifecycle/pseudo-layout fixtures and touch emulation. Static captures do not prove complete
+motion continuity, physical touch/pen, screen-reader behavior, durability or performance.
+Each implemented host still needs its own applicable E2E and runtime design/accessibility review.
 
-Designer provides a reproducible resize check with named frames, version and tested dimensions:
-- Minimum, typical and wide/tall layouts plus intermediate widths/heights; resize the actual
-  parent frame without manually repositioning children to make the result look correct.
-- No accidental overlap, inaccessible controls or clipped required content; document intentional
-  truncation, wrapping, scrolling and approved overflow behavior rather than hiding failures.
-- Longer sample labels and increased text-size representations; verify focus indicators and
-  touch/remote targets. Record limitations that require real native/accessibility testing.
-- Light/dark and relevant accessibility variants; distinguish native system behavior from
-  custom app tokens. Show normal, hover where applicable, focused, pressed, selected, disabled,
-  invalid/error and busy states only where relevant to each control.
-- Empty/drawing/selected and native file/recovery flow states, with keyboard/pointer/pen
-  expectations and links to CT/INV/SU/shared-scenario IDs.
-- TV: remote focus, viewing-distance layout and read-only navigation. Android XR/visionOS:
-  approved 2D surface sizing/input, not implicit immersive tools. Mobile: portrait/landscape
-  and applicable split-window layouts; do not merely shrink the desktop mockup.
+TV/watch remain view-only with remote/crown/rotary and viewing-distance requirements where
+supported. XR starts with separately reviewed 2D scope. Mobile/tablet adaptation follows window
+size, orientation, safe areas, keyboards and input capability rather than device-name-only rules.
 
-Acceptance is visual/interaction design evidence. The later implementation still needs native
-E2E, accessibility checks, resizing tests and running-app designer review on each host.
+## Sequence, ownership and approval
 
-## Sequence and review packet
+The combined designer owns behavior and visual checklists in one packet. Lead coordinates
+scope and platform feasibility; engineers own implementation/tests; rust_engine reviews command
+semantics; fresh reviewer independently assesses traceability and changes. Competitor research
+informs unresolved choices without expanding scope or reopening selected directions.
 
-S00A first defines shared principles, semantic roles and a lightweight mapping for every
-planned platform. Detail the next authorized web slice first, then the macOS component set
-and adaptive preview screens in S00, with macos_ui feasibility and owner approval. macOS
-remains the primary product target (decision 231). Exhaustive designs for every future OS
-are not a prerequisite to either milestone. Each later platform deepens its
-foundation/components before its own screen approval and implementation.
+Detail the next authorized web slice first, then macOS, which remains the primary native target.
+Provide directional mappings for later hosts and deepen them when each slice begins; exhaustive
+future-platform designs are not a prerequisite for the current approved prototype.
 
-Deliver: versioned foundation/component sheets, native mappings, variables/mode documentation,
-resize rules/evidence, scenario/state coverage, Figma links, unresolved decisions and owner
-approval record. Show a few meaningful visual-direction options before polishing one.
-Ask the owner to select/approve; do not assume the current system theme settles product choices.
+Deliver versioned component/state specifications, host mappings, semantic resource references,
+resize rules/evidence, exact artifact paths/hashes, scenario coverage, remaining choices and
+owner approval conditions. Existing scope/design authorization remains valid. New or materially
+changed design scope returns for review. A missing required design/approval blocks only its
+affected slice; independent authorized work may continue. Follow [workflow](workflow.md).
 
-No additional design coordinator is needed. competitor_researcher supplies bounded evidence;
-ui_ux_designer owns visual foundations and behavior, and lead coordinates; platform engineers verify native
-feasibility; rust_engine checks shared action semantics; reviewer checks traceability and
-approval. Follow workflow.md for missing access, exact version/frame records and drift.
+## Internationalization and motion
 
-## Internationalization foundations
+Follow [i18n](../internationalization.md) and [locale tests](../testing/internationalization.md).
+English is source/fallback; English and Ukrainian are required launch languages. Browser/OS
+preferences select language without an in-app switch; region/keyboard remain independent.
+Review logical alignment, icon mirroring, reading/focus order, accessible names and native IME.
+Do not embed translatable text in images or call pseudotext an approved translation. Shared
+resource generation exists; native integration and proficient Ukrainian review remain separate.
 
-Follow [i18n](../internationalization.md) and [locale tests](../testing/internationalization.md). Include pseudo-expanded LTR/RTL chrome, mixed-script/CJK labels, larger text and numeric-locale examples in resizable components. Preserve identical artwork/coordinates across direction variants; handedness is a separate concern. Use native logical alignment and review icon mirroring, reading/focus order, accessibility labels and IME behavior with platform engineers. Do not embed translatable text in images or treat pseudotext as an approved translation. English and Ukrainian are required launch languages; show both in approved adaptive Figma. English is source/fallback; concrete resource mappings remain S00B work.
-
-## Motion foundations
-
-Motion is part of the foundation, not an implementation embellishment. Follow [motion](motion.md):
-semantic purposes, native platform mappings, normal/reduced-motion policies, input responsiveness
-and focus rules. Detailed screens include interactive versioned prototypes, timing/interrupt
-tables and native limitations. A library of static frames alone is insufficient.
+Follow [motion](motion.md): specify purpose, normal/reduced-motion alternatives, interruption/
+reversal, commit/cancel and focus timing together with visual choreography. Include executable
+examples only when authorized. Animation callbacks never own document/save/discard mutations
+or delay input/ink. Static states alone do not establish motion acceptance.
 
 ## Active-stroke style availability
 
 Decision 50 requires disabled color/width/approved style controls and actions while drawing a
-stroke. Show the disabled states/accessibility semantics in Figma; native presentation reflects
+stroke. Show the disabled states/accessibility semantics in design specifications; native presentation reflects
 shared Rust availability. Do not propose a deferred style change or automatic stroke cancellation.
 An already-open color panel cannot bypass the shared guard. Restore availability after end/cancel
 subject to other state restrictions, without stealing canvas focus. Pressure variation is normal
@@ -143,7 +142,7 @@ lifetime/focus with ui_ux_designer and the S02 capture contract. No new pan/zoom
 Decision 62 requires gallery thumbnails to fit all artwork with a small margin. Do not crop to
 last editor view or drop distant marks. Opening still restores the user's local viewport.
 Use approved artwork background/color semantics and no interaction overlays. Propose thumbnail
-size/margin and empty/loading/error/accessible states in Figma; empty PNG export dimensions do
+size/margin and empty/loading/error/accessible states in design specifications; empty PNG export dimensions do
 not prescribe thumbnail size. Distinguish preview failure from unavailable/corrupt artwork.
 
 ## Consistent interruption behavior
@@ -161,7 +160,10 @@ geometry. Reserve preview and metadata space before async content arrives; image
 completion and error/retry substitution must not shift existing items or scroll position. Use
 stable item/focus/AX identities and native view recycling/windowing. Do not impose one fixed pixel
 layout across platforms: respond deliberately to window size, locale and accessibility text size.
-Figma must demonstrate placeholder/loading/loaded/error transitions at relevant sizes and locales.
+The relevant design packet must demonstrate placeholder/loading/loaded/error transitions at
+applicable sizes and locales. Existing synchronous sample fixtures do not verify async loading.
 Implementation starts on web, then macOS; every host requires its own real loading/scroll evidence.
 
-Cross-platform material accessibility: [reduced transparency policy and host acceptance](accessibility-materials.md). Shared authoring status and TypeScript migration proposal: [shared resources](shared-resources-plan.md).
+Cross-platform accessibility: [reduced transparency policy and host acceptance](accessibility-materials.md).
+Shared authoring boundaries: [shared resources](shared-resources-plan.md). Current review surface:
+[live web prototype](live-web-prototype.md), with scoped component readiness in [S00A](../../tasks/S00A.md).

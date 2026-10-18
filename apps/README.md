@@ -1,12 +1,12 @@
 # Platform applications
 
-Linefield is planned as multiplatform from day one. Rust owns shared document/editing behavior; hosts retain platform controls and presentation. Develop web first because the owner has the most web experience, then macOS, which remains the primary product target; iPhone/iPad is the next native priority (decision 231).
+Linefield is planned as multiplatform from day one. Rust owns shared document/editing behavior; hosts render common Linefield styles and retain native input, accessibility and OS integration (decision 232). Develop web first because the owner has the most web experience, then macOS, which remains the primary product target; iPhone/iPad is the next native priority (decision 231).
 
 See [platform plan](../docs/platforms.md) for capabilities, boundaries and acceptance. apps/web contains the authorized live gallery prototype; native application implementations and the full Rust/Wasm editor remain planned/gated.
 
 - [macos](macos/README.md): Swift + AppKit. Editable desktop app; primary product target and first native milestone after web.
 - [ios](ios/README.md): Swift + UIKit; SwiftUI where appropriate. iPhone and iPad editor with touch/Pencil-specific design; next native priority after macOS; web leads the overall development sequence.
-- [android](android/README.md): Kotlin + Jetpack Compose Material 3. Phone/tablet editor; Android desktop behavior shared with the ChromeOS route.
+- [android](android/README.md): Kotlin + Jetpack Compose with Linefield styling. Phone/tablet editor; Android desktop behavior shared with the ChromeOS route.
 - [windows](windows/README.md): C# + WinUI 3. Desktop editor with native pen, pointer, keyboard and file integration.
 - [linux](linux/README.md): Rust + GTK4/libadwaita. GNOME-oriented desktop editor; other Linux desktops need explicit support evidence.
 - [web](web/README.md): TypeScript + semantic HTML, Rust/Wasm and Skia CanvasKit. Browser editor with native browser semantics; no claim of AppKit or WinUI widgets.

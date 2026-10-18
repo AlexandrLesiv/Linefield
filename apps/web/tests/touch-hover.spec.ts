@@ -40,7 +40,6 @@ test("WEB-TH02 WebKit touch feedback has no browser highlight or sticky hover sh
       tile,
       page.locator(".drawing-tile").first(),
       page.locator(".more").first(),
-      page.locator("select"),
     ]) {
       await expect(control).toHaveCSS("-webkit-tap-highlight-color", "rgba(0, 0, 0, 0)");
     }
@@ -55,6 +54,16 @@ test("WEB-TH02 WebKit touch feedback has no browser highlight or sticky hover sh
     await page.locator(".back").tap();
     await expect(tile).toBeVisible();
     await expect(tile).toHaveCSS("box-shadow", "none");
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.locator(".more").first().tap();
+    await page.getByRole("menuitem", { name: "Rename", exact: true }).tap();
+    await expect(page.getByLabel("Drawing name")).toBeFocused();
+    const dialog = await page.getByRole("dialog").boundingBox();
+    expect(dialog?.x).toBeGreaterThanOrEqual(0);
+    expect((dialog?.x ?? 0) + (dialog?.width ?? 0)).toBeLessThanOrEqual(390);
+    await page.getByRole("button", { name: "Cancel", exact: true }).tap();
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+    await expect(page.locator(".more").first()).toBeFocused();
   } finally {
     await browser.close();
   }

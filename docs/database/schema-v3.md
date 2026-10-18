@@ -1,3 +1,6 @@
+
+> Working-copy terminology was normalized by owner decision235 on2026-10-18. Historical approval hashes below still identify their recorded approval artifacts, not these normalized bytes. The pinned base preserves a pre-normalization working copy and is an exact approval snapshot only where its hash matches. See [normalization provenance](../reviews/design-workflow-normalization-2026-10-18.md).
+
 # S02 v3 regional-coordinate DBML review
 
 Status: PENDING OWNER REVIEW; NOT IMPLEMENTED. Prepared 2026-10-17.
@@ -127,5 +130,5 @@ Fresh reviewer must challenge this design; actual implementation still needs ind
 ## Review boundary
 
 This handoff seeks approval of the exact DBML and accompanying defaults/constraints.
-Typed ABI compilation, migration/runtime tests, precision/performance measurements and Figma
+Typed ABI compilation, migration/runtime tests, precision/performance measurements and design review
 are not completed by schema approval. No app code or SQL migrations were executed.

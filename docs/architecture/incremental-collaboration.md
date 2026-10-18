@@ -1,6 +1,6 @@
 
 Current transport default: [platform IPC defaults](platform-ipc-defaults.md), selected under owner delegation in decision 182. Older unselected-transport notes are historical; concrete feasibility/security evidence remains required.
-Decision 166 (2026-10-16): prioritize preventing data loss over automatically reconciling every edit. Preserve conflicting work and resolve explicitly. Local incremental coordination (163) and platform adapters (164) remain selected. Initial future cloud sync preserves both whole-document versions; automatic semantic merging and object-level conflict review are deferred. Concrete preservation/retention/failure contracts and identified Figma approval remain required; no application implementation authorized.
+Decision 166 (2026-10-16): prioritize preventing data loss over automatically reconciling every edit. Preserve conflicting work and resolve explicitly. Local incremental coordination (163) and platform adapters (164) remain selected. Initial future cloud sync preserves both whole-document versions; automatic semantic merging and object-level conflict review are deferred. Concrete preservation/retention/failure contracts and identified design approval remain required; no application implementation authorized.
 
 # Incremental local editing and initial cloud conflict handling
 
@@ -27,23 +27,13 @@ Decisions 177–180 close the current policy batch: DB17-B uses SQLite FULL with
 
 DB11–DB14 selected A (decisions 169–172): bounded client-memory retention until durable acknowledgement; orderly save/disconnect/exclusive takeover rather than live transfer; client-scoped conditional Undo; object/property preconditions rather than interaction reservations. No client recovery journal or persistent Undo selected. Uncertain outcomes require reconciliation, not blind replay. All-holder failure before persistence can lose unsaved work.
 
-On ordinary quit, stop admission and settle saves or obtain the reviewed failure/quit resolution before disconnecting and releasing ownership. A surviving client reconnects only to verified new authority. Host process death differs from window closure. A client cannot claim Saved on acceptance alone. Per-operation receipts/reconciliation, inverse/redo safety and reconnect history remain concrete contract work. Conflict UI requires identified Figma approval.
+On ordinary quit, stop admission and settle saves or obtain the reviewed failure/quit resolution before disconnecting and releasing ownership. A surviving client reconnects only to verified new authority. Host process death differs from window closure. A client cannot claim Saved on acceptance alone. Per-operation receipts/reconciliation, inverse/redo safety and reconnect history remain concrete contract work. Conflict UI requires identified design approval.
 
 ## Responsibility model
 
-```mermaid
-flowchart TD
-  A["Local client A: UI and input preview"] --> T["Typed incremental operations"]
-  B["Local client B: UI and input preview"] --> T
-  T --> C["Authoritative Rust document coordinator"]
-  C --> D["Ordered changes and acknowledgements"]
-  D --> A
-  D --> B
-  C --> P["Bounded persistence worker → local SQLite"]
-  P --> S["Durable revision acknowledgement"]
-  S --> C
-  P -. "Future coherent snapshots + conditional publication" .-> Cloud["Cloud adapter"]
-```
+![Incremental coordination](../diagrams/v2/incremental-coordination.svg)
+
+Native SVG, diagram style v2. The [migration index](../diagrams/migration-v2.md) records source, status and text equivalent.
 
 Clients own their viewport, selection, tool settings and active interaction/previews. The coordinator owns shared document mutation, capabilities, validation, revision/order and persistence policy. A global active-stroke slot is insufficient. Focus loss cancels only the affected client's unfinished work; other clients retain accepted work.
 
@@ -73,7 +63,7 @@ Cloud-linked replicas need shared logical identity and a durable last-successful
 
 Compare the last common sync point with current local durable revision and remote token. If both changed, preserve local work, pause automatic publication and show a conflict. ETag/conditional writes detect changed remote versions but do not merge drawings. Do not merge SQLite pages or synchronize active main/WAL files independently.
 
-Owner selected preservation-first resolution. Proposed Figma scope: inspect either version, keep both as separate drawings, or select which becomes active while retaining the displaced version. These exact controls/layouts still need design approval. Show the exact affected versions and explain which changes will not appear in the selected active version. Publish only against the remote version confirmed; another remote edit invalidates the decision and returns to conflict resolution. Never blindly retry an uncertain publication.
+Owner selected preservation-first resolution. Proposed design review scope: inspect either version, keep both as separate drawings, or select which becomes active while retaining the displaced version. These exact controls/layouts still need design approval. Show the exact affected versions and explain which changes will not appear in the selected active version. Publish only against the remote version confirmed; another remote edit invalidates the decision and returns to conflict resolution. Never blindly retry an uncertain publication.
 
 Required direction (166): preserve coherent recoverable local and remote versions before destructive replacement. Concrete snapshot representation, bounds, retention, cleanup consent and recovery behavior remain review items. If protection cannot be completed (including storage/quota failure), block destructive resolution; surface the failure and preserve existing versions. Do not silently evict unresolved unique work or promise unlimited retention. No automatic force override or silent deletion of unique pending local-client work.
 

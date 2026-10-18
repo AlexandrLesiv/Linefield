@@ -3,7 +3,7 @@ import { en } from "../../shared/localization/en.ts";
 import { uk } from "../../shared/localization/uk.ts";
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, stat, utimes, writeFile } from "node:fs/promises";
+import { mkdtemp, realpath, readFile, rm, stat, utimes, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { parse } from "./schema.ts";
@@ -17,7 +17,7 @@ test("LOC-05 deterministic generation and stale/missing/unexpected output reject
     messages: Object.fromEntries(Object.entries(valid.catalog.messages).reverse()),
   };
   assert.deepEqual(first, generate(reversed, valid.translations));
-  const directory = await mkdtemp(join(tmpdir(), "linefield-locales-"));
+  const directory = await realpath(await mkdtemp(join(tmpdir(), "linefield-locales-")));
   try {
     await synchronize(directory, first, false);
     await synchronize(directory, first, true);
@@ -36,7 +36,7 @@ test("LOC-05 deterministic generation and stale/missing/unexpected output reject
 
 test("LOC-11 generation rejects symlink files, subdirectories and root without touching target", async () => {
   const { mkdir, symlink } = await import("node:fs/promises");
-  const directory = await mkdtemp(join(tmpdir(), "linefield-locale-links-"));
+  const directory = await realpath(await mkdtemp(join(tmpdir(), "linefield-locale-links-")));
   const target = join(directory, "outside.json");
   const output = join(directory, "generated");
   try {
@@ -62,7 +62,7 @@ test("LOC-11 generation rejects symlink files, subdirectories and root without t
 });
 
 test("LOC-12 unchanged generation preserves files so preparation does not reload the preview", async () => {
-  const directory = await mkdtemp(join(tmpdir(), "linefield-locales-stable-"));
+  const directory = await realpath(await mkdtemp(join(tmpdir(), "linefield-locales-stable-")));
   try {
     const outputs = { "web/en.json": '{"name":"Linefield"}\n' };
     await synchronize(directory, outputs, false);

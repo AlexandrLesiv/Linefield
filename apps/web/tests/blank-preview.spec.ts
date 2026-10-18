@@ -1,16 +1,14 @@
 import { test, expect } from "@playwright/test";
 
-for (const platform of ["web", "ios"]) {
-  test(`WEB-N01 ${platform} blank previews never add or reorder gallery tiles`, async ({
-    page,
-  }) => {
-    await page.setViewportSize({ width: platform === "web" ? 1280 : 390, height: 900 });
-    await page.goto("/?platform=" + platform);
+for (const width of [1280, 390]) {
+  test(`WEB-N01 ${width}px blank previews never add or reorder gallery tiles`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
     const cards = page.locator(".drawing-card");
     const before = await cards.evaluateAll((nodes) =>
       nodes.map((node) => node.getAttribute("data-id")),
     );
-    const create = page.locator(platform === "web" ? ".new-tile" : ".iphone-create");
+    const create = page.locator(width >= 640 ? ".new-tile" : ".mobile-create");
     for (let index = 0; index < 2; index++) {
       await create.click();
       await expect(page.locator(".back")).toBeFocused();

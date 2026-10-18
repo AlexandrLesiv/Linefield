@@ -1,0 +1,217 @@
+{
+  "startedAt": "2026-10-18T22:16:55.749Z",
+  "completedAt": "2026-10-18T22:17:03.400Z",
+  "revision": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7",
+  "dirtyWorkingTree": true,
+  "host": {
+    "platform": "darwin",
+    "release": "27.0.0",
+    "arch": "arm64",
+    "node": "v24.12.0"
+  },
+  "sources": {
+    "acquire.ts": "a7e8ba6695818450d347666c5b1e85da49a682892226307c77e1797712cbbb67",
+    "fault.js": "4c0ac4d84ad6ead47888d9d1a3e8cb313d59359b0a32559c7aae7c9afce3aa30",
+    "harness.js": "70d46e692640491658dd09ae484aa7de734d4912740da38229edc7b0fb326386",
+    "instrument.ts": "537f3c296cbc16ec3cb6b63d2a2f92af646f5d174fa699a6e5eda903bcd7b665",
+    "proxy-gate.js": "ecbfeb40e6b0dc26d12072deee67190219ec38731744a222eb5056e3c56f6fe9",
+    "run.ts": "e13a9746954f9d43906425fd25b0314723e2d449065c50728171b33e73665680",
+    "scenarios.js": "afe46371762bf12cd3578f273bcb4f6361d4b9e701801ddb70621b58f099c6b1",
+    "server.ts": "48837ca90d62110c6740b431e20a8c7095470e9505268e2c293752f233ba3254",
+    "worker.js": "d6b18e400bbb19df542523ce9068de0bd0d3577d6da10b39c5d39d66bebbd24c"
+  },
+  "vendor": {
+    "sqlite3.js": "cbee562f4d632cfed46a0572ecb315deea2e1728f29dd1a9fd7b7ca7186c9807",
+    "sqlite3.wasm": "10fd727b37924755edc12c2f3ead0d54155d8f2d9f2abf6a1ef9b2b2597e0a51",
+    "sqlite3-opfs-async-proxy.js": "da5a37526ffba2401cc9a7f24ccc4bffc405825c6f36d8c7c226d010197ecac3"
+  },
+  "results": [
+    {
+      "browser": "chromium",
+      "version": "155.0.8059.80",
+      "capabilities": {
+        "isolated": true,
+        "secure": true,
+        "opfs": true,
+        "locks": true,
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36"
+      },
+      "cases": [
+        {
+          "id": "PROBE-01",
+          "status": "passed",
+          "detail": {
+            "admitted": true,
+            "pragmas": [
+              [
+                [
+                  "delete"
+                ]
+              ],
+              [
+                [
+                  2
+                ]
+              ],
+              [
+                [
+                  1
+                ]
+              ]
+            ],
+            "version": [
+              [
+                "3.54.1",
+                "2026-10-16 14:45:20 555e07ef33f69a0957d24d8e555b702464a131d6f1607f4c3c1e4551e8e6ca76"
+              ]
+            ]
+          }
+        },
+        {
+          "id": "PROBE-02",
+          "status": "passed"
+        },
+        {
+          "id": "PROBE-03",
+          "status": "passed"
+        },
+        {
+          "id": "PROBE-04",
+          "status": "passed"
+        },
+        {
+          "id": "PROBE-05",
+          "status": "passed"
+        },
+        {
+          "id": "PROBE-06",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "browser": "chromium",
+      "fault": {
+        "id": "PROBE-07-CONTROL",
+        "status": "passed",
+        "events": [
+          {
+            "kind": "armed",
+            "proxy": "d902e5e5-e12f-4b54-9ebd-b87dc159f598"
+          },
+          {
+            "kind": "armed",
+            "proxy": "5888fa26-0a4d-4b6a-ae23-7f2b0e5db434"
+          },
+          {
+            "kind": "reached",
+            "proxy": "d902e5e5-e12f-4b54-9ebd-b87dc159f598"
+          },
+          {
+            "kind": "release-sent",
+            "proxy": "d902e5e5-e12f-4b54-9ebd-b87dc159f598"
+          },
+          {
+            "kind": "flush-start",
+            "proxy": "d902e5e5-e12f-4b54-9ebd-b87dc159f598"
+          },
+          {
+            "kind": "flush-complete",
+            "proxy": "d902e5e5-e12f-4b54-9ebd-b87dc159f598"
+          }
+        ]
+      }
+    },
+    {
+      "browser": "chromium",
+      "fault": {
+        "id": "PROBE-07",
+        "status": "passed",
+        "events": [
+          {
+            "kind": "armed",
+            "proxy": "a51fbd7e-7cc1-4075-84ea-9ec4be381318"
+          },
+          {
+            "kind": "armed",
+            "proxy": "a4cd02a7-0546-4160-8553-0d3745d86372"
+          },
+          {
+            "kind": "reached",
+            "proxy": "a51fbd7e-7cc1-4075-84ea-9ec4be381318"
+          },
+          {
+            "kind": "successor-lock-granted"
+          },
+          {
+            "kind": "release-sent",
+            "proxy": "a51fbd7e-7cc1-4075-84ea-9ec4be381318"
+          }
+        ]
+      }
+    },
+    {
+      "browser": "chromium",
+      "restart": {
+        "id": "PROBE-08",
+        "status": "passed"
+      }
+    },
+    {
+      "browser": "firefox",
+      "status": "failed",
+      "error": "Error: browserType.launchPersistentContext: Failed to launch the browser process.\nBrowser logs:\n\n<launching> /Users/oleksandr/Library/Caches/ms-playwright/firefox-1555/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/wr/_kg6tchj2xv2rkv3rs8qbylm0000gn/T/linefield-synthetic-storage-nd2DNM -juggler-pipe about:blank\n<launched> pid=23139\n[pid=23139][err] *** You are running in headless mode.\n[pid=23139][err] Could not find profile folder.\n[pid=23139] <process did exit: exitCode=1, signal=null>\n[pid=23139] starting temporary directories cleanup\nCall log:\n\u001b[2m  - <launching> /Users/oleksandr/Library/Caches/ms-playwright/firefox-1555/firefox/Nightly.app/Contents/MacOS/firefox -no-remote -headless -profile /var/folders/wr/_kg6tchj2xv2rkv3rs8qbylm0000gn/T/linefield-synthetic-storage-nd2DNM -juggler-pipe about:blank\u001b[22m\n\u001b[2m  - <launched> pid=23139\u001b[22m\n\u001b[2m  - [pid=23139][err] *** You are running in headless mode.\u001b[22m\n\u001b[2m  - [pid=23139][err] Could not find profile folder.\u001b[22m\n\u001b[2m  - [pid=23139] <process did exit: exitCode=1, signal=null>\u001b[22m\n\u001b[2m  - [pid=23139] starting temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=23139] <gracefully close start>\u001b[22m\n\u001b[2m  - [pid=23139] <kill>\u001b[22m\n\u001b[2m  - [pid=23139] <skipped force kill spawnedProcess.killed=false processClosed=true>\u001b[22m\n\u001b[2m  - [pid=23139] finished temporary directories cleanup\u001b[22m\n\u001b[2m  - [pid=23139] <gracefully close end>\u001b[22m\n"
+    },
+    {
+      "browser": "webkit",
+      "version": "27.2",
+      "capabilities": {
+        "isolated": true,
+        "secure": true,
+        "opfs": true,
+        "locks": true,
+        "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15"
+      },
+      "cases": [
+        {
+          "id": "PROBE-01",
+          "status": "passed",
+          "detail": {
+            "admitted": true,
+            "pragmas": [
+              [
+                [
+                  "delete"
+                ]
+              ],
+              [
+                [
+                  2
+                ]
+              ],
+              [
+                [
+                  1
+                ]
+              ]
+            ],
+            "version": [
+              [
+                "3.54.1",
+                "2026-10-16 14:45:20 555e07ef33f69a0957d24d8e555b702464a131d6f1607f4c3c1e4551e8e6ca76"
+              ]
+            ]
+          }
+        },
+        {
+          "id": "PROBE-02",
+          "status": "passed"
+        }
+      ]
+    }
+  ],
+  "diagnostics": [
+    "chromium: Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "limits": "Synthetic fixture only; no power-loss, product bridge, native E2E or universal proxy-fencing proof."
+}

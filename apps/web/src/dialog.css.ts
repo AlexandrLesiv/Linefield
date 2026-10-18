@@ -63,11 +63,3 @@ globalStyle(".dialog-actions button:not(.primary):active", {
 globalStyle(".dialog-actions .primary:active", {
   background: "var(--primaryPressed)",
 });
-const appleAction =
-  ':root:is([data-platform="ios"], [data-platform="ipados"]) .dialog-actions button';
-globalStyle(`${appleAction}:hover:not(:active)`, {
-  "@media": { "(hover: hover) and (pointer: fine)": { background: "var(--buttonHover)" } },
-});
-globalStyle(`${appleAction}:active`, {
-  background: "var(--buttonPressed)",
-});

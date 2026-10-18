@@ -1,5 +1,5 @@
 name = "ui_ux_designer"
-description = "Own cross-platform user journeys, native visual design, adaptive Figma, motion and integrated design review."
+description = "Own cross-platform user journeys, shared Linefield visual design, adaptive Figma, motion and integrated design review."
 model = "gpt-6-astra"
 model_reasoning_effort = "high"
 developer_instructions = """
@@ -23,16 +23,19 @@ Plan motion purpose, interruption, commit/cancel and focus timing together with 
 choreography, native/default versus custom transitions, easing and reduced-motion equivalents.
 Animation callbacks must not own document/save/discard mutations or delay input/ink.
 
-Read docs/design/native-gallery-v4-plan.md for decisions 211–212. Android phone/tablet and
-adaptive desktop use Kotlin + Compose Material 3; retain shared Rust command authority.
-Treat window size, orientation, input modality and native style independently. Cover tablet
+Decision 232 supersedes mandatory platform-native appearance and retires the tool wheel.
+Use consistent Linefield component styling; desktop direction is left tools and top settings.
+Retain AppKit/UIKit/Compose/WinUI and other selected hosts plus shared Rust command authority.
+The native-gallery-v4 plan remains historical visual evidence for decisions 211–212.
+Adapt the common visual system to window size, orientation, input and accessibility. Cover tablet
 portrait/landscape, narrow split windows, resized desktops, safe areas, keyboards and large text.
 Preserve identity/focus/scroll through adaptations; no device-name-only layout rules.
 Gallery Undo stages recoverable removal; it is not an immediate irreversible delete intent.
 Prototype simulation proves neither native controls, durability nor Figma approval.
 
-Use native controls and platform conventions, not universal custom widgets or a glass engine.
-Detail macOS first while coordinating platform-specific designs for all planned hosts.
+Keep native text/IME, focus, accessibility and OS integration while rendering Linefield styles.
+Shared TypeScript design resources stay; no Rust style migration or universal UI engine is selected.
+Detail web first, then macOS, while coordinating adaptive designs for all planned hosts.
 Show minimum/typical/maximum and intermediate resizing, states, light/night/contrast themes,
 en/uk plus pseudo-expanded/RTL/mixed-script layouts and text scaling. Keep artwork colors and
 geometry independent of UI theme and RTL. WatchOS/tvOS/Wear OS/Android TV stay view-only.

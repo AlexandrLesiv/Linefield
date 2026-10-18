@@ -1,0 +1,36 @@
+{
+  "baseCommit": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7",
+  "workingTree": "preserved uncommitted work",
+  "recordedAt": "2026-10-18T02:17:17.996Z",
+  "platform": "darwin",
+  "architecture": "arm64",
+  "osRelease": "27.0.0",
+  "node": "v24.12.0",
+  "icu": "77.1",
+  "seed": 7960,
+  "integerCasesPerLanguage": 727,
+  "languages": [
+    "en",
+    "uk"
+  ],
+  "newTests": 5,
+  "hashes": {
+    "scripts/localization/plural-boundaries.test.ts": "ae6ae2b1185d16fa264cf662998f5d590f06bf97fcc3cc96d1a5b85c81b94f80",
+    "apps/web/src/locale-format.ts": "23b334cd76104814190908c00d7fe33a5a30eb1557f3717a6b258d54e6efbd24",
+    "scripts/localization/native-check.ts": "e04c973702aba30473af6ab15621dca485a90f38e26ab923727289e6b4cfb55f",
+    "scripts/localization/schema.ts": "0c3c42437321d67c76c718886019bc5ce2486920f5178dbcb6193fb82802ad7a",
+    "scripts/localization/generate.ts": "982411eb5b3bcb3ef379b51fccae4eab43d5c7b3ebfc5aa47ecdb4b87c7c622a",
+    "scripts/localization/formats.ts": "00707b00089db31730e2cf22a05cb7d303d6f6ade300bd987ad9faf769377540",
+    "scripts/localization/gettext.ts": "70e52290165a6c94f67f93adb63fc9bebf85a0138ea2bf2927c5b35c03297ef4",
+    "shared/localization/catalog.ts": "4d9eac7e34d745d4d43436960de44ea56df5f7bef189b2305253e52450fe6942",
+    "shared/localization/en.ts": "5a9401150e514a75bd321705bf9d12d0413058894906a1cabbafdd50c5cc27b9",
+    "shared/localization/uk.ts": "752551fcf842dfb4be258c923fa49b4a7aff94b59887bca14d39da0627803545",
+    "shared/localization/types.ts": "2c2f958d09a8863ccc6cb33504275337714a5751380d837b77cb916175f0f828"
+  },
+  "nativeSyntax": {
+    "xmllint": "libxml20913;8files passed",
+    "msgfmt": "GNU gettext-tools1.0;4files passed"
+  },
+  "browser": "not-run: known local-server EPERM",
+  "nativeApplication": "not-run"
+}

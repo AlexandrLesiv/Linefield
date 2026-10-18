@@ -22,7 +22,7 @@ Recommendation (pending DB5): keep one document owner and add/retain transaction
 
 ## Conflict handling and possible override
 
-Recommendation only: preserve local work, pause conflicting autosave and offer reviewed recovery choices such as keeping a separate drawing or reloading after explicit consent. Do not show recurring modal errors on every autosave tick. These new conflict UI/actions require product scope and Figma approval.
+Recommendation only: preserve local work, pause conflicting autosave and offer reviewed recovery choices such as keeping a separate drawing or reloading after explicit consent. Do not show recurring modal errors on every autosave tick. These new conflict UI/actions require product scope and design review approval.
 
 Force overwrite is possible but unselected. It must obtain exclusive mutation authority, preserve a coherent recovery copy of the displaced version, and replace only the exact version the user confirmed. Recheck atomically after confirmation; further changes require renewed resolution. Preserve the proper schema/identity, increment a fresh version and invalidate stale work; never raw-copy over an active SQLite database. Both views containing unique unsaved work cannot be preserved merely by backing up the last disk commit. Independent autosaving writers could repeatedly overwrite one another, so confirmation alone is insufficient.
 

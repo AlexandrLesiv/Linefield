@@ -1,0 +1,24 @@
+{
+  "baseCommit": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7",
+  "recordedAt": "2026-10-18T03:17:00.996Z",
+  "node": "v24.12.0",
+  "platform": "darwin",
+  "architecture": "arm64",
+  "osRelease": "27.0.0",
+  "hashes": {
+    "scripts/localization/schema.ts": "8757022bebb4fcd74b0767be1f6b671a08403f49be71881cd91ad46d1c5353fa",
+    "scripts/localization/record-boundaries.test.ts": "7b0658aace20c06e4662dc9769411b253b0a4250c2af1b84016df88f2f45c269",
+    "docs/design/shared-resources-plan.md": "dc89d8c0c86b7ea8c5ac6d6fb4209a594add907fa4c33c9c1c61dfb862f482d9"
+  },
+  "generatedResourceHashesUnchanged": 41,
+  "baseline": "quality/resource-output-validation/manifest.json",
+  "tests": {
+    "added": 3,
+    "localization": 28,
+    "total": 75
+  },
+  "specialist": "build_reliability confirmed reproduction and narrow correction",
+  "precodeReview": "passed",
+  "implementationReview": "passed; three tests independently run, three source hashes and41 unchanged resource hashes verified",
+  "scope": "Trusted locale record validation; no resource format, app, dependency or security boundary change"
+}

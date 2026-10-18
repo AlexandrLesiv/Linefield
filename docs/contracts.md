@@ -477,7 +477,7 @@ idempotent crash recovery. Preserve unrelated files and prevent stale writes/reb
 - CT-05: distinguish shared format invalidity from host resource-capacity rejection. Bound validation
   and preserve oversized valid documents unchanged. No silent truncation or per-host format drift.
 
-Concrete types/budgets and native Figma remain for review. Shared tests and per-host E2E evidence
+Concrete types/budgets and native design review remain for review. Shared tests and per-host E2E evidence
 must distinguish implemented, pending and untested behavior. B01-Q9 is selected A in decision 103.
 
 ## Batch 2 approved refinements (decisions 95-102)

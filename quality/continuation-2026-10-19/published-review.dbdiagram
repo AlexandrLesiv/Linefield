@@ -1,0 +1,670 @@
+{
+  "version": "3.0.0",
+  "darkMode": true,
+  "gridEnabling": false,
+  "currentViewName": null,
+  "defaultView": {
+    "detailLevel": "All",
+    "relationshipMode": "All",
+    "tablePositions": [
+      {
+        "name": "document",
+        "schemaName": "drawing",
+        "x": 0,
+        "y": 0
+      },
+      {
+        "name": "tools",
+        "schemaName": "drawing",
+        "x": 0,
+        "y": 500
+      },
+      {
+        "name": "strokes",
+        "schemaName": "drawing",
+        "x": 600,
+        "y": 780
+      },
+      {
+        "name": "samples",
+        "schemaName": "drawing",
+        "x": 0,
+        "y": 850
+      },
+      {
+        "name": "command_receipts",
+        "schemaName": "drawing",
+        "x": 600,
+        "y": 0
+      },
+      {
+        "name": "library",
+        "schemaName": "catalog",
+        "x": 1400,
+        "y": 0
+      },
+      {
+        "name": "tools",
+        "schemaName": "catalog",
+        "x": 2050,
+        "y": 550
+      },
+      {
+        "name": "drawings",
+        "schemaName": "catalog",
+        "x": 1400,
+        "y": 550
+      },
+      {
+        "name": "local_view",
+        "schemaName": "catalog",
+        "x": 2050,
+        "y": 850
+      },
+      {
+        "name": "pen_preferences",
+        "schemaName": "catalog",
+        "x": 1400,
+        "y": 1120
+      },
+      {
+        "name": "lifecycle",
+        "schemaName": "catalog",
+        "x": 2050,
+        "y": 0
+      },
+      {
+        "name": "snapshots",
+        "schemaName": "jobs",
+        "x": 0,
+        "y": 1700
+      },
+      {
+        "name": "destinations",
+        "schemaName": "jobs",
+        "x": 0,
+        "y": 2150
+      },
+      {
+        "name": "export_jobs",
+        "schemaName": "jobs",
+        "x": 600,
+        "y": 1700
+      }
+    ],
+    "tableGroupCollapseStates": [],
+    "stickyNoteLayouts": [],
+    "referencePaths": [
+      {
+        "firstFieldNames": [
+          "tool_key"
+        ],
+        "firstTableName": "strokes",
+        "firstSchemaName": "drawing",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "tool_key"
+        ],
+        "secondTableName": "tools",
+        "secondSchemaName": "drawing",
+        "secondRelation": "1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "stroke_key"
+        ],
+        "firstTableName": "samples",
+        "firstSchemaName": "drawing",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "stroke_key"
+        ],
+        "secondTableName": "strokes",
+        "secondSchemaName": "drawing",
+        "secondRelation": "1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "active_tool_key"
+        ],
+        "firstTableName": "local_view",
+        "firstSchemaName": "catalog",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "tool_key"
+        ],
+        "secondTableName": "tools",
+        "secondSchemaName": "catalog",
+        "secondRelation": "1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "drawing_key"
+        ],
+        "firstTableName": "pen_preferences",
+        "firstSchemaName": "catalog",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "drawing_key"
+        ],
+        "secondTableName": "drawings",
+        "secondSchemaName": "catalog",
+        "secondRelation": "1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "tool_key"
+        ],
+        "firstTableName": "pen_preferences",
+        "firstSchemaName": "catalog",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "tool_key"
+        ],
+        "secondTableName": "tools",
+        "secondSchemaName": "catalog",
+        "secondRelation": "1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "snapshot_id"
+        ],
+        "firstTableName": "export_jobs",
+        "firstSchemaName": "jobs",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "snapshot_id"
+        ],
+        "secondTableName": "snapshots",
+        "secondSchemaName": "jobs",
+        "secondRelation": "0..1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "destination_id"
+        ],
+        "firstTableName": "export_jobs",
+        "firstSchemaName": "jobs",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "destination_id"
+        ],
+        "secondTableName": "destinations",
+        "secondSchemaName": "jobs",
+        "secondRelation": "0..1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "drawing_key"
+        ],
+        "firstTableName": "drawings",
+        "firstSchemaName": "catalog",
+        "firstRelation": "1",
+        "secondFieldNames": [
+          "drawing_key"
+        ],
+        "secondTableName": "local_view",
+        "secondSchemaName": "catalog",
+        "secondRelation": "1",
+        "checkPoints": []
+      }
+    ]
+  },
+  "views": {
+    "Drawing document": {
+      "detailLevel": "All",
+      "relationshipMode": "All",
+      "tablePositions": [
+        {
+          "x": 0,
+          "y": 0,
+          "name": "document",
+          "schemaName": "drawing"
+        },
+        {
+          "x": 0,
+          "y": 500,
+          "name": "tools",
+          "schemaName": "drawing"
+        },
+        {
+          "x": 600,
+          "y": 500,
+          "name": "strokes",
+          "schemaName": "drawing"
+        },
+        {
+          "x": 0,
+          "y": 800,
+          "name": "samples",
+          "schemaName": "drawing"
+        },
+        {
+          "x": 600,
+          "y": 0,
+          "name": "command_receipts",
+          "schemaName": "drawing"
+        }
+      ],
+      "tableGroupCollapseStates": [],
+      "stickyNoteLayouts": [],
+      "referencePaths": [
+        {
+          "checkPoints": [],
+          "firstRelation": "*",
+          "firstTableName": "strokes",
+          "secondRelation": "1",
+          "firstFieldNames": [
+            "tool_key"
+          ],
+          "firstSchemaName": "drawing",
+          "secondTableName": "tools",
+          "secondFieldNames": [
+            "tool_key"
+          ],
+          "secondSchemaName": "drawing"
+        },
+        {
+          "checkPoints": [],
+          "firstRelation": "*",
+          "firstTableName": "samples",
+          "secondRelation": "1",
+          "firstFieldNames": [
+            "stroke_key"
+          ],
+          "firstSchemaName": "drawing",
+          "secondTableName": "strokes",
+          "secondFieldNames": [
+            "stroke_key"
+          ],
+          "secondSchemaName": "drawing"
+        }
+      ]
+    },
+    "Export processing": {
+      "detailLevel": "All",
+      "relationshipMode": "All",
+      "tablePositions": [
+        {
+          "x": 0,
+          "y": 0,
+          "name": "snapshots",
+          "schemaName": "jobs"
+        },
+        {
+          "x": 0,
+          "y": 450,
+          "name": "destinations",
+          "schemaName": "jobs"
+        },
+        {
+          "x": 600,
+          "y": 0,
+          "name": "export_jobs",
+          "schemaName": "jobs"
+        }
+      ],
+      "tableGroupCollapseStates": [],
+      "stickyNoteLayouts": [],
+      "referencePaths": [
+        {
+          "checkPoints": [],
+          "firstRelation": "*",
+          "firstTableName": "export_jobs",
+          "secondRelation": "0..1",
+          "firstFieldNames": [
+            "snapshot_id"
+          ],
+          "firstSchemaName": "jobs",
+          "secondTableName": "snapshots",
+          "secondFieldNames": [
+            "snapshot_id"
+          ],
+          "secondSchemaName": "jobs"
+        },
+        {
+          "checkPoints": [],
+          "firstRelation": "*",
+          "firstTableName": "export_jobs",
+          "secondRelation": "0..1",
+          "firstFieldNames": [
+            "destination_id"
+          ],
+          "firstSchemaName": "jobs",
+          "secondTableName": "destinations",
+          "secondFieldNames": [
+            "destination_id"
+          ],
+          "secondSchemaName": "jobs"
+        }
+      ]
+    },
+    "Local library": {
+      "detailLevel": "All",
+      "relationshipMode": "All",
+      "tablePositions": [
+        {
+          "x": 0,
+          "y": 0,
+          "name": "library",
+          "schemaName": "catalog"
+        },
+        {
+          "x": 650,
+          "y": 550,
+          "name": "tools",
+          "schemaName": "catalog"
+        },
+        {
+          "x": 0,
+          "y": 550,
+          "name": "drawings",
+          "schemaName": "catalog"
+        },
+        {
+          "x": 650,
+          "y": 850,
+          "name": "local_view",
+          "schemaName": "catalog"
+        },
+        {
+          "x": 0,
+          "y": 1120,
+          "name": "pen_preferences",
+          "schemaName": "catalog"
+        },
+        {
+          "x": 650,
+          "y": 0,
+          "name": "lifecycle",
+          "schemaName": "catalog"
+        }
+      ],
+      "tableGroupCollapseStates": [],
+      "stickyNoteLayouts": [],
+      "referencePaths": [
+        {
+          "checkPoints": [],
+          "firstRelation": "*",
+          "firstTableName": "local_view",
+          "secondRelation": "1",
+          "firstFieldNames": [
+            "active_tool_key"
+          ],
+          "firstSchemaName": "catalog",
+          "secondTableName": "tools",
+          "secondFieldNames": [
+            "tool_key"
+          ],
+          "secondSchemaName": "catalog"
+        },
+        {
+          "checkPoints": [],
+          "firstRelation": "*",
+          "firstTableName": "pen_preferences",
+          "secondRelation": "1",
+          "firstFieldNames": [
+            "drawing_key"
+          ],
+          "firstSchemaName": "catalog",
+          "secondTableName": "drawings",
+          "secondFieldNames": [
+            "drawing_key"
+          ],
+          "secondSchemaName": "catalog"
+        },
+        {
+          "checkPoints": [],
+          "firstRelation": "*",
+          "firstTableName": "pen_preferences",
+          "secondRelation": "1",
+          "firstFieldNames": [
+            "tool_key"
+          ],
+          "firstSchemaName": "catalog",
+          "secondTableName": "tools",
+          "secondFieldNames": [
+            "tool_key"
+          ],
+          "secondSchemaName": "catalog"
+        },
+        {
+          "checkPoints": [],
+          "firstRelation": "1",
+          "firstTableName": "drawings",
+          "secondRelation": "1",
+          "firstFieldNames": [
+            "drawing_key"
+          ],
+          "firstSchemaName": "catalog",
+          "secondTableName": "local_view",
+          "secondFieldNames": [
+            "drawing_key"
+          ],
+          "secondSchemaName": "catalog"
+        }
+      ]
+    },
+    "Overview": {
+      "detailLevel": "Keys",
+      "relationshipMode": "All",
+      "tablePositions": [
+        {
+          "x": 0,
+          "y": 0,
+          "name": "document",
+          "schemaName": "drawing"
+        },
+        {
+          "x": 0,
+          "y": 500,
+          "name": "tools",
+          "schemaName": "drawing"
+        },
+        {
+          "x": 600,
+          "y": 500,
+          "name": "strokes",
+          "schemaName": "drawing"
+        },
+        {
+          "x": 0,
+          "y": 800,
+          "name": "samples",
+          "schemaName": "drawing"
+        },
+        {
+          "x": 600,
+          "y": 0,
+          "name": "command_receipts",
+          "schemaName": "drawing"
+        },
+        {
+          "x": 1400,
+          "y": 0,
+          "name": "library",
+          "schemaName": "catalog"
+        },
+        {
+          "x": 2050,
+          "y": 550,
+          "name": "tools",
+          "schemaName": "catalog"
+        },
+        {
+          "x": 1400,
+          "y": 550,
+          "name": "drawings",
+          "schemaName": "catalog"
+        },
+        {
+          "x": 2050,
+          "y": 850,
+          "name": "local_view",
+          "schemaName": "catalog"
+        },
+        {
+          "x": 1400,
+          "y": 1120,
+          "name": "pen_preferences",
+          "schemaName": "catalog"
+        },
+        {
+          "x": 2050,
+          "y": 0,
+          "name": "lifecycle",
+          "schemaName": "catalog"
+        },
+        {
+          "x": 0,
+          "y": 1300,
+          "name": "snapshots",
+          "schemaName": "jobs"
+        },
+        {
+          "x": 0,
+          "y": 1750,
+          "name": "destinations",
+          "schemaName": "jobs"
+        },
+        {
+          "x": 600,
+          "y": 1300,
+          "name": "export_jobs",
+          "schemaName": "jobs"
+        }
+      ],
+      "tableGroupCollapseStates": [],
+      "stickyNoteLayouts": [],
+      "referencePaths": [
+        {
+          "checkPoints": [],
+          "firstRelation": "*",
+          "firstTableName": "strokes",
+          "secondRelation": "1",
+          "firstFieldNames": [
+            "tool_key"
+          ],
+          "firstSchemaName": "drawing",
+          "secondTableName": "tools",
+          "secondFieldNames": [
+            "tool_key"
+          ],
+          "secondSchemaName": "drawing"
+        },
+        {
+          "checkPoints": [],
+          "firstRelation": "*",
+          "firstTableName": "samples",
+          "secondRelation": "1",
+          "firstFieldNames": [
+            "stroke_key"
+          ],
+          "firstSchemaName": "drawing",
+          "secondTableName": "strokes",
+          "secondFieldNames": [
+            "stroke_key"
+          ],
+          "secondSchemaName": "drawing"
+        },
+        {
+          "checkPoints": [],
+          "firstRelation": "*",
+          "firstTableName": "local_view",
+          "secondRelation": "1",
+          "firstFieldNames": [
+            "active_tool_key"
+          ],
+          "firstSchemaName": "catalog",
+          "secondTableName": "tools",
+          "secondFieldNames": [
+            "tool_key"
+          ],
+          "secondSchemaName": "catalog"
+        },
+        {
+          "checkPoints": [],
+          "firstRelation": "*",
+          "firstTableName": "pen_preferences",
+          "secondRelation": "1",
+          "firstFieldNames": [
+            "drawing_key"
+          ],
+          "firstSchemaName": "catalog",
+          "secondTableName": "drawings",
+          "secondFieldNames": [
+            "drawing_key"
+          ],
+          "secondSchemaName": "catalog"
+        },
+        {
+          "checkPoints": [],
+          "firstRelation": "*",
+          "firstTableName": "pen_preferences",
+          "secondRelation": "1",
+          "firstFieldNames": [
+            "tool_key"
+          ],
+          "firstSchemaName": "catalog",
+          "secondTableName": "tools",
+          "secondFieldNames": [
+            "tool_key"
+          ],
+          "secondSchemaName": "catalog"
+        },
+        {
+          "checkPoints": [],
+          "firstRelation": "*",
+          "firstTableName": "export_jobs",
+          "secondRelation": "0..1",
+          "firstFieldNames": [
+            "snapshot_id"
+          ],
+          "firstSchemaName": "jobs",
+          "secondTableName": "snapshots",
+          "secondFieldNames": [
+            "snapshot_id"
+          ],
+          "secondSchemaName": "jobs"
+        },
+        {
+          "checkPoints": [],
+          "firstRelation": "*",
+          "firstTableName": "export_jobs",
+          "secondRelation": "0..1",
+          "firstFieldNames": [
+            "destination_id"
+          ],
+          "firstSchemaName": "jobs",
+          "secondTableName": "destinations",
+          "secondFieldNames": [
+            "destination_id"
+          ],
+          "secondSchemaName": "jobs"
+        },
+        {
+          "checkPoints": [],
+          "firstRelation": "1",
+          "firstTableName": "drawings",
+          "secondRelation": "1",
+          "firstFieldNames": [
+            "drawing_key"
+          ],
+          "firstSchemaName": "catalog",
+          "secondTableName": "local_view",
+          "secondFieldNames": [
+            "drawing_key"
+          ],
+          "secondSchemaName": "catalog"
+        }
+      ]
+    }
+  }
+}

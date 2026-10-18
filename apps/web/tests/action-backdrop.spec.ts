@@ -84,22 +84,49 @@ test("WEB-BD03 reduced motion and resize settle dismissal without orphan overlay
   await expect(page.locator(".action-backdrop")).toHaveCount(0);
 });
 
-test("WEB-BD04 native right-click retargets another card without replacing the scrim", async ({
+test("WEB-ONE02 open backdrop keeps secondary clicks browser-owned without forwarding", async ({
   page,
 }) => {
   await page.goto("/?platform=macos");
-  const first = page.locator('[data-id="sample-0"] .drawing-tile');
-  await first.click({ button: "right", position: { x: 30, y: 30 } });
-  await page.locator(".action-backdrop").evaluate((node) => {
-    node.dataset.identity = "retarget";
+  await menu(page);
+  const other = page.locator('[data-id="sample-1"]');
+  const bounds = await other.boundingBox();
+  if (!bounds) throw Error("Missing second drawing");
+  await page.evaluate(() => {
+    document.body.dataset.contextCount = "0";
+    document.body.dataset.cardContextCount = "0";
+    document.querySelector('[data-id="sample-1"]')?.addEventListener("contextmenu", () => {
+      document.body.dataset.cardContextCount = String(
+        Number(document.body.dataset.cardContextCount) + 1,
+      );
+    });
+    document.addEventListener("contextmenu", (event) => {
+      document.body.dataset.contextCount = String(Number(document.body.dataset.contextCount) + 1);
+      document.body.dataset.contextPrevented = String(event.defaultPrevented);
+      document.body.dataset.contextTrusted = String(event.isTrusted);
+      document.body.dataset.contextTarget =
+        event.target instanceof Element ? event.target.className : "";
+    });
   });
-  const other = await page.locator('[data-id="sample-1"] .drawing-tile').boundingBox();
-  if (!other) throw Error("Missing second drawing");
-  await page.mouse.click(other.x + 40, other.y + 40, { button: "right" });
-  await expect(page.locator(".action-backdrop")).toHaveAttribute("data-identity", "retarget");
-  await expect(page.getByRole("menu")).toHaveCount(1);
-  await page.getByRole("menuitem", { name: "Rename", exact: true }).click();
-  await expect(page.getByLabel("Drawing name")).toHaveValue("Morning objects");
-  await page.keyboard.press("Escape");
-  await expect(page.locator(".action-backdrop")).toHaveCount(0);
+  const backdrop = page.locator(".action-backdrop");
+  await backdrop.dispatchEvent("contextmenu", {
+    button: 2,
+    clientX: bounds.x + 40,
+    clientY: bounds.y + 40,
+  });
+  await expect(page.locator("body")).toHaveAttribute("data-context-count", "1");
+  await expect(page.locator("body")).toHaveAttribute("data-card-context-count", "0");
+  await expect(page.locator("body")).toHaveAttribute("data-context-prevented", "false");
+  await expect(page.getByRole("menu")).toHaveAccessibleName("Actions for Coastal house");
+  await page.evaluate(() => {
+    document.body.dataset.contextCount = "0";
+  });
+  await page.mouse.click(bounds.x + 40, bounds.y + 40, { button: "right" });
+  await expect(page.locator("body")).toHaveAttribute("data-context-count", "1");
+  await expect(page.locator("body")).toHaveAttribute("data-card-context-count", "0");
+  await expect(page.locator("body")).toHaveAttribute("data-context-prevented", "false");
+  await expect(page.locator("body")).toHaveAttribute("data-context-trusted", "true");
+  await expect(page.locator("body")).toHaveAttribute("data-context-target", "action-backdrop");
+  await expect(page.getByRole("menu")).toHaveCount(0);
+  await expect(page.locator(".drawing-surface")).toHaveCount(0);
 });

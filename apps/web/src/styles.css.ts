@@ -26,14 +26,14 @@ globalStyle("body", {
   margin: "0",
   minWidth: "280px",
 });
-globalStyle("button, input, select", {
+globalStyle("button, input", {
   font: "inherit",
   color: "inherit",
 });
 globalStyle("button", {
   cursor: "pointer",
 });
-globalStyle("button:focus-visible, select:focus-visible", {
+globalStyle("button:focus-visible", {
   outline: "3px solid var(--text)",
   outlineOffset: "4px",
 });
@@ -49,24 +49,6 @@ globalStyle("h1", {
   fontSize: "20px",
   letterSpacing: "-0.04em",
   margin: "0",
-});
-globalStyle(".preview-controls", {
-  display: "flex",
-  alignItems: "center",
-  gap: "12px",
-  color: "var(--muted)",
-  fontSize: "12px",
-});
-globalStyle(".preview-controls label", {
-  display: "flex",
-  alignItems: "center",
-  gap: "8px",
-});
-globalStyle("select, .reset", {
-  background: "var(--surface)",
-  border: "1px solid var(--line)",
-  borderRadius: "8px",
-  padding: "8px",
 });
 globalStyle(".gallery", {
   transition: "opacity 200ms",
@@ -96,43 +78,6 @@ globalStyle(".app-toolbar", {
     "(max-width: 600px)": {
       padding: "16px",
       alignItems: "start",
-    },
-  },
-});
-globalStyle(".preview-controls", {
-  "@media": {
-    "(max-width: 600px)": {
-      flexWrap: "wrap",
-      justifyContent: "flex-end",
-      maxWidth: "230px",
-    },
-  },
-});
-globalStyle(".preview-controls label", {
-  "@media": {
-    "(max-width: 600px)": {
-      fontSize: "0",
-    },
-  },
-});
-globalStyle(".preview-controls select, .reset", {
-  "@media": {
-    "(max-width: 600px)": {
-      minHeight: "44px",
-    },
-  },
-});
-globalStyle(".preview-controls select", {
-  "@media": {
-    "(max-width: 600px)": {
-      fontSize: "12px",
-    },
-  },
-});
-globalStyle(".reset", {
-  "@media": {
-    "(max-width: 600px)": {
-      fontSize: "12px",
     },
   },
 });

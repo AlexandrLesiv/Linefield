@@ -1,0 +1,14 @@
+{
+  "baseCommit": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7",
+  "recordedAt": "2026-10-18T04:08:38.048Z",
+  "hashes": {
+    "docs/RESUME.md": "5d3eac2f21459baa45643a0ec59e7331aad537b19815a4e6d3017673bf694f97",
+    "docs/RESUME-2026-10-18-0405.md": "8ee3c264c2c225c6938074fde58e3cdcb4acbcc1f3e78a3906aee5a328d148e7",
+    "docs/reviews/autonomous-work-index-2026-10-18.md": "67836b98791dadd94b93489721e4cbd7cec87e808b3ada9e6f7ac70cf50b4280"
+  },
+  "localLinksChecked": 32,
+  "specialist": "build_reliability structure/evidence distinction incorporated",
+  "independentReview": "passed; content and32links checked without scope/pass inflation",
+  "archiveProvenance": "Lead read old RESUME bytes and wrote the same Buffer with exclusive creation before replacing RESUME. No separate pre-copy hash was captured; reviewer verified archive hash/content but could not independently compare it with the prior original.",
+  "runtime": "Documentation-only; no new tests or acceptance claims"
+}

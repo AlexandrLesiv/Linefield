@@ -1,3 +1,6 @@
+
+> Working-copy terminology was normalized by owner decision235 on2026-10-18. Historical approval hashes below still identify their recorded approval artifacts, not these normalized bytes. The pinned base preserves a pre-normalization working copy and is an exact approval snapshot only where its hash matches. See [normalization provenance](../docs/reviews/design-workflow-normalization-2026-10-18.md).
+
 # S02 contract proposal evidence and threat delta
 
 Date: 2026-10-16. Documentation only; no code, migrations, generated declarations or runtime tests.
@@ -64,7 +67,7 @@ platform implementations remain separately reviewed. No application-level encryp
 | LOG-01 structured diagnostics | Privacy/failure tests | No content/paths/persistent IDs; bounded drops/sink failure do not fail edit |
 | LIBRARY native cases | Real macOS E2E | Controls/rename/delete/pending navigation and field/IME priority reach shared commands |
 
-All rows are **planned, not executed**. Native E2E needs implementation, approved Figma and a reserved
+All rows are **planned, not executed**. Native E2E needs implementation, approved design review and a reserved
 foreground session. Replays/injected dispatcher tests never substitute. A documentation link check
 cannot certify SQLite migration or ABI correctness.
 

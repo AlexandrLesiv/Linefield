@@ -15,23 +15,6 @@ export function acquireBackdrop() {
   if (!current) {
     node.className = "action-backdrop";
     node.setAttribute("aria-hidden", "true");
-    node.addEventListener("contextmenu", (event) => {
-      // Forward only context intent, never the primary/touch press blocked by this layer.
-      const card = document
-        .elementsFromPoint(event.clientX, event.clientY)
-        .find((candidate) => candidate.matches(".drawing-card"));
-      if (!card) return;
-      const accepted = card.dispatchEvent(
-        new MouseEvent("contextmenu", {
-          bubbles: true,
-          cancelable: true,
-          button: event.button,
-          clientX: event.clientX,
-          clientY: event.clientY,
-        }),
-      );
-      if (!accepted) event.preventDefault();
-    });
     document.body.append(node);
     current = node;
   }

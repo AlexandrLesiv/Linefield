@@ -1,0 +1,114 @@
+
+> linefield@0.0.0 check /Users/oleksandr/projects/linefield
+> node scripts/check.ts
+
+(node:86311) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"check":"shared-theme","status":"passed"}
+✔ THEME-12 clean generation, no-op timestamps, stale rejection and explicit extras (56.952083ms)
+✔ THEME-10 native outputs preserve every role, mode and alpha byte (4.763959ms)
+✔ THEME-11 generation is deterministic and rejects ambiguous resource names (0.965792ms)
+✔ THEME-13 only missing executables qualify as unavailable (86.770542ms)
+✔ THEME-01 shared catalog has exact semantic keys and readable state pairs (1.036708ms)
+✔ THEME-02 malformed modes, unknown/missing tokens and invalid hex are rejected (0.24875ms)
+✔ THEME-03 unreadable normal, pressed and destructive text is rejected (0.172583ms)
+✔ THEME-04 light palette is unchanged and authorized dark palette uses soft graphite (0.364666ms)
+✔ THEME-06 unresolved references, missing roles/modes and executable aliases fail (0.285334ms)
+✔ THEME-07 every pre-layer color and alpha value remains exact (0.090792ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 177.686958
+{"check":"theme-resources","status":"passed","files":29}
+{"check":"localization","status":"passed","messages":41}
+(node:86336) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ CAT-01 authoring modules contain only literal serializable exports (22.288666ms)
+✔ CAT-02 TypeScript rejects missing locale IDs and missing theme roles (173.475375ms)
+✔ LOC-01 rejects schema, missing/extra translation and placeholder mismatch (1.31775ms)
+✔ LOC-02 requires complete bounded plurals and integer selector (2.044542ms)
+✔ LOC-03 overrides are complete, validated and platform-specific (0.430708ms)
+✔ LOC-04 native escaping preserves Unicode, literals and reordered arguments (0.337292ms)
+✔ LOC-06 plain percent stays literal and invalid XML scalars are rejected (1.270625ms)
+✔ LOC-07 plural expansion cannot collide with a plain Windows resource (0.302875ms)
+✔ LOC-10 carriage returns survive XML newline normalization (1.214333ms)
+✔ LOC-05 deterministic generation and stale/missing/unexpected output rejection (33.620333ms)
+✔ LOC-11 generation rejects symlink files, subdirectories and root without touching target (3.302167ms)
+✔ LOC-12 unchanged generation preserves files so preparation does not reload the preview (1.875833ms)
+✔ LOC-13 en bounded integer plural sweep seed7960 (45.672875ms)
+✔ LOC-13 uk bounded integer plural sweep seed7960 (31.758125ms)
+✔ LOC-14 plural language and visibly different numeric regions remain independent (0.3295ms)
+✔ LOC-15 integer plural domain rejects invalid values before category formatting (0.284958ms)
+✔ LOC-16 repeated and reordered named substitutions preserve literal Unicode payloads (0.582583ms)
+✔ LOC-08 browser consumes generated plural contracts with locale-specific categories (12.618916ms)
+✔ LOC-09 integer domain, argument shape, Unicode and literal substitutions (0.734459ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 274.009417
+✔ DX-ACTION-001 invalid IDs, extra operands and shell syntax reject (0.431ms)
+✔ DX-ACTION-002 compiler uses pinned native executable without Node fallback (9.269625ms)
+✔ DX-ACTION-002/009 generators are check-only and never bootstrap (0.54025ms)
+✔ DX-ACTION-002 missing or mismatched native compiler cannot fall back (4.680375ms)
+✔ DX-ACTION-007 two actual CLI checks have distinct report identities (374.990584ms)
+✔ DX-ACTION-001 actual CLI rejects unknown text without echoing it (63.153ms)
+✔ DX-ACTION-009 actual resource checks fail missing outputs without regenerating (156.885667ms)
+✔ DX-ACTION-006 endpoint hashes detect source changes and are deterministic (7.264709ms)
+✔ DX-ACTION-006 nested configured paths reject linked ancestors (2.763084ms)
+✔ DX-ACTION-006 checked web configuration changes invalidate snapshots (3.646042ms)
+✔ DX-ACTION-006 scan rejects symlink, byte/count/time bounds and missing files (3.37325ms)
+✔ DX-ACTION-002/003 direct argv execution preserves exit result (56.170042ms)
+✔ DX-ACTION-004 timeout forces a direct child that ignores termination (355.0765ms)
+✔ DX-ACTION-004 first cancellation wins even after output and successful exit (309.636333ms)
+✔ DX-ACTION-004 already canceled request never spawns (0.303375ms)
+✔ DX-ACTION-005 output flood is bounded and reports contain no raw content (41.81625ms)
+✔ DX-ACTION-005 credential and executable-injection environment is excluded (0.544291ms)
+✔ DX-ACTION-004 cancellation during final metadata cannot become success (0.441209ms)
+✔ DX-ACTION-006 passing execution with stale or unavailable endpoint evidence is not accepted (0.390166ms)
+✔ DX-ACTION-008 report writes one bounded JSON document (1.675875ms)
+✔ DX-ACTION-008 sink failure is visible without leaking error details (1.251958ms)
+✔ DX-ACTION-005 optional revision rejects linked ref ancestors (15.214584ms)
+✔ DX-ZED-001 launchers expose only fixed background action arguments (3.9345ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 848.472958
+✔ REG-PROBE-002 extreme integer subtraction needs wider than i64 (0.511375ms)
+✔ REG-PROBE-003 exact relative geometry is translation invariant (0.325167ms)
+✔ REG-PROBE-003 negative control loses visible quarter-unit displacement (0.19475ms)
+✔ REG-PROBE-003 intermediate cancellation loses visible detail even with regional deltas (0.572417ms)
+✔ REG-PROBE-004 noncanonical finite stress operands produce tagged overflow (0.391042ms)
+✔ REG-PROBE-004 bounded matrix is deterministic and retains expected counterexamples (4.673625ms)
+✔ REG-PROBE-001 binary64 decode has hand-derived boundary values (0.807958ms)
+✔ REG-PROBE-001 exact arithmetic preserves known fractions and borrow gap (0.174541ms)
+✔ REG-PROBE-004 tolerance comparison is exact including negative boundary (0.104625ms)
+✔ REG-PROBE-004 readable approximation does not prematurely underflow (0.088625ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 75.719875
+{"check":"typecheck","status":"passed"}
+{"check":"web-typecheck","status":"passed"}
+{"check":"lint","status":"passed"}
+Checking formatting...
+
+All matched files use the correct format.
+Finished in 77ms on 136 files using 12 threads.
+{"check":"format","status":"passed"}
+{"check":"script-source-size","status":"passed"}

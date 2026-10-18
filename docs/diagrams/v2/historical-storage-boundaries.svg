@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1264" viewBox="0 0 1440 1264" role="img" aria-labelledby="title description">
+<title id="title">Native editing and storage · historical v1</title>
+<desc id="description">Execution ownership and file boundaries only. DBML / hosted dbdocs remains the schema authority.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#718096" stroke-width="1.5"/></marker><style>text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;fill:#233148}.title{font-size:40px;font-weight:600;letter-spacing:-.7px}.section{font-size:26px;font-weight:600}.node{font-size:20px;font-weight:600}.body{font-size:16px}.meta{font-size:14px;fill:#59677C}.edge{fill:none;stroke:#718096;stroke-width:2;stroke-linejoin:round;stroke-linecap:round;marker-end:url(#arrow)}.guide{fill:none;stroke:#718096;stroke-width:1.5;stroke-dasharray:4 8}</style></defs>
+<rect width="1440" height="1264" fill="#F7F8FA"/>
+<text x="72" y="64" class="meta">LINEFIELD / DIAGRAM LANGUAGE v2</text>
+<text x="1368" y="64" class="meta" text-anchor="end">HISTORICAL INTERFACE PROPOSAL · NOT AN ER DIAGRAM</text>
+<text x="72" y="123" class="title">Native editing and storage · historical v1</text>
+<text x="72" y="161" class="body">Execution ownership and file boundaries only. DBML / hosted dbdocs remains the schema authority.</text>
+<path d="M376 290H520" class="edge"/>
+<path d="M824 290H1008" class="edge"/>
+<path d="M1172 348V472" class="edge"/>
+<path d="M1008 530H824" class="edge"/>
+<path d="M520 530H376" class="edge"/>
+<path d="M1336 290H1376V786H1336" class="edge"/>
+<path d="M1008 786H824" class="edge"/>
+<path d="M520 786H376" class="edge"/>
+<path d="M72 786H48V200H1172V232" class="edge"/>
+<path d="M672 844V920H224V1000" class="edge"/>
+<path d="M672 920V1000" class="edge"/>
+<path d="M672 920H1172V1000" class="edge"/>
+<rect x="72" y="232" width="304" height="116" rx="16" fill="#F7F7FE" stroke="#718096" stroke-width="1.5"/>
+<text x="96" y="260" class="meta">HOST</text>
+<text x="96" y="292" class="node">AppKit events / controls</text>
+<rect x="520" y="232" width="304" height="116" rx="16" fill="#F5F9FD" stroke="#718096" stroke-width="1.5"/>
+<text x="544" y="260" class="meta">ABI</text>
+<text x="544" y="292" class="node">Named typed FFI</text>
+<rect x="1008" y="232" width="328" height="116" rx="16" fill="#F5F9FD" stroke="#718096" stroke-width="1.5"/>
+<text x="1032" y="260" class="meta">ENGINE</text>
+<text x="1032" y="292" class="node">Rust dispatcher · main thread</text>
+<rect x="1008" y="472" width="328" height="116" rx="16" fill="#F5F9FD" stroke="#718096" stroke-width="1.5"/>
+<text x="1032" y="500" class="meta">MODEL</text>
+<text x="1032" y="532" class="node">Document / session</text>
+<rect x="520" y="472" width="304" height="116" rx="16" fill="#F5F9FD" stroke="#718096" stroke-width="1.5"/>
+<text x="544" y="500" class="meta">RENDER</text>
+<text x="544" y="532" class="node">Rust Skia · main thread</text>
+<rect x="72" y="472" width="304" height="116" rx="16" fill="#F3FAF7" stroke="#718096" stroke-width="1.5"/>
+<text x="96" y="500" class="meta">OUTPUT</text>
+<text x="96" y="532" class="node">Native canvas</text>
+<rect x="1008" y="728" width="328" height="116" rx="16" fill="#F5F9FD" stroke="#718096" stroke-width="1.5"/>
+<text x="1032" y="756" class="meta">OWNED WORK</text>
+<text x="1032" y="788" class="node">Immutable storage work</text>
+<rect x="520" y="728" width="304" height="116" rx="16" fill="#F5F9FD" stroke="#718096" stroke-width="1.5"/>
+<text x="544" y="756" class="meta">STORAGE OWNER</text>
+<text x="544" y="788" class="node">Background storage service</text>
+<rect x="72" y="728" width="304" height="116" rx="16" fill="#F3FAF7" stroke="#718096" stroke-width="1.5"/>
+<text x="96" y="756" class="meta">COMPLETIONS</text>
+<text x="96" y="788" class="node">Bounded queue + readiness</text>
+<text x="96" y="812" class="node">signal</text>
+<rect x="72" y="1000" width="304" height="116" rx="16" fill="#F3FAF7" stroke="#718096" stroke-width="1.5"/>
+<text x="96" y="1028" class="meta">DATABASE FILE</text>
+<text x="96" y="1060" class="node">Drawing SQLite</text>
+<rect x="520" y="1000" width="304" height="116" rx="16" fill="#F3FAF7" stroke="#718096" stroke-width="1.5"/>
+<text x="544" y="1028" class="meta">DATABASE FILE</text>
+<text x="544" y="1060" class="node">Catalog SQLite</text>
+<rect x="1008" y="1000" width="328" height="116" rx="16" fill="#F3FAF7" stroke="#718096" stroke-width="1.5"/>
+<text x="1032" y="1028" class="meta">DATABASE FILE</text>
+<text x="1032" y="1060" class="node">Export jobs SQLite</text>
+<path d="M72 1192H1368" stroke="#E1E6ED"/>
+<text x="72" y="1224" class="meta">Notation migration only · See source packet for authority and evidence</text>
+<text x="1368" y="1224" class="meta" text-anchor="end">2026-10-19 · Full-size SVG</text>
+</svg>

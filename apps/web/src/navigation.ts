@@ -1,12 +1,12 @@
-import { attachComposeEdge } from "./compose-edge.ts";
+import { createDrawingShell } from "./drawing-shell.ts";
 import { attachCreationVisual, readSurfaceAppearance } from "./creation-motion.ts";
-import { t } from "./locale.ts";
-import { button, element } from "./dom.ts";
+import { element } from "./dom.ts";
 import { artworkBounds, moveSurface } from "./surface-motion.ts";
 import type { Drawing } from "./model.ts";
 import { record } from "./diagnostics.ts";
-export function createNavigation(gallery: HTMLElement, onReturn: () => void) {
+export function createNavigation(gallery: HTMLElement, onReturn: (restoreFocus: boolean) => void) {
   let surface: HTMLElement | null = null;
+  let chrome: ReturnType<typeof createDrawingShell> | null = null;
   let origin: HTMLElement | null = null;
   let generation = 0;
   let closing = false;
@@ -65,35 +65,39 @@ export function createNavigation(gallery: HTMLElement, onReturn: () => void) {
       surface.style.boxShadow = elevatedShadow;
       surface.setAttribute("aria-label", drawing.name);
       attachCreationVisual(surface, source);
-      attachComposeEdge(surface, source);
       if (drawing.image) {
         const image = element("img", "canvas-art");
         image.src = drawing.image;
         image.alt = "";
         surface.append(image);
       }
-      const bar = element("header", "canvas-toolbar");
-      const back = button(t("navigation.back"), "back", requestBack);
-      surface.addEventListener("keydown", (event) => {
-        if (event.key === "Tab") {
-          event.preventDefault();
-          back.focus();
-        }
-      });
-      bar.append(back, element("span", "canvas-title", drawing.name));
-      surface.append(bar);
+      chrome = createDrawingShell(drawing.name, requestBack);
+      chrome.setReady(false);
+      surface.append(chrome.root);
       document.body.append(surface);
       const current = surface;
-      bar.style.opacity = "0";
+      const previousFocus = document.activeElement;
+      let focusChanged = false;
+      const trackFocus = () => {
+        focusChanged = true;
+      };
+      document.addEventListener("focusin", trackFocus);
+      window.addEventListener("blur", trackFocus);
       source.style.visibility = "hidden";
       gallery.inert = true;
       gallery.classList.add("away");
       document.body.classList.add("drawing-open");
       record("opened");
       await move(rect, viewport(), imageRect);
+      document.removeEventListener("focusin", trackFocus);
+      window.removeEventListener("blur", trackFocus);
       if (surface === current && !closing) {
-        bar.style.opacity = "";
-        back.focus({ preventScroll: true });
+        chrome?.setReady(true);
+        if (
+          !focusChanged &&
+          (document.activeElement === previousFocus || document.activeElement === document.body)
+        )
+          chrome?.back.focus({ preventScroll: true });
       }
     },
     async close(): Promise<void> {
@@ -102,18 +106,28 @@ export function createNavigation(gallery: HTMLElement, onReturn: () => void) {
       const current = surface;
       const rect = current.getBoundingClientRect();
       const imageRect = current.querySelector(".canvas-art")?.getBoundingClientRect() ?? null;
-      current.querySelector<HTMLElement>(".canvas-toolbar")?.style.setProperty("opacity", "0");
+      chrome?.setReady(false);
+      chrome?.dispose();
+      let focusChanged = false;
+      const trackFocus = () => {
+        focusChanged = true;
+      };
+      document.addEventListener("focusin", trackFocus);
+      window.addEventListener("blur", trackFocus);
       gallery.classList.remove("away");
       await move(rect, origin.getBoundingClientRect(), imageRect);
+      document.removeEventListener("focusin", trackFocus);
+      window.removeEventListener("blur", trackFocus);
       if (surface !== current) return;
       current.remove();
       origin.style.visibility = "";
       surface = null;
+      chrome = null;
       origin = null;
       gallery.inert = false;
       document.body.classList.remove("drawing-open");
       record("returned");
-      onReturn();
+      onReturn(!focusChanged);
     },
   };
 }

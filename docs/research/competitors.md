@@ -37,7 +37,7 @@ features, extra platforms, new inputs or feature imitation.
 
 Follow [research workflow](README.md). Give owner, UX and UI the same sourced recommendations; UX
 plans relevant inputs using [inventory](../input/inventory.md) and submits the feature proposal with
-identified Figma for owner approval. No up-front global shortcut decisions. Native engineer checks
+identified design for owner approval. No up-front global shortcut decisions. Native engineer checks
 feasibility. Record documented versus observed behavior and unknowns, including native/compatible
 platform delivery; don't use app-store reviews as measured latency or correctness evidence.
 

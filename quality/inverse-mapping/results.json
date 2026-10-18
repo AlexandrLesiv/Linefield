@@ -1,0 +1,562 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-10-18T03:27:44.728Z",
+  "node": "v24.12.0",
+  "platform": "darwin",
+  "architecture": "arm64",
+  "sources": [
+    {
+      "path": "scripts/probes/regional/dyadic.ts",
+      "sha256": "0ab115955e1d58da0782de1c8be53a6e897dfbf11b7ace56139c5f90df1bb95e"
+    },
+    {
+      "path": "scripts/probes/regional/rational.ts",
+      "sha256": "81f3924c2d955bf83d7c1427cbd505f3b741dff0c475e524668f5e33c1792796"
+    },
+    {
+      "path": "scripts/probes/regional/inverse.ts",
+      "sha256": "1466bb7032ceff82958a9bc78590c3fa19e88716afb34f1ee18f9bc970884f42"
+    },
+    {
+      "path": "scripts/probes/regional/inverse.test.ts",
+      "sha256": "d9e8aef69136a98173f18a3bc509decb3cb0aebc61fca041086d8da756b1b085"
+    },
+    {
+      "path": "scripts/probes/regional/inverse-run.ts",
+      "sha256": "2b978e53e08c634d5c6a4fe1140e0024469e4f60ce3abbe9e1da7afb9a508b28"
+    }
+  ],
+  "rows": [
+    {
+      "id": "zero",
+      "point": 0,
+      "center": 0,
+      "zoom": 0.1,
+      "outcome": "finite",
+      "candidate": 0,
+      "negativeZero": false,
+      "exact": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "inverseError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "projectedError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "diagnosticWithinQuarterPoint": true,
+      "numberRoundTrip": {
+        "outcome": "finite",
+        "error": 0
+      }
+    },
+    {
+      "id": "zero",
+      "point": 0,
+      "center": 0,
+      "zoom": 1,
+      "outcome": "finite",
+      "candidate": 0,
+      "negativeZero": false,
+      "exact": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "inverseError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "projectedError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "diagnosticWithinQuarterPoint": true,
+      "numberRoundTrip": {
+        "outcome": "finite",
+        "error": 0
+      }
+    },
+    {
+      "id": "zero",
+      "point": 0,
+      "center": 0,
+      "zoom": 8,
+      "outcome": "finite",
+      "candidate": 0,
+      "negativeZero": false,
+      "exact": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "inverseError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "projectedError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "diagnosticWithinQuarterPoint": true,
+      "numberRoundTrip": {
+        "outcome": "finite",
+        "error": 0
+      }
+    },
+    {
+      "id": "one",
+      "point": 1,
+      "center": 0,
+      "zoom": 0.1,
+      "outcome": "finite",
+      "candidate": 10,
+      "negativeZero": false,
+      "exact": {
+        "numerator": "36028797018963968",
+        "denominator": "3602879701896397"
+      },
+      "inverseError": {
+        "numerator": "2",
+        "denominator": "3602879701896397"
+      },
+      "projectedError": {
+        "numerator": "1",
+        "denominator": "18014398509481984"
+      },
+      "diagnosticWithinQuarterPoint": true,
+      "numberRoundTrip": {
+        "outcome": "finite",
+        "error": 0
+      }
+    },
+    {
+      "id": "one",
+      "point": 1,
+      "center": 0,
+      "zoom": 1,
+      "outcome": "finite",
+      "candidate": 1,
+      "negativeZero": false,
+      "exact": {
+        "numerator": "1",
+        "denominator": "1"
+      },
+      "inverseError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "projectedError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "diagnosticWithinQuarterPoint": true,
+      "numberRoundTrip": {
+        "outcome": "finite",
+        "error": 0
+      }
+    },
+    {
+      "id": "one",
+      "point": 1,
+      "center": 0,
+      "zoom": 8,
+      "outcome": "finite",
+      "candidate": 0.125,
+      "negativeZero": false,
+      "exact": {
+        "numerator": "1",
+        "denominator": "8"
+      },
+      "inverseError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "projectedError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "diagnosticWithinQuarterPoint": true,
+      "numberRoundTrip": {
+        "outcome": "finite",
+        "error": 0
+      }
+    },
+    {
+      "id": "fractional",
+      "point": 100.25,
+      "center": 100,
+      "zoom": 0.1,
+      "outcome": "finite",
+      "candidate": 2.5,
+      "negativeZero": false,
+      "exact": {
+        "numerator": "9007199254740992",
+        "denominator": "3602879701896397"
+      },
+      "inverseError": {
+        "numerator": "1",
+        "denominator": "7205759403792794"
+      },
+      "projectedError": {
+        "numerator": "1",
+        "denominator": "72057594037927936"
+      },
+      "diagnosticWithinQuarterPoint": true,
+      "numberRoundTrip": {
+        "outcome": "finite",
+        "error": 0
+      }
+    },
+    {
+      "id": "fractional",
+      "point": 100.25,
+      "center": 100,
+      "zoom": 1,
+      "outcome": "finite",
+      "candidate": 0.25,
+      "negativeZero": false,
+      "exact": {
+        "numerator": "1",
+        "denominator": "4"
+      },
+      "inverseError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "projectedError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "diagnosticWithinQuarterPoint": true,
+      "numberRoundTrip": {
+        "outcome": "finite",
+        "error": 0
+      }
+    },
+    {
+      "id": "fractional",
+      "point": 100.25,
+      "center": 100,
+      "zoom": 8,
+      "outcome": "finite",
+      "candidate": 0.03125,
+      "negativeZero": false,
+      "exact": {
+        "numerator": "1",
+        "denominator": "32"
+      },
+      "inverseError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "projectedError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "diagnosticWithinQuarterPoint": true,
+      "numberRoundTrip": {
+        "outcome": "finite",
+        "error": 0
+      }
+    },
+    {
+      "id": "negative",
+      "point": -1,
+      "center": 0,
+      "zoom": 0.1,
+      "outcome": "finite",
+      "candidate": -10,
+      "negativeZero": false,
+      "exact": {
+        "numerator": "-36028797018963968",
+        "denominator": "3602879701896397"
+      },
+      "inverseError": {
+        "numerator": "-2",
+        "denominator": "3602879701896397"
+      },
+      "projectedError": {
+        "numerator": "-1",
+        "denominator": "18014398509481984"
+      },
+      "diagnosticWithinQuarterPoint": true,
+      "numberRoundTrip": {
+        "outcome": "finite",
+        "error": 0
+      }
+    },
+    {
+      "id": "negative",
+      "point": -1,
+      "center": 0,
+      "zoom": 1,
+      "outcome": "finite",
+      "candidate": -1,
+      "negativeZero": false,
+      "exact": {
+        "numerator": "-1",
+        "denominator": "1"
+      },
+      "inverseError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "projectedError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "diagnosticWithinQuarterPoint": true,
+      "numberRoundTrip": {
+        "outcome": "finite",
+        "error": 0
+      }
+    },
+    {
+      "id": "negative",
+      "point": -1,
+      "center": 0,
+      "zoom": 8,
+      "outcome": "finite",
+      "candidate": -0.125,
+      "negativeZero": false,
+      "exact": {
+        "numerator": "-1",
+        "denominator": "8"
+      },
+      "inverseError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "projectedError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "diagnosticWithinQuarterPoint": true,
+      "numberRoundTrip": {
+        "outcome": "finite",
+        "error": 0
+      }
+    },
+    {
+      "id": "large-subtraction",
+      "point": 4503599627370496,
+      "center": -0.25,
+      "zoom": 0.1,
+      "outcome": "finite",
+      "candidate": 45035996273704960,
+      "negativeZero": false,
+      "exact": {
+        "numerator": "45035996273704960",
+        "denominator": "1"
+      },
+      "inverseError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "projectedError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "diagnosticWithinQuarterPoint": true,
+      "numberRoundTrip": {
+        "outcome": "finite",
+        "error": 0
+      }
+    },
+    {
+      "id": "large-subtraction",
+      "point": 4503599627370496,
+      "center": -0.25,
+      "zoom": 1,
+      "outcome": "finite",
+      "candidate": 4503599627370496,
+      "negativeZero": false,
+      "exact": {
+        "numerator": "18014398509481985",
+        "denominator": "4"
+      },
+      "inverseError": {
+        "numerator": "-1",
+        "denominator": "4"
+      },
+      "projectedError": {
+        "numerator": "-1",
+        "denominator": "4"
+      },
+      "diagnosticWithinQuarterPoint": true,
+      "numberRoundTrip": {
+        "outcome": "finite",
+        "error": 0
+      }
+    },
+    {
+      "id": "large-subtraction",
+      "point": 4503599627370496,
+      "center": -0.25,
+      "zoom": 8,
+      "outcome": "finite",
+      "candidate": 562949953421312,
+      "negativeZero": false,
+      "exact": {
+        "numerator": "18014398509481985",
+        "denominator": "32"
+      },
+      "inverseError": {
+        "numerator": "-1",
+        "denominator": "32"
+      },
+      "projectedError": {
+        "numerator": "-1",
+        "denominator": "4"
+      },
+      "diagnosticWithinQuarterPoint": true,
+      "numberRoundTrip": {
+        "outcome": "finite",
+        "error": 0
+      }
+    },
+    {
+      "id": "subnormal",
+      "point": 5e-324,
+      "center": 0,
+      "zoom": 0.1,
+      "outcome": "finite",
+      "candidate": 5e-323,
+      "negativeZero": false,
+      "exact": {
+        "numerator": "1",
+        "denominator": "20240225330731062958807743960839173035771409219554670346925747641684641915737541925025262154524732028946691051478781323139692622934787833054137395084177741572448183924369913497496024679618604611012849275635362753437969198873755325100252100205308964846037946531406109226174033240187414252888919866362827531551747834260750336"
+      },
+      "inverseError": {
+        "numerator": "1",
+        "denominator": "364615485029501157210938431874932944789614585886047754042923539282566739126391009338614915750995836220168264560482842452460674922566902753174394385212320795505950204560982003954354870609125717552471690495681825958474921641532348554066759796075756318472155034665136689338473890325816859435045997654491412690278977706818277598207982513946624"
+      },
+      "projectedError": {
+        "numerator": "1",
+        "denominator": "3646154850295011369707131011438711095400799139943170490872585628683549034362552065955809589514611470241298944167703929337528884908857116141935206466329731088046102104871310118026124429524895811057809162863601918344981537942578416978660114536064864566618194697491810552574682390899399042017045361314411594716462268422176512674372084045971456"
+      },
+      "diagnosticWithinQuarterPoint": true,
+      "numberRoundTrip": {
+        "outcome": "finite",
+        "error": 0
+      }
+    },
+    {
+      "id": "subnormal",
+      "point": 5e-324,
+      "center": 0,
+      "zoom": 1,
+      "outcome": "finite",
+      "candidate": 5e-324,
+      "negativeZero": false,
+      "exact": {
+        "numerator": "1",
+        "denominator": "202402253307310618352495346718917307049556649764142118356901358027430339567995346891960383701437124495187077864316811911389808737385793476867013399940738509921517424276566361364466907742093216341239767678472745068562007483424692698618103355649159556340810056512358769552333414615230502532186327508646006263307707741093494784"
+      },
+      "inverseError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "projectedError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "diagnosticWithinQuarterPoint": true,
+      "numberRoundTrip": {
+        "outcome": "finite",
+        "error": 0
+      }
+    },
+    {
+      "id": "subnormal",
+      "point": 5e-324,
+      "center": 0,
+      "zoom": 8,
+      "outcome": "finite",
+      "candidate": 0,
+      "negativeZero": false,
+      "exact": {
+        "numerator": "1",
+        "denominator": "1619218026458484946819962773751338456396453198113136946855210864219442716543962775135683069611496995961496622914534495291118469899086347814936107199525908079372139394212530890915735261936745730729918141427781960548496059867397541588944826845193276450726480452098870156418667316921844020257490620069168050106461661928747958272"
+      },
+      "inverseError": {
+        "numerator": "-1",
+        "denominator": "1619218026458484946819962773751338456396453198113136946855210864219442716543962775135683069611496995961496622914534495291118469899086347814936107199525908079372139394212530890915735261936745730729918141427781960548496059867397541588944826845193276450726480452098870156418667316921844020257490620069168050106461661928747958272"
+      },
+      "projectedError": {
+        "numerator": "-1",
+        "denominator": "202402253307310618352495346718917307049556649764142118356901358027430339567995346891960383701437124495187077864316811911389808737385793476867013399940738509921517424276566361364466907742093216341239767678472745068562007483424692698618103355649159556340810056512358769552333414615230502532186327508646006263307707741093494784"
+      },
+      "diagnosticWithinQuarterPoint": true,
+      "numberRoundTrip": {
+        "outcome": "finite",
+        "error": -5e-324
+      }
+    },
+    {
+      "id": "nonphysical-overflow-stress",
+      "point": 1.7976931348623157e+308,
+      "center": 0,
+      "zoom": 0.1,
+      "outcome": "nonfinite-candidate",
+      "exact": {
+        "numerator": "6476872105833939068202597150078990733863736476842654340230051879955141772455526469612029056442135453012077202027993896684018360110771960624585353540437142346098835018953626052591367348285041817710794160726751364381652431129567091003176578010921579907253479645086531972272626529342183121240978726357806981084421329218095284224",
+        "denominator": "3602879701896397"
+      }
+    },
+    {
+      "id": "nonphysical-overflow-stress",
+      "point": 1.7976931348623157e+308,
+      "center": 0,
+      "zoom": 1,
+      "outcome": "finite",
+      "candidate": 1.7976931348623157e+308,
+      "negativeZero": false,
+      "exact": {
+        "numerator": "179769313486231570814527423731704356798070567525844996598917476803157260780028538760589558632766878171540458953514382464234321326889464182768467546703537516986049910576551282076245490090389328944075868508455133942304583236903222948165808559332123348274797826204144723168738177180919299881250404026184124858368",
+        "denominator": "1"
+      },
+      "inverseError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "projectedError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "diagnosticWithinQuarterPoint": true,
+      "numberRoundTrip": {
+        "outcome": "finite",
+        "error": 0
+      }
+    },
+    {
+      "id": "nonphysical-overflow-stress",
+      "point": 1.7976931348623157e+308,
+      "center": 0,
+      "zoom": 8,
+      "outcome": "finite",
+      "candidate": 2.2471164185778946e+307,
+      "negativeZero": false,
+      "exact": {
+        "numerator": "22471164185778946351815927966463044599758820940730624574864684600394657597503567345073694829095859771442557369189297808029290165861183022846058443337942189623256238822068910259530686261298666118009483563556891742788072904612902868520726069916515418534349728275518090396092272147614912485156300503273015607296",
+        "denominator": "1"
+      },
+      "inverseError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "projectedError": {
+        "numerator": "0",
+        "denominator": "1"
+      },
+      "diagnosticWithinQuarterPoint": true,
+      "numberRoundTrip": {
+        "outcome": "finite",
+        "error": 0
+      }
+    }
+  ]
+}

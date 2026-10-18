@@ -1,6 +1,6 @@
 # S02 decision batch 6 — conflict granularity and reconnect behavior
 
-Status: DB20-A, DB21-A and DB22-A selected on 2026-10-16 (178–180). DB17-B is recorded as 177. Alternatives below are retained as history. Concrete schema/interfaces and identified Figma implementation remain unapproved.
+Status: DB20-A, DB21-A and DB22-A selected on 2026-10-16 (178–180). DB17-B is recorded as 177. Alternatives below are retained as history. Concrete schema/interfaces and identified design implementation remain unapproved.
 
 ## DB20 — Initial conflict-check granularity for existing strokes
 
@@ -18,6 +18,6 @@ This decides whether coordinator recovery ends the editing session; it does not 
 
 A (recommended): pause/reject dependent commands while allowing demonstrably independent commands from that client to proceed under their own preconditions. Preserve all pending work/outcomes; if independence cannot be proved, conservatively pause the affected dependency chain. Atomic groups stay all-or-none. Retain client sequence for dependent/ordered commands and shared paint-order invariants; this is not arbitrary queue reordering.
 B: pause that client's entire editing submission stream until the conflict is resolved. Other clients continue. Simpler control flow but unrelated edits by the affected client are interrupted.
-Neither means automatic reconciliation of conflicting work. Existing bounded queues, no silent dropped edits and identified Figma conflict design remain required.
+Neither means automatic reconciliation of conflicting work. Existing bounded queues, no silent dropped edits and identified design conflict design remain required.
 
 Next step after outstanding answers: consolidate a concrete contract packet, including numeric budgets, receipt/incarnation schema amendments, current-vs-superseded decisions, transitions and planned negative/conformance/native E2E evidence. Do not proliferate new policy questions where a concrete engineering proposal will suffice.

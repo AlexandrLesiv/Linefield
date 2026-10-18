@@ -1,0 +1,167 @@
+[
+  {
+    "schemaVersion": 1,
+    "jobId": "de68c292-6c8e-4c7d-9362-f05ed3cc207e",
+    "actionId": "root-typecheck",
+    "startedAt": "2026-10-18T01:52:22.831Z",
+    "finishedAt": "2026-10-18T01:52:22.959Z",
+    "durationMs": 128,
+    "execution": {
+      "outcome": "passed",
+      "exitCode": 0,
+      "signal": null,
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    },
+    "nodeVersion": "v24.12.0",
+    "toolVersion": "7.0.2",
+    "platform": "darwin",
+    "architecture": "arm64",
+    "dirty": "unavailable",
+    "before": {
+      "sha256": "6e3ccf867e75a2d0f2416dda9e85b04a29c1f4a661dd28ce33a46ae02f2928a7",
+      "files": 164,
+      "bytes": 516393
+    },
+    "after": {
+      "sha256": "6e3ccf867e75a2d0f2416dda9e85b04a29c1f4a661dd28ce33a46ae02f2928a7",
+      "files": 164,
+      "bytes": 516393
+    },
+    "freshness": "fresh",
+    "revision": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7",
+    "cancelled": false
+  },
+  {
+    "schemaVersion": 1,
+    "jobId": "d16b737e-3ea1-46fc-aecd-a09b8654defb",
+    "actionId": "web-typecheck",
+    "startedAt": "2026-10-18T01:52:23.017Z",
+    "finishedAt": "2026-10-18T01:52:23.218Z",
+    "durationMs": 201,
+    "execution": {
+      "outcome": "passed",
+      "exitCode": 0,
+      "signal": null,
+      "stdoutBytes": 0,
+      "stderrBytes": 0
+    },
+    "nodeVersion": "v24.12.0",
+    "toolVersion": "7.0.2",
+    "platform": "darwin",
+    "architecture": "arm64",
+    "dirty": "unavailable",
+    "before": {
+      "sha256": "6e3ccf867e75a2d0f2416dda9e85b04a29c1f4a661dd28ce33a46ae02f2928a7",
+      "files": 164,
+      "bytes": 516393
+    },
+    "after": {
+      "sha256": "6e3ccf867e75a2d0f2416dda9e85b04a29c1f4a661dd28ce33a46ae02f2928a7",
+      "files": 164,
+      "bytes": 516393
+    },
+    "freshness": "fresh",
+    "revision": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7",
+    "cancelled": false
+  },
+  {
+    "schemaVersion": 1,
+    "jobId": "fb0aa875-a8af-4e62-b5d1-e88c021a522a",
+    "actionId": "lint",
+    "startedAt": "2026-10-18T01:52:23.278Z",
+    "finishedAt": "2026-10-18T01:52:23.367Z",
+    "durationMs": 90,
+    "execution": {
+      "outcome": "passed",
+      "exitCode": 0,
+      "signal": null,
+      "stdoutBytes": 92,
+      "stderrBytes": 0
+    },
+    "nodeVersion": "v24.12.0",
+    "toolVersion": "1.88.0",
+    "platform": "darwin",
+    "architecture": "arm64",
+    "dirty": "unavailable",
+    "before": {
+      "sha256": "6e3ccf867e75a2d0f2416dda9e85b04a29c1f4a661dd28ce33a46ae02f2928a7",
+      "files": 164,
+      "bytes": 516393
+    },
+    "after": {
+      "sha256": "6e3ccf867e75a2d0f2416dda9e85b04a29c1f4a661dd28ce33a46ae02f2928a7",
+      "files": 164,
+      "bytes": 516393
+    },
+    "freshness": "fresh",
+    "revision": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7",
+    "cancelled": false
+  },
+  {
+    "schemaVersion": 1,
+    "jobId": "731f8e68-cf06-4eb3-adb1-e05cf09fb4cf",
+    "actionId": "locales-check",
+    "startedAt": "2026-10-18T01:52:23.426Z",
+    "finishedAt": "2026-10-18T01:52:23.541Z",
+    "durationMs": 115,
+    "execution": {
+      "outcome": "passed",
+      "exitCode": 0,
+      "signal": null,
+      "stdoutBytes": 57,
+      "stderrBytes": 0
+    },
+    "nodeVersion": "v24.12.0",
+    "toolVersion": "v24.12.0",
+    "platform": "darwin",
+    "architecture": "arm64",
+    "dirty": "unavailable",
+    "before": {
+      "sha256": "6e3ccf867e75a2d0f2416dda9e85b04a29c1f4a661dd28ce33a46ae02f2928a7",
+      "files": 164,
+      "bytes": 516393
+    },
+    "after": {
+      "sha256": "6e3ccf867e75a2d0f2416dda9e85b04a29c1f4a661dd28ce33a46ae02f2928a7",
+      "files": 164,
+      "bytes": 516393
+    },
+    "freshness": "fresh",
+    "revision": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7",
+    "cancelled": false
+  },
+  {
+    "schemaVersion": 1,
+    "jobId": "e8c2409e-f18a-43a3-b9e1-645a16d3a56e",
+    "actionId": "theme-resources-check",
+    "startedAt": "2026-10-18T01:52:23.600Z",
+    "finishedAt": "2026-10-18T01:52:23.714Z",
+    "durationMs": 114,
+    "execution": {
+      "outcome": "passed",
+      "exitCode": 0,
+      "signal": null,
+      "stdoutBytes": 57,
+      "stderrBytes": 0
+    },
+    "nodeVersion": "v24.12.0",
+    "toolVersion": "v24.12.0",
+    "platform": "darwin",
+    "architecture": "arm64",
+    "dirty": "unavailable",
+    "before": {
+      "sha256": "6e3ccf867e75a2d0f2416dda9e85b04a29c1f4a661dd28ce33a46ae02f2928a7",
+      "files": 164,
+      "bytes": 516393
+    },
+    "after": {
+      "sha256": "6e3ccf867e75a2d0f2416dda9e85b04a29c1f4a661dd28ce33a46ae02f2928a7",
+      "files": 164,
+      "bytes": 516393
+    },
+    "freshness": "fresh",
+    "revision": "fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7",
+    "cancelled": false
+  }
+]

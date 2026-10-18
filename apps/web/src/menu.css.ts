@@ -38,21 +38,6 @@ globalStyle(".gallery-menu button:hover, .gallery-menu button:focus-visible", {
 globalStyle(".gallery-menu button.destructive", {
   color: theme.destructive,
 });
-globalStyle('[data-platform="windows"] .gallery-menu', {
-  borderRadius: "7px",
-});
-globalStyle('[data-platform="android"] .gallery-menu', {
-  borderRadius: "16px",
-});
-globalStyle(
-  '[data-platform="android"] .gallery-menu button, [data-platform="ios"] .gallery-menu button, [data-platform="ipados"] .gallery-menu button',
-  {
-    minHeight: "44px",
-  },
-);
-globalStyle('[data-platform="ios"] .gallery-menu, [data-platform="ipados"] .gallery-menu', {
-  borderRadius: "14px",
-});
 globalStyle(".gallery-menu button:focus-visible", {
   "@media": {
     "(forced-colors: active)": {

@@ -1,10 +1,14 @@
-Current 2026-10-17: decision 214 and [live prototype](./live-web-prototype.md) supersede the old gallery experiments below. apps/web is the active review surface. Native/Figma implementation gates remain.
+Current policy, decision 232 (2026-10-18): mandatory platform-native appearance in this plan
+is superseded by shared Linefield styling with native input/accessibility and adaptive layout.
+Preserve the proposal/evidence below; existing gallery code has not been rewritten.
+
+Current 2026-10-17: decision 214 and [live prototype](./live-web-prototype.md) supersede the old gallery experiments below. apps/web is the active review surface. Native/design review implementation gates remain.
 
 # Native Gallery v4 — approved redesign direction
 
 Date: 2026-10-17. Owner authorized design prototype revisions and Android Compose Material 3
 planning. Decisions 211–212. This is not production UI, storage implementation or identified
-Figma approval. V1–V3 remain historical artifacts; Native Showcase is retired from the active review.
+design review approval. V1–V3 remain historical artifacts; Native Showcase is retired from the active review.
 
 ## Composition and adaptability
 
@@ -98,7 +102,7 @@ guards and export cancellation consent remain. Historical DBML approval bytes st
 ui_ux_designer owns behavior, edge cases and visual/adaptive/motion review; lead integrates artifacts
 and plan, fresh reviewer checks behavior/evidence. Record source hashes and actual tested browser.
 Screen captures demonstrate design, not native accessibility, Skia latency or persistence safety.
-Figma reconstruction/identified approval, en/uk linguistic review and native host tests remain gates.
+design review reconstruction/identified approval, en/uk linguistic review and native host tests remain gates.
 
 ## Verified primary references
 

@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1128" viewBox="0 0 1440 1128" role="img" aria-labelledby="title description">
+<title id="title">Tool interaction states · historical sketch</title>
+<desc id="description">The earlier state sketch includes predicted samples; current actual-input preview scope is not expanded.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#718096" stroke-width="1.5"/></marker><style>text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;fill:#233148}.title{font-size:40px;font-weight:600;letter-spacing:-.7px}.section{font-size:26px;font-weight:600}.node{font-size:20px;font-weight:600}.body{font-size:16px}.meta{font-size:14px;fill:#59677C}.edge{fill:none;stroke:#718096;stroke-width:2;stroke-linejoin:round;stroke-linecap:round;marker-end:url(#arrow)}.guide{fill:none;stroke:#718096;stroke-width:1.5;stroke-dasharray:4 8}</style></defs>
+<rect width="1440" height="1128" fill="#F7F8FA"/>
+<text x="72" y="64" class="meta">LINEFIELD / DIAGRAM LANGUAGE v2</text>
+<text x="1368" y="64" class="meta" text-anchor="end">HISTORICAL PROPOSAL · CURRENT CONTRACTS TAKE PRECEDENCE</text>
+<text x="72" y="123" class="title">Tool interaction states · historical sketch</text>
+<text x="72" y="161" class="body">The earlier state sketch includes predicted samples; current actual-input preview scope is not expanded.</text>
+<path d="M720 348V420H232V520" class="edge"/>
+<rect x="424" y="388" width="32" height="25" rx="8" fill="#F7F8FA"/>
+<text x="432" y="406" class="meta">1</text>
+<path d="M720 348V520" class="edge"/>
+<rect x="728" y="442" width="32" height="25" rx="8" fill="#F7F8FA"/>
+<text x="736" y="460" class="meta">5</text>
+<path d="M720 420H1208V520" class="edge"/>
+<rect x="992" y="388" width="32" height="25" rx="8" fill="#F7F8FA"/>
+<text x="1000" y="406" class="meta">9</text>
+<path d="M72 578H48V290H560" class="edge"/>
+<rect x="224" y="254" width="56" height="25" rx="8" fill="#F7F8FA"/>
+<text x="232" y="272" class="meta">3 / 4</text>
+<path d="M880 578H944V290H880" class="edge"/>
+<rect x="944" y="442" width="56" height="25" rx="8" fill="#F7F8FA"/>
+<text x="952" y="460" class="meta">7 / 8</text>
+<path d="M1368 578H1392V200H720V232" class="edge"/>
+<rect x="1092" y="170" width="32" height="25" rx="8" fill="#F7F8FA"/>
+<text x="1100" y="188" class="meta">10</text>
+<path d="M392 550H448V608H392" class="edge"/>
+<rect x="452" y="564" width="32" height="25" rx="8" fill="#F7F8FA"/>
+<text x="460" y="582" class="meta">2</text>
+<path d="M880 550H912V608H880" class="edge"/>
+<rect x="888" y="642" width="32" height="25" rx="8" fill="#F7F8FA"/>
+<text x="896" y="660" class="meta">6</text>
+<rect x="560" y="232" width="320" height="116" rx="16" fill="#F7F7FE" stroke="#718096" stroke-width="1.5"/>
+<text x="584" y="260" class="meta">INITIAL STATE</text>
+<text x="584" y="292" class="node">Idle</text>
+<rect x="72" y="520" width="320" height="116" rx="16" fill="#F5F9FD" stroke="#718096" stroke-width="1.5"/>
+<text x="96" y="548" class="meta">INTERACTION</text>
+<text x="96" y="580" class="node">Drawing</text>
+<rect x="560" y="520" width="320" height="116" rx="16" fill="#F5F9FD" stroke="#718096" stroke-width="1.5"/>
+<text x="584" y="548" class="meta">INTERACTION</text>
+<text x="584" y="580" class="node">Transforming</text>
+<rect x="1048" y="520" width="320" height="116" rx="16" fill="#F5F9FD" stroke="#718096" stroke-width="1.5"/>
+<text x="1072" y="548" class="meta">INTERACTION</text>
+<text x="1072" y="580" class="node">Panning</text>
+<text x="72" y="684" class="meta">1 · Idle → Drawing: accepted pen down. 2 · Drawing self-loop: validated actual or predicted samples (historical wording).</text>
+<text x="72" y="720" class="meta">3 · Drawing → Idle: pen up / commit one undo. 4 · Drawing → Idle: Escape or focus loss / cancel.</text>
+<text x="72" y="756" class="meta">5 · Idle → Transforming: begin selected-stroke move or scale. 6 · Transforming self-loop: transient preview.</text>
+<text x="72" y="792" class="meta">7 · Transforming → Idle: release / commit one undo. 8 · Transforming → Idle: Escape or focus loss / cancel.</text>
+<text x="72" y="828" class="meta">9 · Idle → Panning: navigation begins. 10 · Panning → Idle: navigation ends or cancels.</text>
+<text x="72" y="864" class="meta">Initial marker in the original points to Idle. Numbers identify transitions; they do not prescribe event order.</text>
+<path d="M72 1056H1368" stroke="#E1E6ED"/>
+<text x="72" y="1088" class="meta">Notation migration only · See source packet for authority and evidence</text>
+<text x="1368" y="1088" class="meta" text-anchor="end">2026-10-19 · Full-size SVG</text>
+</svg>

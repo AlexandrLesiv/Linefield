@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { mkdtemp, realpath, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { resolved } from "../../shared/theme/resolve.ts";
@@ -8,7 +8,7 @@ import { synchronize } from "../localization/files.ts";
 import { generateThemeResources } from "./generate.ts";
 
 test("THEME-12 clean generation, no-op timestamps, stale rejection and explicit extras", async () => {
-  const directory = await mkdtemp(join(tmpdir(), "linefield-theme-"));
+  const directory = await realpath(await mkdtemp(join(tmpdir(), "linefield-theme-")));
   try {
     const outputs = generateThemeResources(resolved);
     await assert.rejects(synchronize(directory, outputs, true), /Stale/);

@@ -4,6 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "action": "node scripts/action.ts",
+    "actions:test": "node --test scripts/actions/*.test.ts",
+    "probe:regional": "node scripts/probes/regional/run.ts",
+    "probe:regional:test": "node --test scripts/probes/regional/*.test.ts",
     "check": "node scripts/check.ts",
     "typecheck": "node scripts/localization.ts && tsc --noEmit",
     "lint": "oxlint --deny-warnings scripts shared/theme shared/localization",
