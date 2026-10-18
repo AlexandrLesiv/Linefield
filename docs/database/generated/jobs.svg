@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1696" height="1646" viewBox="0 0 1696 1646" role="img" aria-labelledby="title description">
+<title id="title">Jobs schema</title>
+<desc id="description">Generated schema review. SQL owns reference structure; Rust owns semantic validation and cross-file coordination. The companion dictionary includes every source note, constraint, index and relationship. No production implementation is approved by this image.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#718096" stroke-width="1.5"/></marker><style>text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;fill:#233148}.title{font-size:40px;font-weight:600;letter-spacing:-.7px}.section{font-size:26px;font-weight:600}.node{font-size:20px;font-weight:600}.body{font-size:16px}.meta{font-size:14px;fill:#59677C}.edge{fill:none;stroke:#718096;stroke-width:2;stroke-linejoin:round;stroke-linecap:round;marker-end:url(#arrow)}.guide{fill:none;stroke:#718096;stroke-width:1.5;stroke-dasharray:4 8}</style></defs>
+<rect x="0" y="0" width="1696" height="1646" fill="#F7F8FA"/>
+<text x="72" y="72" class="title">Jobs schema</text>
+<text x="72" y="112" class="body">V4.1 shape approved · reference constraints remain proposals · NOT IMPLEMENTED</text>
+<rect x="72" y="160" width="760" height="400" rx="16" fill="#FFFFFF" stroke="#E1E6ED" stroke-width="1.5"/>
+<text x="96" y="200" class="section">jobs.snapshots</text>
+<text x="96" y="229" class="meta">PROPOSAL ONLY · no executable jobs schema</text>
+<text x="96" y="272" class="body">snapshot_id</text>
+<text x="527" y="272" class="meta">BLOB</text>
+<text x="607" y="272" class="meta">PK1 · required</text>
+<text x="96" y="304" class="body">managed_file_id</text>
+<text x="527" y="304" class="meta">BLOB</text>
+<text x="607" y="304" class="meta">U · required</text>
+<text x="96" y="336" class="body">document_id</text>
+<text x="527" y="336" class="meta">BLOB</text>
+<text x="607" y="336" class="meta">required</text>
+<text x="96" y="368" class="body">source_database_incarnation</text>
+<text x="527" y="368" class="meta">BLOB</text>
+<text x="607" y="368" class="meta">required</text>
+<text x="96" y="400" class="body">content_revision</text>
+<text x="527" y="400" class="meta">INTEGER</text>
+<text x="607" y="400" class="meta">required</text>
+<text x="96" y="432" class="body">metadata_revision</text>
+<text x="527" y="432" class="meta">INTEGER</text>
+<text x="607" y="432" class="meta">required</text>
+<text x="96" y="464" class="body">byte_length</text>
+<text x="527" y="464" class="meta">INTEGER</text>
+<text x="607" y="464" class="meta">required</text>
+<text x="96" y="496" class="body">digest_sha256</text>
+<text x="527" y="496" class="meta">BLOB</text>
+<text x="607" y="496" class="meta">required</text>
+<text x="96" y="528" class="body">state</text>
+<text x="527" y="528" class="meta">TEXT</text>
+<text x="607" y="528" class="meta">required</text>
+<rect x="864" y="160" width="760" height="400" rx="16" fill="#FFFFFF" stroke="#E1E6ED" stroke-width="1.5"/>
+<text x="888" y="200" class="section">jobs.destinations</text>
+<text x="888" y="229" class="meta">PROPOSAL ONLY · no executable jobs schema</text>
+<text x="888" y="272" class="body">destination_id</text>
+<text x="1319" y="272" class="meta">BLOB</text>
+<text x="1399" y="272" class="meta">PK1 · required</text>
+<text x="888" y="304" class="body">access_kind</text>
+<text x="1319" y="304" class="meta">TEXT</text>
+<text x="1399" y="304" class="meta">required</text>
+<text x="888" y="336" class="body">access_reference</text>
+<text x="1319" y="336" class="meta">BLOB</text>
+<text x="1399" y="336" class="meta">required</text>
+<text x="888" y="368" class="body">target_identity</text>
+<text x="1319" y="368" class="meta">BLOB</text>
+<text x="1399" y="368" class="meta">nullable</text>
+<text x="888" y="400" class="body">destination_serialization_key</text>
+<text x="1319" y="400" class="meta">BLOB</text>
+<text x="1399" y="400" class="meta">required</text>
+<rect x="72" y="592" width="760" height="528" rx="16" fill="#FFFFFF" stroke="#E1E6ED" stroke-width="1.5"/>
+<text x="96" y="632" class="section">jobs.export_jobs</text>
+<text x="96" y="661" class="meta">PROPOSAL ONLY · no executable jobs schema</text>
+<text x="96" y="704" class="body">job_id</text>
+<text x="527" y="704" class="meta">BLOB</text>
+<text x="607" y="704" class="meta">PK1 · required</text>
+<text x="96" y="736" class="body">source_document_id</text>
+<text x="527" y="736" class="meta">BLOB</text>
+<text x="607" y="736" class="meta">required</text>
+<text x="96" y="768" class="body">snapshot_id</text>
+<text x="527" y="768" class="meta">BLOB</text>
+<text x="607" y="768" class="meta">nullable</text>
+<text x="96" y="800" class="body">destination_id</text>
+<text x="527" y="800" class="meta">BLOB</text>
+<text x="607" y="800" class="meta">nullable</text>
+<text x="96" y="832" class="body">format</text>
+<text x="527" y="832" class="meta">TEXT</text>
+<text x="607" y="832" class="meta">required</text>
+<text x="96" y="864" class="body">state</text>
+<text x="527" y="864" class="meta">TEXT</text>
+<text x="607" y="864" class="meta">required</text>
+<text x="96" y="896" class="body">admission_instance_id</text>
+<text x="527" y="896" class="meta">BLOB</text>
+<text x="607" y="896" class="meta">required</text>
+<text x="96" y="928" class="body">claim_instance_id</text>
+<text x="527" y="928" class="meta">BLOB</text>
+<text x="607" y="928" class="meta">nullable</text>
+<text x="96" y="960" class="body">claim_generation</text>
+<text x="527" y="960" class="meta">INTEGER</text>
+<text x="607" y="960" class="meta">required</text>
+<text x="96" y="992" class="body">accepted_utc_us</text>
+<text x="527" y="992" class="meta">INTEGER</text>
+<text x="607" y="992" class="meta">required</text>
+<text x="96" y="1024" class="body">publication_phase</text>
+<text x="527" y="1024" class="meta">TEXT</text>
+<text x="607" y="1024" class="meta">required</text>
+<text x="96" y="1056" class="body">approved_target_identity</text>
+<text x="527" y="1056" class="meta">BLOB</text>
+<text x="607" y="1056" class="meta">nullable</text>
+<text x="96" y="1088" class="body">outcome_code</text>
+<text x="527" y="1088" class="meta">TEXT</text>
+<text x="607" y="1088" class="meta">nullable</text>
+<text x="72" y="1184" class="section">Foreign-key relationships</text>
+<rect x="72" y="1218" width="1552" height="146" rx="16" fill="#FFFFFF" stroke="#E1E6ED" stroke-width="1.5"/>
+<text x="96" y="1254" class="node">export_jobs</text>
+<text x="1100" y="1254" class="node">snapshots</text>
+<path d="M650 1248H1050" class="edge"/>
+<text x="96" y="1285" class="meta">snapshot_id</text>
+<text x="1100" y="1285" class="meta">snapshot_id</text>
+<text x="96" y="1320" class="body">Per child: 0..1 parent · per parent: 0..many children</text>
+<text x="96" y="1346" class="meta">Same file · DELETE RESTRICT · UPDATE RESTRICT · proposed SQL</text>
+<rect x="72" y="1388" width="1552" height="146" rx="16" fill="#FFFFFF" stroke="#E1E6ED" stroke-width="1.5"/>
+<text x="96" y="1424" class="node">export_jobs</text>
+<text x="1100" y="1424" class="node">destinations</text>
+<path d="M650 1418H1050" class="edge"/>
+<text x="96" y="1455" class="meta">destination_id</text>
+<text x="1100" y="1455" class="meta">destination_id</text>
+<text x="96" y="1490" class="body">Per child: 0..1 parent · per parent: 0..many children</text>
+<text x="96" y="1516" class="meta">Same file · DELETE RESTRICT · UPDATE RESTRICT · proposed SQL</text>
+<text x="72" y="1606" class="meta">Generated from shared/schema inputs · full notes and SQL details: dictionary.md · no cross-file SQL foreign keys</text>
+</svg>

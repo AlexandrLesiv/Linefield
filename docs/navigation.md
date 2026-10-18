@@ -96,7 +96,7 @@ Same-origin history behavior and local storage access are browser-specific test 
 
 ## Common document navigation flow
 
-~~~mermaid
+```text
 flowchart TD
     Request[Native action, Back or validated route request] --> Guard[Shared interaction and dirty-state policy]
     Guard -->|cancel| Stay[Keep current session and restore host navigation]
@@ -108,7 +108,9 @@ flowchart TD
     Resolve -->|valid target and current operation| Accept[Accept destination and session change]
     Accept --> Host[Update native presentation or browser history]
     Host --> Motion[Approved transition and focus restoration]
-~~~
+```
+
+Historical relationship notation; no diagram renderer is required.
 
 Keep the old session until the replacement loads successfully, so failed Open preserves the
 drawing. Save success for revision N cannot authorize leaving N+1 silently; recheck or prevent

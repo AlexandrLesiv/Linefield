@@ -1,3 +1,7 @@
+Historical hash scope: the hashes below identify the approved source at Git e08f304. Decision239
+updates current workflow/style prose and removes obsolete sources; those editorial revisions do not
+match or replace the original approval bytes. Current policy is docs/workflow/parallel-tasks.md.
+
 # Owner approval — workflow and diagram style
 
 2026-10-19, explicit owner instruction: approve diagram style v2 and proposed workflow; start

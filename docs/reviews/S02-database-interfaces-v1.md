@@ -36,21 +36,9 @@ dependencies, design review implementation, accounts, a resident service or anot
 | Typed native boundary | Checked handles, copied DTOs, named intent calls | Serialized command packets |
 | Platform coordination adapter | Lock primitive, authenticated connection, advisory wakes | Permission to bypass shared commands |
 
-```mermaid
-flowchart LR
-  Host["AppKit events / controls"] --> ABI["Named typed FFI"]
-  ABI --> Engine["Rust dispatcher • main thread"]
-  Engine --> Model["Document / session"]
-  Model --> Render["Rust Skia • main thread"]
-  Render --> Canvas["Native canvas"]
-  Engine --> Jobs["Owned immutable storage work"]
-  Jobs --> Store["Storage service • background"]
-  Store --> Drawing[("Drawing SQLite")]
-  Store --> Catalog[("Catalog SQLite")]
-  Store --> Exports[("Export jobs SQLite")]
-  Store --> Completion["Bounded completions + readiness signal"]
-  Completion --> Engine
-```
+![Architecture view](../diagrams/v2/historical-storage-boundaries.svg)
+
+Presentation migrated under decision239; original approved source bytes remain at commit e08f304.
 
 Arrows crossing databases are application reconciliation, not cross-file foreign keys or
 one atomic SQLite transaction. Future cloud operates on reviewed snapshots/change semantics,

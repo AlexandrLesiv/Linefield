@@ -1,0 +1,544 @@
+{
+  "width": 1440,
+  "height": 1264,
+  "title": "Native editing and storage · historical v1",
+  "description": "Execution ownership and file boundaries only. DBML / hosted dbdocs remains the schema authority.",
+  "elements": [
+    {
+      "tag": "rect",
+      "attrs": {
+        "width": "1440",
+        "height": "1264",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "64",
+        "class": "meta"
+      },
+      "text": "LINEFIELD / DIAGRAM LANGUAGE v2"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "64",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "HISTORICAL INTERFACE PROPOSAL · NOT AN ER DIAGRAM"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "123",
+        "class": "title"
+      },
+      "text": "Native editing and storage · historical v1"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "161",
+        "class": "body"
+      },
+      "text": "Execution ownership and file boundaries only. DBML / hosted dbdocs remains the schema authority."
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M376 290H520",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M824 290H1008",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1172 348V472",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1008 530H824",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M520 530H376",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1336 290H1376V786H1336",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1008 786H824",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M520 786H376",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M72 786H48V200H1172V232",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M672 844V920H224V1000",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M672 920V1000",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M672 920H1172V1000",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "232",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.presentation}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "260",
+        "class": "meta"
+      },
+      "text": "HOST"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "292",
+        "class": "node"
+      },
+      "text": "AppKit events / controls"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "520",
+        "y": "232",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "260",
+        "class": "meta"
+      },
+      "text": "ABI"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "292",
+        "class": "node"
+      },
+      "text": "Named typed FFI"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "232",
+        "width": "328",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "260",
+        "class": "meta"
+      },
+      "text": "ENGINE"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "292",
+        "class": "node"
+      },
+      "text": "Rust dispatcher · main thread"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "472",
+        "width": "328",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "500",
+        "class": "meta"
+      },
+      "text": "MODEL"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "532",
+        "class": "node"
+      },
+      "text": "Document / session"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "520",
+        "y": "472",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "500",
+        "class": "meta"
+      },
+      "text": "RENDER"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "532",
+        "class": "node"
+      },
+      "text": "Rust Skia · main thread"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "472",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "500",
+        "class": "meta"
+      },
+      "text": "OUTPUT"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "532",
+        "class": "node"
+      },
+      "text": "Native canvas"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "728",
+        "width": "328",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "756",
+        "class": "meta"
+      },
+      "text": "OWNED WORK"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "788",
+        "class": "node"
+      },
+      "text": "Immutable storage work"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "520",
+        "y": "728",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "756",
+        "class": "meta"
+      },
+      "text": "STORAGE OWNER"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "788",
+        "class": "node"
+      },
+      "text": "Background storage service"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "728",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "756",
+        "class": "meta"
+      },
+      "text": "COMPLETIONS"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "788",
+        "class": "node"
+      },
+      "text": "Bounded queue + readiness"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "812",
+        "class": "node"
+      },
+      "text": "signal"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "1000",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "1028",
+        "class": "meta"
+      },
+      "text": "DATABASE FILE"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "1060",
+        "class": "node"
+      },
+      "text": "Drawing SQLite"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "520",
+        "y": "1000",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "1028",
+        "class": "meta"
+      },
+      "text": "DATABASE FILE"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "1060",
+        "class": "node"
+      },
+      "text": "Catalog SQLite"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "1000",
+        "width": "328",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "1028",
+        "class": "meta"
+      },
+      "text": "DATABASE FILE"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "1060",
+        "class": "node"
+      },
+      "text": "Export jobs SQLite"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M72 1192H1368",
+        "stroke": "{diagram.color.divider}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "1224",
+        "class": "meta"
+      },
+      "text": "Notation migration only · See source packet for authority and evidence"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "1224",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "2026-10-19 · Full-size SVG"
+    }
+  ]
+}

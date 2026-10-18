@@ -14,12 +14,10 @@ the storage contracts or establish an implemented durable service.
 
 Apply this style to newly authored project diagrams: architecture, ownership, sequences,
 recovery/state machines, build flows and task/Git explanations. Use native SVG as the default
-authoring and review format. Keep one source of truth per diagram. Mermaid is optional only
-when a task specifically benefits from it; no Mermaid renderer or diagram library is required.
+authoring and review format. Keep one source of truth per diagram. Current diagrams use the generated v2 pipeline under decision239. This earlier style is historical.
 
-Keep **DBML and hosted dbdocs for database ER/schema review**. Architecture SVG may identify a
-database-file boundary and link its schema packet; it must not duplicate the physical ER model
-or introduce local schema exports. Charts and scientific plots retain appropriate plotting tools.
+Decision239 now uses shared definitions and generated SVG for schema review too. This earlier
+style document is historical; charts and scientific plots retain appropriate plotting tools.
 
 These documentation tokens are separate from [shared application themes](../../shared/theme/README.md).
 Both follow the [foundations](foundations.md) principles of semantic roles, restrained chrome and

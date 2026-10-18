@@ -3,7 +3,8 @@
 Diagram documentation uses owner-approved [native SVG style v2](diagram-style-v2.md), with the
 semantic conventions it retains from v1. [Decision238 approval](../reviews/workflow-style-approval-2026-10-19.md)
 identifies the exact snapshots. Original proposal status text remains historical; v2 is adopted.
-App screen styles and DBML/dbdocs schema workflow remain separate. [Converted diagram index](../diagrams/migration-v2.md).
+Decision239 shares DTCG diagram styles across architecture and generated schema views. Application
+theme parity migration remains a separate task. [Converted diagram index](../diagrams/migration-v2.md).
 
 Follow [workflow](workflow.md). Selected gallery/drawing references and the live web prototype have owner authorization (decisions214,233,234); broader foundation and new native-screen approvals remain separate. Add feature briefs and approval records with task/scenario IDs, exact design version/frame references, platform, owner decision/conditions and implementation evidence. Do not invent approval links or completed designs.
 

@@ -32,7 +32,7 @@ compromised dependency/build input; future hostile page/origin/provider. Root/ke
 protecting plaintext during execution of a compromised authorized app are beyond this preview's
 protection claim. Still minimize consequences and avoid treating process-local pointers as security.
 
-~~~mermaid
+```text
 flowchart LR
     File[Untrusted external drawing] --> Import[Bounded host access and import staging]
     Import --> Validate[Restricted SQLite reader and semantic validation]
@@ -46,7 +46,9 @@ flowchart LR
     Publish --> Output[User-selected external output]
     Rust --> Logs[Allowlisted bounded diagnostics]
     Cloud[Future cloud adapter: deferred] -. reviewed replication boundary .-> Rust
-~~~
+```
+
+Historical relationship notation; no diagram renderer is required.
 
 The diagram is a trust/data-flow map, not a new process/thread topology. Typed FFI is an in-process
 language boundary, not a sandbox against arbitrary memory access. Advisory catalog notifications

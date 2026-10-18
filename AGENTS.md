@@ -8,7 +8,10 @@ Milestones contain bounded child tasks. Harness owns scoped implementation/tests
 independent review; owner reviews/merges. Verify integration after completion notification, then
 provide a concise next-task prompt for a fresh chat. Replacement chats first stop/transfer the
 prior writer. Use one implementation writer per leaf task; do not create competing branches for it.
-Routine diagrams use approved v2, preserving historical snapshots and the DBML/dbdocs exception.
+Decision239 permits independent task branches/worktrees while PRs await review. Follow
+docs/workflow/parallel-tasks.md; declare dependencies/owned paths and serialize shared contracts.
+Current diagrams are generated native SVG from shared definitions and DTCG style tokens.
+Database review uses the same pipeline; previous hosted-tool requirements are superseded.
 Owner authorized bootstrap and public reviewed source/docs to AlexandrLesiv/Linefield; private
 captures/credentials/local backups remain excluded. No feature main merge or release is implied.
 
@@ -20,7 +23,7 @@ Design work uses versioned repository specifications, shared resources, referenc
 
 Read docs/RESUME.md, docs/objectives.md, docs/decisions.md and the assigned task first. This project's instructions govern Linefield; old repository tasks and ancestry rules are historical reference, not successor requirements. Human instructions take precedence.
 
-Current authorization covers documentation/folder scaffold, root Node.js/TypeScript/pnpm development tooling, dbdiagram CLI, and the explicitly owner-requested apps/web Vite/TypeScript live gallery prototype (decision 214). Prototype UI, manifests and browser tests are authorized within docs/design/live-web-prototype.md. Real drawing engine, persistence, native applications and additional product behavior still require explicit authorization. Never interpret a task file as broader implementation approval.
+Current authorization covers documentation/folder scaffold, root Node.js/TypeScript/pnpm development tooling, shared diagram generation, and the explicitly owner-requested apps/web Vite/TypeScript live gallery prototype (decision 214). Prototype UI, manifests and browser tests are authorized within docs/design/live-web-prototype.md. Real drawing engine, persistence, native applications and additional product behavior still require explicit authorization. Never interpret a task file as broader implementation approval.
 
 macOS remains the primary product target: Swift/AppKit host and a custom Skia canvas. Develop web first because the owner has the most web experience, then macOS, with iPhone/iPad the next native priority. Shared Rust document/geometry/editing/persistence semantics and Skia/CanvasKit remain selected. First preview includes pen, pan/zoom, single-stroke select/move/uniform-scale/delete, undo/redo, open/save/recovery. No legacy document compatibility. Multiplatform planning and apps/ placeholders are authorized from day one; other platform features follow macOS, except web which leads implementation. See docs/platforms.md. Distribution, rotation/multi-select, agents/network features and exports require their own scope approval. Platform implementation still needs its reviewed task/design and implementation authorization. Preserve existing macOS color-control behavior until a concrete replacement is reviewed; its native appearance is no longer mandatory.
 
@@ -74,7 +77,7 @@ Require ordered actual samples, transient predictions, atomic batch validation, 
 
 Lead owns scope, architecture coordination and integration. Use configured specialists for scoped work. ui_ux_designer specifies and reviews interactions, native visual design, adaptive design and motion; rust_engine owns shared semantics and typed boundary; macos_ui owns AppKit; rendering_performance owns measurements; build_reliability owns runners/evidence; fresh reviewer independently reviews substantive changes. Platform roles may review portability/design now; web leads implementation, while other native hosts follow macOS and their approved task/design. Keep shared semantics native/Wasm compatible, isolate OS storage/executor/render backends, and never make AppKit/Metal assumptions part of universal contracts.
 
-At most three concurrent subagents and two implementation writers; one feature in flight. Assign outcome, base commit, owned paths, dependencies/contracts, acceptance IDs, required evidence and stopping condition. Freeze contracts before parallel writers; one contract owner. Use isolated worktrees within this repository, not the reference repository. Do not delegate recursively without a specific approved independent task and capacity.
+At most three concurrent subagents and two implementation writers; independent ready tasks may be in flight. Assign outcome, base commit, owned paths, dependencies/contracts, acceptance IDs, required evidence and stopping condition. Freeze contracts before parallel writers; one contract owner. Use isolated worktrees within this repository, not the reference repository. Do not delegate recursively without a specific approved independent task and capacity.
 
 Implementers own feature tests and logging. Do not add permanent architecture/logging/test agents to replace that responsibility. Lead diagnoses after two unproductive repair cycles. Designer/reviewer agreement is not owner approval for a new feature or material architecture decision.
 
@@ -189,7 +192,7 @@ transaction recovery; draft creation and exact persistence scheduling still requ
 ## Database design specialist
 
 Use database_designer for scoped SQLite schema design and review per docs/database-design.md.
-Require a visual owner handoff: hosted conceptual/physical ER diagrams, table dictionary,
+Require a visual owner handoff: generated native SVG conceptual/physical schema views, table dictionary,
 persistence sequence, tradeoffs and migration/test plan. Record approval of an exact proposal
 version before schema/migration implementation; material deviations require renewed review.
 The specialist cannot self-approve, choose unresolved product behavior or create another mutable
@@ -197,10 +200,11 @@ editor owner. rust_engine retains shared command/persistence implementation; exi
 performance and test responsibilities remain. This scoped role is an explicit owner-requested
 addition, not permission to proliferate quality roles or raise concurrency limits.
 
-The owner selected DBML with dbdiagram for schema visualization. database_designer must use
-versioned DBML/layout and a hosted dbdocs review handoff; the owner does not want local rendered diagram exports. Tested SQLite
-migrations remain executable authority. See docs/database-design.md; do not reopen the tool
-comparison without new evidence or owner request.
+Decision239 replaces the hosted schema toolchain with generated native SVG from shared schema
+definitions and DTCG diagram tokens. Reference SQL remains executable constraint authority;
+annotations and documentation-only jobs definitions preserve the reviewed proposal. Future hosts
+consume generated shared data only after their implementation approvals. Never duplicate schema
+policy in hand-authored diagrams. See docs/database/README.md.
 
 ## Gallery-first scope
 
@@ -303,7 +307,7 @@ values remain floating point. Concrete contracts/design review and implementatio
 Capture completed artwork when Export is accepted, before destination selection. Job-owned immutable
 snapshots outlive editor navigation. The owner selected durable jobs/source snapshots for crash
 recovery and serialized same-destination exports with valid replacement confirmation. This is not
-approval for an invented job protocol/schema/IPC or worker topology: obtain concrete S02/DBML review,
+approval for an invented job protocol/schema/IPC or worker topology: obtain concrete S02/shared schema review,
 including access/privacy/durability/retention, ambiguous publication and multi-process fencing.
 Preserve independent failures and safe progress; never silently replay an uncertain overwrite.
 The selected count is three accepted jobs including reservations, with byte/work limits and
@@ -454,9 +458,11 @@ record actual participation/snapshots and report planned/missing evidence honest
 report and owner-decision list. Do not turn review requests into automatic repairs, foreground tests,
 new permissions, accounts, packaging/submission or publishing. No scheduled automation is created.
 
-## Database documentation CLI exception
+## Local schema documentation
 
-The owner authorized project-local dbdiagram tooling on 2026-10-16. Use the pinned CLI from the root package via pnpm run dbdiagram for DBML validation/sync/private documentation publishing; follow docs/database/cli-security.md. Application implementation remains unauthorized. Never directly read/search credentials or .env files, inspect process environments or print/request tokens. Prepare authenticated commands for the owner/approved isolated publisher when credentials are unavailable. These are workflow obligations, not a technical secret-isolation guarantee. Browser use is for visual/privacy review, not a CLI publishing workaround. Upstream CLI validation also attempts credential lookup/telemetry; strict isolation requires an externally constrained runner or owner-operated command. No secure publisher is configured.
+Decision239 retires the external schema CLI. Use pnpm schema:generate/schema:check/schema:test and
+shared diagram tokens; ordinary checks require no authentication. Do not read credentials or move
+former CLI settings. Existing remote publication is historical, not a required review destination.
 
 ## DB1–DB4 database decision batch
 
@@ -464,7 +470,10 @@ Follow decisions 156–159 and docs/reviews/S02-db-batch-1.md: retain three data
 
 ## Root tooling exception and commands
 
-Owner requested root Node.js/TypeScript/pnpm setup and removal of tools/dbdiagram. Use root package.json/pnpm-lock.yaml; do not recreate nested documentation-tool packages or npm lockfiles. Run pnpm install --frozen-lockfile with lifecycle scripts disabled by project configuration, then pnpm check for owned tooling changes. Use pnpm db:validate and pnpm dbdiagram for explicit schema work; never put authenticated publication into ordinary quality checks. CLI credentials are not moved or inspected. Read docs/tooling.md and docs/database/cli.md. App/native/browser implementation remains pending; Vite follows the authorized web slice.
+Use root package.json/pnpm-lock.yaml; do not recreate nested documentation packages or npm
+lockfiles. Run pnpm install --frozen-lockfile with lifecycle scripts disabled, then pnpm check.
+Diagram/schema generation and drift checks are local and credential-free. See docs/tooling.md and
+docs/database/README.md. App/native implementation gates remain separate from documentation tooling.
 
 ## Multi-client and future sync direction (163–166)
 
@@ -491,7 +500,7 @@ The owner delegated transport selection. Follow docs/architecture/platform-ipc-d
 ## Latest coordinate, budget and watch selections (193–195)
 
 Region addresses plus local coordinates replace the global-coordinate-only direction for
-affected contracts. Lead/Rust owns the concrete contract proposal, database_designer DBML,
+affected contracts. Lead/Rust owns the concrete contract proposal, database_designer shared schema definitions,
 rendering_performance precision validation, and reviewer independent assessment. Obtain owner
 review of concrete schema/ABI/normalization/cross-region transforms before implementation;
 do not rewrite S02 v2 historical approval hashes or treat direction approval as exact signatures.
@@ -548,7 +557,7 @@ flat region/local sample and placement columns; separate canvas-local and canoni
 types; Rust-owned viewport mapping and captured-base pointer transform calculations.
 Read docs/reviews/engineering-budgets-v1.md for the exact selected proposal. Keep native
 event-to-view conversion and metrics reporting in hosts; do not duplicate world geometry.
-Do not re-ask RC9/RC10. Exact generated ABI/ownership, visualized DBML/constraints,
+Do not re-ask RC9/RC10. Exact generated ABI/ownership, visualized shared schema definitions/constraints,
 transform UX and precision evidence remain required; no application implementation authorized.
 An empty RC11 entry does not select any policy.
 
@@ -562,9 +571,10 @@ Exact contracts and precision evidence remain part of the consolidated review pa
 
 ## S02 v3 schema review defaults (decision 208)
 
-The owner delegated conservative recommended defaults for the DBML review handoff.
-Current docs/database/review.dbml and schema-v3.md are the pending v3 proposal; do not
-inherit v2 approval for changed regional fields. Include saved viewport region/local
+The owner delegated conservative recommended defaults for the shared schema definitions review handoff.
+The v3 source/approval is historical in Git e08f304; current v4.1 review data is
+shared/schema/schema.json, with authority/status in docs/database/README.md. Do not
+inherit an older approval for changed regional fields. Include saved viewport region/local
 centers as well as samples and placement. Preserve exact historical sources/hashes.
 Do not restart preference questionnaires for routine defaults within this scope.
 Unmeasured numerical stroke-span support remains evidence-gated; no runtime or ABI claim.

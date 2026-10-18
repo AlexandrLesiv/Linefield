@@ -1,0 +1,535 @@
+{
+  "width": 1440,
+  "height": 1080,
+  "title": "One task, one branch, one PR",
+  "description": "The owner reviews and merges. The harness verifies integration before handing off the next ready task.",
+  "elements": [
+    {
+      "tag": "rect",
+      "attrs": {
+        "width": "1440",
+        "height": "1080",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "64",
+        "class": "meta"
+      },
+      "text": "LINEFIELD / DIAGRAM LANGUAGE v2"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "64",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "OWNER-APPROVED WORKFLOW · NOT AN AUTOMATION"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "123",
+        "class": "title"
+      },
+      "text": "One task, one branch, one PR"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "161",
+        "class": "body"
+      },
+      "text": "The owner reviews and merges. The harness verifies integration before handing off the next"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "185",
+        "class": "body"
+      },
+      "text": "ready task."
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M232 366H256",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "304",
+        "width": "160",
+        "height": "164",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.presentation}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "332",
+        "class": "meta"
+      },
+      "text": "01"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "364",
+        "class": "node"
+      },
+      "text": "Ready task"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M416 366H440",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "256",
+        "y": "304",
+        "width": "160",
+        "height": "164",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.presentation}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "280",
+        "y": "332",
+        "class": "meta"
+      },
+      "text": "02"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "280",
+        "y": "364",
+        "class": "node"
+      },
+      "text": "Branch +"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "280",
+        "y": "388",
+        "class": "node"
+      },
+      "text": "chat"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M600 366H624",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "440",
+        "y": "304",
+        "width": "160",
+        "height": "164",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "464",
+        "y": "332",
+        "class": "meta"
+      },
+      "text": "03"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "464",
+        "y": "364",
+        "class": "node"
+      },
+      "text": "Scoped work"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M784 366H808",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "624",
+        "y": "304",
+        "width": "160",
+        "height": "164",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "648",
+        "y": "332",
+        "class": "meta"
+      },
+      "text": "04"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "648",
+        "y": "364",
+        "class": "node"
+      },
+      "text": "Review + PR"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M968 366H992",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "808",
+        "y": "304",
+        "width": "160",
+        "height": "164",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "832",
+        "y": "332",
+        "class": "meta"
+      },
+      "text": "05"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "832",
+        "y": "364",
+        "class": "node"
+      },
+      "text": "Owner"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "832",
+        "y": "388",
+        "class": "node"
+      },
+      "text": "review /"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "832",
+        "y": "412",
+        "class": "node"
+      },
+      "text": "merge"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1152 366H1176",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "992",
+        "y": "304",
+        "width": "160",
+        "height": "164",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1016",
+        "y": "332",
+        "class": "meta"
+      },
+      "text": "06"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1016",
+        "y": "364",
+        "class": "node"
+      },
+      "text": "Verify"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1016",
+        "y": "388",
+        "class": "node"
+      },
+      "text": "merge"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1176",
+        "y": "304",
+        "width": "160",
+        "height": "164",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1200",
+        "y": "332",
+        "class": "meta"
+      },
+      "text": "07"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1200",
+        "y": "364",
+        "class": "node"
+      },
+      "text": "Next prompt"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M888 468V500H1000V560H520V468",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "544",
+        "y": "526",
+        "width": "376",
+        "height": "25",
+        "rx": "{diagram.size.labelRadius}",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "552",
+        "y": "544",
+        "class": "meta"
+      },
+      "text": "comments → fix in the same task / branch / PR"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M472 468V608H336V664",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "248",
+        "y": "610",
+        "width": "72",
+        "height": "25",
+        "rx": "{diagram.size.labelRadius}",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "256",
+        "y": "628",
+        "class": "meta"
+      },
+      "text": "blocked"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "664",
+        "width": "528",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.unknown}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "692",
+        "class": "meta"
+      },
+      "text": "STOP DEPENDENT WORK"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "724",
+        "class": "node"
+      },
+      "text": "Missing approval, dependency or required evidence"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "808",
+        "y": "664",
+        "width": "528",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "832",
+        "y": "692",
+        "class": "meta"
+      },
+      "text": "REVIEW GATE"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "832",
+        "y": "724",
+        "class": "node"
+      },
+      "text": "Specialist + fresh review, exact checks, approved"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "832",
+        "y": "748",
+        "class": "node"
+      },
+      "text": "publication destination"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "864",
+        "class": "body"
+      },
+      "text": "Publish one PR only within authorized repository access; drafts disclose unfinished evidence."
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "904",
+        "class": "body"
+      },
+      "text": "No automatic merge. If verification is incomplete, remain integration-pending and retain the task checkpoint."
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "944",
+        "class": "body"
+      },
+      "text": "Closed without merge means cancelled / superseded, not Done. New post-merge work gets a follow-up task."
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M72 1008H1368",
+        "stroke": "{diagram.color.divider}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "1040",
+        "class": "meta"
+      },
+      "text": "One executable task owns one branch / PR · Milestones do not get implementation branches"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "1040",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "2026-10-19 · Full-size SVG"
+    }
+  ]
+}

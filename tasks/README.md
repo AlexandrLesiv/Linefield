@@ -8,14 +8,24 @@ Decision238 adopts the [task/PR/fresh-chat workflow](../docs/workflow/task-pr-ch
 The broad records below remain milestones/workstreams; existing completion claims describe local
 deliverables, not fabricated GitHub merges. New executable leaf tasks follow the updated template.
 
-## Active executable task
+## Executable task lanes
 
-| Task | Branch | State |
+See [parallel task policy](../docs/workflow/parallel-tasks.md). Two implementation writers maximum;
+owner-review PRs do not occupy a writer slot. Ready is scoped authorization, not permission to skip
+base/contract checks. Each writer uses an isolated worktree; one owner per shared input/output.
+
+| Task | State / PR | Dependencies and parallelism |
 | --- | --- | --- |
-| [DX-G01 Repository/workflow bootstrap](DX-G01.md) | codex/dx-g01-workflow-bootstrap | In progress; public PR preparation, owner merge pending |
+| [DX-G01 bootstrap](DX-G01.md) | Owner review, [PR #1](https://github.com/AlexandrLesiv/Linefield/pull/1) | Initial delivered baseline; owner merge pending |
+| [DX-G02 shared documentation](DX-G02.md) | In progress | Stacked on DX-G01; owns tooling/docs cleanup, not runtime behavior |
+| [S02-P01 storage admission](S02-P01.md) | Ready for bounded synthetic investigation | DX-G01 baseline; independent of DX-G02 and S02-C01, separate probe paths |
+| [S02-C01 regional contract](S02-C01.md) | Ready for contract/probe work | DX-G01 baseline; independent of storage and documentation tooling |
+| [DX-T01 app token parity](DX-T01.md) | Contract-blocked; read-only inventory may proceed | DX-G02 token contract/review before implementation; no simultaneous shared-token edits |
 
-Next candidate is the bounded storage-preservation experiment. Its executable brief will be
-prepared after bootstrap integration; production durable-library and engine gates remain.
+After PR #1 integrates, S02-P01 and S02-C01 can use the same verified main base in separate worktrees
+while DX-G02 is reviewed. Production durable-library work remains blocked by storage adoption and
+exact implementation scope approval. Broad milestones below must gain a bounded executable brief
+before implementation; listing them does not silently authorize every feature.
 
 ## Milestones and existing delivered slices
 

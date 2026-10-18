@@ -1,0 +1,279 @@
+{
+  "tables": [
+    {
+      "database": "jobs",
+      "name": "snapshots",
+      "columns": [
+        {
+          "name": "snapshot_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": true,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "managed_file_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": true,
+          "note": ""
+        },
+        {
+          "name": "document_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Logical source identity only"
+        },
+        {
+          "name": "source_database_incarnation",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Captured source instance; independent snapshot has its own incarnation"
+        },
+        {
+          "name": "content_revision",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "metadata_revision",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "byte_length",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "digest_sha256",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "state",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        }
+      ],
+      "indexes": [],
+      "note": ""
+    },
+    {
+      "database": "jobs",
+      "name": "destinations",
+      "columns": [
+        {
+          "name": "destination_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": true,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "access_kind",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "access_reference",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Bounded host-native bookmark/grant; no generic command codec"
+        },
+        {
+          "name": "target_identity",
+          "type": "BLOB",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Bounded native identity, NULL if no target existed"
+        },
+        {
+          "name": "destination_serialization_key",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        }
+      ],
+      "indexes": [],
+      "note": ""
+    },
+    {
+      "database": "jobs",
+      "name": "export_jobs",
+      "columns": [
+        {
+          "name": "job_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": true,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "source_document_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "snapshot_id",
+          "type": "BLOB",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "destination_id",
+          "type": "BLOB",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "format",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "state",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "admission_instance_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "claim_instance_id",
+          "type": "BLOB",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "claim_generation",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "accepted_utc_us",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "publication_phase",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "approved_target_identity",
+          "type": "BLOB",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "outcome_code",
+          "type": "TEXT",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        }
+      ],
+      "indexes": [
+        {
+          "columns": ["state", "accepted_utc_us", "job_id"],
+          "primaryKey": false,
+          "unique": false
+        },
+        {
+          "columns": ["source_document_id", "state"],
+          "primaryKey": false,
+          "unique": false
+        }
+      ],
+      "note": ""
+    }
+  ],
+  "relationships": [
+    {
+      "database": "jobs",
+      "table": "export_jobs",
+      "columns": ["snapshot_id"],
+      "notation": ">?",
+      "targetDatabase": "jobs",
+      "targetTable": "snapshots",
+      "targetColumns": ["snapshot_id"],
+      "onDelete": "RESTRICT",
+      "onUpdate": "RESTRICT"
+    },
+    {
+      "database": "jobs",
+      "table": "export_jobs",
+      "columns": ["destination_id"],
+      "notation": ">?",
+      "targetDatabase": "jobs",
+      "targetTable": "destinations",
+      "targetColumns": ["destination_id"],
+      "onDelete": "RESTRICT",
+      "onUpdate": "RESTRICT"
+    }
+  ]
+}

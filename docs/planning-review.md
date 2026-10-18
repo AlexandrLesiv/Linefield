@@ -164,7 +164,7 @@ cannot meet the reviewed budget, not a promise that a single-thread design is al
 That change needs immutable scene publication, bounded latest-frame scheduling, surface safety
 and owner review. Port-specific thread topologies are reviewed when each host is implemented.
 
-~~~mermaid
+```text
 flowchart LR
     subgraph Main[macOS main thread]
       Inputs[Native input and controls] --> Adapter[Swift adapters]
@@ -177,7 +177,9 @@ flowchart LR
     Files --> Done
     Editor -->|bounded redacted events| Logs[Diagnostics drain]
     Frame --> GPU[Metal GPU and presentation]
-~~~
+```
+
+Historical relationship notation; no diagram renderer is required.
 
 ### R11 Document format and compatibility
 

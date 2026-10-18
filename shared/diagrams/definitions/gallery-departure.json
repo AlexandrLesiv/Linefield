@@ -1,0 +1,505 @@
+{
+  "width": 1440,
+  "height": 1428,
+  "title": "Stage, depart, then clean up",
+  "description": "v4.1 · Logical departure and physical cleanup are separate; no production deletion claim.",
+  "elements": [
+    {
+      "tag": "rect",
+      "attrs": {
+        "width": "1440",
+        "height": "1428",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "64",
+        "class": "meta"
+      },
+      "text": "LINEFIELD / DIAGRAM LANGUAGE v2"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "64",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "SCHEMA APPROVED · MECHANISM PROPOSAL"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "123",
+        "class": "title"
+      },
+      "text": "Stage, depart, then clean up"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "161",
+        "class": "body"
+      },
+      "text": "v4.1 · Logical departure and physical cleanup are separate; no production deletion claim."
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "216",
+        "width": "160",
+        "height": "76",
+        "rx": "{diagram.size.participantRadius}",
+        "fill": "{diagram.color.panel}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "152",
+        "y": "246",
+        "class": "body",
+        "text-anchor": "middle"
+      },
+      "text": "Gallery client"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M152 292V1336",
+        "class": "guide"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "450.66666666666674",
+        "y": "216",
+        "width": "160",
+        "height": "76",
+        "rx": "{diagram.size.participantRadius}",
+        "fill": "{diagram.color.panel}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "530.6666666666667",
+        "y": "246",
+        "class": "body",
+        "text-anchor": "middle"
+      },
+      "text": "Library coordinator"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M530.6666666666667 292V1336",
+        "class": "guide"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "829.3333333333334",
+        "y": "216",
+        "width": "160",
+        "height": "76",
+        "rx": "{diagram.size.participantRadius}",
+        "fill": "{diagram.color.panel}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "909.3333333333334",
+        "y": "246",
+        "class": "body",
+        "text-anchor": "middle"
+      },
+      "text": "Catalog storage"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "909.3333333333334",
+        "y": "268",
+        "class": "body",
+        "text-anchor": "middle"
+      },
+      "text": "owner"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M909.3333333333334 292V1336",
+        "class": "guide"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1208",
+        "y": "216",
+        "width": "160",
+        "height": "76",
+        "rx": "{diagram.size.participantRadius}",
+        "fill": "{diagram.color.panel}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1288",
+        "y": "246",
+        "class": "body",
+        "text-anchor": "middle"
+      },
+      "text": "Destination"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1288",
+        "y": "268",
+        "class": "body",
+        "text-anchor": "middle"
+      },
+      "text": "open/create"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1288 292V1336",
+        "class": "guide"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "80",
+        "y": "309",
+        "width": "1280",
+        "height": "28",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "330",
+        "class": "body"
+      },
+      "text": "1 · StageRemoval(exact target, scope generation / revision)"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M152 363H530.6666666666667",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "80",
+        "y": "401",
+        "width": "1280",
+        "height": "28",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "422",
+        "class": "body"
+      },
+      "text": "2 · Verify target authority, exports settled, reserve capacity"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M530.6666666666667 455h40v22h-40",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "80",
+        "y": "493",
+        "width": "1280",
+        "height": "28",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "514",
+        "class": "body"
+      },
+      "text": "3 · Atomic staged row + scope revision"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M530.6666666666667 547H909.3333333333334",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "80",
+        "y": "585",
+        "width": "1280",
+        "height": "28",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "606",
+        "class": "body"
+      },
+      "text": "4 · Reply: durable staged outcome; show Deleted / Undo"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M909.3333333333334 639H152",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "80",
+        "y": "677",
+        "width": "1280",
+        "height": "28",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "698",
+        "class": "body"
+      },
+      "text": "5 · Request departure with explicit ordered removal IDs"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M152 731H530.6666666666667",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "80",
+        "y": "769",
+        "width": "1280",
+        "height": "28",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "790",
+        "class": "body"
+      },
+      "text": "6 · Prepare and hold validated destination session"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M530.6666666666667 823H1288",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "80",
+        "y": "861",
+        "width": "1280",
+        "height": "28",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "882",
+        "class": "body"
+      },
+      "text": "7 · Reply: ready token; not visible route acceptance"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1288 915H530.6666666666667",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "80",
+        "y": "953",
+        "width": "1280",
+        "height": "28",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "974",
+        "class": "body"
+      },
+      "text": "8 · Atomic exact-set departure + finalizing rows + cleanup intents"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M530.6666666666667 1007H909.3333333333334",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "80",
+        "y": "1045",
+        "width": "1280",
+        "height": "28",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "1066",
+        "class": "body"
+      },
+      "text": "9 · Reply: durable committed outcome OR Unknown"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M909.3333333333334 1099H530.6666666666667",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "80",
+        "y": "1137",
+        "width": "1280",
+        "height": "28",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "1158",
+        "class": "body"
+      },
+      "text": "10 · Accept route only on known commit; Unknown enters reconciliation"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M530.6666666666667 1191H152",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "80",
+        "y": "1229",
+        "width": "1280",
+        "height": "28",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "1250",
+        "class": "body"
+      },
+      "text": "11 · Retry identity-checked physical cleanup after commit"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M530.6666666666667 1283H909.3333333333334",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M72 1356H1368",
+        "stroke": "{diagram.color.divider}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "1388",
+        "class": "meta"
+      },
+      "text": "Solid arrows include replies · Dashed guides are participant lifetimes"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "1388",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "2026-10-19 · Full-size SVG"
+    }
+  ]
+}

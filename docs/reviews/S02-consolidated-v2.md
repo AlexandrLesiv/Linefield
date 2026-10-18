@@ -5,7 +5,7 @@
 Prepared 2026-10-16. Status: OWNER APPROVED on 2026-10-16 (decision 181), documentation only. See [approval scope](S02-v2-approval-2026-10-16.md). Current tree has no committed baseline; evidence uses exact file hashes. Policies DB1–DB22 are selected (DB16 cloud retention deliberately deferred); the concrete fields/signatures/transitions and provisional starting limits below are now explicitly approved; implementation and feasibility evidence remain separate.
 
 ## Read in this order
-1. [Schema delta and field constraints](../database/schema-v2.md), with [combined DBML](../database/review.dbml) and [editable layout](../database/review.dbdiagram). Private hosted version/evidence recorded after publication in quality/S02-v2-review.json.
+1. [Schema delta and field constraints](../database/schema-v2.md), with [combined DBML (historical)](https://github.com/AlexandrLesiv/Linefield/blob/e08f304/docs/database/review.dbml) and [editable layout (historical)](https://github.com/AlexandrLesiv/Linefield/blob/e08f304/docs/database/review.dbdiagram). Private hosted version/evidence recorded after publication in quality/S02-v2-review.json.
 2. [Typed commands and ownership](../interfaces/native-v2.md), then [query/effect DTOs](../interfaces/native-v2-queries.md).
 3. [Recovery transitions and thread/sequence diagrams](../architecture/recovery-v2.md).
 4. [Proposed limits and SQLite configuration](../architecture/limits-v2.md).

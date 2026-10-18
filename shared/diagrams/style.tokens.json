@@ -1,0 +1,191 @@
+{
+  "$description": "Linefield approved diagram style v2. Documentation-only namespace; application semantic palettes stay separate.",
+  "diagram": {
+    "color": {
+      "$type": "color",
+      "ink": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.13725490196078433, 0.19215686274509805, 0.2823529411764706],
+          "alpha": 1,
+          "hex": "#233148"
+        }
+      },
+      "muted": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.34901960784313724, 0.403921568627451, 0.48627450980392156],
+          "alpha": 1,
+          "hex": "#59677C"
+        }
+      },
+      "edge": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.44313725490196076, 0.5019607843137255, 0.5882352941176471],
+          "alpha": 1,
+          "hex": "#718096"
+        }
+      },
+      "divider": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.8823529411764706, 0.9019607843137255, 0.9294117647058824],
+          "alpha": 1,
+          "hex": "#E1E6ED"
+        }
+      },
+      "storage": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9529411764705882, 0.9803921568627451, 0.9686274509803922],
+          "alpha": 1,
+          "hex": "#F3FAF7"
+        }
+      },
+      "command": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9607843137254902, 0.9764705882352941, 0.9921568627450981],
+          "alpha": 1,
+          "hex": "#F5F9FD"
+        }
+      },
+      "presentation": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9686274509803922, 0.9686274509803922, 0.996078431372549],
+          "alpha": 1,
+          "hex": "#F7F7FE"
+        }
+      },
+      "canvas": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [0.9686274509803922, 0.9725490196078431, 0.9803921568627451],
+          "alpha": 1,
+          "hex": "#F7F8FA"
+        }
+      },
+      "unknown": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 0.9803921568627451, 0.9372549019607843],
+          "alpha": 1,
+          "hex": "#FFFAEF"
+        }
+      },
+      "panel": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "alpha": 1,
+          "hex": "#FFFFFF"
+        }
+      }
+    },
+    "size": {
+      "$type": "dimension",
+      "title": {
+        "$value": {
+          "value": 40,
+          "unit": "px"
+        }
+      },
+      "section": {
+        "$value": {
+          "value": 26,
+          "unit": "px"
+        }
+      },
+      "node": {
+        "$value": {
+          "value": 20,
+          "unit": "px"
+        }
+      },
+      "body": {
+        "$value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "meta": {
+        "$value": {
+          "value": 14,
+          "unit": "px"
+        }
+      },
+      "tracking": {
+        "$value": {
+          "value": -0.7,
+          "unit": "px"
+        }
+      },
+      "arrow": {
+        "$value": {
+          "value": 2,
+          "unit": "px"
+        }
+      },
+      "border": {
+        "$value": {
+          "value": 1.5,
+          "unit": "px"
+        }
+      },
+      "dash": {
+        "$value": {
+          "value": 4,
+          "unit": "px"
+        }
+      },
+      "gap": {
+        "$value": {
+          "value": 8,
+          "unit": "px"
+        }
+      },
+      "panelRadius": {
+        "$value": {
+          "value": 24,
+          "unit": "px"
+        }
+      },
+      "cardRadius": {
+        "$value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "participantRadius": {
+        "$value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "labelRadius": {
+        "$value": {
+          "value": 8,
+          "unit": "px"
+        }
+      },
+      "halo": {
+        "$value": {
+          "value": 8,
+          "unit": "px"
+        }
+      }
+    },
+    "font": {
+      "family": {
+        "$type": "fontFamily",
+        "$value": ["-apple-system", "BlinkMacSystemFont", "Segoe UI", "Arial", "sans-serif"]
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "$value": 600
+      }
+    }
+  }
+}

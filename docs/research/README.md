@@ -54,7 +54,7 @@ An unavailable paid feature is an evidence gap, not a reason to bypass access co
 
 ## Review flow
 
-~~~mermaid
+```text
 flowchart LR
     Brief[Lead: bounded research brief] --> Research[Competitor researcher: evidence and options]
     Research --> Owner[Owner: scope and priorities review]
@@ -70,7 +70,9 @@ flowchart LR
     Check --> Approval[Owner: identified design approval]
     Approval --> Build[Authorized implementation and tests]
     Build --> Review[UX behavior, UI visual and independent code review]
-~~~
+```
+
+Historical relationship notation; no diagram renderer is required.
 
 New scope requires an owner decision before it enters implementation. Existing-scope design
 exploration can incorporate research, but still needs identified design approval before coding.

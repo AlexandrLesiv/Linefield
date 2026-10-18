@@ -9,7 +9,7 @@ prior pending-review wording; all four TV/watch hosts are view-only.
 
 ## Shared Rust policy, native acquisition
 
-~~~mermaid
+```text
 flowchart TD
     OS[OS devices and system gestures] --> Native[Native event and focus adapter]
     Native --> Priority{OS / IME / text / modal owns event?}
@@ -22,7 +22,9 @@ flowchart TD
     State --> Render[Skia scene]
     State --> Controls[Native menu/control projection]
     Controls -. approved accelerators and action IDs .-> Native
-~~~
+```
+
+Historical relationship notation; no diagram renderer is required.
 
 Native controls can directly dispatch semantic actions; they need not synthesize key/pointer events.
 Pure native text/navigation presentation remains native. Native menu registration and Rust matching
@@ -45,7 +47,7 @@ repeat for held navigation or native behavior only. Releasing focus/modifiers cl
 
 ## State and arbitration
 
-~~~mermaid
+```text
 stateDiagram-v2
     [*] --> Idle
     Idle --> Candidate: native contact awaiting classification
@@ -57,7 +59,9 @@ stateDiagram-v2
     Editing --> Idle: end commits one operation
     Editing --> Idle: cancel rolls back unfinished work
     Navigating --> Idle: end or cancel
-~~~
+```
+
+Historical relationship notation; no diagram renderer is required.
 
 Candidate is a proposed arbitration concept, not approval for a delay or new thread. A quick tap or
 short drag ending before classification must receive an explicit outcome; never silently discard it.

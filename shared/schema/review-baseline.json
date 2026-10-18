@@ -1,0 +1,1627 @@
+{
+  "provenance": {
+    "revision": "e08f304e9bc08886ee936ee620d8498809869a23",
+    "path": "docs/database/deletion-v4/review.dbml",
+    "sha256": "059104124b0a86b67df6d2cfb0d9a13652357d861edf8090616caef6b66717fa"
+  },
+  "projectNote": "\n# Linefield S02 deletion amendment v4.1\nPROPOSED AMENDMENT — NOT IMPLEMENTED OR SCHEMA-APPROVED, 2026-10-19.\nThe original regional v3 schema was approved in decision209; its tables are preserved below.\nDecision236 approves durable-library sequencing and recoverable removal lifecycle, not these new mechanisms.\n17 tables, 146 columns, 11 same-file relationships. Three namespaces represent separate SQLite files.\nNew catalog tables: removal_scopes, removals and departures. Drawing/jobs tables unchanged.\nStage preserves target bytes and Undo. Only an exact-set durable departure after destination readiness ends Undo.\nNo timeout finalization, persistent document edit Undo, new database or cross-file SQL foreign key.\nProposed scope ownership, acquisition reconciliation, bounds and partial SQL constraints require owner review.\nSee docs/database/deletion-v4/proposal.md for dictionary, sequence, migration and17 planned cases.\nDBML is review documentation, not executable migrations. Exact browser lock/flush and generated contracts remain gates.\nPrivate schema notes only; no drawing content, credentials or grants.\n",
+  "tables": [
+    {
+      "database": "drawing",
+      "name": "document",
+      "columns": [
+        {
+          "name": "singleton",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": true,
+          "unique": false,
+          "note": "CHECK(singleton = 1)"
+        },
+        {
+          "name": "document_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": true,
+          "note": "16-byte UUIDv4"
+        },
+        {
+          "name": "database_incarnation",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "16-byte instance UUID; changes on controlled replacement, not coordinator restart"
+        },
+        {
+          "name": "display_name",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "content_revision",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "metadata_revision",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "created_utc_us",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "content_edited_utc_us",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "color_space",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "srgb only initially"
+        }
+      ],
+      "indexes": [],
+      "note": ""
+    },
+    {
+      "database": "drawing",
+      "name": "tools",
+      "columns": [
+        {
+          "name": "tool_key",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": true,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "tool_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": true,
+          "note": "16-byte stable UUID"
+        },
+        {
+          "name": "name_key",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": true,
+          "note": "Stable machine key, not localized display text"
+        }
+      ],
+      "indexes": [],
+      "note": ""
+    },
+    {
+      "database": "drawing",
+      "name": "strokes",
+      "columns": [
+        {
+          "name": "stroke_key",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": true,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "stroke_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": true,
+          "note": "16-byte UUIDv4"
+        },
+        {
+          "name": "mutation_revision",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Resulting content revision of last stroke mutation; fresh on Undo restoration"
+        },
+        {
+          "name": "tool_key",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "paint_order",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": true,
+          "note": ""
+        },
+        {
+          "name": "base_width",
+          "type": "REAL",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Logical units before transform; CHECK(value BETWEEN 1 AND 512)"
+        },
+        {
+          "name": "red",
+          "type": "REAL",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "green",
+          "type": "REAL",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "blue",
+          "type": "REAL",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "alpha",
+          "type": "REAL",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "placement_region_x",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Signed i64 region address; Rust checked arithmetic"
+        },
+        {
+          "name": "placement_region_y",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Signed i64 region address; positive Y down"
+        },
+        {
+          "name": "placement_local_x",
+          "type": "REAL",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Finite canonical local offset; CHECK(0 <= value AND value < 65536); +0"
+        },
+        {
+          "name": "placement_local_y",
+          "type": "REAL",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Finite canonical local offset; CHECK(0 <= value AND value < 65536); +0"
+        },
+        {
+          "name": "uniform_scale",
+          "type": "REAL",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "CHECK(value BETWEEN 0.015625 AND 64); original points and base width preserved"
+        }
+      ],
+      "indexes": [],
+      "note": ""
+    },
+    {
+      "database": "drawing",
+      "name": "samples",
+      "columns": [
+        {
+          "name": "stroke_key",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "sample_index",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Nonnegative contiguous from 0; sample 0 is derived immutable source anchor"
+        },
+        {
+          "name": "region_x",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Signed i64 original region address"
+        },
+        {
+          "name": "region_y",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Signed i64 original region address; positive Y down"
+        },
+        {
+          "name": "local_x",
+          "type": "REAL",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Finite canonical local offset; CHECK(0 <= value AND value < 65536); +0"
+        },
+        {
+          "name": "local_y",
+          "type": "REAL",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Finite canonical local offset; CHECK(0 <= value AND value < 65536); +0"
+        },
+        {
+          "name": "pressure",
+          "type": "REAL",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": false,
+          "note": "NULL unavailable, otherwise 0..1"
+        }
+      ],
+      "indexes": [
+        {
+          "columns": [
+            "stroke_key",
+            "sample_index"
+          ],
+          "primaryKey": true,
+          "unique": false
+        }
+      ],
+      "note": ""
+    },
+    {
+      "database": "drawing",
+      "name": "command_receipts",
+      "columns": [
+        {
+          "name": "operation_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": true,
+          "unique": false,
+          "note": "16-byte command UUID; private committed outcome only"
+        },
+        {
+          "name": "client_session_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "16-byte authenticated-session binding; not itself a credential"
+        },
+        {
+          "name": "client_sequence",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "owner_generation",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "16-byte generation under which command was admitted"
+        },
+        {
+          "name": "database_incarnation",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "command_kind",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "add_stroke, move_stroke, scale_stroke, delete_stroke, undo, redo, rename"
+        },
+        {
+          "name": "argument_fingerprint",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "32-byte private validated-argument digest, never exported or logged"
+        },
+        {
+          "name": "base_content_revision",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "base_metadata_revision",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "result_content_revision",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "result_metadata_revision",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "committed_utc_us",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        }
+      ],
+      "indexes": [
+        {
+          "columns": [
+            "owner_generation",
+            "client_session_id",
+            "client_sequence"
+          ],
+          "primaryKey": false,
+          "unique": true
+        },
+        {
+          "columns": [
+            "committed_utc_us",
+            "operation_id"
+          ],
+          "primaryKey": false,
+          "unique": false
+        }
+      ],
+      "note": ""
+    },
+    {
+      "database": "catalog",
+      "name": "library",
+      "columns": [
+        {
+          "name": "singleton",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": true,
+          "unique": false,
+          "note": "CHECK(singleton = 1)"
+        },
+        {
+          "name": "library_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": true,
+          "note": ""
+        },
+        {
+          "name": "catalog_incarnation",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Fresh 16-byte UUID after rebuild/replacement"
+        },
+        {
+          "name": "catalog_generation",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "automatic_name_highwater",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "activity_highwater",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Local monotonic gallery activity allocator; never use wall-clock time"
+        },
+        {
+          "name": "sequence_recovery_state",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        }
+      ],
+      "indexes": [],
+      "note": ""
+    },
+    {
+      "database": "catalog",
+      "name": "tools",
+      "columns": [
+        {
+          "name": "tool_key",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": true,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "tool_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": true,
+          "note": ""
+        },
+        {
+          "name": "name_key",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": true,
+          "note": ""
+        }
+      ],
+      "indexes": [],
+      "note": ""
+    },
+    {
+      "database": "catalog",
+      "name": "drawings",
+      "columns": [
+        {
+          "name": "drawing_key",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": true,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "document_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": true,
+          "note": ""
+        },
+        {
+          "name": "database_incarnation",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Last observed drawing incarnation; repairable projection"
+        },
+        {
+          "name": "managed_file_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": true,
+          "note": "Opaque app-managed locator; not a display name or source path"
+        },
+        {
+          "name": "display_name",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "content_revision",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "metadata_revision",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "created_utc_us",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "content_edited_utc_us",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "added_utc_us",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "activity_order",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Persistent local activity ordinal; descending order, timestamps remain independent"
+        },
+        {
+          "name": "availability",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        }
+      ],
+      "indexes": [
+        {
+          "columns": [
+            "activity_order",
+            "document_id"
+          ],
+          "primaryKey": false,
+          "unique": false
+        }
+      ],
+      "note": ""
+    },
+    {
+      "database": "catalog",
+      "name": "local_view",
+      "columns": [
+        {
+          "name": "drawing_key",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": true,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "preference_revision",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "center_region_x",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Signed i64 saved viewport-center region; device-local preference"
+        },
+        {
+          "name": "center_region_y",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Signed i64 saved viewport-center region; positive Y down"
+        },
+        {
+          "name": "center_local_x",
+          "type": "REAL",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Finite canonical local offset; CHECK(0 <= value AND value < 65536); +0"
+        },
+        {
+          "name": "center_local_y",
+          "type": "REAL",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Finite canonical local offset; CHECK(0 <= value AND value < 65536); +0"
+        },
+        {
+          "name": "zoom",
+          "type": "REAL",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "CHECK(value BETWEEN 0.1 AND 8); 1 means 100 percent"
+        },
+        {
+          "name": "active_tool_key",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        }
+      ],
+      "indexes": [],
+      "note": ""
+    },
+    {
+      "database": "catalog",
+      "name": "pen_preferences",
+      "columns": [
+        {
+          "name": "drawing_key",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "tool_key",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "preference_revision",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "width",
+          "type": "REAL",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Maximum untransformed pen width; CHECK(value BETWEEN 1 AND 512)"
+        },
+        {
+          "name": "red",
+          "type": "REAL",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "green",
+          "type": "REAL",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "blue",
+          "type": "REAL",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "alpha",
+          "type": "REAL",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        }
+      ],
+      "indexes": [
+        {
+          "columns": [
+            "drawing_key",
+            "tool_key"
+          ],
+          "primaryKey": true,
+          "unique": false
+        }
+      ],
+      "note": ""
+    },
+    {
+      "database": "catalog",
+      "name": "lifecycle",
+      "columns": [
+        {
+          "name": "operation_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": true,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "document_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "managed_file_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "operation_kind",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "phase",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "expected_database_incarnation",
+          "type": "BLOB",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Required for existing-file operations; nullable before new-file staging"
+        },
+        {
+          "name": "expected_content_revision",
+          "type": "INTEGER",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "expected_metadata_revision",
+          "type": "INTEGER",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "automatic_name_number",
+          "type": "INTEGER",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "confirmed_utc_us",
+          "type": "INTEGER",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "updated_utc_us",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        }
+      ],
+      "indexes": [
+        {
+          "columns": [
+            "document_id",
+            "operation_kind"
+          ],
+          "primaryKey": false,
+          "unique": false
+        }
+      ],
+      "note": ""
+    },
+    {
+      "database": "jobs",
+      "name": "snapshots",
+      "columns": [
+        {
+          "name": "snapshot_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": true,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "managed_file_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": true,
+          "note": ""
+        },
+        {
+          "name": "document_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Logical source identity only"
+        },
+        {
+          "name": "source_database_incarnation",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Captured source instance; independent snapshot has its own incarnation"
+        },
+        {
+          "name": "content_revision",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "metadata_revision",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "byte_length",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "digest_sha256",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "state",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        }
+      ],
+      "indexes": [],
+      "note": ""
+    },
+    {
+      "database": "jobs",
+      "name": "destinations",
+      "columns": [
+        {
+          "name": "destination_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": true,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "access_kind",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "access_reference",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Bounded host-native bookmark/grant; no generic command codec"
+        },
+        {
+          "name": "target_identity",
+          "type": "BLOB",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Bounded native identity, NULL if no target existed"
+        },
+        {
+          "name": "destination_serialization_key",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        }
+      ],
+      "indexes": [],
+      "note": ""
+    },
+    {
+      "database": "jobs",
+      "name": "export_jobs",
+      "columns": [
+        {
+          "name": "job_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": true,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "source_document_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "snapshot_id",
+          "type": "BLOB",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "destination_id",
+          "type": "BLOB",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "format",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "state",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "admission_instance_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "claim_instance_id",
+          "type": "BLOB",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "claim_generation",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "accepted_utc_us",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "publication_phase",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "approved_target_identity",
+          "type": "BLOB",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "outcome_code",
+          "type": "TEXT",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        }
+      ],
+      "indexes": [
+        {
+          "columns": [
+            "state",
+            "accepted_utc_us",
+            "job_id"
+          ],
+          "primaryKey": false,
+          "unique": false
+        },
+        {
+          "columns": [
+            "source_document_id",
+            "state"
+          ],
+          "primaryKey": false,
+          "unique": false
+        }
+      ],
+      "note": ""
+    },
+    {
+      "database": "catalog",
+      "name": "removal_scopes",
+      "columns": [
+        {
+          "name": "scope_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": true,
+          "unique": false,
+          "note": "UUID length16; runtime-created gallery visit, never a bearer capability"
+        },
+        {
+          "name": "catalog_incarnation",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "UUID length16; Rust matches current library incarnation"
+        },
+        {
+          "name": "claim_generation",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Nonnegative i64; checked increment on exclusive claim"
+        },
+        {
+          "name": "scope_revision",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Nonnegative i64; optimistic command precondition"
+        },
+        {
+          "name": "state",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "CHECK open or committed; transitions validated in Rust"
+        }
+      ],
+      "indexes": [],
+      "note": "Current scope/fencing state, NOT a durable Create/Claim request receipt. One verified runtime grant holder. Lost acquisition results use live bounded request lookup or Unknown followed by verified retirement and fresh claim; never infer grant from row existence/generation. See proposal.md. No persisted credential or timeout takeover."
+    },
+    {
+      "database": "catalog",
+      "name": "removals",
+      "columns": [
+        {
+          "name": "removal_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": true,
+          "unique": false,
+          "note": "Stage operation UUID length16"
+        },
+        {
+          "name": "scope_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": ""
+        },
+        {
+          "name": "stage_fingerprint",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "32-byte versioned canonical semantic request digest; private"
+        },
+        {
+          "name": "document_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "UUID length16; logical drawing reference, no SQL FK"
+        },
+        {
+          "name": "managed_file_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "UUID length16; immutable managed target, no path"
+        },
+        {
+          "name": "database_incarnation",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "UUID length16; exact expected instance"
+        },
+        {
+          "name": "content_revision",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Nonnegative i64; exact protected revision"
+        },
+        {
+          "name": "metadata_revision",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Nonnegative i64; exact protected revision"
+        },
+        {
+          "name": "state",
+          "type": "TEXT",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "CHECK staged, restored, finalizing or cleaned; legal transitions Rust"
+        },
+        {
+          "name": "undo_operation_id",
+          "type": "BLOB",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": true,
+          "note": "UUID length16; present iff restored"
+        },
+        {
+          "name": "undo_fingerprint",
+          "type": "BLOB",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": false,
+          "note": "32 bytes; present iff restored together with undo_operation_id"
+        },
+        {
+          "name": "departure_id",
+          "type": "BLOB",
+          "notNull": false,
+          "primaryKey": false,
+          "unique": false,
+          "note": "UUID length16; present iff finalizing or cleaned"
+        }
+      ],
+      "indexes": [
+        {
+          "columns": [
+            "scope_id",
+            "state",
+            "removal_id"
+          ],
+          "primaryKey": false,
+          "unique": false
+        },
+        {
+          "columns": [
+            "departure_id",
+            "removal_id"
+          ],
+          "primaryKey": false,
+          "unique": false
+        }
+      ],
+      "note": "SQL partial UNIQUE(document_id) WHERE state IN (staged,finalizing) is required but not expressible here. Stage preserves existing drawings row/name/activity position. Terminal receipts survive drawing deletion. SQL state-dependent null CHECKs and Rust transaction checks are specified in proposal.md."
+    },
+    {
+      "database": "catalog",
+      "name": "departures",
+      "columns": [
+        {
+          "name": "departure_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": true,
+          "unique": false,
+          "note": "Committed departure operation UUID length16"
+        },
+        {
+          "name": "scope_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": true,
+          "note": "At most one committed departure per scope"
+        },
+        {
+          "name": "argument_fingerprint",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "32 bytes; binds canonical exact removal set and destination"
+        },
+        {
+          "name": "destination_document_id",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "UUID length16; logical validated destination, no cross-file FK"
+        },
+        {
+          "name": "destination_database_incarnation",
+          "type": "BLOB",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "UUID length16"
+        },
+        {
+          "name": "result_scope_revision",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "Positive i64; matches committed closed scope"
+        },
+        {
+          "name": "removal_count",
+          "type": "INTEGER",
+          "notNull": true,
+          "primaryKey": false,
+          "unique": false,
+          "note": "CHECK between 1 and 256; exact count/member equality checked in Rust transaction"
+        }
+      ],
+      "indexes": [
+        {
+          "columns": [
+            "departure_id",
+            "scope_id"
+          ],
+          "primaryKey": false,
+          "unique": true
+        }
+      ],
+      "note": "Immutable acceptance receipt; one or more catalog.removals. Insert with exact members, scope closure and lifecycle cleanup intents in one catalog transaction. Lost reply queries this outcome; absence is not permission to replay."
+    }
+  ],
+  "relationships": [
+    {
+      "database": "drawing",
+      "table": "strokes",
+      "columns": [
+        "tool_key"
+      ],
+      "notation": ">",
+      "targetDatabase": "drawing",
+      "targetTable": "tools",
+      "targetColumns": [
+        "tool_key"
+      ],
+      "onDelete": "RESTRICT",
+      "onUpdate": "RESTRICT"
+    },
+    {
+      "database": "drawing",
+      "table": "samples",
+      "columns": [
+        "stroke_key"
+      ],
+      "notation": ">",
+      "targetDatabase": "drawing",
+      "targetTable": "strokes",
+      "targetColumns": [
+        "stroke_key"
+      ],
+      "onDelete": "CASCADE",
+      "onUpdate": "RESTRICT"
+    },
+    {
+      "database": "catalog",
+      "table": "drawings",
+      "columns": [
+        "drawing_key"
+      ],
+      "notation": "-",
+      "targetDatabase": "catalog",
+      "targetTable": "local_view",
+      "targetColumns": [
+        "drawing_key"
+      ],
+      "onDelete": "CASCADE",
+      "onUpdate": "RESTRICT"
+    },
+    {
+      "database": "catalog",
+      "table": "local_view",
+      "columns": [
+        "active_tool_key"
+      ],
+      "notation": ">",
+      "targetDatabase": "catalog",
+      "targetTable": "tools",
+      "targetColumns": [
+        "tool_key"
+      ],
+      "onDelete": "RESTRICT",
+      "onUpdate": "RESTRICT"
+    },
+    {
+      "database": "catalog",
+      "table": "pen_preferences",
+      "columns": [
+        "drawing_key"
+      ],
+      "notation": ">",
+      "targetDatabase": "catalog",
+      "targetTable": "drawings",
+      "targetColumns": [
+        "drawing_key"
+      ],
+      "onDelete": "CASCADE",
+      "onUpdate": "RESTRICT"
+    },
+    {
+      "database": "catalog",
+      "table": "pen_preferences",
+      "columns": [
+        "tool_key"
+      ],
+      "notation": ">",
+      "targetDatabase": "catalog",
+      "targetTable": "tools",
+      "targetColumns": [
+        "tool_key"
+      ],
+      "onDelete": "RESTRICT",
+      "onUpdate": "RESTRICT"
+    },
+    {
+      "database": "jobs",
+      "table": "export_jobs",
+      "columns": [
+        "snapshot_id"
+      ],
+      "notation": ">?",
+      "targetDatabase": "jobs",
+      "targetTable": "snapshots",
+      "targetColumns": [
+        "snapshot_id"
+      ],
+      "onDelete": "RESTRICT",
+      "onUpdate": "RESTRICT"
+    },
+    {
+      "database": "jobs",
+      "table": "export_jobs",
+      "columns": [
+        "destination_id"
+      ],
+      "notation": ">?",
+      "targetDatabase": "jobs",
+      "targetTable": "destinations",
+      "targetColumns": [
+        "destination_id"
+      ],
+      "onDelete": "RESTRICT",
+      "onUpdate": "RESTRICT"
+    },
+    {
+      "database": "catalog",
+      "table": "removals",
+      "columns": [
+        "scope_id"
+      ],
+      "notation": ">",
+      "targetDatabase": "catalog",
+      "targetTable": "removal_scopes",
+      "targetColumns": [
+        "scope_id"
+      ],
+      "onDelete": "RESTRICT",
+      "onUpdate": "RESTRICT"
+    },
+    {
+      "database": "catalog",
+      "table": "departures",
+      "columns": [
+        "scope_id"
+      ],
+      "notation": "-",
+      "targetDatabase": "catalog",
+      "targetTable": "removal_scopes",
+      "targetColumns": [
+        "scope_id"
+      ],
+      "onDelete": "RESTRICT",
+      "onUpdate": "RESTRICT"
+    },
+    {
+      "database": "catalog",
+      "table": "removals",
+      "columns": [
+        "departure_id",
+        "scope_id"
+      ],
+      "notation": ">",
+      "targetDatabase": "catalog",
+      "targetTable": "departures",
+      "targetColumns": [
+        "departure_id",
+        "scope_id"
+      ],
+      "onDelete": "RESTRICT",
+      "onUpdate": "RESTRICT"
+    }
+  ],
+  "groups": [
+    {
+      "name": "Drawing document",
+      "tables": [
+        "drawing.document",
+        "drawing.tools",
+        "drawing.strokes",
+        "drawing.samples",
+        "drawing.command_receipts"
+      ]
+    },
+    {
+      "name": "Local library",
+      "tables": [
+        "catalog.library",
+        "catalog.drawings",
+        "catalog.tools",
+        "catalog.local_view",
+        "catalog.pen_preferences",
+        "catalog.lifecycle"
+      ]
+    },
+    {
+      "name": "Export processing",
+      "tables": [
+        "jobs.snapshots",
+        "jobs.destinations",
+        "jobs.export_jobs"
+      ]
+    }
+  ],
+  "referenceSql": [
+    {
+      "path": "docs/database/empty-library-catalog-v1.sql",
+      "sha256": "7fa28a640f6e403c726b453c0f884872447bc630ba948c7622db4f520c65e16b"
+    },
+    {
+      "path": "docs/database/empty-library-drawing-v1.sql",
+      "sha256": "0b8a0cc968f02e41483a78062a1045afd12f8902366ed59b6fdbf4a5c4a557f4"
+    },
+    {
+      "path": "docs/database/empty-library-removal-v1.sql",
+      "sha256": "b181bd5fcfc8d95c1565a4772998648f20fae3be30e794260454c7302ad50a73"
+    }
+  ]
+}

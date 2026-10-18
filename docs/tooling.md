@@ -81,15 +81,18 @@ no scheduled jobs or current deletion. Keep unrelated dependency upgrades in sep
 changes, pinned and audited; required feature/fix updates need rationale. Do not add update bots
 or silently refresh latest versions. Planned runner requirements are not executable checks yet.
 
-## Installed documentation tool (2026-10-16)
+## Shared documentation tooling
 
-Official dbdiagram 0.6.3 is pinned in the root package with pnpm-lock.yaml and lifecycle scripts disabled. See [usage](database/cli.md) and [credential limits](database/cli-security.md). Root CLI version and DBML validation passed; existing owner CLI login remains in use. No MCP or legacy dbdocs CLI installed.
+Native Node TypeScript generates SVG review artifacts from shared definitions and DTCG2025.10
+style tokens. The external schema CLI/dependency is retired under decision239. No hosted publication,
+credentials or renderer package is required. See [diagram inputs](diagrams/README.md) and
+[schema inputs](database/README.md). Root checks include generation drift and unit/schema parity.
 
 ## Installed root commands
 
 - pnpm install --frozen-lockfile: install the pinned development tools; pnpm-workspace.yaml disables lifecycle scripts and enforces engines. Never weaken this to make installation pass.
-- pnpm check: native Node scripts/check.ts runs strict type checking, Oxlint, Oxfmt check and the 200-physical-line limit for scripts/**/*.ts. It does not invoke dbdiagram, native UI, app builds or network checks.
+- pnpm check: native Node scripts/check.ts runs strict type checking, Oxlint, Oxfmt check and the 200-physical-line limit for scripts/**/*.ts. It does not invoke native UI, app builds or network checks.
 - pnpm typecheck / pnpm lint / pnpm format:check: individual checks; pnpm format intentionally formats owned tooling files only, not the existing documentation tree.
-- pnpm db:validate / pnpm dbdiagram: explicit schema validation or upstream CLI commands; credential policy still applies.
+- pnpm diagrams:generate / diagrams:check and schema:generate / schema:check: deterministic local artifacts; schema:test covers parity.
 
 The root workspace currently contains only this package; add apps/web packages when authorized, rather than generating empty package manifests for native hosts. Node runs erasable .ts directly; tsc checks types separately. No tsx/ts-node transpiler, zx wrapper, Vite app, CI or global runtime upgrade was added. The source-size gate currently covers owned scripts only; native-language gates remain future S01 work. Generic cancellable multi-platform build orchestration and evidence collection remain planned; this small bounded background check runner is not that full framework.

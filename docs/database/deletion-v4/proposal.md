@@ -21,16 +21,16 @@ and a committed exact departure set. Existing lifecycle rows remain responsible 
 physical cleanup. No ordinary Delete confirmation, generic Trash screen, document edit-history
 persistence, new writer, cross-file SQL FK, custom wire protocol or recovery journal is added.
 
-[catalog-delta.dbml](catalog-delta.dbml) contains the complete unchanged v3 catalog context plus
+[catalog-delta.dbml (historical)](https://github.com/AlexandrLesiv/Linefield/blob/e08f304/docs/database/deletion-v4/catalog-delta.dbml) contains the complete unchanged v3 catalog context plus
 the proposed three tables; it is not a complete three-database release schema. Its table notes
 form the conceptual model: one scope owns zero or more removals and at most one departure;
-one departure covers one or more removals. [catalog-delta.dbdiagram](catalog-delta.dbdiagram)
+one departure covers one or more removals. [catalog-delta.dbdiagram (historical)](https://github.com/AlexandrLesiv/Linefield/blob/e08f304/docs/database/deletion-v4/catalog-delta.dbdiagram)
 records proposed layout, not a CLI-exported or hosted-verified diagram. The lead composed the
-complete [review.dbml](review.dbml), retaining the previous three-database context and appending
+complete [review.dbml (historical)](https://github.com/AlexandrLesiv/Linefield/blob/e08f304/docs/database/deletion-v4/review.dbml), retaining the previous three-database context and appending
 the proposed catalog tables. Both standalone and combined DBML passed the pinned CLI validation
 on2026-10-19 using ordinary authorized CLI access, not strict credential isolation. Hosted
 publication/privacy/layout remain separate evidence; see the current review handoff. No local
-rendered ER export is provided. See [CLI policy](../cli.md). DBML is documentation, not migrations.
+rendered ER export is provided. See [CLI policy (historical)](https://github.com/AlexandrLesiv/Linefield/blob/e08f304/docs/database/cli.md). DBML is documentation, not migrations.
 
 ## Authority, visibility and recovery ownership
 
@@ -126,24 +126,9 @@ All catalog changes below use one SQLite transaction on its existing storage own
 executed here. `scope_revision` increments once per accepted non-no-op stage/Undo/claim/commit,
 checked for overflow; stale expected revision rejects without changing any row.
 
-```mermaid
-sequenceDiagram
-  participant G as Gallery client
-  participant C as Existing library coordinator
-  participant S as Catalog storage owner
-  participant D as Destination open/create
-  G->>C: StageRemoval(exact target, scope generation/revision)
-  C->>C: Verify target authority, exports settled, reserve capacity
-  C->>S: Atomic staged row + scope revision
-  S-->>G: Durable staged outcome; show Deleted / Undo
-  G->>C: Request departure with explicit ordered removal IDs
-  C->>D: Prepare and hold validated destination session
-  D-->>C: Ready token; not visible route acceptance
-  C->>S: Atomic exact-set departure + finalizing rows + cleanup intents
-  S-->>C: Durable committed outcome OR Unknown
-  C-->>G: Accept route only on known commit; Unknown enters reconciliation
-  C->>S: Retry identity-checked physical cleanup after commit
-```
+![Architecture view](../../diagrams/v2/gallery-departure.svg)
+
+Presentation migrated under decision239; original approved source bytes remain at commit e08f304.
 
 1. **Stage:** insert staged removal retaining immutable target IDs/revisions and gallery display
    metadata through the existing drawings row; increment scope revision. Do not remove files,

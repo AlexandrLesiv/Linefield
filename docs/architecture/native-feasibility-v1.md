@@ -41,13 +41,9 @@ Apple DTS documents that ordinary apps cannot publish a supported named XPC list
 All three remain unselected. A preserves typed native XPC and avoids a bespoke socket command format, but its operational cost is real. No broker was installed, registered or started by the completed probe.
 
 Proposed option A, not implementation:
-```mermaid
-flowchart LR
-  A["App A: authoritative Rust coordinator"] -->|"register anonymous endpoint"| R["Discovery-only per-user broker"]
-  B["App B: native UI + Rust client"] -->|"request endpoint"| R
-  B <-->|"direct authenticated typed XPC"| A
-  A --> D["Sole drawing SQLite writer"]
-```
+![Architecture view](../diagrams/v2/historical-native-discovery.svg)
+
+Presentation migrated under decision239; original approved source bytes remain at commit e08f304.
 The broker must never own artwork, revisions, SQL connections or editing authority. Its restart cannot confer document ownership; the existing lock/identity protocol still decides authority. The actual broker contract must cover identity, registration races, stale endpoints, restart, bounded storage and uninstall before code. A scoped temporary registration experiment requires owner approval of that change and explicit cleanup; it is not covered by the already-completed bundled-service test.
 
 ## Browser result

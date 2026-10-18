@@ -25,20 +25,9 @@ Closing stops admission, cancels unfinished interactions, settles accepted work,
 then releases ownership. Genuine ownership failure pauses mutation/persistence and preserves
 accepted unsaved RAM state where possible; no silent reacquisition and flush.
 
-```mermaid
-stateDiagram-v2
-  [*] --> Unowned
-  Unowned --> Acquiring: explicit Open / maintenance
-  Acquiring --> InUse: lock held elsewhere
-  Acquiring --> Loading: lock acquired + fresh generation
-  Loading --> Editing: validated document accepted
-  Loading --> Unowned: failed open / release
-  Editing --> Closing: accepted close request
-  Editing --> Paused: ownership loss / poisoned session
-  Closing --> Unowned: workers settled + connections closed
-  Closing --> Editing: cancellable close rejected
-  Paused --> RecoveryRequired: preserve work / explicit recovery
-```
+![Architecture view](../diagrams/v2/historical-owner-states.svg)
+
+Presentation migrated under decision239; original approved source bytes remain at commit e08f304.
 
 Contested explicit Open can activate the verified owning window if supported; otherwise report
 in-use. Background refresh must never steal focus. One window per app instance remains unchanged.
@@ -80,22 +69,9 @@ Busy or Unavailable. Connection loss is UnknownOutcome, never proof of failure.
 
 ## Rename and receipts
 
-```mermaid
-sequenceDiagram
-  participant R as Requesting process
-  participant O as Verified owning process
-  participant E as Rust dispatcher
-  participant D as Drawing SQLite
-  participant C as Catalog SQLite
-  R->>O: Rename(request ID, expected revision, name)
-  O->>E: Authenticated bounded typed intent on main thread
-  E->>E: Check generation, revision and interaction guards
-  E->>D: Background transaction: name + revision + receipt
-  D-->>E: Durable commit with captured revisions
-  E->>C: Refresh metadata projection
-  C-->>E: Updated or reconciliation pending
-  E-->>R: Committed + projection status
-```
+![Architecture view](../diagrams/v2/historical-rename.svg)
+
+Presentation migrated under decision239; original approved source bytes remain at commit e08f304.
 
 The receipt keys request UUID plus owner generation and stores a fingerprint of validated arguments,
 expected/result metadata revisions and committed result. Names/fingerprints are private data and

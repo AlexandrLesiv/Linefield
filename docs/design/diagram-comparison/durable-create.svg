@@ -72,6 +72,6 @@
   <text x="579" y="716" font-size="15" fill="#937449">Reconcile before retry</text>
 
   <path d="M88 786H1352" stroke="#EBEEF2"/>
-  <text x="88" y="815" class="caption">Design comparison · Same states and transitions as the Mermaid example</text>
+  <text x="88" y="815" class="caption">Design comparison · Same states and transitions as the retired text-diagram notation example</text>
   <text x="1352" y="815" class="caption" text-anchor="end">Illustration only · Storage not implemented</text>
 </svg>

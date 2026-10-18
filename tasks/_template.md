@@ -9,8 +9,11 @@ Status: planned / ready / in-progress / internal-review / owner-review / changes
 blocked / integration-pending / done / cancelled. Current status: planned.
 Branch: codex/TASK-ID-purpose. PR URL: not opened. Intended repository/base: pending.
 Current writer/chat/worktree: pending; transfer only after previous writer is stopped/idle.
-Dependency task IDs and verified merged revisions: pending.
-Scoped entry reading: pending. See docs/workflow/task-pr-chat-plan.md and decision238.
+Dependencies (hard / frozen contract / independent), task IDs and verified revisions: pending.
+Can run alongside / conflicts with: pending. Shared contract owner/version: pending.
+PR base: main or explicit stacked parent PR/SHA. Merge order/revalidation: pending.
+Owned inputs/generated outputs and allowed shared-file integration edits: pending.
+Scoped entry reading: pending. See docs/workflow/parallel-tasks.md and decisions238–239.
 Owner: unassigned. Scope/non-goals: pending. Dependencies: pending.
 Base revision or exact uncommitted snapshot: pending. Owned paths: pending.
 CT/INV/SU/SEC acceptance IDs: pending. Independent reviewer: unassigned.

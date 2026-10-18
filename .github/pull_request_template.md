@@ -6,7 +6,9 @@ Concrete problem and resulting behavior:
 ## Scope and authority
 
 Approval/design/contract references:
-Exclusions and dependencies:
+Exclusions and dependencies (hard / frozen contract / independent):
+Owned paths and conflicts with other active tasks:
+Base SHA; stacked parent PR and required merge order, if any:
 Architecture/UI SVGs, if applicable:
 
 ## Verification and review

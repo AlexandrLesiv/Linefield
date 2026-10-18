@@ -1,0 +1,433 @@
+{
+  "width": 1440,
+  "height": 1184,
+  "title": "Native host composition · historical view",
+  "description": "Preserves the earlier host decomposition; current multi-client coordination has separate authority.",
+  "elements": [
+    {
+      "tag": "rect",
+      "attrs": {
+        "width": "1440",
+        "height": "1184",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "64",
+        "class": "meta"
+      },
+      "text": "LINEFIELD / DIAGRAM LANGUAGE v2"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "64",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "HISTORICAL PROPOSAL · NOT FULL IPC TOPOLOGY"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "123",
+        "class": "title"
+      },
+      "text": "Native host composition · historical view"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "161",
+        "class": "body"
+      },
+      "text": "Preserves the earlier host decomposition; current multi-client coordination has separate authority."
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M376 290H520",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M672 348V432",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M672 572V680",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M672 616H224V680",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M672 616H1172V680",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M376 750H520",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1008 750H824",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1172 796V936",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1156 864H1188",
+        "fill": "none",
+        "stroke": "{diagram.color.canvas}",
+        "stroke-width": "{diagram.size.halo}"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M672 820V864H1392V200H672V232",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1064",
+        "y": "170",
+        "width": "176",
+        "height": "25",
+        "rx": "{diagram.size.labelRadius}",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1072",
+        "y": "188",
+        "class": "meta"
+      },
+      "text": "projection / effects"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "232",
+        "width": "304",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.presentation}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "260",
+        "class": "meta"
+      },
+      "text": "HOST EVENTS"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "292",
+        "class": "node"
+      },
+      "text": "AppKit pen, mouse,"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "316",
+        "class": "node"
+      },
+      "text": "keyboard and controls"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "520",
+        "y": "232",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.presentation}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "260",
+        "class": "meta"
+      },
+      "text": "SWIFT"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "292",
+        "class": "node"
+      },
+      "text": "Input adapters and"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "316",
+        "class": "node"
+      },
+      "text": "presenters"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "520",
+        "y": "432",
+        "width": "304",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "460",
+        "class": "meta"
+      },
+      "text": "BOUNDARY"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "492",
+        "class": "node"
+      },
+      "text": "editor-native: generated"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "516",
+        "class": "node"
+      },
+      "text": "typed ABI and composition"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "680",
+        "width": "304",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "708",
+        "class": "meta"
+      },
+      "text": "editor-services"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "740",
+        "class": "node"
+      },
+      "text": "File worker, recovery"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "764",
+        "class": "node"
+      },
+      "text": "storage, diagnostics sinks"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "520",
+        "y": "680",
+        "width": "304",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "708",
+        "class": "meta"
+      },
+      "text": "editor-engine"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "740",
+        "class": "node"
+      },
+      "text": "Commands, state, geometry,"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "764",
+        "class": "node"
+      },
+      "text": "history, codec, scene"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "680",
+        "width": "328",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "708",
+        "class": "meta"
+      },
+      "text": "editor-renderer"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "740",
+        "class": "node"
+      },
+      "text": "Skia and Metal"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "936",
+        "width": "328",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "964",
+        "class": "meta"
+      },
+      "text": "HOST SURFACE"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "996",
+        "class": "node"
+      },
+      "text": "AppKit-owned Metal surface"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M72 1112H1368",
+        "stroke": "{diagram.color.divider}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "1144",
+        "class": "meta"
+      },
+      "text": "Notation migration only · See source packet for authority and evidence"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "1144",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "2026-10-19 · Full-size SVG"
+    }
+  ]
+}

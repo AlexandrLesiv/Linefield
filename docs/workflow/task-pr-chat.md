@@ -1,8 +1,8 @@
 # Task → branch → PR → next chat
 
 Adopted2026-10-19 by decision238. [Exact approved plan](task-pr-chat-plan.md) and
-[approval record](../reviews/workflow-style-approval-2026-10-19.md) retain the full requirements.
-This is the current visual entry point. Current bootstrap: [DX-G01](../../tasks/DX-G01.md).
+[approval record](../reviews/workflow-style-approval-2026-10-19.md) record the historical approval; decision239 overrides serial scheduling.
+This is the current visual entry point. Bootstrap: [DX-G01](../../tasks/DX-G01.md). Decision239 adds [parallel task lanes](parallel-tasks.md).
 
 ![One task, one branch, one PR](../diagrams/v2/task-pr-lifecycle.svg)
 
@@ -16,7 +16,8 @@ block dependent work rather than silently expanding the task.
 
 After the owner reports completion, verify the intended PR is merged and record its merge SHA.
 Compare tested and integrated content, run affected checks when required, and confirm acceptance.
-Only then provide a concise prompt for the next ready task in a fresh chat. If verification is
+Only then issue that task’s completion receipt. Independent ready tasks may receive a fresh-chat
+prompt while another PR awaits review; their dependencies and ownership must be explicit. If verification is
 missing, keep integration pending. A replacement chat for an unfinished task reuses its branch
 and PR only after the prior writer stops and ownership transfers.
 

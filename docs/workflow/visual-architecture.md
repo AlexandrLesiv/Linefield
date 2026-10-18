@@ -5,39 +5,23 @@ no new owner decision is needed. Preparing/updating documentation is not a new i
 approval gate. Material ABI, schema, topology, security and product changes retain existing gates.
 This plan introduces no new agent configuration, service, installed renderer or external upload.
 
-## Current direction: native SVG, with a reviewed style specification
+## Current direction: generated native SVG
 
-Decision238 approves [native SVG style v2](../design/diagram-style-v2.md), including the v1
-semantic conventions it explicitly retains. Use carefully authored SVG for new architecture
-diagrams. [Exact approval](../reviews/workflow-style-approval-2026-10-19.md) identifies the source
-hashes; its original proposal-era text is retained as a review snapshot, not pending adoption.
-The owner additionally requested conversion of existing diagrams. [Migration index](../diagrams/migration-v2.md)
-accounts for all source diagrams and new workflow views. Historical semantics and approval
-snapshots remain intact; new illustrations do not renew their architecture approval.
+Decision239 selects shared data definitions and DTCG2025.10 style tokens. New diagrams use the
+approved [v2 appearance](../design/diagram-style-v2.md). Edit the shared definition and regenerate;
+do not hand-edit generated SVG output. Schema views use the same renderer and style tokens.
+See [diagram sources](../diagrams/README.md) and [schema authority](../database/README.md).
 
-For native SVG, the SVG itself is the authoritative editable source. Preserve one source per
-diagram. For an explicitly chosen generated format, never hand-edit its generated SVG; update
-the source and regenerate. Record that exception and its tool/version alongside the diagram.
+DTCG is the W3C Design Tokens Community Group's portable JSON format, not a W3C Recommendation.
+[The published specification](https://www.designtokens.org/tr/2025.10/format/) defines types and
+references; Linefield implements its documented subset, rejects unsupported input and does not
+claim a general-purpose token processor. Style tokens are not database columns or runtime contracts.
 
-| Option | Strength | Cost / recommended use |
-| --- | --- | --- |
-| Mermaid + SVG | Text diffs, flow/sequence/state diagrams, fits existing Markdown | Automatic layout can become crowded; optional exception, no longer the recommended default |
-| Hand-authored SVG | Precise layout, scalable, no diagram editor dependency | Verbose geometry and manual alignment; owner-preferred direction with shared style rules |
-| draw.io source + SVG | Comfortable manual layout, rich visual editing; SVG can embed editable source | XML diffs/merges are noisy; one editor per file; optional for diagrams needing careful placement |
-| PlantUML + SVG | Text-based detailed sequence/state/component notation | Adds a renderer/toolchain; consider only if Mermaid becomes materially limiting |
-| PNG or PDF | Convenient fixed review/export snapshots | Poor editable source; PNG loses sharpness on zoom, PDF less convenient inline; secondary exports only |
-| DBML + hosted dbdocs | Existing selected physical/conceptual schema workflow | Keep exact source/layout version and publication evidence; hosted mutable link alone is insufficient |
-
-**Database exception:** keep the owner's DBML/dbdocs choice. Do not replace schema ER handoffs
-with local SVG exports or republish an internal schema merely because diagrams are requested.
-General architecture SVGs may show database-file boundaries and authority, linking the actual
-schema packet without duplicating its full table model.
-
-Tool facts checked2026-10-19: [Mermaid CLI SVG export](https://github.com/mermaid-js/mermaid-cli),
-[Mermaid accessibility](https://mermaid.js.org/config/accessibility),
-[draw.io editable SVG](https://www.drawio.com/docs/manual/export/embed-svg/),
-[PlantUML SVG](https://plantuml.com/svg). Format preferences above are project recommendations.
-No online renderer is required; keep internal diagrams local unless publication is authorized.
+SVG is the review/distribution artifact: selectable text, precise layout, scalable, offline and
+GitHub-viewable. Shared data keeps diagrams consistent; hand-tuned layout coordinates remain in
+versioned definitions. PNG is a secondary capture, never source authority. No external diagram
+service, renderer package or duplicate diagram notation is required. Historical review snapshots
+are available in Git at e08f304; changing presentation does not renew architecture approval.
 
 ## Planner responsibility and review
 
@@ -127,8 +111,7 @@ An attractive diagram must not turn the latter into an approved implementation.
 4. Add deletion Stage/Undo/departure and regional engine views when those slices advance; defer
    detailed native deployment and future cloud internals until their contracts are actually scoped.
 5. With style approval recorded and representative diagrams available, consider a small local SVG
-   validation/render command under existing Node tooling conventions. No Mermaid installation
-   is needed for native SVG. Automation implementation remains future work, not a passing gate.
+   validation/render command under existing Node tooling conventions. No external diagram renderer is required.
 
 Routine diagrams of already-approved behavior need no new owner approval. Present new material
 architecture choices with their diagrams before implementation under existing gates. This rule

@@ -2,55 +2,25 @@
 Status: concrete proposal approved by owner (decision 181). Supersedes exclusive-client/rename-only portions of ownership-rename-v1.md; retains existing supported-migration and export policies. CT-01/03/04/05/07, INV-01/04/06/09/10.
 
 ## Threads and authority
-```mermaid
-flowchart LR
-  UIA["Host A main thread: native controls + Rust coordinator + Skia"] --> Q["Owned immutable save batch"]
-  UIB["Host B main thread: native controls + read-only projection + preview"] --> IPC["Authenticated native adapter: bounded typed mailbox"]
-  IPC --> UIA
-  UIA --> IPC
-  Q --> SQL["Existing storage service owner: SQLite connections"]
-  SQL --> ACK["Bounded completion queue + readiness signal"]
-  ACK --> UIA
-  UIA --> LOG["Bounded redacted log sink"]
-```
+![Architecture view](../diagrams/v2/recovery-authority.svg)
+
+Presentation migrated under decision239; original approved source bytes remain at commit e08f304.
 No new executor or standalone service. One authoritative coordinator mutates each document on its hosting process main thread. Every client has its own interaction/selection/viewport/history; remote preview is not another writable document. Native callbacks enter shared named Rust commands. IPC callbacks authenticate/copy/enqueue only, never mutate. Skia/native widgets remain local. Background storage retains lifetime authority guard through commit/rollback.
 
 Stable lock-file identity is separate from replaceable drawing DB; never unlink an active lock inode. Proposed macOS advisory exclusive lifetime lock; old owner release confirmed by successful acquisition, not PID/heartbeat timeout. Exact signed/sandboxed endpoint discovery still requires a native probe. Same-process calls use direct dispatch. Peer self-declared UUID/origin is not authentication.
 Ordering: drawing authority → short library mutation admission → one database transaction at a time. No library/SQL lock across UI, IPC reply or slow render. Destination lock never acquires drawing lock; staged immutable export releases source authority before publication. Deletion/export admission share the library coordinator; multiple destinations follow canonical deterministic ordering or one-at-a-time.
 
 ## Completed edit and acknowledgement
-```mermaid
-sequenceDiagram
-  participant C as Client main thread
-  participant O as Coordinator main thread
-  participant S as Storage owner
-  participant D as Drawing SQLite
-  C->>O: Named command + session/sequence/operation + stroke token
-  O->>O: Validate authority, dependencies, token and reserved capacity
-  O-->>C: Accepted (not Saved); retain exact pending command
-  O->>S: Immutable ordered changes + base/target versions + receipt
-  S->>D: BEGIN IMMEDIATE; compare incarnation + durable base
-  S->>D: Changes + revision pair + command receipts
-  D-->>S: Synchronized COMMIT or failure/unknown
-  S-->>O: Identity-bound durable acknowledgement
-  O->>O: Reject stale completion; advance only captured durable revisions
-  O-->>C: Durable outcome + current/durable version pair
-  C->>O: Contiguous incorporated-outcome acknowledgement
-```
+![Architecture view](../diagrams/v2/recovery-durable-ack.svg)
+
+Presentation migrated under decision239; original approved source bytes remain at commit e08f304.
 Validated sequence floors prevent a pruned operation from executing again. Capture content timestamps at semantic acceptance; durable completion is not edit time. Rename increments metadata only. A save batch may contain several operations but each keeps its own receipt/history boundary. Reject/rollback entire SQL batch on persistence-base mismatch; live accepted work remains pending, not silently rolled back or declared saved.
 No-op/rejection outcomes are bounded session-memory results; after owner loss they can become Unknown. Never infer execution from current state or replay under a new UUID. Queries of old receipts use newly authenticated current authority; old execution credentials stay invalid.
 
 ## Coordinator loss and reconnect
-```mermaid
-stateDiagram-v2
-  Attached --> Paused: connection/authority lost
-  Paused --> Discovering: reconnect requested
-  Discovering --> Paused: old lock still held or peer unavailable
-  Discovering --> Reloading: exclusive takeover or verified new owner
-  Reloading --> Reconciling: validated durable state + fresh owner generation
-  Reconciling --> Attached: known outcomes applied, unknown work retained, fresh empty history
-  Reconciling --> RecoveryRequired: invalid data or unavailable authority
-```
+![Architecture view](../diagrams/v2/recovery-reconnect.svg)
+
+Presentation migrated under decision239; original approved source bytes remain at commit e08f304.
 Old interaction handles/events never resume. Cancel unfinished preview per client; preserve completed pending work in the surviving client. Durable receipt resolves committed operation; missing receipt keeps its proposal in bounded unresolved state, separate from Undo. Initial proposal does not automatically reapply unknown content or add a salvage/merge screen. Approved conflict/recovery UX must expose actionable preservation paths before implementation.
 Fresh local handles and history generation; fresh Undo/Redo even if artwork is unchanged. Ordinary owner restart keeps database incarnation. Controlled DB replacement creates new incarnation and requires exclusive file-handle coordination before publication. DB token alone does not fence arbitrary external file replacement.
 Orderly quit: stop admission, cancel unfinished interactions, settle pending saves or reviewed quit failure/consent, notify/disconnect peers, close SQL, then release authority. Never join slow workers on UI thread. Forced kill/power loss can lose RAM-only work. No live coordinator transfer.

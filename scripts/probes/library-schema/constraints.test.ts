@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
 import { test } from "node:test";
+import { buildSchema } from "../../schema/build.ts";
 
 const root = new URL("../../../docs/database/", import.meta.url);
 const id = (value: number) => Buffer.alloc(16, value);
@@ -31,19 +32,15 @@ function stage(db: DatabaseSync, key: number, scopeKey: number): void {
   );
 }
 
-test("DLIB-SQL-01: exact DBML column parity and STRICT tables", () => {
-  const dbml = readFileSync(new URL("deletion-v4/review.dbml", root), "utf8");
+test("DLIB-SQL-01: shared schema column parity and STRICT tables", () => {
+  const schema = buildSchema();
   let count = 0;
   for (const kind of ["catalog", "drawing"] as const) {
     using db = database(kind);
-    for (const match of dbml.matchAll(/Table (catalog|drawing)\.(\w+)[^{]*\{([\s\S]*?)\n\}/g)) {
-      if (match[1] !== kind) continue;
-      const table = match[2];
-      const body = match[3];
-      assert.ok(table && body);
-      const columns = [...body.matchAll(/^  (\w+) (?:INTEGER|BLOB|TEXT|REAL)\b/gm)].map(
-        (m) => m[1],
-      );
+    for (const definition of schema.tables) {
+      if (definition.database !== kind) continue;
+      const table = definition.name;
+      const columns = definition.columns.map((column) => column.name);
       assert.deepEqual(
         db
           .prepare(`PRAGMA table_info('${table}')`)

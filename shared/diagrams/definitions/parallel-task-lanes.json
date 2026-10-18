@@ -1,0 +1,524 @@
+{
+  "width": 1440,
+  "height": 1140,
+  "title": "Independent tasks keep moving",
+  "description": "Independent tasks can proceed while another PR awaits owner review. Shared contracts and file conflicts serialize affected work; stacked PRs retain explicit merge order.",
+  "elements": [
+    {
+      "tag": "rect",
+      "attrs": {
+        "width": 1440,
+        "height": 1140,
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 72,
+        "y": 64,
+        "class": "meta"
+      },
+      "text": "LINEFIELD / DIAGRAM LANGUAGE v2"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 900,
+        "y": 64,
+        "class": "meta"
+      },
+      "text": "WORKFLOW · OWNER REVIEW / MERGE"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 72,
+        "y": 123,
+        "class": "title"
+      },
+      "text": "Independent tasks keep moving"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 72,
+        "y": 166,
+        "class": "body"
+      },
+      "text": "Each task keeps one branch, one worktree and one PR. Owner review can overlap independent work."
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": 72,
+        "y": 260,
+        "width": 256,
+        "height": 514,
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.presentation}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 96,
+        "y": 300,
+        "class": "meta"
+      },
+      "text": "STARTING POINT"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 96,
+        "y": 340,
+        "class": "node"
+      },
+      "text": "Reviewed base"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 96,
+        "y": 380,
+        "class": "body"
+      },
+      "text": "Explicit dependencies"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 96,
+        "y": 412,
+        "class": "body"
+      },
+      "text": "Disjoint owned paths"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 96,
+        "y": 444,
+        "class": "body"
+      },
+      "text": "Frozen shared contracts"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 96,
+        "y": 704,
+        "class": "meta"
+      },
+      "text": "One writer per task"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 96,
+        "y": 740,
+        "class": "meta"
+      },
+      "text": "No automatic merge"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M328 330H400",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": 400,
+        "y": 260,
+        "width": 424,
+        "height": 134,
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 424,
+        "y": 295,
+        "class": "node"
+      },
+      "text": "Task A"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 424,
+        "y": 328,
+        "class": "body"
+      },
+      "text": "Own branch + isolated worktree"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 424,
+        "y": 364,
+        "class": "meta"
+      },
+      "text": "Checks + specialist + independent review"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M824 330H920",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": 920,
+        "y": 260,
+        "width": 448,
+        "height": 134,
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 944,
+        "y": 295,
+        "class": "node"
+      },
+      "text": "PR A"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 944,
+        "y": 330,
+        "class": "body"
+      },
+      "text": "PR ready · owner reviewing"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 944,
+        "y": 364,
+        "class": "meta"
+      },
+      "text": "Owner merges; harness verifies integration"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M328 520H400",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": 400,
+        "y": 450,
+        "width": 424,
+        "height": 134,
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 424,
+        "y": 485,
+        "class": "node"
+      },
+      "text": "Task B"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 424,
+        "y": 518,
+        "class": "body"
+      },
+      "text": "Own branch + isolated worktree"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 424,
+        "y": 554,
+        "class": "meta"
+      },
+      "text": "Design → implement → test → review"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M824 520H920",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": 920,
+        "y": 450,
+        "width": 448,
+        "height": 134,
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.panel}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 944,
+        "y": 485,
+        "class": "node"
+      },
+      "text": "PR B"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 944,
+        "y": 520,
+        "class": "body"
+      },
+      "text": "Work continues independently"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 944,
+        "y": 554,
+        "class": "meta"
+      },
+      "text": "Owner merges; harness verifies integration"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M328 710H400",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": 400,
+        "y": 640,
+        "width": 424,
+        "height": 134,
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 424,
+        "y": 675,
+        "class": "node"
+      },
+      "text": "Task C"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 424,
+        "y": 708,
+        "class": "body"
+      },
+      "text": "Own branch + isolated worktree"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 424,
+        "y": 744,
+        "class": "meta"
+      },
+      "text": "Design → implement → test → review"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M824 710H920",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": 920,
+        "y": 640,
+        "width": 448,
+        "height": 134,
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.panel}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 944,
+        "y": 675,
+        "class": "node"
+      },
+      "text": "PR C"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 944,
+        "y": 710,
+        "class": "body"
+      },
+      "text": "Work continues independently"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 944,
+        "y": 744,
+        "class": "meta"
+      },
+      "text": "Owner merges; harness verifies integration"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": 72,
+        "y": 834,
+        "width": 624,
+        "height": 192,
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.unknown}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 96,
+        "y": 870,
+        "class": "meta"
+      },
+      "text": "CONFLICT OR UNSETTLED CONTRACT"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 96,
+        "y": 910,
+        "class": "node"
+      },
+      "text": "Serialize the affected work"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 96,
+        "y": 948,
+        "class": "body"
+      },
+      "text": "Shared mutable files or changing interfaces need one owner."
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 96,
+        "y": 980,
+        "class": "body"
+      },
+      "text": "Keep unrelated ready tasks moving; do not guess a contract."
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": 728,
+        "y": 834,
+        "width": 640,
+        "height": 192,
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 752,
+        "y": 870,
+        "class": "meta"
+      },
+      "text": "DEPENDENT TASK FROM AN UNMERGED PR"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 752,
+        "y": 910,
+        "class": "node"
+      },
+      "text": "Label it stacked; merge the parent first"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 752,
+        "y": 948,
+        "class": "body"
+      },
+      "text": "Retarget onto the verified base, then rerun affected checks."
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 752,
+        "y": 980,
+        "class": "body"
+      },
+      "text": "Parallel work does not turn a dependency into approval."
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M72 1060H1368",
+        "stroke": "{diagram.color.divider}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": 72,
+        "y": 1096,
+        "class": "meta"
+      },
+      "text": "Review queue and implementation capacity are separate · One task / branch / PR"
+    }
+  ]
+}

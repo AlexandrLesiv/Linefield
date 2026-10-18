@@ -1,14 +1,14 @@
 # Linefield Git strategy
 
-Prepared 2026-10-19 at the owner's request. This is the recommended workflow and transition
-plan; it does not create branches, commits, remotes, protections, CI or releases. Main merges
+Adopted under decisions238–239. Follow [parallel task rules](parallel-tasks.md); the historical
+bootstrap observations below describe the original checkout, not current GitHub state. Main merges
 and publication retain owner approval. Local commits for already-authorized work remain permitted.
 
 ## Recommended model
 
-The owner has proposed a [task → PR → fresh-chat lifecycle](task-pr-chat-plan.md).
+The owner adopted the [task → PR → fresh-chat lifecycle](task-pr-chat.md).
 Under that plan, each executable leaf task owns exactly one branch and one PR; parent milestones
-do not get implementation branches. The detailed transition and task restructuring remain a plan.
+do not get implementation branches. Independent ready tasks may overlap owner review under decision239.
 
 Use a single integration branch, `main`, with short-lived `codex/<task>-<purpose>` branches.
 Keep the monorepo together: shared contracts, Rust, hosts, resources, tests and documentation
@@ -24,7 +24,7 @@ authorized, but shared contract changes need one owner and an agreed base before
 
 Native SVG, diagram style v2. The [migration index](../diagrams/migration-v2.md) records source, status and text equivalent.
 
-## Current checkout: transition before ordinary branching
+## Historical bootstrap procedure (completed in PR #1)
 
 Observed2026-10-19: only local branch `codex/project-foundation`, HEAD
 `fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7`, two commits. No local main or remote-tracking refs
@@ -52,8 +52,8 @@ Do not treat this checkout as a clean main or silently rename it.
    integration establish main at that identified commit. If a remote is later selected, agree its
    destination/access and publication separately. This document does not authorize an upload.
 
-The working tree remains unchanged by this plan. This transition is outstanding work, not completed
-backup or evidence that all current files are safe to publish.
+The bootstrap preservation/publication is recorded in DX-G01 and PR #1. The observations above
+are historical. Owner merge and integration verification remain distinct from publication.
 
 ## Daily change and agent workflow
 
@@ -62,7 +62,7 @@ backup or evidence that all current files are safe to publish.
 - Prefer an isolated worktree for implementation writers, as AGENTS requires. A worktree starts
   from committed state and does not inherit the current dirty checkout. First preserve and commit
   the required base; never let an agent unknowingly work from stale contracts.
-- Respect at most three concurrent subagents, two implementation writers and one feature in flight.
+- Respect at most three concurrent subagents and two implementation writers; independent ready tasks can overlap.
   Give shared contract/schema files one owner. Read-only reviews need no separate writer checkout.
 - Commit a coherent behavior plus its tests, relevant documentation and evidence references.
   Titles explain the outcome, e.g. `fix(web): preserve keyboard focus in settings` or

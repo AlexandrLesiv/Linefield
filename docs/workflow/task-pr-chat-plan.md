@@ -1,3 +1,7 @@
+Current override: decision239 and [parallel task rules](parallel-tasks.md) supersede this
+approval-era plan wherever it serializes independent tasks behind owner review. The original
+approved bytes are in commit e08f304. Owner-only merge and verified completion still apply.
+
 # One task, one branch, one PR, one working chat
 
 Proposed2026-10-19 in response to the owner's workflow request. This document plans the transition;

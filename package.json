@@ -11,10 +11,8 @@
     "check": "node scripts/check.ts",
     "typecheck": "node scripts/localization.ts && tsc --noEmit",
     "lint": "oxlint --deny-warnings scripts shared/theme shared/localization",
-    "format": "oxfmt package.json tsconfig.json .oxlintrc.json .oxfmtrc.json pnpm-workspace.yaml scripts shared/theme shared/localization",
-    "format:check": "oxfmt --check package.json tsconfig.json .oxlintrc.json .oxfmtrc.json pnpm-workspace.yaml scripts shared/theme shared/localization",
-    "dbdiagram": "dbdiagram",
-    "db:validate": "dbdiagram validate docs/database/review.dbml",
+    "format": "oxfmt package.json tsconfig.json .oxlintrc.json .oxfmtrc.json pnpm-workspace.yaml scripts shared/theme shared/localization shared/diagrams shared/schema",
+    "format:check": "oxfmt --check package.json tsconfig.json .oxlintrc.json .oxfmtrc.json pnpm-workspace.yaml scripts shared/theme shared/localization shared/diagrams shared/schema",
     "web:dev": "pnpm --filter @linefield/web dev",
     "web:build": "pnpm --filter @linefield/web build",
     "web:test": "pnpm --filter @linefield/web test",
@@ -26,11 +24,16 @@
     "theme:test": "node --test scripts/theme-validation.test.ts scripts/theme-resources/*.test.ts",
     "theme:generate": "node scripts/theme-resources.ts",
     "theme:resources:check": "node scripts/theme-resources.ts --check",
-    "theme:native-check": "node scripts/theme-resources/native-check.ts"
+    "theme:native-check": "node scripts/theme-resources/native-check.ts",
+    "diagrams:generate": "node scripts/diagrams/generate.ts",
+    "diagrams:check": "node scripts/diagrams/generate.ts --check",
+    "diagrams:test": "node --test scripts/diagrams/*.test.ts",
+    "schema:generate": "node scripts/schema/generate.ts",
+    "schema:check": "node scripts/schema/generate.ts --check",
+    "schema:test": "node --test scripts/schema/*.test.ts scripts/probes/library-schema/constraints.test.ts"
   },
   "devDependencies": {
     "@types/node": "24.19.2",
-    "dbdiagram": "0.6.3",
     "oxfmt": "0.73.0",
     "oxlint": "1.88.0",
     "typescript": "7.0.2"

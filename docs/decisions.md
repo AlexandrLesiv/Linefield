@@ -161,12 +161,12 @@ schema or implementation is approved by this choice. See [autosave policy](autos
 
 On 2026-10-16 the owner requested database-specialist entity/relationship visualization and
 handoff of visualized schemas for review. Added database_designer and docs/database-design.md:
-Mermaid conceptual/physical ER diagrams plus a dictionary and persistence sequence; rendered
+retired text-diagram notation conceptual/physical ER diagrams plus a dictionary and persistence sequence; rendered
 SVG/HTML fallback when needed. Owner approves the identified proposal before implementation.
 Rust retains implementation and shared semantics. No concrete schema or new product feature is
 approved by this workflow; configured role runtime discovery remains unverified.
 
-Follow-up: owner objected to Mermaid ERDs and asked to evaluate dbdiagram/dbdocs. The Mermaid
+Follow-up: owner objected to retired text-diagram notation ERDs and asked to evaluate dbdiagram/dbdocs. The retired text-diagram notation
 ERD mandate is removed. DBML plus dbdiagram is the recommended review format, with dbdocs an
 optional hosted reference; setup/publication is pending, not authorized by reading their docs.
 Track schema and layout in Git; tested SQLite migrations remain executable authority. See
@@ -3626,3 +3626,19 @@ authorized public publication of reviewed source and documentation. Exclude priv
 captures, credentials, local recovery snapshots and regenerable downloads. This permits bootstrap
 publication/PR preparation, not merging its changes to main or approving durable engine code.
 Preserve the approved proposal snapshots and record probe limitations and any required changes.
+
+## Decision 239 — parallel task review and shared generated documentation
+
+On2026-10-19 the owner requested independent tasks progressing while PRs await review, retirement
+of the hosted database diagram toolchain in favor of native SVG, shared reusable definitions and
+W3C-community design-token format where appropriate, plus obsolete documentation cleanup.
+Use explicit hard/contract/independent dependencies, isolated worktrees, one branch/PR per leaf,
+shared-path ownership and parent-first integration for stacked PRs. Owner merge authority remains.
+
+DTCG2025.10 JSON is selected for diagram style tokens. It is a Community Group specification,
+not a W3C Recommendation. Diagram structure/schema data is separate from style tokens. Current
+app theme migration is a distinct parity-preserving task; no recolor or native rollout is implied.
+Generate schema SVGs/dictionary from unchanged reference SQL, reviewed notes and documentation-only
+job definitions. Retire the old CLI/dependency/layout files and duplicate diagram sources. Original
+approved bytes remain retrievable from commit e08f304; old hashes describe that historical revision,
+not cleaned current prose. No schema/ABI/runtime authority is broadened by changing review format.

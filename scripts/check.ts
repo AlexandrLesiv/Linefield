@@ -14,6 +14,8 @@ const formatTargets = [
   "pnpm-workspace.yaml",
   "scripts",
   "shared/theme",
+  "shared/diagrams",
+  "shared/schema",
   "shared/localization",
   "apps/web/src",
   "apps/web/tests",
@@ -80,6 +82,14 @@ try {
     }
   }
   for (const args of [
+    ["scripts/diagrams/generate.ts", "--check"],
+    ["scripts/schema/generate.ts", "--check"],
+    [
+      "--test",
+      "scripts/diagrams/*.test.ts",
+      "scripts/schema/*.test.ts",
+      "scripts/probes/library-schema/constraints.test.ts",
+    ],
     ["scripts/theme-validation.ts"],
     ["--test", "scripts/theme-validation.test.ts", "scripts/theme-resources/*.test.ts"],
     ["scripts/theme-resources.ts", "--check"],

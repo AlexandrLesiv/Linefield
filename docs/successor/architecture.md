@@ -9,18 +9,9 @@ the durable document. Prefer composition and explicit state machines over inheri
 
 ## Modules and dependency direction
 
-```mermaid
-flowchart TD
-    Input[AppKit pen, mouse, keyboard and controls] --> Adapter[Swift input adapters and presenters]
-    Adapter --> Bridge[editor-native: generated typed ABI and composition]
-    Bridge --> Engine[editor-engine: commands, state, geometry, history, codec, scene]
-    Bridge --> Services[editor-services: file worker, recovery storage, diagnostics sinks]
-    Bridge --> Renderer[editor-renderer: Skia and Metal]
-    Services --> Engine
-    Renderer --> Engine
-    Renderer --> Surface[AppKit-owned Metal surface]
-    Engine -. immutable projection and native effects .-> Adapter
-```
+![Architecture view](../diagrams/v2/historical-successor-components.svg)
+
+Presentation migrated under decision239; original approved source bytes remain at commit e08f304.
 
 Owner-selected crate split (2026-10-16): `editor-engine`, `editor-services`, `editor-renderer`,
 `editor-native`. The engine combines pure domain and application modules rather than
@@ -66,20 +57,9 @@ session/operation identity before work is scheduled. Swift never sends “mark s
 Do not introduce `NSDocument` as a second persistence authority; revisit its integration
 only with an explicit, reviewed division of responsibility.
 
-```mermaid
-stateDiagram-v2
-    [*] --> Idle
-    Idle --> Drawing: accepted pen down
-    Drawing --> Drawing: validated actual or predicted samples
-    Drawing --> Idle: pen up / commit one undo
-    Drawing --> Idle: Escape or focus loss / cancel
-    Idle --> Transforming: begin selected-stroke move or scale
-    Transforming --> Transforming: transient preview
-    Transforming --> Idle: release / commit one undo
-    Transforming --> Idle: Escape or focus loss / cancel
-    Idle --> Panning: navigation begins
-    Panning --> Idle: navigation ends or cancels
-```
+![Architecture view](../diagrams/v2/historical-tool-states.svg)
+
+Presentation migrated under decision239; original approved source bytes remain at commit e08f304.
 
 Specify conflicts explicitly in S02: reject tool switches during active interactions without
 queuing or cancellation (decision 75). An invalidating canvas remap cancels the interaction
@@ -89,20 +69,9 @@ only validated actual/corrected data becomes durable. Reject an invalid batch at
 
 ## Thread ownership and parallelism
 
-```mermaid
-flowchart LR
-    subgraph Main[macOS main thread]
-      Event[AppKit input] --> Command[Rust validation and command]
-      Command --> State[Editor state and immutable revision]
-      State --> Frame[Scheduled frame preparation]
-      Frame --> Skia[Skia encode and submit]
-      Completion[Apply matching completion] --> State
-    end
-    State -->|owned immutable snapshot| IO[Bounded background file worker]
-    IO -->|typed operation result| Completion
-    Command -->|bounded structured events| Logs[Background diagnostics drain]
-    Skia -->|asynchronous command buffer| GPU[Metal GPU execution and display]
-```
+![Architecture view](../diagrams/v2/historical-native-execution.svg)
+
+Presentation migrated under decision239; original approved source bytes remain at commit e08f304.
 
 Owner selected this macOS starting topology on 2026-10-16: main-thread ownership for the
 editor and Skia context, with an early performance checkpoint. This avoids cross-thread

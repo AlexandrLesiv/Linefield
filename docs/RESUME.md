@@ -7,14 +7,20 @@ Delivered source/tests/docs are consolidated in the bootstrap PR; ignored local 
 recovery copies remain preserved. No reset/clean,
 main merge or release. Read AGENTS.md, objectives, latest decisions and the assigned task.
 
-Current executable task: [DX-G01 bootstrap](../tasks/DX-G01.md), branch
-`codex/dx-g01-workflow-bootstrap`. Decision238 approves SVG v2 and the task/branch/PR/fresh-chat
-workflow. Owner configured public origin `https://github.com/AlexandrLesiv/Linefield.git` and
-explicitly authorized reviewed source/documentation publication. Private captures/backups stay
-local. Full9295-entry pre-edit recovery copy verified under .build-cache/bootstrap-preservation-2026-10-19.
-[Bootstrap PR #1](https://github.com/AlexandrLesiv/Linefield/pull/1) is open for owner review.
-Reviewed candidate commit7083fb4 contains source/docs/evidence; the follow-up records this status.
-No bootstrap merge is authorized; owner review precedes integration.
+Current executable task: [DX-G02 shared documentation](../tasks/DX-G02.md), branch
+codex/dx-g02-shared-documentation, explicitly stacked on [DX-G01 / PR #1](https://github.com/AlexandrLesiv/Linefield/pull/1)
+at e08f304. PR #1 is owner-review, not merged. Decision239 permits independent ready tasks while
+other PRs await review and replaces the hosted schema diagram workflow with generated native SVG.
+[Parallel task policy](workflow/parallel-tasks.md) and [task board](../tasks/README.md) define hard,
+contract and independent dependencies, owned paths, branch bases and parent-first stacked integration.
+S02-P01/S02-C01 can be claimed independently within their synthetic/contract scope; DX-T01 app token
+migration waits for its token contract. No production engine/library implementation is approved.
+
+Shared diagram definitions and DTCG2025.10 style tokens generate19 architecture/workflow views;
+shared schema inputs generate17-table/146-column/11-relationship review data, four SVG views and
+complete dictionary. Reference SQL is unchanged; jobs remain proposal-only. No external schema CLI
+or account is needed. Earlier approval bytes live at Git e08f304; historical hashes do not describe
+cleaned current prose. Private captures/backups remain local. Owner review/merge is still required.
 
 The decision235 away-work window ended2026-10-18; its heartbeat remains PAUSED.
 Decision236 records owner approval of D1–D3. Current work prepares concrete storage/deletion/engine
@@ -80,8 +86,8 @@ the task and bootstrap evidence; do not infer merge or production readiness from
 Owner-requested documentation follow-up: [Git strategy](workflow/git-strategy.md) recommends a
 reviewed-main/task-branch workflow and a preservation-first transition from the current dirty
 foundation branch. [Visual architecture plan](workflow/visual-architecture.md) specifies planner
-deliverables, native SVG presentation and the existing DBML/dbdocs exception.
-DX-G01 is implementing the approved workflow; no new agent, CI protection or renderer dependency
+deliverables and generated native SVG presentation, including schema views under decision239.
+DX-G01 established the workflow; DX-G02 adds parallel task lanes and generated shared styles; no new agent, CI protection or renderer dependency
 is implied. See its actual PR/integration status rather than the earlier planning snapshots.
 Routine documentation needs no new approval; material architecture gates remain unchanged.
 Native SVG style v2 is the adopted diagram style. Existing historical snapshots remain preserved;

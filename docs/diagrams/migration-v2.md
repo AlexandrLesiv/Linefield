@@ -2,13 +2,11 @@
 
 Prepared 2026-10-19 after the owner approved style v2 and the task / branch / PR workflow.
 This is a notation and documentation migration, not architecture implementation or new scope.
-The starting source inventory contains **16 Mermaid blocks in 11 Markdown files**, plus two
+The starting source inventory contains **16 original text-diagram blocks in 11 Markdown files**, plus two
 new workflow views. Earlier “12 files” estimates were not the actual inventory.
 
-Style: [v2 specification](../design/diagram-style-v2.md), retaining v1 semantic conventions.
-Each new SVG is its own editable source. No renderer dependency, external assets or remote font
-was added. Diagrams keep text selectable, title/description, 14 px minimum type, opaque light
-canvas and explicit status. View at full size; a thumbnail is not the complete readable artifact.
+Style: [v2 specification](../design/diagram-style-v2.md). Inputs, tokens and generated sources are
+linked from the [current index](README.md). Earlier migration evidence applies to its original commit.
 
 ## Source-to-artifact map and text equivalents
 
@@ -58,37 +56,10 @@ dashed guides mean participant lifetime only. A future/proposed path is written 
 In dense historical views, a small background gap at a crossing separates independent routes;
 it is not a junction or an additional relationship. Directed endpoints remain authoritative.
 
-The S02 database/interfaces block is a **flowchart**, not an ER diagram. Its replacement shows
-three database-file boundaries only. DBML/layout and hosted dbdocs retain schema authority;
-no physical ER export, schema publication or replacement was performed.
+The historical storage-boundary diagram is a flowchart, not a physical schema view. Current physical
+views are generated separately under docs/database/generated. Decision239 retires the previous
+hosted-tool exception; SQL and shared annotations determine schema views. No schema behavior changes.
 
-The deletion source's old header says schema approval is absent. Decision237 and the current
-handoff supersede that stale statement; the SVG labels schema approval separately from proposed
-mechanisms. This notation migration does not alter approved schema content or infer production
-deletion permission. The lead may reconcile current-status prose while retaining original
-approval/evidence snapshots.
-
-Existing native-gallery/drawing-screen mockups, the liked first SVG comparison and v1/v2 style
-approval artifacts are historical design assets, not active Mermaid diagrams. They are not
-mass-restyled or reinterpreted as new application designs. This set does not add a permanent
-architecture planner agent or change concurrency rules.
-
-## Review and evidence
-
-The lead renders the new artifacts and checks links/source placement; the designer inspects
-representative and dense views; fresh independent review checks semantic fidelity and statuses.
-XML/source-size checks are appropriate; application tests are not evidence for documentation
-notation. Record exact file hashes and rendered artifacts in the migration evidence packet.
-Missing or uninspected renders remain gaps until recorded. Diagram completion does not close
-storage adoption, native integration, language review, security or product implementation gates.
-
-Designer verification on 2026-10-19: all 18 initial renders inspected; ambiguous independent
-routes and the workflow failure/verification branches were corrected. All 18 were rendered
-again using a fresh headless Chrome page per SVG, waiting for fonts and two animation frames;
-changed diagrams and the footer-capture regression were visually rechecked. No text overflow
-or pairwise text-box overlap was reported. XML validation passed; each SVG is below 200 lines.
-[Render manifest](../../quality/bootstrap-v1/diagram-renders.json) records exact source and local
-preview hashes. Captures are local review artifacts, not native accessibility/runtime evidence.
-An initial sandboxed Chrome launch failed; scoped approved headless execution completed. No
-foreground UI, remote publication or application behavior was involved. Independent integration
-review remains the lead's responsibility; designer inspection is not a user study.
+Decision239 also adds parallel-task-lanes.svg and replaces remaining historical fenced diagrams
+with equivalent SVG links or plain-text relationship notation. Original reviewed bytes remain in
+Git at e08f304; prior approval hashes still identify that revision.

@@ -5,7 +5,7 @@
 
 Status: PENDING OWNER REVIEW; NOT IMPLEMENTED. Prepared 2026-10-17.
 The owner delegated recommended defaults after RC1–RC11; decision 208 records that
-delegation, not approval of this exact artifact. [Grouped DBML](review.dbml) is the review
+delegation, not approval of this exact artifact. [Grouped DBML (historical)](https://github.com/AlexandrLesiv/Linefield/blob/e08f304/docs/database/review.dbml) is the review
 entry point. [Historical v2](history/s02-v2/README.md) retains exact prior local sources;
 quality/S02-v2-review.json and the original hosted approval are unchanged.
 

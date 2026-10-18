@@ -1,0 +1,212 @@
+{
+  "browser": "155.0.8059.80",
+  "results": [
+    {
+      "source": "docs/diagrams/v2/developer-evidence-flow.svg",
+      "sha256": "575b3c279fbb8a6c34db6aff23868669fac954dca9b79c35c8a183eced949144",
+      "previewLocal": ".build-cache/g02-renders/developer-evidence-flow.svg.png",
+      "previewSha256": "48bfb7f7d238e32b2749eec93f13a5c18dc5023fb3af8173bf51b71cfdf5a118",
+      "sameSourceAsPrior": true,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/diagrams/v2/gallery-departure.svg",
+      "sha256": "5c1923a52ec2497769104b2bb177a5ada6b947ffae67feec692c165e614c8097",
+      "previewLocal": ".build-cache/g02-renders/gallery-departure.svg.png",
+      "previewSha256": "490928fed52277e9756bf0ca52474b3cc5451534e87f7fcbb87beab5428aa136",
+      "sameSourceAsPrior": true,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/diagrams/v2/git-integration-loop.svg",
+      "sha256": "123fe6869834f2532de389930ebe069de1f6392819daa3749f3c30990b5166b0",
+      "previewLocal": ".build-cache/g02-renders/git-integration-loop.svg.png",
+      "previewSha256": "9962b17441a9dd728fb8cc1ea72be3e37c1c19425e3e2031117bad18482e30c1",
+      "sameSourceAsPrior": true,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/diagrams/v2/historical-native-discovery.svg",
+      "sha256": "c6b278b87232c62872d64aef855483fcdd8db6eae3e84c1a17ae04fbc1036d48",
+      "previewLocal": ".build-cache/g02-renders/historical-native-discovery.svg.png",
+      "previewSha256": "156d654a384b99d922cb345c82c72a5cdb1984df949f5fc945d0fd0a26160af1",
+      "sameSourceAsPrior": true,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/diagrams/v2/historical-native-execution.svg",
+      "sha256": "5b1959e91641967c935c9329232ade8141d0f4629d4e4676c5c6dad9ba2d7b25",
+      "previewLocal": ".build-cache/g02-renders/historical-native-execution.svg.png",
+      "previewSha256": "ef59e578c93533a2523bc614a319e645647937a0fb7930d1a4a66f976ad70914",
+      "sameSourceAsPrior": true,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/diagrams/v2/historical-owner-states.svg",
+      "sha256": "da8204994075320c502b304c030bcf564422725f81742ad54e13662a446be44d",
+      "previewLocal": ".build-cache/g02-renders/historical-owner-states.svg.png",
+      "previewSha256": "ebea7352a25d9f7ef249388bffc1347cf08a915b8d94e4a6163dca6c1b5615be",
+      "sameSourceAsPrior": true,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/diagrams/v2/historical-rename.svg",
+      "sha256": "9a36cef6b49f4a696cad76acb10ae1a8ff38d23cdf66a05a8412c1a7c7910c63",
+      "previewLocal": ".build-cache/g02-renders/historical-rename.svg.png",
+      "previewSha256": "f2f8f4e07d874bb2940335172a2592e31b0ff7e90b0618da53e56bf3f213f617",
+      "sameSourceAsPrior": true,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/diagrams/v2/historical-storage-boundaries.svg",
+      "sha256": "fec0d1363db9d10d66396d916a7b482e7e44161009a4b1e25e75f2ecf1f19394",
+      "previewLocal": ".build-cache/g02-renders/historical-storage-boundaries.svg.png",
+      "previewSha256": "a4c2225d8363b91378c01b315be2af8e9f077c23d1bb5f4e26a44411bbbd9666",
+      "sameSourceAsPrior": true,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/diagrams/v2/historical-successor-components.svg",
+      "sha256": "3991cf5ef1fb4fb08e56179150fb393be8669ae1a2aa1b32c55b0279ae69c7dc",
+      "previewLocal": ".build-cache/g02-renders/historical-successor-components.svg.png",
+      "previewSha256": "a13a9e643b850dd6cb1b514e75223e554106a52fdd3bcfbbd2819d8d6df53590",
+      "sameSourceAsPrior": true,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/diagrams/v2/historical-tool-states.svg",
+      "sha256": "4e3c17f3dd27836bde2224229890d24fa07aa19aa60a299f80001acb4be24c7e",
+      "previewLocal": ".build-cache/g02-renders/historical-tool-states.svg.png",
+      "previewSha256": "59d77afc65d9da680c1b6fddc51f2b72323900cd50f183cd4ddfa947392f8047",
+      "sameSourceAsPrior": true,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/diagrams/v2/incremental-coordination.svg",
+      "sha256": "3f32f36e238a43382a95c961e78434b100ca629fa8195a19a791e046e4a4ec93",
+      "previewLocal": ".build-cache/g02-renders/incremental-coordination.svg.png",
+      "previewSha256": "17874856bf042c4781dc8be10c428c92b3680386ecc4bb04b7a9c8e1c1c41cc9",
+      "sameSourceAsPrior": true,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/diagrams/v2/localization-boundaries.svg",
+      "sha256": "fae8f87a0cdda254a5b6362e7905626c76c50382db38cdd1294f103eec08bef0",
+      "previewLocal": ".build-cache/g02-renders/localization-boundaries.svg.png",
+      "previewSha256": "773353e3e64fdc52db095b7826cceffe498e4bc9729de11fda6b4b966fac02c9",
+      "sameSourceAsPrior": true,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/diagrams/v2/next-chat-handoff.svg",
+      "sha256": "af1db5bc61eb83f82bee927d48dac1bc974775e88245110f187d9013b88082bc",
+      "previewLocal": ".build-cache/g02-renders/next-chat-handoff.svg.png",
+      "previewSha256": "fada58ad8427fe4d8ae80edcac7009dcba7cb457c378d687df4d6693803af363",
+      "sameSourceAsPrior": true,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/diagrams/v2/parallel-task-lanes.svg",
+      "sha256": "6aa66b58bfdd67d6165685dce6ebf7cf1b725d676540be69ae96977d17b3d8f1",
+      "previewLocal": ".build-cache/g02-renders/parallel-task-lanes.svg.png",
+      "previewSha256": "1919c505dc16abe06fbf537e303539be26e1910918392802ef3c9a61fde54717",
+      "sameSourceAsPrior": null,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/diagrams/v2/recovery-authority.svg",
+      "sha256": "31a3c93b0dc77aa13191fdb2c8e497219f4db8a802d3cf0fd3479f21481e2002",
+      "previewLocal": ".build-cache/g02-renders/recovery-authority.svg.png",
+      "previewSha256": "0962454fcd1e16746c74aeba2f55b0b3983c5438924f0c24500efaff99cc5191",
+      "sameSourceAsPrior": true,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/diagrams/v2/recovery-durable-ack.svg",
+      "sha256": "a28a3c13622324b99ad670731157285a3311ae0620e3e804d8ae0d4e3cb42251",
+      "previewLocal": ".build-cache/g02-renders/recovery-durable-ack.svg.png",
+      "previewSha256": "4a3467900bd5c0d480844eb2e1199c40d1c8283a1c0424e6923b87bca8cb5645",
+      "sameSourceAsPrior": true,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/diagrams/v2/recovery-reconnect.svg",
+      "sha256": "d4615ad9d9e110307be4bac222e44d2c477408875034efffbdf2e42c9444640f",
+      "previewLocal": ".build-cache/g02-renders/recovery-reconnect.svg.png",
+      "previewSha256": "b81b85c88c86f260d323a0cfb59666373dfd773a27ab4cac79f403a32acd90b9",
+      "sameSourceAsPrior": true,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/diagrams/v2/shared-e2e.svg",
+      "sha256": "108c400a2fed7625a8fa439e8933b96d89a1b46c8b79c792bde582dd8d753a3b",
+      "previewLocal": ".build-cache/g02-renders/shared-e2e.svg.png",
+      "previewSha256": "e2ca96449694a8f64533f78da10c4f25cc671448b7805f56f630661b67c1c8c0",
+      "sameSourceAsPrior": true,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/diagrams/v2/task-pr-lifecycle.svg",
+      "sha256": "e7b7f37d681dfc992314f19a4d668c451a4f0cae34827ba2a194a5430fe430ac",
+      "previewLocal": ".build-cache/g02-renders/task-pr-lifecycle.svg.png",
+      "previewSha256": "c318d613d4b921948e000b2e55b69e6e746b1ceba3446c760b0ffedb5b07a51d",
+      "sameSourceAsPrior": true,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/database/generated/catalog.svg",
+      "sha256": "7cdd3737f48dd4c5d555a914f5e457648518f459c8e7d0cec61a32584b31b115",
+      "previewLocal": ".build-cache/g02-renders/catalog.svg.png",
+      "previewSha256": "b0dc9ea79bae06ae866d2dbfcad3f6ad8f6ad89f619fe8abff73424cf3826647",
+      "sameSourceAsPrior": null,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/database/generated/drawing.svg",
+      "sha256": "bae08387f496db0b1b3f42a220940925abeaac3135432a49cfcbe17193dc7f43",
+      "previewLocal": ".build-cache/g02-renders/drawing.svg.png",
+      "previewSha256": "e9aefc9a57a6eb9a4a5ce92dfff11aca349f858a24e7728538e861f5c67f488a",
+      "sameSourceAsPrior": null,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/database/generated/jobs.svg",
+      "sha256": "5bebe802d561a561e7c17968a06a23555e2373cb005164fc5cd81f783a3d7175",
+      "previewLocal": ".build-cache/g02-renders/jobs.svg.png",
+      "previewSha256": "37c1f08e140a76f68923a2618f6b2139d4e9231bd46258ab6fe3ed09c45c431c",
+      "sameSourceAsPrior": null,
+      "outside": [],
+      "overlaps": []
+    },
+    {
+      "source": "docs/database/generated/overview.svg",
+      "sha256": "ce23f7b80027afee93a44469620080a98b801198dd4f8998b128172e415bd0f4",
+      "previewLocal": ".build-cache/g02-renders/overview.svg.png",
+      "previewSha256": "28f4f227d0db2c61cbf8973e1243bcb24a4ee4ebe3ba4278b20237d6e02966ce",
+      "sameSourceAsPrior": null,
+      "outside": [],
+      "overlaps": []
+    }
+  ]
+}

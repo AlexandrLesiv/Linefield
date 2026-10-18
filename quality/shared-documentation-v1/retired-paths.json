@@ -1,0 +1,22 @@
+[
+  "docs/database/catalog.dbml",
+  "docs/database/deletion-v4/catalog-delta.dbdiagram",
+  "docs/database/deletion-v4/catalog-delta.dbml",
+  "docs/database/deletion-v4/review.dbml",
+  "docs/database/drawing.dbml",
+  "docs/database/history/s02-v2/catalog.dbml",
+  "docs/database/history/s02-v2/drawing.dbml",
+  "docs/database/history/s02-v2/jobs.dbml",
+  "docs/database/history/s02-v2/review.dbdiagram",
+  "docs/database/history/s02-v2/review.dbml",
+  "docs/database/jobs.dbml",
+  "docs/database/review.dbdiagram",
+  "docs/database/review.dbml",
+  "quality/continuation-2026-10-19/published-review.dbdiagram",
+  "quality/continuation-2026-10-19/published-review.dbml",
+  "docs/database/cli.md",
+  "docs/database/cli-security.md",
+  "docs/database/cli-research.md",
+  "docs/database/diagram-presentation.md",
+  "docs/database-visualization-options.md"
+]

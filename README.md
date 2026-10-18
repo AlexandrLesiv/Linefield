@@ -29,4 +29,8 @@ Current review: [remaining decisions and recommendations](docs/planning-review.m
 Owner decisions and approvals: [responsibility index](docs/owner-responsibilities.md).
 On-demand architecture checks: [$linefield-review](docs/workflow/milestone-review.md), a project-local instruction skill; no executable runner or automatic milestone pass.
 
-Root tooling: use Node 24.12.0 and pnpm 10.26.0, then pnpm install --frozen-lockfile and pnpm check. TypeScript scripts run directly through Node. See [tooling](docs/tooling.md) and [database CLI](docs/database/cli.md) for individual commands and credential boundaries.
+Root tooling: use Node 24.12.0 and pnpm 10.26.0, then pnpm install --frozen-lockfile and pnpm check. TypeScript scripts run directly through Node. See [tooling](docs/tooling.md) and [database CLI (historical)](https://github.com/AlexandrLesiv/Linefield/blob/e08f304/docs/database/cli.md) for individual commands and credential boundaries.
+
+Independent ready tasks can progress while other PRs await review. See the [parallel task policy](docs/workflow/parallel-tasks.md)
+and [task board](tasks/README.md). Architecture and schema diagrams are generated from shared
+definitions and DTCG style tokens; use the [diagram index](docs/diagrams/README.md).

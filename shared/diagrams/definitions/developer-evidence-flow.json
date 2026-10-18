@@ -1,0 +1,410 @@
+{
+  "width": 1440,
+  "height": 1056,
+  "title": "One action layer, reusable evidence",
+  "description": "Zed tasks and command-line entry points share action and reporting boundaries.",
+  "elements": [
+    {
+      "tag": "rect",
+      "attrs": {
+        "width": "1440",
+        "height": "1056",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "64",
+        "class": "meta"
+      },
+      "text": "LINEFIELD / DIAGRAM LANGUAGE v2"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "64",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "MIXED · CLI EXISTS / FUTURE VIEWS PLANNED"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "123",
+        "class": "title"
+      },
+      "text": "One action layer, reusable evidence"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "161",
+        "class": "body"
+      },
+      "text": "Zed tasks and command-line entry points share action and reporting boundaries."
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M376 298H448V354H520",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M376 482H448V398H520",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M824 378H1008",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1172 460V544",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1172 660V712H672V768",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1172 712V768",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M376 838H520",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M224 908V944H1172V908",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "240",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.presentation}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "268",
+        "class": "meta"
+      },
+      "text": "ENTRY"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "300",
+        "class": "node"
+      },
+      "text": "Zed project tasks"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "424",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.presentation}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "452",
+        "class": "meta"
+      },
+      "text": "ENTRY"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "484",
+        "class": "node"
+      },
+      "text": "Command line"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "520",
+        "y": "320",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "348",
+        "class": "meta"
+      },
+      "text": "ACTIONS"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "380",
+        "class": "node"
+      },
+      "text": "Node .ts actions"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "320",
+        "width": "328",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "348",
+        "class": "meta"
+      },
+      "text": "FUTURE TOOL INTEGRATION"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "380",
+        "class": "node"
+      },
+      "text": "Cargo, Xcode and later"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "404",
+        "class": "node"
+      },
+      "text": "platform tools"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "544",
+        "width": "328",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "572",
+        "class": "meta"
+      },
+      "text": "EVIDENCE"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "604",
+        "class": "node"
+      },
+      "text": "Versioned evidence and"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "628",
+        "class": "node"
+      },
+      "text": "metrics"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "768",
+        "width": "304",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.presentation}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "796",
+        "class": "meta"
+      },
+      "text": "PLANNING RECORDS"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "828",
+        "class": "node"
+      },
+      "text": "Tasks, decisions and"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "852",
+        "class": "node"
+      },
+      "text": "design review approvals"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "520",
+        "y": "768",
+        "width": "304",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "796",
+        "class": "meta"
+      },
+      "text": "FUTURE VIEW"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "828",
+        "class": "node"
+      },
+      "text": "Local workbench views"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "768",
+        "width": "328",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "796",
+        "class": "meta"
+      },
+      "text": "FUTURE VIEW"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "828",
+        "class": "node"
+      },
+      "text": "Static CI report views"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M72 984H1368",
+        "stroke": "{diagram.color.divider}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "1016",
+        "class": "meta"
+      },
+      "text": "Notation migration only · See source packet for authority and evidence"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "1016",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "2026-10-19 · Full-size SVG"
+    }
+  ]
+}

@@ -1,7 +1,9 @@
 # Linefield diagram style v2 — visual refinement proposal
 
-Status: **proposed, not adopted**, 2026-10-19. The owner asked for a more attractive diagram UI.
-This is an alternative to [v1](diagram-style-v1.md), not a silent replacement of that snapshot.
+Status: **adopted**, decisions238–239. Current diagram style values are authored once in
+shared/diagrams/style.tokens.json (DTCG2025.10); shared definitions generate SVG review artifacts.
+This document describes the approved appearance. Original approval bytes remain at Git e08f304.
+The earlier [v1](diagram-style-v1.md) is historical; retained semantic conventions still apply.
 The editable [SVG review board](diagram-style-v2/review-board.svg) is 1440 × 1160 units.
 
 ## What improves
@@ -82,13 +84,9 @@ proposed, blocked and historical documentation. Group colors carry no adoption m
 
 ## Approval and review boundary
 
-Choose **visual style v2** if this direction is preferred. Approval would adopt its visual rules
-for newly authored or substantively revised project diagrams, alongside v1's retained semantic
-conventions. It would not approve example architecture, application UI, a production component,
-new tools or a database schema. DBML/dbdocs remains the hosted schema-review exception.
-
-Preserve v1 and historical approvals. Apply the selected style gradually; no bulk historical
-restyling. Routine diagrams of approved behavior need no new owner approval, while material
-architecture choices retain existing gates. This proposal installs no renderer or automated gate.
-Lead renders the board, the designer inspects it, and an independent reviewer checks readability
-and meaning. Record those results before treating the review packet as complete.
+Decisions238–239 adopt these visual rules for generated architecture/workflow/schema diagrams.
+They do not approve example architecture, app UI, a production component or schema behavior.
+Canonical style tokens and shared definitions drive generation; do not edit generated outputs.
+Original boards are historical approval snapshots. Routine conforming documentation needs no
+new owner approval; material architecture changes retain their existing gates. Designer visual
+inspection and independent semantic review supplement XML/layout/drift checks.

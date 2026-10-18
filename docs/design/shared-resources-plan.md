@@ -1,3 +1,7 @@
+Current2026-10-19: decision239 adopts DTCG2025.10 JSON for shared diagram style tokens.
+Application theme conversion is the separate DX-T01 parity task; locales remain typed TypeScript.
+The historical authoring-format discussion below describes the implemented application pipeline.
+
 # Shared resource authoring and platform boundaries
 
 Status2026-10-17: owner approved the typed TypeScript catalog migration (decision227). Theme and localization authoring now use typed TypeScript, with all12 generated locale files byte-identical and the palette unchanged; generated output formats remain unchanged. Decision230 adds deterministic native theme resource generation; native consumers and the other sharing candidates below remain future work.
@@ -21,7 +25,7 @@ Recommended boundary: shared resources/specifications own app colors, spacing, t
 
 Only color and localization sharing/generation exist today. Add other token categories and component contracts as a reviewed screen needs them; this note does not claim a complete shared component library. Tokens alone cannot make different default widgets visually identical. Host component work and visual/interaction verification will still be needed. An all-Skia UI or another single UI framework would be a separate architecture choice with text, focus, accessibility and host-integration costs.
 
-Background: [DTCG's platform-independent design-token model](https://www.designtokens.org/tr/2025.10/format/#introduction) explains translation into host resources; its interchange format is not being adopted here. [Compose custom design systems](https://developer.android.com/develop/ui/compose/designsystems/custom) demonstrates that a host toolkit and its default Material appearance are separate choices. Keep actual source/output format decisions and host feasibility distinct.
+Background: [DTCG's platform-independent design-token model](https://www.designtokens.org/tr/2025.10/format/#introduction) explains translation into host resources; its format now supplies diagram style authoring; application conversion is tracked separately. [Compose custom design systems](https://developer.android.com/develop/ui/compose/designsystems/custom) demonstrates that a host toolkit and its default Material appearance are separate choices. Keep actual source/output format decisions and host feasibility distinct.
 
 ## Selected authoring format
 
