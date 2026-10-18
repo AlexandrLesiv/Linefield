@@ -1,13 +1,30 @@
+import {
+  propertyValue,
+  propertyTrack,
+  drawingProperty,
+  propertyWidth,
+  propertyOpacity,
+  propertySmoothing,
+  propertyInput,
+} from "./drawing-controls.css.ts";
 import { element } from "./dom.ts";
 import { t } from "./locale.ts";
 import { drawingIcon } from "./drawing-icons.ts";
 import { record } from "./diagnostics.ts";
+const propertyStyles = {
+  width: propertyWidth,
+  opacity: propertyOpacity,
+  smoothing: propertySmoothing,
+};
 export type Property = "width" | "opacity" | "smoothing";
 export function drawingRange(property: Property, initial: number, update: () => void) {
-  const label = element("label", `drawing-property property-${property}`);
+  const label = element(
+    "label",
+    `drawing-property property-${property} ${drawingProperty} ${propertyStyles[property]}`,
+  );
   const name = t(`canvas.${property}`);
   label.title = name;
-  const input = element("input");
+  const input = element("input", propertyInput);
   input.type = "range";
   input.min = property === "width" ? "1" : "0";
   input.max = property === "width" ? "32" : "100";
@@ -19,7 +36,7 @@ export function drawingRange(property: Property, initial: number, update: () => 
       label.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "instant" });
     }
   });
-  const value = element("span", "property-value");
+  const value = element("span", `property-value ${propertyValue}`);
   value.setAttribute("aria-hidden", "true");
   const number = new Intl.NumberFormat(navigator.language);
   const percent = new Intl.NumberFormat(navigator.language, { style: "percent" });
@@ -101,7 +118,7 @@ export function drawingRange(property: Property, initial: number, update: () => 
     keyboardAdjustment = false;
   });
   input.addEventListener("blur", cancel);
-  const track = element("span", "property-track");
+  const track = element("span", `property-track ${propertyTrack}`);
   track.append(input);
   label.append(drawingIcon(property), value, track);
   return { label, input, cancel, render };

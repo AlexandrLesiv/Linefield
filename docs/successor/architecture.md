@@ -249,7 +249,7 @@ limits before implementation; no custom IPC/daemon or new thread topology is aut
 
 ## Batch 8 approved durable-export policies (decisions 132-138)
 
-Use a separate SQLite job database and dedicated immutable snapshot area; exact DBML/source
+Use a separate SQLite job database and dedicated immutable snapshot area; exact schema source/source
 representation still needs review. Accepted Export captures before its panel in bounded memory;
 persist after destination confirmation, with an honest preparing/durable boundary. Automatically
 resume only validated safe recovered work; pause uncertain publication/access and changed targets.

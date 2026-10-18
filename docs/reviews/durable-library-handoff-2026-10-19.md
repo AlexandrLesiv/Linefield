@@ -17,7 +17,7 @@ recoverable removals, exact-set durable departure after destination readiness. T
   the explicit WebKit case. Headless browser permission was granted; no Computer Use was needed.
 - Web type checks, lint, formatting, production build and repository checks passed. Final assets:
   `index-DCSOpgQJ.js` and `index-z7JnId1S.css`. Exact source/test/build hashes and runtime report:
-  [manifest](../../quality/continuation-2026-10-19/final-manifest.json),
+  [Historical evidence](https://github.com/AlexandrLesiv/Linefield/commit/b0cb531),
   [browser results](../../quality/continuation-2026-10-19/browser/final-results.json).
 - Designer source review accepted the focus correction. Independent review corrected acquisition
   recovery and preserved multi-client coordinator attachment. These reviews do not certify native
@@ -33,14 +33,14 @@ recoverable removals, exact-set durable departure after destination readiness. T
 | [Durable UI states v1](../design/durable-library-states-v1.md) | Own/other-tab removal, reclaim, unknown outcome, accepted removal with failed destination, focus and announcements | Identified visual frames, precise recovery selector, en/uk review and actual durable scenarios |
 
 Schema-only publication was explicitly authorized by the owner and succeeded through pinned CLI0.6.3.
-Hosted project: [Linefield schema review](https://dbdocs.io/AlexandrLesiv/Linefield-S02-proposal-v1),
+Historical publication record: [Git snapshot](https://github.com/AlexandrLesiv/Linefield/commit/b0cb531),
 version label **S02 deletion v4.1 proposed 2026-10-19**. It contains17tables,146columns and11
 same-file relationships, with unchanged approved v3 table definitions plus proposed catalog additions.
 The original approved review source remains untouched; the new derivative corrects its project
-title/status/counts. Both standalone and combined DBML validate. No executable migration exists.
+title/status/counts. Both standalone and combined schema source validate. No executable migration exists.
 Authenticated CLI readback matched the local payload byte-for-byte (SHA-256
 `059104124b0a86b67df6d2cfb0d9a13652357d861edf8090616caef6b66717fa`).
-[Publication record](../../quality/continuation-2026-10-19/publication.json).
+[Historical evidence](https://github.com/AlexandrLesiv/Linefield/commit/b0cb531).
 Existing project was previously verified private; publication did not request a sharing change.
 Fresh hosted visual layout/privacy-setting inspection is still not performed. The tool returned
 the project URL, not an immutable version URL; local hashes identify the exact review payload.

@@ -1,60 +1,78 @@
-import { globalStyle } from "@vanilla-extract/css";
+import { style } from "@vanilla-extract/css";
 import { theme } from "./theme.css.ts";
-globalStyle(".drawing-grid", {
-  display: "grid",
-  gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-  gap: "24px",
-  maxWidth: "1372px",
-  margin: "0 auto",
-  padding: "16px 32px 32px",
-});
-globalStyle(".drawing-card, .new-cell", {
+import { empty } from "./states.css.ts";
+import { removed } from "./states.css.ts";
+export const drawingCard = style({
+  "@media": {
+    "(max-width: 639px)": {
+      aspectRatio: "auto",
+    },
+    "(min-width: 640px)": {
+      maxWidth: "420px",
+    },
+    "(hover: hover) and (pointer: fine)": {
+      selectors: {
+        "&:hover": {
+          boxShadow: "0 5px 18px rgb(0 0 0 / 12%)",
+        },
+      },
+    },
+  },
   position: "relative",
   aspectRatio: "1",
   minWidth: "0",
   borderRadius: "12px",
+  transition: "box-shadow 150ms ease",
+  selectors: {
+    "&[data-menu-open]": {
+      boxShadow: "0 5px 18px rgb(0 0 0 / 12%)",
+    },
+    "&[data-renaming]": {
+      boxShadow: "0 5px 18px rgb(0 0 0 / 16%)",
+    },
+  },
 });
-globalStyle(".drawing-tile, .new-tile", {
-  width: "100%",
-  height: "100%",
-  padding: "0",
-  border: "0",
-  borderRadius: "12px",
-  overflow: "hidden",
-});
-globalStyle(".drawing-tile", {
-  display: "flex",
-  flexDirection: "column",
-  background: theme.paper,
-  color: theme.paperText,
-  textAlign: "left",
-});
-globalStyle(".artwork", {
-  isolation: "isolate",
-  width: "100%",
-  flex: "1",
-  minHeight: "0",
-  background: theme.paper,
-  padding: "18px",
-  display: "grid",
-  placeItems: "center",
-});
-globalStyle(".artwork img", {
-  mixBlendMode: "darken",
-  width: "100%",
-  height: "100%",
-  minHeight: "0",
-  objectFit: "contain",
-  pointerEvents: "none",
-});
-globalStyle(".drawing-name", {
+export const drawingName = style({
+  "@media": {
+    "(hover: hover) and (pointer: fine) and (min-width: 640px)": {
+      opacity: "0",
+      transition: "opacity 130ms",
+      selectors: {
+        [`${drawingCard}:is(:hover, :focus-within, [data-menu-open]) &`]: {
+          opacity: "1",
+        },
+      },
+    },
+    "(max-width: 639px)": {
+      opacity: "1",
+    },
+  },
   padding: "14px 60px 16px 16px",
   fontSize: "15px",
   overflow: "hidden",
   textOverflow: "ellipsis",
   whiteSpace: "nowrap",
+  selectors: {
+    [`${drawingCard}[data-renaming] &`]: {
+      opacity: 1,
+    },
+  },
 });
-globalStyle(".more", {
+export const more = style({
+  "@media": {
+    "(hover: hover) and (pointer: fine) and (min-width: 640px)": {
+      opacity: "0",
+      transition: "opacity 130ms",
+      selectors: {
+        [`${drawingCard}:is(:hover, :focus-within, [data-menu-open]) &`]: {
+          opacity: "1",
+        },
+        '&[aria-expanded="true"]': {
+          opacity: "1",
+        },
+      },
+    },
+  },
   position: "absolute",
   bottom: "6px",
   right: "8px",
@@ -65,52 +83,86 @@ globalStyle(".more", {
   background: "transparent",
   color: theme.paperText,
   fontSize: "22px",
+  selectors: {
+    "&:hover": {
+      background: theme.paperHover,
+    },
+    '&[aria-expanded="true"]': {
+      background: theme.paperHover,
+    },
+  },
 });
-globalStyle('.more:hover, .more[aria-expanded="true"]', {
-  background: theme.paperHover,
+export const drawingGrid = style({
+  "@media": {
+    "(max-width: 959px)": {
+      gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+      gap: "24px",
+      padding: "16px 24px",
+    },
+    "(max-width: 639px)": {
+      gridTemplateColumns: "minmax(0, 1fr)",
+      gap: "20px",
+      padding: "16px 20px 110px",
+    },
+  },
+  display: "grid",
+  gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+  gap: "24px",
+  maxWidth: "1372px",
+  margin: "0 auto",
+  padding: "16px 32px 32px",
+  selectors: {
+    [`${empty} &`]: {
+      minHeight: "calc(100dvh - 140px)",
+      display: "grid",
+      placeItems: "center",
+    },
+  },
 });
-globalStyle(".new-tile", {
+export const drawingTile = style({
+  "@media": {
+    "(max-width: 639px)": {
+      height: "auto",
+    },
+  },
+  width: "100%",
+  height: "100%",
+  padding: "0",
+  border: "0",
+  borderRadius: "12px",
+  overflow: "hidden",
   display: "flex",
   flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: "18px",
-  background: "var(--new)",
-  color: "var(--text)",
-  border: "1px dashed var(--line)",
-  fontSize: "58px",
-  transition: "background 150ms,\n    box-shadow 150ms",
-});
-globalStyle(".new-tile span", {
-  fontSize: "18px",
-  fontWeight: "500",
-});
-globalStyle(".new-tile:hover", {
-  "@media": {
-    "(hover: hover) and (pointer: fine)": {
-      background: "var(--surface)",
-      boxShadow: "0 5px 18px rgb(0 0 0 / 12%)",
+  background: theme.paper,
+  color: theme.paperText,
+  textAlign: "left",
+  selectors: {
+    "&:active": {
+      filter: "brightness(0.96)",
+    },
+    [`${removed} &`]: {
+      visibility: "hidden",
     },
   },
 });
-globalStyle(".drawing-card", { transition: "box-shadow 150ms ease" });
-globalStyle(".drawing-card:hover", {
+export const artwork = style({
   "@media": {
-    "(hover: hover) and (pointer: fine)": {
-      boxShadow: "0 5px 18px rgb(0 0 0 / 12%)",
+    "(max-width: 639px)": {
+      aspectRatio: "4/3",
+      flex: "none",
     },
   },
+  isolation: "isolate",
+  width: "100%",
+  flex: "1",
+  minHeight: "0",
+  background: theme.paper,
+  padding: "18px",
+  display: "grid",
+  placeItems: "center",
 });
-globalStyle(".drawing-card[data-menu-open]", {
-  boxShadow: "0 5px 18px rgb(0 0 0 / 12%)",
-});
-globalStyle(".drawing-tile:active, .new-tile:active", {
-  filter: "brightness(0.96)",
-});
-globalStyle(".removed .drawing-tile", {
-  visibility: "hidden",
-});
-globalStyle(".removal", {
+
+export const removal = style({
   position: "absolute",
   inset: "0",
   display: "flex",
@@ -120,31 +172,26 @@ globalStyle(".removal", {
   gap: "18px",
   padding: "20px",
   borderRadius: "12px",
-  background: "var(--surface)",
+  background: theme.surface,
   textAlign: "center",
   overflowWrap: "anywhere",
 });
-globalStyle(".undo", {
+export const undo = style({
   padding: "10px 20px",
-  background: "var(--text)",
-  color: "var(--background)",
+  background: theme.text,
+  color: theme.background,
   border: "0",
   borderRadius: "8px",
 });
-globalStyle(".mobile-create", {
-  display: "none",
-});
-globalStyle(".empty .drawing-grid", {
-  minHeight: "calc(100dvh - 140px)",
-  display: "grid",
-  placeItems: "center",
-});
-globalStyle(".empty .new-cell", {
-  width: "min(360px, 100%)",
-});
-globalStyle(".empty-message", {
+export const emptyMessage = style({
   textAlign: "center",
   padding: "64px 20px",
 });
-globalStyle(".drawing-card[data-renaming]", { boxShadow: "0 5px 18px rgb(0 0 0 / 16%)" });
-globalStyle(".drawing-card[data-renaming] .drawing-name", { opacity: 1 });
+export const artworkImage = style({
+  mixBlendMode: "darken",
+  width: "100%",
+  height: "100%",
+  minHeight: "0",
+  objectFit: "contain",
+  pointerEvents: "none",
+});

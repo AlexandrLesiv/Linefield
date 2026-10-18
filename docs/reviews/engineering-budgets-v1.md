@@ -271,7 +271,7 @@ typed commands, f64 local precision and reviewed platform resource profiles.
 Region labels are not raster tiles or document UUIDs.
 
 Next concrete packet must reconcile stroke transforms, cross-region arithmetic/precision,
-viewport/hit-testing/indexing, DBML/typed declarations, migration/version consequences and
+viewport/hit-testing/indexing, schema source/typed declarations, migration/version consequences and
 boundary/failure/conformance tests. Keep the old approved S02 v2 snapshot immutable.
 Selected directions do not approve exact replacement columns/signatures or runtime code.
 The lead is obtaining scoped Rust review before presenting further owner tradeoffs;
@@ -366,7 +366,7 @@ need authorization within applicable task/tooling scope; no foreground session i
    min/max zoom/scale, width/pressure bounds, negative/near-extreme addresses and crossings.
    If evidence warrants a smaller span versus more sophisticated arithmetic/clipping, present
    that real tradeoff with measurements. Do not ask the owner to guess an untested bound.
-2. Exact schema/interface amendment approval: DBML/constraints/dictionary, anchored transforms,
+2. Exact schema/interface amendment approval: schema source/constraints/dictionary, anchored transforms,
    generated declaration proposal, canvas-local vs world DTOs, ownership/mapping generation,
    canonical command fingerprints, version/snapshot/import/export impact and tests.
 3. Cross-region rendering/selection conformance and limitations: clipped/rebased derived
@@ -390,7 +390,7 @@ clipping/splitting, original samples, stroke IDs/order and one-operation Undo.
 
 Owner selected RC9-A and RC10-A on 2026-10-17 (decisions 205–206). The two amendment
 proposals below are accepted directions for the final review packet. They are not a compiled
-ABI or final visualized DBML approval. Do not infer implementation or publication authority.
+ABI or final visualized schema source approval. Do not infer implementation or publication authority.
 The owner supplied an empty RC11 entry; no RC11 question is defined here or answer recorded.
 Exact tested per-stroke span remains deferred until numerical evidence exists.
 Scoped rust_engine planning review checked the field layout and identified missing
@@ -415,7 +415,7 @@ The schema adds four columns net: samples +2 and strokes +2 (two removals and fo
 additions in each table).
 Estimate actual SQLite/heap/batch costs with fixtures; do not treat raw field width as
 measured row cost or silently raise resource caps.
-Choices: A accept this column-layout proposal for the final DBML/constraint review;
+Choices: A accept this column-layout proposal for the final schema source/constraint review;
 B request revisions before producing that packet. Final visual approval remains separate.
 
 ### RC10 — distinct pointer/world types and Rust-owned viewport/transform math
@@ -457,7 +457,7 @@ B request revisions. Final exact ABI/visualized schema review and tests remain r
 
 Exact per-stroke span and required precision/clipping implementation depend on the complete
 arithmetic and render test evidence. Keep pending, show evidence when available. The next
-combined review must cover actual DBML delta, declaration layouts/ownership, canonical
+combined review must cover actual schema source delta, declaration layouts/ownership, canonical
 fingerprints, transform and viewport math, sample0/hydration ordering, tests and limitations.
 Do not add further preference rounds for field naming or settled sample/history policies.
 
@@ -482,7 +482,7 @@ Require known-point round trips, both-axis positive/negative region crossings, p
 selection/render/export parity and native flipped/unflipped adapter checks as applicable.
 
 The owner subsequently selected RC11-A (decision 207). The earlier empty entry was not approval.
-Prepare the consolidated DBML/exact ABI/ownership/test packet; exact tested
+Prepare the consolidated schema source/exact ABI/ownership/test packet; exact tested
 stroke span still needs numerical evidence. Handle dragging/click offset/scale-factor UX belongs
 to feature-specific UX and identified design, not an incidental architecture selection.
 No schema changes, executable probes, app implementation or publication authorized here.

@@ -2,7 +2,7 @@ Current proposal: [S02 consolidated v2](../reviews/S02-consolidated-v2.md). This
 
 # S02 schema proposal v1: constraints and remaining freeze gates
 
-These are documentation specifications, not executable migrations or tested DDL. DBML is visual documentation, not SQLite authority. Every table is proposed STRICT, with PRAGMA user_version as top-level version; application_id values must be assigned before migration code. Verify runtime supports STRICT and foreign_keys is enabled per connection; never use writable_schema to bypass unsupported formats.
+These are documentation specifications, not executable migrations or tested DDL. schema source is visual documentation, not SQLite authority. Every table is proposed STRICT, with PRAGMA user_version as top-level version; application_id values must be assigned before migration code. Verify runtime supports STRICT and foreign_keys is enabled per connection; never use writable_schema to bypass unsupported formats.
 
 ## SQL constraints to express in migration DDL
 
@@ -51,4 +51,4 @@ Fault/recovery: kill at every create/import/delete/upgrade/export boundary; cata
 
 Performance: measure row-based size/open/save and receipt/index overhead; no performance conclusions yet. Native/Wasm roundtrip feasibility remains separate; native success cannot establish browser VFS guarantees.
 
-Primary SQLite references checked 2026-10-16: https://www.sqlite.org/stricttables.html ; https://www.sqlite.org/foreignkeys.html ; https://www.sqlite.org/pragma.html . STRICT permits lossless type coercion and needs a compatible SQLite runtime. No DBML parser, migrations, native tests or store checks were run.
+Primary SQLite references checked 2026-10-16: https://www.sqlite.org/stricttables.html ; https://www.sqlite.org/foreignkeys.html ; https://www.sqlite.org/pragma.html . STRICT permits lossless type coercion and needs a compatible SQLite runtime. No schema source parser, migrations, native tests or store checks were run.

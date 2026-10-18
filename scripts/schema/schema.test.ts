@@ -17,7 +17,7 @@ const key = (database: string, table: string) => `${database}.${table}`;
 test("SCHEMA-01: frozen review fixture and unchanged SQL source hashes", () => {
   assert.equal(
     createHash("sha256").update(fixtureBytes).digest("hex"),
-    "da90ad3cb441b646c078d3729c9a5c3272b621abfc0928ab1f009eff13cf6422",
+    "b023939466f45b15d14331b4ba839ea5ffed3f345e60496c07869c26ae120653",
   );
   for (const item of list(baseline.referenceSql)) {
     const source = record(item);

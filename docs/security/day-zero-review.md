@@ -3,7 +3,7 @@
 Date: 2026-10-16. Scope: architecture/documentation assessment of the uncommitted Linefield scaffold;
 repository has no HEAD commit. No application implementation, penetration test, entitlement probe,
 dependency audit or runtime pass exists. Review snapshot hashes will be retained separately.
-Owner approved this review, not every proposed mitigation mechanism. Concrete S02/DBML/ABI/trust
+Owner approved this review, not every proposed mitigation mechanism. Concrete S02/schema source/ABI/trust
 choices still require review before code. Current decisions include no app encryption (146),
 sandbox from first macOS preview (145), fixed local library/future cloud boundary (144), typed Rust
 commands and generated FFI, one editor owner per drawing, multiple processes and durable exports.

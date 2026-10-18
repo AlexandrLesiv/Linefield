@@ -47,7 +47,7 @@ The main directions are selected; this is a grouped review inventory, not a clai
 technical setting is finalized. The owner reconfirmed rusqlite after discussing browser disk
 persistence/WAL on 2026-10-16. No implementation or browser storage runtime was authorized.
 
-1. Concrete persistence packet: DBML catalog/document tables, field types/IDs/indexes/constraints,
+1. Concrete persistence packet: schema source catalog/document tables, field types/IDs/indexes/constraints,
    revision ownership, safe create/import/delete/rebuild/migration sequences, recovery-copy
    retention and snapshot publication. SQLite, per-sample rows, separate transforms, metadata
    authority, automatic lossless upgrades, macOS WAL and durable Saved policy are settled.
@@ -108,7 +108,7 @@ is independent. The historical inventory above contains items since settled; con
 and planning-review.md's current outstanding inventory rather than reopening those choices.
 
 Remaining review packets: S00E security/role recommendation; S00F platform input and shared binding
-matrix; S00G store/day-zero requirements; concrete S02 DBML/ABI/coordination/lifecycle/budgets/toolchain;
+matrix; S00G store/day-zero requirements; concrete S02 schema source/ABI/coordination/lifecycle/budgets/toolchain;
 and identified design foundations/screens/motion. Product-emphasis and OS-selected-language details
 remain UX/i18n proposals. These need owner review with evidence/options, not an invented target
 number of further questions. No implementation, design review approval or security/compliance pass is implied.

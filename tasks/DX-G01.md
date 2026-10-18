@@ -45,8 +45,8 @@ git clean or delete build-cache while this is the retained recovery source. Mani
 the bootstrap evidence. Original branch remains codex/project-foundation; task branch preserves it.
 
 Entry reading: AGENTS.md, docs/RESUME.md, approved task-pr-chat plan, Git strategy and style v2.
-[Fresh validation and preservation evidence](../quality/bootstrap-v1/README.md) records root87,
-browser118, schema6, DBML validation and the SVG render inventory. Original committed foundation
+[Historical evidence](https://github.com/AlexandrLesiv/Linefield/commit/b0cb531) records root87,
+browser118, schema6, schema source validation and the SVG render inventory. Original committed foundation
 fbcc30c was published as remote main; task changes remain separate for owner PR review. After owner
 merge notification, verify merge identity/checks and provide a next-task prompt. Next candidate:
 bounded synthetic storage preservation investigation; production storage still blocked.

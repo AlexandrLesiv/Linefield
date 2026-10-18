@@ -16,8 +16,8 @@ xcuserdata/
 node_modules/
 
 # Never commit CLI authentication material
-**/.dbdiagram/.credentials.json
-**/.dbdiagram/.telemetry.json
+**/.credentials.json
+**/.telemetry.json
 
 /apps/web/dist/
 /apps/web/test-results/

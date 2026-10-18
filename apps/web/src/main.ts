@@ -1,3 +1,4 @@
+import { gallery as galleryStyle, srOnly, prototypeLabel } from "./styles.css.ts";
 import { createOverlayScrollbar } from "./overlay-scrollbar.ts";
 import { t } from "./locale.ts";
 import "./styles.css.ts";
@@ -23,10 +24,10 @@ const blankPreview: Drawing = {
   deleted: false,
 };
 const toolbar = createAppHeader();
-const gallery = element("main", "gallery");
-const status = element("p", "sr-only");
+const gallery = element("main", `gallery ${galleryStyle}`);
+const status = element("p", `sr-only ${srOnly}`);
 status.setAttribute("role", "status");
-const notice = element("p", "prototype-label", t("preview.disclaimer"));
+const notice = element("p", `prototype-label ${prototypeLabel}`, t("preview.disclaimer"));
 app.append(toolbar, gallery, notice, status);
 const announce = (text: string) => {
   status.textContent = text;

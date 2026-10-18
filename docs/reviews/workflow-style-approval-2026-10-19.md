@@ -23,8 +23,7 @@ semantic conventions where explicitly stated. V1 alone was not selected as the v
 
 Applies to new/substantively updated diagrams, not app UI themes or example architecture adoption.
 Preserve historical review sources and approved snapshots. Native SVG conversion must preserve
-technical meaning and status; diagram appearance cannot approve an old mechanism. DBML/dbdocs
-remains authoritative for hosted schema review; no new publication to that service is implied.
+technical meaning and status; diagram appearance cannot approve an old mechanism. Decision239 subsequently selected shared schema definitions and generated local SVG review views.
 
 Workflow adoption authorizes a bounded leaf task/branch/PR with owner integration and a verified
 next-chat handoff. The bootstrap is a one-time preservation/integration transition: old local

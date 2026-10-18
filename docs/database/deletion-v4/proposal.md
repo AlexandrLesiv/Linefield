@@ -1,6 +1,7 @@
 # Durable gallery removal amendment v4.1
 
-Status: **PROPOSED mechanisms; NOT IMPLEMENTED; NOT OWNER-APPROVED schema.** Prepared 2026-10-19.
+Current status: **schema shape approved by decision237; mechanisms proposed and not implemented.**
+Presentation/tooling superseded by decisions239–240; original review bytes remain in Git history.
 Base fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7 plus preserved uncommitted work. Database specialist
 owns this directory; lead integrates Rust, designer, security and independent review. No executable
 DDL, application code, hosted publication or dependency installation is included.
@@ -21,16 +22,16 @@ and a committed exact departure set. Existing lifecycle rows remain responsible 
 physical cleanup. No ordinary Delete confirmation, generic Trash screen, document edit-history
 persistence, new writer, cross-file SQL FK, custom wire protocol or recovery journal is added.
 
-[catalog-delta.dbml (historical)](https://github.com/AlexandrLesiv/Linefield/blob/e08f304/docs/database/deletion-v4/catalog-delta.dbml) contains the complete unchanged v3 catalog context plus
+[Historical catalog amendment](https://github.com/AlexandrLesiv/Linefield/commit/b0cb531) contains the complete unchanged v3 catalog context plus
 the proposed three tables; it is not a complete three-database release schema. Its table notes
 form the conceptual model: one scope owns zero or more removals and at most one departure;
-one departure covers one or more removals. [catalog-delta.dbdiagram (historical)](https://github.com/AlexandrLesiv/Linefield/blob/e08f304/docs/database/deletion-v4/catalog-delta.dbdiagram)
+one departure covers one or more removals. [Historical catalog layout](https://github.com/AlexandrLesiv/Linefield/commit/b0cb531)
 records proposed layout, not a CLI-exported or hosted-verified diagram. The lead composed the
-complete [review.dbml (historical)](https://github.com/AlexandrLesiv/Linefield/blob/e08f304/docs/database/deletion-v4/review.dbml), retaining the previous three-database context and appending
-the proposed catalog tables. Both standalone and combined DBML passed the pinned CLI validation
+complete [Historical review schema source (historical)](https://github.com/AlexandrLesiv/Linefield/commit/b0cb531), retaining the previous three-database context and appending
+the proposed catalog tables. Both standalone and combined schema source passed the pinned CLI validation
 on2026-10-19 using ordinary authorized CLI access, not strict credential isolation. Hosted
 publication/privacy/layout remain separate evidence; see the current review handoff. No local
-rendered ER export is provided. See [CLI policy (historical)](https://github.com/AlexandrLesiv/Linefield/blob/e08f304/docs/database/cli.md). DBML is documentation, not migrations.
+rendered ER export is provided. See [CLI policy (historical)](https://github.com/AlexandrLesiv/Linefield/blob/e08f304/docs/database/cli.md). schema source is documentation, not migrations.
 
 ## Authority, visibility and recovery ownership
 
@@ -169,7 +170,7 @@ No scene transition, wall-clock expiry, catalog projection or receipt absence su
 
 All new tables are STRICT; UUID BLOB values require length16, fingerprints length32; revisions
 and generations are nonnegative signed i64 with checked increments. No new timestamp field.
-All new fields are NOT NULL except explicitly optional state-specific fields in DBML.
+All new fields are NOT NULL except explicitly optional state-specific fields in schema source.
 
 | Table / fields | Meaning and validation authority |
 | --- | --- |
@@ -179,14 +180,14 @@ All new fields are NOT NULL except explicitly optional state-specific fields in 
 | document_id, managed_file_id, database_incarnation, content_revision, metadata_revision | Exact protected source; immutable; logical cross-file relationship, Rust validates; no FK to drawings because terminal outcomes survive deletion |
 | removals.state | staged/restored/finalizing/cleaned; SQL enum; legal transition and fence admission Rust |
 | undo_operation_id, undo_fingerprint | Both present iff restored; stable lost-reply outcome; SQL CHECK and unique non-null operation ID |
-| departure_id | Present iff finalizing/cleaned; same-scope departure FK proposed in companion DBML; exact membership/count checked by Rust inside transaction |
+| departure_id | Present iff finalizing/cleaned; same-scope departure FK proposed in companion schema source; exact membership/count checked by Rust inside transaction |
 | departures.departure_id, scope_id, argument_fingerprint | Committed request/body; PK, unique scope; one departure per scope; immutable |
 | destination_document_id, destination_database_incarnation | Already-ready destination identity; logical reference, not permanent readiness or cross-file FK |
 | result_scope_revision, removal_count | Commit result and exact member count; positive; SQL domain CHECK; equality against scope/members Rust |
 
 SQL indexes: partial UNIQUE removals(document_id) WHERE state IN ('staged','finalizing') prevents
 two active removals of one library identity; INDEX(scope_id,state,removal_id) supports bounded sets;
-INDEX(departure_id,removal_id) supports reconciliation. DBML cannot encode the partial predicate,
+INDEX(departure_id,removal_id) supports reconciliation. the historical review representation omitted executable partial predicates,
 so prose/actual migration introspection are mandatory. Enforce departure scope consistency with
 UNIQUE(departure_id,scope_id) and composite FK from removals; all new FKs delete/update RESTRICT.
 Existing drawings deletion still cascades only existing view/pen preference rows. No cascading
@@ -265,9 +266,9 @@ departure authority from timestamps/availability. Ambiguous old states block cle
 files. No broad conversion of unknown catalogs; no in-place migration of immutable snapshots.
 
 Before implementation: reconcile designer/Rust review, choose exact browser ownership mechanism,
-complete declaration/request vectors, proposed DDL and introspection fixtures, validate DBML via
-approved isolated CLI/operator, publish authorized private hosted before/after snapshot with hashes,
-obtain independent security/design review and explicit owner approval of this exact amendment.
+complete declaration/request vectors, proposed DDL and introspection fixtures, regenerate the local
+shared-schema views/dictionary and pass parity checks. Obtain independent security/design review
+and owner approval of any material deviation from the approved shape or unresolved mechanism.
 Then obtain scoped implementation authorization. D1 permits durable create/list/open/rename first
 with production Delete disabled if this amendment is not ready; disposable delete simulation must
 not operate on actual documents. No runtime gate or database correctness claim is made here.

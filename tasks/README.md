@@ -18,6 +18,7 @@ base/contract checks. Each writer uses an isolated worktree; one owner per share
 | --- | --- | --- |
 | [DX-G01 bootstrap](DX-G01.md) | Owner review, [PR #1](https://github.com/AlexandrLesiv/Linefield/pull/1) | Initial delivered baseline; owner merge pending |
 | [DX-G02 shared documentation](DX-G02.md) | Owner review, [PR #2](https://github.com/AlexandrLesiv/Linefield/pull/2) | Stacked on DX-G01; owns tooling/docs cleanup, not runtime behavior |
+| [P05-S01 local styles](P05-S01.md) | Verified; preparing owner PR review | Stacked on DX-G02; app style scoping and final documentation cleanup |
 | [S02-P01 storage admission](S02-P01.md) | Ready for bounded synthetic investigation | DX-G01 baseline; independent of DX-G02 and S02-C01, separate probe paths |
 | [S02-C01 regional contract](S02-C01.md) | Ready for contract/probe work | DX-G01 baseline; independent of storage and documentation tooling |
 | [DX-T01 app token parity](DX-T01.md) | Contract-blocked; read-only inventory may proceed | DX-G02 token contract/review before implementation; no simultaneous shared-token edits |
@@ -41,7 +42,7 @@ Root Node/TypeScript/pnpm tooling and the authorized web gallery prototype are i
 | [P05-D01 Selected drawing screen v2](P05-D01.md) | Complete: selected slim rail/top settings UI;106 browser passes plus production smoke; engine/native implementation remains separate |
 | [S00 Review and design](S00.md) | Awaiting remaining decisions/design approval |
 | [S01 Independent foundation](S01.md) | Root tooling installed; native/app gates pending |
-| [S02 Concrete contracts](S02.md) | Regional DBML v3 approved (209); revised exact ABI, numerical and native feasibility evidence pending |
+| [S02 Concrete contracts](S02.md) | Regional schema source v3 approved (209); revised exact ABI, numerical and native feasibility evidence pending |
 | [S02M Multi-client coordination](S02M.md) | Direction selected; exact contracts/design review/probes pending |
 | [S02L Gallery and library first](S02L.md) | Selected web gallery prototype complete; durable/native library design/contracts and implementation remain gated |
 | [S03 Pure editor](S03.md) | Planned; not started |

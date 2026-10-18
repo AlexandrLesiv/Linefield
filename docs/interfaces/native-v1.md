@@ -254,6 +254,6 @@ safe outcome/reason/revision delta. Never names, paths, persistent UUIDs, raw sa
 fingerprints or serialized state. Aggregate input activity, no per-sample production logging.
 Log queue overflow/sink failure cannot fail an otherwise valid edit.
 
-See [test and threat matrix](../../quality/S02-contract-review.md). Generated header compilation,
+See [Historical evidence](https://github.com/AlexandrLesiv/Linefield/commit/b0cb531). Generated header compilation,
 ABI layout, handle misuse, copied buffer lifetimes, resync, duplicate effects, wake races, panic/
 shutdown and real native behavior must be verified separately. No tests have run for this proposal.

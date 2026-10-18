@@ -84,7 +84,7 @@ crash/quit handling, coordinator authority, export races, restore/finalize error
 retention before schema/runtime changes. Proposed safety default: crash/quit preserves pending
 removals for recovery; finalized navigation may schedule cleanup only after reviewed authority.
 This is not a new general Trash feature or document edit-history policy. Existing busy-owner
-guards and export cancellation consent remain. Historical DBML approval bytes stay unchanged.
+guards and export cancellation consent remain. Historical schema source approval bytes stay unchanged.
 
 ## Acceptance and evidence
 

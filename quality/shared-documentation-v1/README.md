@@ -17,7 +17,7 @@ This is a stacked follow-up to DX-G01/PR #1, not a claim that its base has merge
 - Five schema tests retain17 tables/146 columns/11 relationships and full notes. Reviewer also
   independently compared original committed source to the conversion fixture and unchanged SQL.
   Reference SQL is unchanged; jobs remain proposal-only. No production migration/engine introduced.
-- [Retired paths](retired-paths.json) records20 obsolete schema files/tool documents. Duplicate
+- [Historical evidence](https://github.com/AlexandrLesiv/Linefield/commit/b0cb531) records20 obsolete schema files/tool documents. Duplicate
   diagram source notation was also removed. Historical bytes remain at Git e08f304; old approval
   hashes identify that revision. Current tracked source has no retired text-diagram tool mentions.
 

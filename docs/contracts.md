@@ -379,7 +379,7 @@ old artwork meaning through reviewed compatibility/migrations, not silent reinte
 Tool/document/stroke UUIDs use standard 16-byte binary SQLite representation. Define length/type/
 UUID validation and canonical cross-host conversion; do not serialize native GUID memory layouts.
 Keep document/stroke UUIDv4 generation, fixed tool identities, local integer relationship keys and
-sample indices. Review exact DBML/ABI representation and malformed/round-trip/import fixtures.
+sample indices. Review exact schema source/ABI representation and malformed/round-trip/import fixtures.
 Binary database storage does not introduce a command serialization protocol.
 
 Decision 72 refines CT-05/08: owned drawing/catalog tables use SQLite STRICT with verified
@@ -553,7 +553,7 @@ limits before implementation; no custom IPC/daemon or new thread topology is aut
 
 ## Batch 8 approved durable-export policies (decisions 132-138)
 
-Use a separate SQLite job database and dedicated immutable snapshot area; exact DBML/source
+Use a separate SQLite job database and dedicated immutable snapshot area; exact schema source/source
 representation still needs review. Accepted Export captures before its panel in bounded memory;
 persist after destination confirmation, with an honest preparing/durable boundary. Automatically
 resume only validated safe recovered work; pause uncertain publication/access and changed targets.

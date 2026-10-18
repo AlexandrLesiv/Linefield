@@ -1,3 +1,13 @@
+import {
+  renameDialog,
+  error as errorStyle,
+  dialogActions,
+  primary,
+  dialogHeading,
+  dialogLabel,
+  dialogInput,
+  dialogButton,
+} from "./dialog.css.ts";
 import { acquireBackdrop } from "./action-backdrop.ts";
 import { t } from "./locale.ts";
 import { exitRename } from "./rename-exit.ts";
@@ -11,20 +21,20 @@ export function renameDrawing(
   sourceCard: HTMLElement | null,
 ): void {
   const backdrop = acquireBackdrop();
-  const dialog = element("dialog", "rename-dialog");
+  const dialog = element("dialog", `rename-dialog ${renameDialog}`);
   const form = element("form");
-  const heading = element("h2", "", t("rename.title"));
+  const heading = element("h2", dialogHeading, t("rename.title"));
   heading.id = "rename-heading";
   dialog.setAttribute("aria-labelledby", heading.id);
-  const label = element("label", "", t("rename.label"));
-  const input = element("input");
+  const label = element("label", dialogLabel, t("rename.label"));
+  const input = element("input", dialogInput);
   input.value = name;
   input.maxLength = 240;
   input.required = true;
   label.append(input);
-  const error = element("p", "error");
+  const error = element("p", `error ${errorStyle}`);
   error.setAttribute("role", "alert");
-  const actions = element("div", "dialog-actions");
+  const actions = element("div", `dialog-actions ${dialogActions}`);
   let closed = false;
   let disposeMotion = () => {};
   const cardId = sourceCard?.dataset.id;
@@ -47,9 +57,9 @@ export function renameDrawing(
     };
     exitRename(dialog, form, trigger, disposeMotion, done);
   };
-  const submit = element("button", "primary", t("action.rename"));
+  const submit = element("button", `primary ${primary} ${dialogButton}`, t("action.rename"));
   submit.type = "submit";
-  actions.append(button(t("action.cancel"), "", close), submit);
+  actions.append(button(t("action.cancel"), dialogButton, close), submit);
   form.append(heading, label, error, actions);
   dialog.append(form);
   document.body.append(dialog);

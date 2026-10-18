@@ -1,6 +1,6 @@
 # S02 decision batch 4 — lost acknowledgements and conflict-copy retention
 
-Status: owner selected DB15-A and DB16-C on 2026-10-16 (decisions 173–174). Alternatives remain for review history; no other option selected. DB11–DB14 are A, decisions 169–172. Existing migration-copy retention (decision 40: latest verified pre-upgrade copy) is unchanged. No application implementation, new DBML publication or cloud work authorized.
+Status: owner selected DB15-A and DB16-C on 2026-10-16 (decisions 173–174). Alternatives remain for review history; no other option selected. DB11–DB14 are A, decisions 169–172. Existing migration-copy retention (decision 40: latest verified pre-upgrade copy) is unchanged. No application implementation, new schema source publication or cloud work authorized.
 
 ## DB15 — Durable outcomes for completed editing commands
 

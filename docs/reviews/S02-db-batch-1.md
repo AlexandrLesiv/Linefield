@@ -17,8 +17,8 @@ Pending next batch: D2 drawing lifetime ownership, D3 authenticated cross-proces
 
 ## Verification and hosted update
 
-Official pinned CLI validation passed. Canonical/combined table field/type/key/nullability parity passed using the current DBML parser: 14 tables, 105 fields; Rust agent TOML parsed. An initial auxiliary check used the older parser entry point, which rejects reference colors; rerunning through the current compiler passed without modifying schema/presentation to hide the incompatibility.
+Official pinned CLI validation passed. Canonical/combined table field/type/key/nullability parity passed using the current schema source parser: 14 tables, 105 fields; Rust agent TOML parsed. An initial auxiliary check used the older parser entry point, which rejects reference colors; rerunning through the current compiler passed without modifying schema/presentation to hide the incompatibility.
 
-Independent read-only reviewer s02_packet_review found no actionable issues in the decision alignment. No application tests ran. Private dbdocs publication succeeded and browser verified Version 5 with selected DB1–DB4 notes and 105 fields. Existing sharing was not changed. No local rendered diagram directory was created.
+Independent read-only reviewer s02_packet_review found no actionable issues in the decision alignment. No application tests ran. Private historical schema review publication succeeded and browser verified Version 5 with selected DB1–DB4 notes and 105 fields. Existing sharing was not changed. No local rendered diagram directory was created.
 
-Next question batch: [ownership and interfaces](S02-db-batch-2.md). Source hashes for this update: ../../quality/S02-db-batch-1.json.
+Next question batch: [ownership and interfaces](S02-db-batch-2.md). Source hashes for this update: quality/historical-records.json (Git b0cb531).

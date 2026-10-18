@@ -1,13 +1,13 @@
 
 > Working-copy terminology was normalized by owner decision235 on2026-10-18. Historical approval hashes below still identify their recorded approval artifacts, not these normalized bytes. The pinned base preserves a pre-normalization working copy and is an exact approval snapshot only where its hash matches. See [normalization provenance](../reviews/design-workflow-normalization-2026-10-18.md).
 
-# S02 v3 regional-coordinate DBML review
+# S02 v3 regional-coordinate schema source review
 
 Status: PENDING OWNER REVIEW; NOT IMPLEMENTED. Prepared 2026-10-17.
 The owner delegated recommended defaults after RC1–RC11; decision 208 records that
-delegation, not approval of this exact artifact. [Grouped DBML (historical)](https://github.com/AlexandrLesiv/Linefield/blob/e08f304/docs/database/review.dbml) is the review
+delegation, not approval of this exact artifact. [Grouped schema source (historical)](https://github.com/AlexandrLesiv/Linefield/commit/b0cb531) is the review
 entry point. [Historical v2](history/s02-v2/README.md) retains exact prior local sources;
-quality/S02-v2-review.json and the original hosted approval are unchanged.
+quality/historical-records.json (Git b0cb531) and the original hosted approval are unchanged.
 
 ## Changes and selected defaults
 
@@ -42,7 +42,7 @@ numerical evidence. Region size is not a stroke-span cap. No guessed span CHECK 
 
 ## Constraint authority and validation
 
-All owned tables remain STRICT; foreign_keys is enabled on every connection. DBML is
+All owned tables remain STRICT; foreign_keys is enabled on every connection. schema source is
 documentation, not executed SQLite DDL. Field notes specify intended CHECKs using
 "value" as a placeholder for the actual column name.
 - Each regional field: NOT NULL INTEGER; signed range includes negatives.
@@ -129,6 +129,6 @@ Fresh reviewer must challenge this design; actual implementation still needs ind
 
 ## Review boundary
 
-This handoff seeks approval of the exact DBML and accompanying defaults/constraints.
+This handoff seeks approval of the exact schema source and accompanying defaults/constraints.
 Typed ABI compilation, migration/runtime tests, precision/performance measurements and design review
 are not completed by schema approval. No app code or SQL migrations were executed.

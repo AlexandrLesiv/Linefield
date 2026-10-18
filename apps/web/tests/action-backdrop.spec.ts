@@ -104,8 +104,9 @@ test("WEB-ONE02 open backdrop keeps secondary clicks browser-owned without forwa
       document.body.dataset.contextCount = String(Number(document.body.dataset.contextCount) + 1);
       document.body.dataset.contextPrevented = String(event.defaultPrevented);
       document.body.dataset.contextTrusted = String(event.isTrusted);
-      document.body.dataset.contextTarget =
-        event.target instanceof Element ? event.target.className : "";
+      document.body.dataset.contextTargetIsBackdrop = String(
+        event.target === document.querySelector(".action-backdrop"),
+      );
     });
   });
   const backdrop = page.locator(".action-backdrop");
@@ -126,7 +127,7 @@ test("WEB-ONE02 open backdrop keeps secondary clicks browser-owned without forwa
   await expect(page.locator("body")).toHaveAttribute("data-card-context-count", "0");
   await expect(page.locator("body")).toHaveAttribute("data-context-prevented", "false");
   await expect(page.locator("body")).toHaveAttribute("data-context-trusted", "true");
-  await expect(page.locator("body")).toHaveAttribute("data-context-target", "action-backdrop");
+  await expect(page.locator("body")).toHaveAttribute("data-context-target-is-backdrop", "true");
   await expect(page.getByRole("menu")).toHaveCount(0);
   await expect(page.locator(".drawing-surface")).toHaveCount(0);
 });

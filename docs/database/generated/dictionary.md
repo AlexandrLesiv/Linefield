@@ -14,7 +14,7 @@ Failure preserves uncertain drawing bytes and recovery authority. Catalog public
 
 ## Inputs
 
-- `shared/schema/annotations.json` — SHA256 `4927b91893571015d719aedc2ca5927713680c30d0acaf431f54a46b81c99c7f`
+- `shared/schema/annotations.json` — SHA256 `0d31a0e8399ab4e6dfd88ca6706cae0c5f27aaf2ecffa4094570ab0f172fd995`
 - `shared/schema/jobs-proposal.json` — SHA256 `b918f9ddc6aa37151ff2b012672d8d42706cce1c7cf90cb1eed24799ee5a9343`
 - `docs/database/empty-library-catalog-v1.sql` — SHA256 `7fa28a640f6e403c726b453c0f884872447bc630ba948c7622db4f520c65e16b`
 - `docs/database/empty-library-removal-v1.sql` — SHA256 `b181bd5fcfc8d95c1565a4772998648f20fae3be30e794260454c7302ad50a73`
@@ -707,7 +707,7 @@ No executable SQL exists for this proposal table. Its constraints are not verifi
 
 ## Original review context
 
-The following source note is preserved verbatim as migration provenance. Its original pending-status wording is historical; current disposition appears above.
+The following source note is editorially normalized migration context; original bytes remain in Git. Its original pending-status wording is historical; current disposition appears above.
 
 ```text
 # Linefield S02 deletion amendment v4.1
@@ -720,6 +720,6 @@ Stage preserves target bytes and Undo. Only an exact-set durable departure after
 No timeout finalization, persistent document edit Undo, new database or cross-file SQL foreign key.
 Proposed scope ownership, acquisition reconciliation, bounds and partial SQL constraints require owner review.
 See docs/database/deletion-v4/proposal.md for dictionary, sequence, migration and17 planned cases.
-DBML is review documentation, not executable migrations. Exact browser lock/flush and generated contracts remain gates.
+schema source is review documentation, not executable migrations. Exact browser lock/flush and generated contracts remain gates.
 Private schema notes only; no drawing content, credentials or grants.
 ```

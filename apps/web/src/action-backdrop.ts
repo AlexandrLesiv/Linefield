@@ -1,4 +1,4 @@
-import "./action-backdrop.css.ts";
+import { actionBackdrop } from "./action-backdrop.css.ts";
 import { reducedMotion } from "./dom.ts";
 
 let current: HTMLElement | undefined;
@@ -13,7 +13,7 @@ export function acquireBackdrop() {
   const initial = current ? getComputedStyle(node).opacity : "0";
   motion?.cancel();
   if (!current) {
-    node.className = "action-backdrop";
+    node.className = `action-backdrop ${actionBackdrop}`;
     node.setAttribute("aria-hidden", "true");
     document.body.append(node);
     current = node;

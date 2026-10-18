@@ -1,4 +1,4 @@
-import "./menu.css.ts";
+import { galleryMenu, galleryMenuContent, destructive, menuButton } from "./menu.css.ts";
 import { acquireBackdrop } from "./action-backdrop.ts";
 import { morphDeleteMenu } from "./delete-menu-motion.ts";
 import { closeMotion, openMotion, placeMenu } from "./menu-motion.ts";
@@ -114,14 +114,14 @@ export function showMenu(origin: HTMLElement, items: readonly MenuItem[]): void 
   finishClosing?.();
   finishClosing = undefined;
   const box = document.createElement("div");
-  box.className = "gallery-menu";
+  box.className = `gallery-menu ${galleryMenu}`;
   box.setAttribute("role", "menu");
   box.setAttribute(
     "aria-label",
     origin.getAttribute("aria-label") || origin.textContent || "Actions",
   );
   const content = document.createElement("div");
-  content.className = "gallery-menu-content";
+  content.className = `gallery-menu-content ${galleryMenuContent}`;
   box.append(content);
   const menu: Menu = {
     origin,
@@ -135,9 +135,10 @@ export function showMenu(origin: HTMLElement, items: readonly MenuItem[]): void 
   const buttons = items.map((item) => {
     const button = document.createElement("button");
     button.type = "button";
+    button.className = menuButton;
     button.setAttribute("role", "menuitem");
     button.textContent = item.label;
-    if (item.destructive) button.className = "destructive";
+    if (item.destructive) button.classList.add("destructive", destructive);
     button.addEventListener(
       "click",
       () => {

@@ -1,3 +1,6 @@
+import { drawingOpen } from "./styles.css.ts";
+import { away } from "./states.css.ts";
+import { drawingSurface, canvasArt } from "./canvas.css.ts";
 import { createDrawingShell } from "./drawing-shell.ts";
 import { attachCreationVisual, readSurfaceAppearance } from "./creation-motion.ts";
 import { element } from "./dom.ts";
@@ -61,12 +64,12 @@ export function createNavigation(gallery: HTMLElement, onReturn: (restoreFocus: 
       const rect = source.getBoundingClientRect();
       const imageRect = artworkBounds(source);
       elevatedShadow = getComputedStyle(source.closest(".drawing-card") ?? source).boxShadow;
-      surface = element("section", "drawing-surface");
+      surface = element("section", `drawing-surface ${drawingSurface}`);
       surface.style.boxShadow = elevatedShadow;
       surface.setAttribute("aria-label", drawing.name);
       attachCreationVisual(surface, source);
       if (drawing.image) {
-        const image = element("img", "canvas-art");
+        const image = element("img", `canvas-art ${canvasArt}`);
         image.src = drawing.image;
         image.alt = "";
         surface.append(image);
@@ -85,8 +88,8 @@ export function createNavigation(gallery: HTMLElement, onReturn: (restoreFocus: 
       window.addEventListener("blur", trackFocus);
       source.style.visibility = "hidden";
       gallery.inert = true;
-      gallery.classList.add("away");
-      document.body.classList.add("drawing-open");
+      gallery.classList.add("away", away);
+      document.body.classList.add("drawing-open", drawingOpen);
       record("opened");
       await move(rect, viewport(), imageRect);
       document.removeEventListener("focusin", trackFocus);
@@ -114,7 +117,7 @@ export function createNavigation(gallery: HTMLElement, onReturn: (restoreFocus: 
       };
       document.addEventListener("focusin", trackFocus);
       window.addEventListener("blur", trackFocus);
-      gallery.classList.remove("away");
+      gallery.classList.remove("away", away);
       await move(rect, origin.getBoundingClientRect(), imageRect);
       document.removeEventListener("focusin", trackFocus);
       window.removeEventListener("blur", trackFocus);
@@ -125,7 +128,7 @@ export function createNavigation(gallery: HTMLElement, onReturn: (restoreFocus: 
       chrome = null;
       origin = null;
       gallery.inert = false;
-      document.body.classList.remove("drawing-open");
+      document.body.classList.remove("drawing-open", drawingOpen);
       record("returned");
       onReturn(!focusChanged);
     },

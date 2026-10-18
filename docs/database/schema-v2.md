@@ -54,4 +54,4 @@ No encryption, new color space, metadata timestamp or generic settings payload a
 
 ## Queries and index rationale
 Samples composite PK already supports ordered stroke hydration/cascade; no redundant sample index. Stroke UUID UNIQUE supports target lookup; paint_order UNIQUE supports rendering order. Receipt PK supports outcome lookup, session/sequence UNIQUE supports replay audit, time/ID index bounds cleanup scans. Catalog activity_order/document index supports paging; new incarnation is compared with projection authority rather than used as chronology.
-Measure row storage, long stroke load/save, receipt overhead and bounded cleanup using the test plan. DBML is not executable SQLite DDL or evidence of query performance.
+Measure row storage, long stroke load/save, receipt overhead and bounded cleanup using the test plan. schema source is not executable SQLite DDL or evidence of query performance.

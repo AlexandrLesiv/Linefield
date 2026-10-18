@@ -1,6 +1,6 @@
-import { globalStyle } from "@vanilla-extract/css";
+import { style } from "@vanilla-extract/css";
 import { theme } from "./theme.css.ts";
-globalStyle(".drawing-surface", {
+export const drawingSurface = style({
   isolation: "isolate",
   position: "fixed",
   inset: "0",
@@ -11,7 +11,7 @@ globalStyle(".drawing-surface", {
   color: theme.paperText,
   zIndex: "10",
 });
-globalStyle(".canvas-art", {
+export const canvasArt = style({
   mixBlendMode: "darken",
   position: "absolute",
   left: 0,
@@ -22,7 +22,7 @@ globalStyle(".canvas-art", {
   objectFit: "contain",
   background: "transparent",
 });
-globalStyle(".drawing-chrome", {
+export const drawingChrome = style({
   position: "absolute",
   inset: 0,
   pointerEvents: "none",
@@ -38,9 +38,12 @@ globalStyle(".drawing-chrome", {
         "--header-size": "calc(max(56px, 3em) + env(safe-area-inset-top))",
       },
     },
+    "(forced-colors: active)": {
+      color: "CanvasText",
+    },
   },
 });
-globalStyle(".canvas-toolbar", {
+export const canvasToolbar = style({
   position: "absolute",
   top: 0,
   left: 0,
@@ -56,14 +59,13 @@ globalStyle(".canvas-toolbar", {
   borderBottom: `1px solid ${theme.line}`,
   pointerEvents: "auto",
 });
-globalStyle(".canvas-toolbar > :last-child", { justifySelf: "end" });
-globalStyle(".canvas-title", {
+export const canvasTitle = style({
   textAlign: "center",
   overflow: "hidden",
   textOverflow: "ellipsis",
   whiteSpace: "nowrap",
 });
-globalStyle(".back", {
+export const back = style({
   justifySelf: "start",
   minHeight: "44px",
   padding: "8px",
@@ -72,8 +74,17 @@ globalStyle(".back", {
   background: "transparent",
   color: theme.text,
   whiteSpace: "nowrap",
+  selectors: {
+    "&:hover": {
+      background: theme.buttonHover,
+    },
+    "&:focus-visible": {
+      outline: `2px solid ${theme.focus}`,
+      outlineOffset: "2px",
+    },
+  },
 });
-globalStyle(".drawing-rail", {
+export const drawingRail = style({
   position: "absolute",
   top: "var(--header-size)",
   bottom: 0,
@@ -89,7 +100,7 @@ globalStyle(".drawing-rail", {
   borderRight: `1px solid ${theme.line}`,
   pointerEvents: "auto",
 });
-globalStyle(".drawing-context", {
+export const drawingContext = style({
   position: "absolute",
   top: "var(--header-size)",
   left: "var(--rail-size)",
@@ -104,7 +115,7 @@ globalStyle(".drawing-context", {
   borderBottom: `1px solid ${theme.line}`,
   pointerEvents: "auto",
 });
-globalStyle(".canvas-footer", {
+export const canvasFooter = style({
   position: "absolute",
   bottom: "max(12px, env(safe-area-inset-bottom))",
   left: "calc(var(--rail-size) + 16px)",
@@ -113,7 +124,7 @@ globalStyle(".canvas-footer", {
   alignItems: "end",
   gap: "12px",
 });
-globalStyle(".canvas-notice", {
+export const canvasNotice = style({
   margin: 0,
   flex: 1,
   minWidth: 0,
@@ -124,9 +135,12 @@ globalStyle(".canvas-notice", {
   padding: "4px 6px",
   borderRadius: "4px",
 });
-globalStyle(".canvas-zoom", {
+export const canvasZoom = style({
   flexShrink: 0,
   color: theme.paperMuted,
   background: theme.paper,
   padding: "4px",
+});
+export const settingsControl = style({
+  justifySelf: "end",
 });

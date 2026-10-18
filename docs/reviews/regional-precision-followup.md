@@ -1,6 +1,6 @@
 # S02 regional precision follow-up v1 — 2026-10-18
 
-Status: **proposal for a later consolidated review; not owner-approved or implemented**. This packet converts the arithmetic evidence into concrete engineering work. It does not reopen selected RC1–RC11, modify approved DBML, select a stroke span, or replace the historical v2 ABI with an unreviewed declaration. Lead owns integration; rust_engine reviews numerical semantics; independent reviewer checks scope and evidence.
+Status: **proposal for a later consolidated review; not owner-approved or implemented**. This packet converts the arithmetic evidence into concrete engineering work. It does not reopen selected RC1–RC11, modify approved schema source, select a stroke span, or replace the historical v2 ABI with an unreviewed declaration. Lead owns integration; rust_engine reviews numerical semantics; independent reviewer checks scope and evidence.
 
 ## Evidence and its practical consequence
 

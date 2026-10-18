@@ -147,7 +147,7 @@ operation_kind,phase,expected_database_incarnation,expected_content_revision,
 expected_metadata_revision,automatic_name_number,confirmed_utc_us,updated_utc_us.
 `DI` columns are drawing_key,document_id,database_incarnation,managed_file_id,display_name,
 content_revision,metadata_revision,created_utc_us,content_edited_utc_us,added_utc_us,activity_order,
-availability. `RC` is every explicitly ordered command_receipts column in the reviewed DBML.
+availability. `RC` is every explicitly ordered command_receipts column in the reviewed schema source.
 These column lists are expanded in generated SQL; wildcard SELECT is forbidden. Whole-record
 parameter sets use these exact field names/types, with no caller-controlled column selection.
 
@@ -200,7 +200,7 @@ This permits restart recovery without the dead runtime's operation handle or req
 Exact DDL/checks/application IDs and seed constants are now proposed in
 [empty-library format v1](../database/empty-library-v1.md) for the final implementation
 approval bundle and tested during implementation; this interface does not substitute guessed
-DDL or loosen existing DBML requirements. Schema migration implementation is not performed here.
+DDL or loosen existing schema source requirements. Schema migration implementation is not performed here.
 
 ## 4. Create, rename and cancellation transactions
 

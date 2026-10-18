@@ -22,7 +22,7 @@ dependencies, design review implementation, accounts, a resident service or anot
    one editor owner, fences, conflict/unknown outcomes and transport feasibility.
 4. [Recovery transitions](../architecture/storage-transitions-v1.md): durable checkpoints
    between files/databases, interruption and retry.
-5. [Acceptance and threat delta](../../quality/S02-contract-review.md):
+5. [Historical evidence](https://github.com/AlexandrLesiv/Linefield/commit/b0cb531):
    planned tests, unresolved decisions and evidence status.
 
 ## Recommended division of responsibility

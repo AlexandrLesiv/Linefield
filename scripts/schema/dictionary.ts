@@ -68,7 +68,7 @@ export function dictionary(schema: Schema): string {
   lines.push(
     "## Original review context",
     "",
-    "The following source note is preserved verbatim as migration provenance. Its original pending-status wording is historical; current disposition appears above.",
+    "The following source note is editorially normalized migration context; original bytes remain in Git. Its original pending-status wording is historical; current disposition appears above.",
     "",
     "```text",
     schema.projectNote.trim(),

@@ -13,7 +13,7 @@ types and relationships stay selected unless a later reviewed change supersedes 
 
 | Scope | Status |
 | --- | --- |
-| Displayed DBML table structure | Approved by owner |
+| Displayed schema source table structure | Approved by owner |
 | Typed FFI | Pending owner review; gallery-first signatures exist, full canvas/file DTOs incomplete |
 | Cross-process rename transport | Pending; NSXPC is a candidate with discovery/signing/sandbox proof outstanding |
 | Ownership and wake/shutdown contract | Proposed; exact lock lifetime, copied outputs and readiness approach need review |
@@ -29,20 +29,22 @@ multi-file workflows.
 
 ## Exact approved baseline
 
+Descriptive labels below identify historical sources. Recover the original source identity through
+quality/historical-records.json at Git b0cb531; these labels are not current file paths.
 
 | Source | SHA-256 |
 | --- | --- |
-| docs/database/review.dbml | a06ac7c55af54403ab2ccdced30cf3224bb8e0476d78fc08ce6b019aba22a2a2 |
-| docs/database/review.dbdiagram | f2203e806455b04fb8435dc77f450f02c4f58621443b2c61e4d7885892a5fb03 |
-| docs/database/drawing.dbml | 677d74e4e126b44fbde817b302c91406113ef508b3159a4ffacc9113944258a8 |
-| docs/database/catalog.dbml | f83e2f3d60b0348b54fecc60f6e6f443e17e08feb49a1ae586712f2a4a708352 |
-| docs/database/jobs.dbml | 4c409e2e306e1237085b2a48f50303cec9a255a09d3538397e1cb2a19cbce110 |
+| Historical review schema source | a06ac7c55af54403ab2ccdced30cf3224bb8e0476d78fc08ce6b019aba22a2a2 |
+| Historical schema layout | f2203e806455b04fb8435dc77f450f02c4f58621443b2c61e4d7885892a5fb03 |
+| Historical drawing schema source | 677d74e4e126b44fbde817b302c91406113ef508b3159a4ffacc9113944258a8 |
+| Historical catalog schema source | f83e2f3d60b0348b54fecc60f6e6f443e17e08feb49a1ae586712f2a4a708352 |
+| Historical jobs schema source | 4c409e2e306e1237085b2a48f50303cec9a255a09d3538397e1cb2a19cbce110 |
 
 Hashes identify the files shown before approval-status notes were added. A status-only publication
 is not another schema change. The current diagram remains a review view; the source and explicit
 owner statement above establish the approval scope.
 
-## dbdocs presentation convention
+## historical schema review presentation convention
 
 Project notes display APPROVED / PENDING REVIEW / NOT IMPLEMENTED per scope, with review date,
 baseline version and local approval-record path. Table/group notes can identify future proposed

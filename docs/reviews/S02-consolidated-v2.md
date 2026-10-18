@@ -5,7 +5,7 @@
 Prepared 2026-10-16. Status: OWNER APPROVED on 2026-10-16 (decision 181), documentation only. See [approval scope](S02-v2-approval-2026-10-16.md). Current tree has no committed baseline; evidence uses exact file hashes. Policies DB1–DB22 are selected (DB16 cloud retention deliberately deferred); the concrete fields/signatures/transitions and provisional starting limits below are now explicitly approved; implementation and feasibility evidence remain separate.
 
 ## Read in this order
-1. [Schema delta and field constraints](../database/schema-v2.md), with [combined DBML (historical)](https://github.com/AlexandrLesiv/Linefield/blob/e08f304/docs/database/review.dbml) and [editable layout (historical)](https://github.com/AlexandrLesiv/Linefield/blob/e08f304/docs/database/review.dbdiagram). Private hosted version/evidence recorded after publication in quality/S02-v2-review.json.
+1. [Schema delta and field constraints](../database/schema-v2.md), with [combined schema source (historical)](https://github.com/AlexandrLesiv/Linefield/commit/b0cb531) and [editable layout (historical)](https://github.com/AlexandrLesiv/Linefield/commit/b0cb531). Private hosted version/evidence recorded after publication in quality/historical-records.json (Git b0cb531).
 2. [Typed commands and ownership](../interfaces/native-v2.md), then [query/effect DTOs](../interfaces/native-v2-queries.md).
 3. [Recovery transitions and thread/sequence diagrams](../architecture/recovery-v2.md).
 4. [Proposed limits and SQLite configuration](../architecture/limits-v2.md).
@@ -41,9 +41,9 @@ File import/export access-grant persistence and destination identity still need 
 No numeric latency guarantee or all-platform parity proof. No data-loss-free promise for uncommitted RAM after all holders die, misbehaving external writers, storage faults or hardware that misreports flush.
 
 ## Agent and security handoff
-Database specialist reviewed schema/receipt/ABA proposal read-only; rust_engine reviewed typed boundaries/threading/replay read-only. Lead is sole writer; no concurrent writer worktrees needed. Fresh independent reviewer checks final document snapshot and evidence. See quality/S02-v2-review.json for actual results; do not infer review from planned roles.
+Database specialist reviewed schema/receipt/ABA proposal read-only; rust_engine reviewed typed boundaries/threading/replay read-only. Lead is sole writer; no concurrent writer worktrees needed. Fresh independent reviewer checks final document snapshot and evidence. See quality/historical-records.json (Git b0cb531) for actual results; do not infer review from planned roles.
 Threat delta: edit-capable authenticated peers, replay/pruning, raw/native capability misuse, stale authority/file replacement, hostile SQLite and private export leakage. Map tests S02V2-01–28 to existing CT/INV and security review. Logs are bounded/redacted; no per-sample or persistent IDs.
-No runtime tests or migration checks executed during planning. Static DBML validation/layout/link/definition checks and hosted visual review are documentation evidence only.
+No runtime tests or migration checks executed during planning. Static schema source validation/layout/link/definition checks and hosted visual review are documentation evidence only.
 
 ## After your review
 Resolve concrete findings/conditions, then authorize scoped compile/rendezvous/storage probes; do not begin app implementation from this packet alone. Gallery design review/native milestone remains first product implementation. S02/S02M remain open for their required feasibility evidence; concrete v2 contract approval is recorded in decision 181; schema diagram publication is not completion.

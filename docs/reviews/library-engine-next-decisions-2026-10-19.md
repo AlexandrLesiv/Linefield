@@ -85,7 +85,7 @@ These are our work, not requests for the owner to choose internal constants or g
 | Packet | Concrete deliverable / recommended starting direction | Acceptance before claiming readiness |
 | --- | --- | --- |
 | Browser durable storage | Pin an actual SQLite/Wasm backend/VFS under the already selected worker/coordination direction; document catalog/document ownership, lock lifetime, flush acknowledgement, quota/error/eviction limits and supported environments | Disposable create/reload, interrupted transaction, quota/denied storage, competing-tab and lost-owner tests; no in-memory fallback labeled durable; unavailable browser evidence remains a blocker |
-| Decision212 schema/lifecycle amendment | Versioned DBML delta, table dictionary, staging→Undo/finalization/recovery sequence and hosted review snapshot consistent with D2/D3 | Owner review of exact amendment; storage fault/restart, stale intents, cross-file reconciliation, other-client visibility, busy-owner/export and restore/finalization failure cases |
+| Decision212 schema/lifecycle amendment | Versioned schema source delta, table dictionary, staging→Undo/finalization/recovery sequence and hosted review snapshot consistent with D2/D3 | Owner review of exact amendment; storage fault/restart, stale intents, cross-file reconciliation, other-client visibility, busy-owner/export and restore/finalization failure cases |
 | Library failure-state design | Existing visual system applied to loading, creation/rename failure, storage unavailable, in-use and removal recovery states, en/uk and focus behavior | Designer packet with identified states and native exclusions; no gallery redesign |
 | Regional typed boundary | Separate canvas-local inputs from stored/query regional positions; Rust owns mapping generation and captured gesture base | Identified signatures/layouts/lifetimes, bounded copies, failure semantics, declaration compile plan and native/Wasm vectors; old affected global-f64 ABI cannot be reused unchanged |
 | Numerical normalization | Evaluate nearest-canonical rounding before input acceptance, including tie rules and upper-domain endpoint behavior; exact-domain check before rounding | Compare exact-rejection/directed alternatives, idempotence/equivalent representations, original accepted-byte preservation and an explicit input-error budget. Recommendation is an experiment, not adopted policy |
@@ -99,7 +99,7 @@ checks are not browser storage, native IPC, actual drawing or performance accept
 ## Review and stopping boundary
 
 After D1–D3, prepare one identified library implementation packet with the storage evidence,
-DBML amendment, failure-state designs and exact tests. Request approval of those concrete artifacts,
+schema source amendment, failure-state designs and exact tests. Request approval of those concrete artifacts,
 not blanket permission to invent their contracts. Prepare the regional ABI/numerical packet in
 parallel as documentation/evidence, then authorize the real pen slice separately. Preserve exports,
 future sync, other hosts and optional workbench scope for their own milestones.

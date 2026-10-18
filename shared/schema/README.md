@@ -6,8 +6,8 @@ not implement persistence, a host runtime or a production migration.
 - The three unchanged `docs/database/empty-library-*-v1.sql` resources define the 14 reference
   catalog/drawing tables. Generation executes them only in independent in-memory Node SQLite
   databases and introspects their columns, keys, indexes, foreign keys and exact CREATE SQL.
-- `annotations.json` owns prose keyed by stable table/column identifiers. Its original project
-  note is preserved as historical context, including the old pending-status wording; decisions
+- `annotations.json` owns prose keyed by stable table/column identifiers. Its project
+  note is editorially normalized historical context; original bytes remain in Git, including the old pending-status wording; decisions
   209/237 supply the current shape approval. Missing or surplus annotations fail generation.
 - `jobs-proposal.json` describes three jobs tables and two relationships for review only. No
   jobs DDL or runtime is invented. Future export implementation remains separately authorized.

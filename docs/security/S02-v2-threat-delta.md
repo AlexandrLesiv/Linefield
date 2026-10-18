@@ -12,5 +12,5 @@ Status: proposed mitigations, not implemented controls. Sensitive design require
 | Availability | Malicious/slow peer pins receipts, readers, queues | Per-client and aggregate reservations; fail admission without dropping accepted work; reserved recovery lane | S02V2-06/15/22 |
 
 Trust limitations: peer principal/authentication adapter must be proven; UUIDs and directory descriptors presented by arbitrary untrusted code are not automatically valid grants. Local FFI caller remains trusted to supply valid addresses. External writers with raw filesystem access can violate cooperative ownership. No encryption/server/cloud security selected here.
-No network uploads of diagnostics or drawing contents. Existing approved private dbdocs publication contains schema/notes only. CLI credential policy unchanged.
-Review status and final hashes: ../../quality/S02-v2-review.json. Planned tests are not executed evidence.
+No network uploads of diagnostics or drawing contents. Existing approved private historical schema review publication contains schema/notes only. CLI credential policy unchanged.
+Review status and final hashes: quality/historical-records.json (Git b0cb531). Planned tests are not executed evidence.

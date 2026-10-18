@@ -29,4 +29,4 @@ standalone acquisition and future publication. Preserve the original hashed thre
 Use a concrete threat delta when implementing these boundaries; source research is not security proof.
 
 
-S02 v2 sensitive design update: [threat delta](S02-v2-threat-delta.md), edit-capable peers/replay/receipt privacy/lifetime and cross-file recovery. Independent snapshot assessment is recorded in ../../quality/S02-v2-review.json; runtime mitigations/tests remain unimplemented.
+S02 v2 sensitive design update: [threat delta](S02-v2-threat-delta.md), edit-capable peers/replay/receipt privacy/lifetime and cross-file recovery. Independent snapshot assessment is recorded in quality/historical-records.json (Git b0cb531); runtime mitigations/tests remain unimplemented.

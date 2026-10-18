@@ -10,7 +10,7 @@ that SQLite cannot make atomic across files, databases, native consent and files
 
 Persisted drawing identity combines stable document ID, database incarnation and scoped content/metadata revisions. Ordinary edits advance relevant counters; controlled replacement/restoration assigns a fresh incarnation. Coordinator restart alone does not change it. Existing restore-as-independent-import semantics still create a fresh document ID. The incarnation is not an ownership generation or schema version.
 
-Check incarnation and expected durable revisions within the write transaction; rejection changes nothing. Check acknowledgement identity before advancing saved state. Replacement must coordinate active clients and storage ownership; a token alone cannot fence arbitrary file swaps or external writers. Exact encoding/schema amendments, import/export treatment and lifecycle fencing remain concrete review items. The current DBML/hosted diagram does not yet include this amendment.
+Check incarnation and expected durable revisions within the write transaction; rejection changes nothing. Check acknowledgement identity before advancing saved state. Replacement must coordinate active clients and storage ownership; a token alone cannot fence arbitrary file swaps or external writers. Exact encoding/schema amendments, import/export treatment and lifecycle fencing remain concrete review items. The current schema source/hosted diagram does not yet include this amendment.
 
 ## Revision ownership
 

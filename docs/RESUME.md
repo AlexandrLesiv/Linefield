@@ -7,7 +7,12 @@ Delivered source/tests/docs are consolidated in the bootstrap PR; ignored local 
 recovery copies remain preserved. No reset/clean,
 main merge or release. Read AGENTS.md, objectives, latest decisions and the assigned task.
 
-Current executable task: [DX-G02 shared documentation](../tasks/DX-G02.md), branch
+Current executable task: [P05-S01 local styles](../tasks/P05-S01.md), branch
+codex/p05-s01-local-styles, stacked on PR #2 at b0cb531. Verified locally: 106 root tests and 121 browser tests pass; 32 visual pairs are unchanged.
+Component styles are local; globals cover document/reset integration only. Evidence and reviews:
+quality/local-styles-v1. Owner PR review/integration remains pending.
+
+Parent [DX-G02 shared documentation](../tasks/DX-G02.md), branch
 codex/dx-g02-shared-documentation; [PR #2](https://github.com/AlexandrLesiv/Linefield/pull/2) is
 open for owner review, explicitly stacked on [DX-G01 / PR #1](https://github.com/AlexandrLesiv/Linefield/pull/1)
 at e08f304. PR #1 is owner-review, not merged. Decision239 permits independent ready tasks while
@@ -57,8 +62,8 @@ is preserved verbatim as history; do not restart its completed queue.
 
 ## Latest verification and open lanes
 
-- DX-G01 fresh [bootstrap verification](../quality/bootstrap-v1/README.md): root aggregate87,
-  full browser118 (zero failures/skips/flaky), build, six schema tests and DBML validation passed.
+- DX-G01 fresh [Historical evidence](https://github.com/AlexandrLesiv/Linefield/commit/b0cb531): root aggregate87,
+  full browser118 (zero failures/skips/flaky), build, six schema tests and schema source validation passed.
   Native SVG conversion covers18 views; final review/publication state is in DX-G01.
 
 - Latest local aggregate: [native-resource-tools](../quality/native-resource-tools/README.md),
@@ -72,7 +77,7 @@ is preserved verbatim as history; do not restart its completed queue.
 - [Localization launch](../apps/web/quality/web-localization-launch/README.md):9 separate passes
   on unchanged app. Do not combine these into a claimed115-case run.
 - Keyboard follow-up is resolved: final full suite **118 passed**, zero failures/skips/flaky,
-  including the new pointer regression. [Exact evidence](../quality/continuation-2026-10-19/final-manifest.json).
+  including the new pointer regression. [Historical evidence](https://github.com/AlexandrLesiv/Linefield/commit/b0cb531).
   Final assets index-DCSOpgQJ.js / index-z7JnId1S.css; web gates/build and repository checks passed.
   Designer and independent review passed; reviewer audited runtime artifacts, their own sandbox
   rerun remained blocked. Physical assistive/IME/input, actual Zed and native apps remain unrun.

@@ -653,7 +653,7 @@ Updated 2026-10-16: Q48 A, Q49 A, Q50 A, Q51 A, Q52 A, Q53 A and Q54 B are appro
 decisions 132-138. Original alternatives remain review history. Package: durable export recovery
 and multi-process queue scope. Batch 7 is now fully approved. Preserve accepted capture timing,
 immutable job source, native consent, bounded FIFO, normal Quit behavior and completed-output
-preservation. The exact DBML/schema/access/locking mechanism still requires review; no implementation.
+preservation. The exact schema source/schema/access/locking mechanism still requires review; no implementation.
 
 48. **Durable export metadata storage:** A (recommended) a separate SQLite job database, with
     immutable drawing snapshots in a dedicated managed area using the reviewed Linefield snapshot
@@ -777,7 +777,7 @@ to meet those estimates. Remaining reviews are the concrete packets listed below
 S00E/F/G agenda. Only ask further policy questions where those reviews reveal a real owner tradeoff.
 
 Then stop generating small implementation-choice questionnaires. Specialists should consolidate
-concrete proposals for owner review: DBML/schema and storage state transitions; typed ABI/ownership/
+concrete proposals for owner review: schema source/schema and storage state transitions; typed ABI/ownership/
 platform mechanisms; numeric resource/performance budgets backed by probes; and identified design
 foundations/screens/motion. These are separate approval packets, not counted as A/B questions or
 already approved work. Later-platform features/distribution/network choices remain deferred. Detailed
@@ -896,7 +896,7 @@ No numbered batch question remains unanswered. Do not claim that all architectur
    native focus/IME precedence and capability gaps; owner reviews consolidated matrix.
 4. S00G distribution: current official channel requirements and day-zero implications, intended
    channels and role ownership. Actual enrollment/publishing stays deferred and separately approved.
-5. S02 technical packets: DBML/schema, typed signatures, ownership/rename transport, crash-safe
+5. S02 technical packets: schema source/schema, typed signatures, ownership/rename transport, crash-safe
    persistence/export coordination, name allocation/import ordering and lifecycle transitions.
    Exact mechanisms require review; policy-level approvals are insufficient to implement them.
 6. Measured/provisional engineering settings: input/zoom/selection tolerances; memory/queue/history/

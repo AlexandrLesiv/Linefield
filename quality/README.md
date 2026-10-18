@@ -1,15 +1,43 @@
-# Acceptance and evidence
+# Verification evidence
 
-Planned registry fields: feature/acceptance/invariant ID, task, discovered executable test IDs, test layer, platform/device, applicability, exact source revision/build, execution result and artifact links. Keep automated coverage separate from whether the test was run successfully.
+This folder contains **proof of checks and reviews**, not application source or runtime data.
+It grew as each task retained its results; it is not a requirement to keep every historical run
+in the current checkout. Test implementations live in scripts/ and apps/web/tests/.
 
-SU-01 through SU-20 are defined in docs/successor/delivery.md. The planned native acceptance registry has not executed. Browser prototype and shared resource checks have separate executed evidence linked below. Do not copy Native Sketch pass statuses. Build_reliability installs the registry and discovery/reporting checks when S01 is authorized.
+## Where to look
 
-The [contract catalog](../docs/contracts.md) defines CT/INV IDs; the [shared E2E plan](../docs/testing/shared-e2e.md)
-defines scenario IDs. Registry records also include scenario/fixture versions and hashes,
-capabilities, platform variants, driver/test IDs, retry history and freshness. A native UI
-scenario must not pass through dispatcher injection. All catalog scenarios remain planned.
+| Need | Entry point | Why retained |
+| --- | --- | --- |
+| Current style/cleanup task | [Local styles](local-styles-v1/README.md) | Fresh checks and visual/behavior preservation |
+| Shared diagram/schema tooling | [Shared documentation](shared-documentation-v1/README.md) | Generator checks, semantic review and render evidence |
+| Delivered baseline | [Bootstrap inputs](bootstrap-v1/tested-source.json) | Exact source hashes used by independent task launch briefs |
+| Unresolved storage failures | [Storage experiment](browser-storage-v1/README.md) | Actual corruption canaries/results and adoption blockers; do not prune |
+| Durable-library design | [Review packet](durable-library-review-v1/README.md) | Identified design snapshots, reviews and limits |
+| Web UI checks | [Web evidence index](../apps/web/quality/README.md) | Browser-specific results owned beside the app |
+| Older removed reports | [Historical record ledger](historical-records.json) | Original Git objects and hashes; not fabricated current passes |
 
-SU-20 and CT-09/INV-11 track i18n readiness; [locale scenarios](../docs/testing/internationalization.md) record language, region, direction, keyboard, resource/runtime version and translation review status separately. No real locales are yet certified.
+## What the files mean
+
+- JSON manifests bind a result to source/build hashes, tool versions and test IDs.
+- Logs/TAP files preserve actual check output; a passing old run does not certify changed code.
+- Review notes and SVG/PNG boards identify the design that was inspected or approved.
+- Synthetic failure fixtures preserve bugs we must not lose while choosing storage mechanisms.
+- Templates describe evidence to collect; an empty template is never a pass.
+
+The root tracked evidence was about 1.9 MiB before this cleanup; browser evidence is separate.
+Most repository disk use comes from ignored downloads/dependencies/captures, not these records.
+Those local files are not published. The eighteen obsolete or mixed historical reports retired
+in this cleanup remain recoverable from Git b0cb531. Their raw contents were not rewritten to
+pretend that old checks used today's tooling. Current links point to retained evidence or history.
+
+## Retention rule
+
+Keep the current task's concise result, exact tested identity, necessary review snapshot and any
+unresolved failure fixture. Archive superseded raw reports in Git when no current check/task needs
+their local path; repair links and name the revision. Never delete original drawings, credentials,
+recovery data or private captures under this evidence policy. Large reproducible captures and
+vendor downloads stay ignored locally. Do not auto-accept screenshots, hide failures or rewrite
+historical hashes. Detailed native acceptance requirements remain in [quality policy](../docs/quality.md).
 
 ## Security task/review records
 

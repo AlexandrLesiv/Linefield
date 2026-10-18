@@ -23,6 +23,7 @@ export const thumb = style({
   outlineOffset: 2,
   selectors: {
     "&:hover, &:focus-visible": { opacity: 1 },
+    "&::before": { content: '""', position: "absolute", inset: "0 -7px" },
     "&:active": { cursor: "grabbing" },
   },
   "@media": {
@@ -33,11 +34,6 @@ export const thumb = style({
       forcedColorAdjust: "none",
     },
   },
-});
-globalStyle(`.${thumb}::before`, {
-  content: '""',
-  position: "absolute",
-  inset: "0 -7px",
 });
 globalStyle('html[data-overlay-scrollbar="ready"]', {
   scrollbarWidth: "none",

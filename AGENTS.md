@@ -59,7 +59,10 @@ docs/design/archived-explorations.md; current handoff is docs/RESUME.md.
 
 ## Live web prototype conventions
 
-Within apps/web, author styles in Vanilla Extract .css.ts with semantic theme tokens; do not reintroduce parallel plain CSS styling. Keep English and Ukrainian in separate catalogues using stable semantic IDs and typed named placeholders. Author trusted data-only TypeScript catalogues; see docs/design/shared-resources-plan.md for generation invariants and platform boundaries. Browser/OS selects locale/theme. Use the same responsive Web gallery pattern everywhere (decision233). Remove platform-query simulation and hidden review switches; all live cards use ellipsis actions. Preserve browser context-menu/long-press behavior. Future native viewer capabilities remain separately reviewed. See docs/design/live-web-prototype.md.
+Within apps/web, author styles in Vanilla Extract .css.ts with semantic theme tokens. Use exported
+local style()/styleVariants classes bound explicitly to owned DOM elements. Reserve globalStyle for
+reset/document defaults, root theme and genuine document-level scrollbar behavior. Stable query hooks
+are not styling selectors. Do not reintroduce parallel plain CSS styling or global component rules. Keep English and Ukrainian in separate catalogues using stable semantic IDs and typed named placeholders. Author trusted data-only TypeScript catalogues; see docs/design/shared-resources-plan.md for generation invariants and platform boundaries. Browser/OS selects locale/theme. Use the same responsive Web gallery pattern everywhere (decision233). Remove platform-query simulation and hidden review switches; all live cards use ellipsis actions. Preserve browser context-menu/long-press behavior. Future native viewer capabilities remain separately reviewed. See docs/design/live-web-prototype.md.
 
 ## Quality requirements
 
@@ -582,7 +585,7 @@ Unmeasured numerical stroke-span support remains evidence-gated; no runtime or A
 ## S02 v3 owner approval (decision 209)
 
 Owner approved hosted Version8 and exact regional schema/defaults snapshot; follow
-docs/reviews/S02-v3-approval-2026-10-17.md and quality/S02-v3-review.json. Preserve reviewed
+docs/reviews/S02-v3-approval-2026-10-17.md and quality/historical-records.json (Git b0cb531). Preserve reviewed
 source bytes; pending wording inside the snapshot is historical, not an unanswered choice.
 Do not re-ask RC1–RC11. Exact revised ABI, numerical evidence and feature design review are separate.
 Proceed with delegated engineering defaults and coordinated UX/UI review proposals;

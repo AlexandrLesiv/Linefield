@@ -2,7 +2,7 @@ Current proposal: [S02 consolidated v2](../reviews/S02-consolidated-v2.md). This
 
 # S02 schema proposal v1: field dictionary
 
-Documentation only; uncommitted draft, no parser/migration/runtime validation. DBML files represent separate database boundaries. The displayed table structure is now owner-approved; remaining constraints/coordination need review. See ../reviews/S02-table-structure-approval-2026-10-16.md. No new fourth database is silently selected.
+Documentation only; uncommitted draft, no parser/migration/runtime validation. schema source files represent separate database boundaries. The displayed table structure is now owner-approved; remaining constraints/coordination need review. See ../reviews/S02-table-structure-approval-2026-10-16.md. No new fourth database is silently selected.
 
 ## Common representations
 
@@ -12,7 +12,7 @@ Documentation only; uncommitted draft, no parser/migration/runtime validation. D
 - *_utc_us is signed INTEGER microseconds since Unix epoch for display/history/ordering only, never process liveness or deadline evidence. Monotonic runtime clocks govern scheduling. Imported timestamps remain actual source values; no fabricating source edits.
 - REAL geometry is finite f64 in logical canvas units. RGBA are finite unpremultiplied sRGB channels 0..1. Pressure NULL is unavailable and 0 is a real measurement; normalized pressure 0..1. Exact width/coordinate/scale/zoom/name/row budgets must be fixed by S02 before implementation.
 - TEXT state values are finite enumerations checked by SQL; names are Unicode user data, not locators or log metadata. Shared Rust applies deterministic outer-whitespace trimming and approved name limits.
-- Every field is NOT NULL unless DBML explicitly omits it. No unreviewed defaults. Creation constructs and validates every required value explicitly.
+- Every field is NOT NULL unless schema source explicitly omits it. No unreviewed defaults. Creation constructs and validates every required value explicitly.
 
 ## Drawing database
 

@@ -237,7 +237,7 @@ Decision 72 selects STRICT tables in the native document and local catalog, requ
 SQLite 3.37 or newer. This is a runtime/schema compatibility requirement, not a new file format
 or tool-version scheme. Preserve explicit constraints/Rust validation and reviewed migrations;
 future browser builds must demonstrate support before claiming interchangeability. No silent
-fallback to permissive tables. Exact DBML/physical DDL still require owner review.
+fallback to permissive tables. Exact schema source/physical DDL still require owner review.
 
 Decision 106 selects normalized floating-point sRGB channels in native documents. Exact float
 width, alpha and conversion semantics remain schema review; do not quantize native values to

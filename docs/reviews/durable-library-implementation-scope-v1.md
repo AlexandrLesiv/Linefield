@@ -74,9 +74,9 @@ despite `preserveOnInitFailure:true` and `clearOnInit:false`. Actual before/afte
 are retained. This is a confirmed preservation blocker; a zero runner exit means the diagnostic
 completed, not storage passed. Neither candidate is production-ready. No user drawing was used.
 
-Reference SQL has6 reproducible in-memory Node SQLite cases, including14-table DBML column parity,
+Reference SQL has6 reproducible in-memory Node SQLite cases, including14-table schema source column parity,
 STRICT tables, identity/name rejection, atomic rename rollback, removal uniqueness and scope FKs.
-[Evidence](../../quality/library-schema-v1/README.md). These are smoke/constraint tests, not browser
+[Historical evidence](https://github.com/AlexandrLesiv/Linefield/commit/b0cb531). These are smoke/constraint tests, not browser
 schema-validator, migrations, recovery or production persistence acceptance.
 
 The designer inspected all three rendered boards and accepted their composition. Static designs

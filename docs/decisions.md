@@ -157,29 +157,14 @@ Naming/location can be chosen later. Draft retention/restoration, empty-draft cl
 publication/identity rules remain pending. No gallery, automatic draft deletion, concrete SQL
 schema or implementation is approved by this choice. See [autosave policy](autosave.md).
 
-## Database specialist and visual schema review
+## Database specialist and visual schema review — historical selection
 
-On 2026-10-16 the owner requested database-specialist entity/relationship visualization and
-handoff of visualized schemas for review. Added database_designer and docs/database-design.md:
-retired text-diagram notation conceptual/physical ER diagrams plus a dictionary and persistence sequence; rendered
-SVG/HTML fallback when needed. Owner approves the identified proposal before implementation.
-Rust retains implementation and shared semantics. No concrete schema or new product feature is
-approved by this workflow; configured role runtime discovery remains unverified.
-
-Follow-up: owner objected to retired text-diagram notation ERDs and asked to evaluate dbdiagram/dbdocs. The retired text-diagram notation
-ERD mandate is removed. DBML plus dbdiagram is the recommended review format, with dbdocs an
-optional hosted reference; setup/publication is pending, not authorized by reading their docs.
-Track schema and layout in Git; tested SQLite migrations remain executable authority. See
-docs/database-design.md for verified tool limits and the visual handoff requirements.
-
-## Selected database visualization workflow
-
-On 2026-10-16 the owner selected DBML with dbdiagram for its preferred visual review experience,
-superseding the pending tool comparison above. Keep DBML and companion layout in Git and provide
-a rendered versioned handoff for explicit schema approval. SQLite migrations remain executable
-authority, with parity verification; no assumed lossless DBML-to-SQLite generation. dbdocs hosting
-and optional extraction/check tools remain separate choices. No concrete schema, application
-implementation, purchase or public publication is approved merely by selecting this workflow.
+On 2026-10-16 the owner requested a database specialist and versioned visual schema handoffs,
+including entity relationships, a table dictionary and persistence sequences. Earlier visualization
+and hosting selections were subsequently retired by decision239. Current review uses shared schema
+definitions and generated native SVG views; tested SQLite migrations remain executable authority.
+Original tool-selection records are recoverable from Git b0cb531. The specialist cannot approve a
+schema or authorize product implementation. See docs/database-design.md for the current workflow.
 
 ## Architecture review — decision 7 (library lifecycle and first screen)
 
@@ -413,7 +398,7 @@ future provider locations; this layout does not implement cloud synchronization.
 S02 must define catalog/document metadata authority, cross-file reconciliation, staged creation/
 import and interrupted deletion. Never assume separate catalog and document updates succeed
 atomically. Concrete tables, constraints, journal/durability, connections, naming/file locations,
-export snapshots and catalog recovery still require a visualized DBML schema and owner review.
+export snapshots and catalog recovery still require a visualized schema source schema and owner review.
 This selects the storage layout only; no schema or application implementation is authorized.
 
 ## Architecture review — decision 23 (metadata authority)
@@ -1452,7 +1437,7 @@ Concrete keys and relationships must fit actual tables; do not introduce redunda
 merely to enforce a conceptual pattern. Active-tool selection and viewport remain distinct local
 metadata. Local preferences are not portable stroke properties, exports or rendering dependencies.
 
-S02/database_designer proposes the DBML table/field/key/constraint/index design, SQL constraints
+S02/database_designer proposes the schema source table/field/key/constraint/index design, SQL constraints
 versus Rust validation and schema migrations for owner visual review. Record introduction/default
 and incompatible-version handling; relational columns do not eliminate settings migrations.
 Future tools still require separate product/design review approval. This decision does not select an ORM,
@@ -1493,12 +1478,12 @@ local preferences. Do not introduce a mandatory external catalog dependency for 
 
 Review tests for stable seeded identities, localization-independent names, version uniqueness,
 missing/unsupported references, safe migrations and per-tool/per-drawing isolation. Concrete
-DBML and version compatibility policy remain review deliverables. Documentation only.
+schema source and version compatibility policy remain review deliverables. Documentation only.
 
 ## Architecture review — decision 70 (versioned tool registry direction; superseded by 71)
 
 On 2026-10-16 the owner approved the proposed stable tool ID plus explicit version-table
-structure as the direction for the DBML proposal. A tools table holds a stable standard 16-byte
+structure as the direction for the schema source proposal. A tools table holds a stable standard 16-byte
 UUID identity and locale-independent readable tool key. A tool_versions table identifies explicit
 supported contract versions for each tool. Tool-specific relational settings reference the
 appropriate tool/version while retaining explicit typed property columns under decision 68.
@@ -1513,7 +1498,7 @@ Perform joins during storage/query work and use validated typed settings in the 
 join per input sample. Portable drawing files must not depend on the local registry/preferences
 to render, and foreign keys cannot enforce references across catalog/drawing database files.
 Database designer must show the exact key/constraint/version-field design, seeded identities,
-migrations/unsupported-version behavior and self-contained artwork interpretation in DBML with
+migrations/unsupported-version behavior and self-contained artwork interpretation in schema source with
 owner visual review. Concrete constants/columns/DDL and implementation remain unapproved.
 
 Test stable identity/version relationships, localized names without identity change, referential
@@ -1545,7 +1530,7 @@ path. Portable drawing interpretation remains self-contained, not dependent on l
 
 Future incompatible artwork meaning requires reviewed top-level format/migration handling that
 preserves old appearance or rejects unsupported content; removing tool versions is not permission
-to reinterpret old files silently. Concrete DBML keys/types, seeded values, version numbering,
+to reinterpret old files silently. Concrete schema source keys/types, seeded values, version numbering,
 compatibility and conversion fixtures still require visual owner review. Test 16-byte round-trips,
 malformed lengths/UUIDs, canonical cross-host conversion, identity/FK mappings and existing import
 regeneration semantics. Documentation only; no code, schema or migration has been implemented.
@@ -1563,7 +1548,7 @@ reviewed 16-byte BLOB validation and semantic UUID checks. Numeric bounds, finit
 referential integrity and supported document interpretation remain explicit contracts. Review
 concrete supported type names and avoid using ANY to bypass the typed schema requirement.
 
-S02/database_designer shows STRICT in the physical schema specification and records any DBML
+S02/database_designer shows STRICT in the physical schema specification and records any schema source
 visualization limitations without pretending the diagram enforces it. Review executable migration
 DDL and effective table/runtime checks after implementation authorization. Top-level drawing and
 catalog version policies remain selected; no per-tool versions are reintroduced.
@@ -1895,7 +1880,7 @@ On 2026-10-16 the owner selected A for B01-Q2.
 Use a reviewed same-database foreign-key cascade so deleting a stroke row removes its owned
 sample rows. Rust still decides command admission, editing, Undo and save revision semantics;
 SQLite does not implement application Undo. Enable and verify foreign-key enforcement on each
-relevant connection. Concrete DDL remains for DBML/schema approval. Test orphan rejection,
+relevant connection. Concrete DDL remains for schema source/schema approval. Test orphan rejection,
 transaction rollback and Undo restoring the complete stroke/sample set; no cross-file cascade
 or deletion of unrelated shared tool definitions is implied.
 
@@ -2502,7 +2487,7 @@ Persist accepted export job intent and immutable source data for recovery/reconc
 crash or restart, rather than making the queue session-only. This is distinct from ordinary
 SQLite document autosave and does not authorize a new custom command protocol. Exact storage
 layout/schema, source snapshot encoding, durability boundary, destination access references,
-privacy/retention, quotas and worker claims require an owner-reviewed S02/DBML proposal.
+privacy/retention, quotas and worker claims require an owner-reviewed S02/schema source proposal.
 
 Recovery must distinguish unpublished work, known completed output and publication whose outcome
 is uncertain. Never blindly replay a possibly completed overwrite or promise exactly-once external
@@ -2626,7 +2611,7 @@ On 2026-10-16 the owner selected B08-Q48 A.
 
 Store durable export metadata in a separate SQLite job database. Keep immutable drawing snapshots
 in a dedicated managed area using the reviewed Linefield snapshot representation. Catalog rebuild
-must not discard accepted job intent. Exact DBML/schema, source representation, cross-file staging,
+must not discard accepted job intent. Exact schema source/schema, source representation, cross-file staging,
 reconciliation, cleanup, identity and privacy remain concrete S02 review; no custom codec implied.
 
 Documentation only. Exact contracts/schema/security/resource bounds and identified design require
@@ -2922,7 +2907,7 @@ a metadata timestamp is a separately documented recommendation, not a silently a
 
 ## Decision 155 — S02 table structure approved; hosted diagram review
 
-On 2026-10-16 the owner approved the table structure shown in dbdocs Version 3, not the remaining interfaces/ownership/recovery contract or application implementation. See reviews/S02-table-structure-approval-2026-10-16.md for exact scope/hashes. The owner declined local rendered diagram files; retain source/layout and hosted version evidence instead.
+On 2026-10-16 the owner approved the table structure shown in historical schema review Version 3, not the remaining interfaces/ownership/recovery contract or application implementation. See reviews/S02-table-structure-approval-2026-10-16.md for exact scope/hashes. The owner declined local rendered diagram files; retain source/layout and hosted version evidence instead.
 
 
 ## Decision 156 — DB1-A: conservative catalog-loss recovery
@@ -2944,7 +2929,7 @@ Owner selected B: Rust owns localized default-name creation in en/uk using host-
 
 ## Decision 160 — Root Node/TypeScript/pnpm tooling
 
-Owner explicitly requested removing tools/dbdiagram and setting up root Node.js/TypeScript/pnpm for future scripting. Root tooling and .ts check runner are authorized; app implementation remains pending. Keep dbdiagram 0.6.3 in root devDependencies, one pnpm lockfile, strict type/lint/format/size checks and disabled lifecycle scripts. CLI credential boundaries are unchanged. See tooling.md and ../quality/root-tooling.md for installed scope and evidence.
+Owner authorized root Node.js/TypeScript/pnpm tooling and a .ts check runner. The original schema-tool dependency was subsequently retired by decision239. Keep one pnpm lockfile, strict type/lint/format/size checks and disabled lifecycle scripts. See tooling.md and quality/historical-records.json (Git b0cb531) for the original scope and evidence.
 
 
 ## Decision 161 — DB7-A: caller-owned query buffers
@@ -3079,7 +3064,7 @@ Documentation only. Concrete contracts, identified design approval where applica
 
 ## Decision 181 — consolidated S02 v2 proposal approved
 
-On 2026-10-16 the owner replied “I approve” to the consolidated schema, typed interfaces, recovery transitions, resource limits and test plan. Approve the exact v2 snapshot recorded in quality/S02-v2-review.json and private hosted Version 6. Resource caps are approved provisional starting values, not measured guarantees. See reviews/S02-v2-approval-2026-10-16.md for scope and remaining feasibility/design review/runtime gates. This is design approval, not application implementation authorization. No material design deviation is implicitly approved.
+On 2026-10-16 the owner replied “I approve” to the consolidated schema, typed interfaces, recovery transitions, resource limits and test plan. Approve the exact v2 snapshot recorded in quality/historical-records.json (Git b0cb531) and private hosted Version 6. Resource caps are approved provisional starting values, not measured guarantees. See reviews/S02-v2-approval-2026-10-16.md for scope and remaining feasibility/design review/runtime gates. This is design approval, not application implementation authorization. No material design deviation is implicitly approved.
 
 ## Decision 182 — delegated platform IPC defaults
 On 2026-10-16 the owner explicitly asked the lead to choose and document safe defaults, then asked that store compatibility be checked. Under that delegated authority select docs/architecture/platform-ipc-defaults.md: direct typed Rust calls within processes; macOS NSXPC with discovery-only sandboxed SMAppService LaunchAgent; Windows local named pipes/standard JSON-RPC; Linux typed session D-Bus; in-process Apple-mobile scenes and Android JNI with private AIDL only for required secondary processes; browser postMessage/BroadcastChannel and coordinator-worker-owned Web Locks; no editable IPC on viewer hosts. This narrowly supersedes the no-extra-service macOS assumption and resolves IPC1 as A with store constraints. It is not registration, app implementation, new platform features or store approval. Concrete implementation/security/probe evidence and identified design where relevant remain gates; do not re-ask the user to choose these transport defaults. See docs/distribution/ipc-compatibility.md for packaging/consent restrictions. New budget options EB1–EB5 are not selected by this decision.
@@ -3183,7 +3168,7 @@ On 2026-10-17 the owner selected region/chunk addresses plus local coordinates i
 the previously proposed global-coordinate envelope. This selects a redesign direction,
 not a concrete representation. Prepare region size, address types/ranges, local precision,
 canonical normalization, cross-region strokes/transforms, viewport conversion, indexing,
-typed ABI and DBML changes for explicit owner review before implementation.
+typed ABI and schema source changes for explicit owner review before implementation.
 The old global-f64 contract is a historical approved snapshot, not implementation authority
 for the affected fields after this choice. Preserve its unrelated approved behavior.
 Do not equate coordinate regions with raster tiles or introduce a tiled renderer implicitly.
@@ -3320,7 +3305,7 @@ compute new placement around the gesture pivot and new scale from the captured b
 not accumulated event deltas. Preserve one-operation Undo and existing interaction guards.
 Use checked relative arithmetic before narrowing; never collapse huge absolute addresses
 to a global f64 merely to subtract them afterward. Reject unsupported precision/overflow
-atomically under the selected stroke-span contract. Exact DBML/typed declarations and
+atomically under the selected stroke-span contract. Exact schema source/typed declarations and
 numerical evidence remain for consolidated review; no schema publication or runtime code.
 
 ## Decision 204 — explicit feature edge-case responsibility and review
@@ -3336,12 +3321,12 @@ material architecture/design review approval, native foreground and implementati
 ## Decision 205 — RC9-A: flat region/local database columns
 
 On 2026-10-17 the owner selected RC9-A in engineering-budgets-v1.md. For the revised
-DBML review packet, replace samples.x/y with region_x/region_y (signed i64 INTEGER)
+schema source review packet, replace samples.x/y with region_x/region_y (signed i64 INTEGER)
 and local_x/local_y (finite REAL in [0,65536)); replace strokes.translation_x/y with
 placement_region_x/placement_region_y and placement_local_x/placement_local_y.
 Retain uniform_scale and existing identity/order/revision/transaction semantics.
 Derive the source anchor from the first original sample; no redundant anchor/region table.
-Exact constraints, visualized DBML and measured storage costs remain review/evidence items.
+Exact constraints, visualized schema source and measured storage costs remain review/evidence items.
 This records the column-layout direction, not unseen schema approval or implementation.
 
 ## Decision 206 — RC10-A: distinct canvas/world types and Rust-owned mapping
@@ -3369,25 +3354,25 @@ AppKit view orientation. RTL presentation never mirrors artwork.
 Preserve selected logical units, regional addressing, positive scale and normalization.
 Require known-point round trips, positive/negative region crossings, pan/zoom,
 selection/render/export parity and applicable flipped/unflipped native adapter checks.
-RC1–RC11 directions are now selected; exact DBML/ABI/ownership and numerical stroke-span
+RC1–RC11 directions are now selected; exact schema source/ABI/ownership and numerical stroke-span
 evidence remain for consolidated review. This records a convention, not runtime implementation.
 
-## Decision 208 — delegated conservative defaults and DBML handoff
+## Decision 208 — delegated conservative defaults and schema source handoff
 
-On 2026-10-17 the owner requested automatic selection of recommended defaults and a DBML
+On 2026-10-17 the owner requested automatic selection of recommended defaults and a schema source
 review handoff rather than further preference questions. Prepare the minimal v3 amendment
 consistent with RC1–RC11: include regional saved viewport centers, explicit validated field
 initialization, existing indexes and bounds, and no redundant/persistent derived geometry.
-These are lead-selected proposals for owner review, not approval of unseen DBML, runtime
+These are lead-selected proposals for owner review, not approval of unseen schema source, runtime
 implementation or measured optimality. Do not invent a supported stroke span without evidence.
 Preserve prior approval snapshots. Scope here is the schema handoff; exact generated ABI and
 feature UX remain separate review artifacts.
 
 ## Decision 209 — approval of S02 v3 regional schema
 
-On 2026-10-17 the owner approved the S02 v3 DBML handoff, private dbdocs Version8,
+On 2026-10-17 the owner approved the S02 v3 schema source handoff, private historical schema review Version8,
 and accompanying recommended schema defaults/constraints/cases. Exact reviewed hashes
-are retained in quality/S02-v3-review.json. See docs/reviews/S02-v3-approval-2026-10-17.md.
+are retained in quality/historical-records.json (Git b0cb531). See docs/reviews/S02-v3-approval-2026-10-17.md.
 This settles the regional schema amendment; it does not approve unseen revised generated
 ABI, unmeasured stroke-span guarantees, application implementation or designs.
 Preserve exact reviewed source bytes and historical approvals. Do not reopen RC1–RC11.
@@ -3613,7 +3598,7 @@ workflow, authorized repository/workflow bootstrap with preservation of all exis
 requested conversion of existing diagrams plus workflow SVG documentation. Exact approved
 artifact hashes and scope are recorded in docs/reviews/workflow-style-approval-2026-10-19.md.
 New and substantively revised explanatory diagrams use native SVG v2; historical snapshots
-remain preserved and DBML/dbdocs remains the database ER-review exception.
+remain preserved. The initial database-review exception was subsequently retired by decision239.
 
 One executable task owns one branch and PR. The harness prepares design, implementation, tests
 and independent review within approved scope; the owner reviews/merges or requests changes.
@@ -3642,3 +3627,17 @@ Generate schema SVGs/dictionary from unchanged reference SQL, reviewed notes and
 job definitions. Retire the old CLI/dependency/layout files and duplicate diagram sources. Original
 approved bytes remain retrievable from commit e08f304; old hashes describe that historical revision,
 not cleaned current prose. No schema/ABI/runtime authority is broadened by changing review format.
+
+## Decision 240 — local component styles and evidence cleanup
+
+On2026-10-19 the owner requested full retirement of old schema-tool names, an explanation of the
+quality folder and local Vanilla Extract styles wherever possible. Component rules use exported
+local classes with explicit DOM bindings; globals are limited to resets and genuine document-wide
+preferences/integration. This is a behavior/appearance-preserving refactor, not a redesign.
+
+Historical tool-specific reports are retired whole into Git, with a concise object/hash ledger,
+rather than editing old logs into false fresh evidence. Current text/provenance uses neutral schema
+terminology; original review bytes remain in Git history. Schema fixture changes are editorial
+metadata only and must prove all semantic fields unchanged before updating their pinned hash.
+Keep unresolved failure fixtures, current source/test evidence and approval scope. No history
+rewrite, account deletion, schema behavior change or production implementation is authorized.

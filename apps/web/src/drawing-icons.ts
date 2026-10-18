@@ -1,3 +1,4 @@
+import { toolIcon, propertyIcon, strokeIcon } from "./drawing-controls.css.ts";
 const paths = {
   pen: "M12 3 5 16l4 3h6l4-3L12 3Zm0 0v10m-3 8h6",
   select: "M8 4H4v4m12-4h4v4M4 16v4h4m12-4v4h-4",
@@ -14,6 +15,14 @@ const paths = {
 export type DrawingIcon = keyof typeof paths;
 export function drawingIcon(name: DrawingIcon): SVGSVGElement {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute(
+    "class",
+    name === "stroke"
+      ? strokeIcon
+      : ["width", "opacity", "smoothing"].includes(name)
+        ? propertyIcon
+        : toolIcon,
+  );
   svg.setAttribute("viewBox", "0 0 24 24");
   svg.setAttribute("aria-hidden", "true");
   svg.setAttribute("focusable", "false");

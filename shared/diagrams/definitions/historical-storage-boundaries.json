@@ -2,7 +2,7 @@
   "width": 1440,
   "height": 1264,
   "title": "Native editing and storage · historical v1",
-  "description": "Execution ownership and file boundaries only. DBML / hosted dbdocs remains the schema authority.",
+  "description": "Historical execution ownership and file boundaries. Current schema authority: shared definitions and tested SQL.",
   "elements": [
     {
       "tag": "rect",
@@ -47,7 +47,7 @@
         "y": "161",
         "class": "body"
       },
-      "text": "Execution ownership and file boundaries only. DBML / hosted dbdocs remains the schema authority."
+      "text": "Historical execution ownership and file boundaries. Current schema authority: shared definitions and tested SQL."
     },
     {
       "tag": "path",
