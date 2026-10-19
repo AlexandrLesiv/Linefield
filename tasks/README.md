@@ -28,7 +28,7 @@ Historical PR/base statements below do not override the actual integrated state.
 | Order | Task | Gate |
 | --- | --- | --- |
 | 1 | [S02-W01 memory editor contract/design](S02-W01.md) | [PR #9](https://github.com/AlexandrLesiv/Linefield/pull/9) merged; investigation/reviews complete; core and P1/H1/S1–S4 approved; N1/A1/R1 approved at51d9345; merged c28f56b, integrated tree verified |
-| 2 | [P05-E01 runtime foundation](P05-E01.md) | Owner-confirmed second task; implemented/reviewed on codex/p05-e01-memory-runtime from verified c28f56b; preparing owner-review PR; no ink yet |
+| 2 | [P05-E01 runtime foundation](P05-E01.md) | Owner-confirmed second task; implemented/reviewed from verified c28f56b; [PR #10](https://github.com/AlexandrLesiv/Linefield/pull/10) awaits owner review; no ink yet |
 | 3 | [P05-E02 usable pen and viewport](P05-E02.md) | Separate task confirmation and verified foundation; pen, pan/zoom, settings, cancellation and Undo/Redo together |
 
 S02-W01 is integrated at `c28f56b`; P05-E01 is confirmed and assigned to one implementation
