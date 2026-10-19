@@ -1,5 +1,7 @@
 import { penCheckpoint } from "./pen-checkpoint.ts";
 import { undoCheckpoint } from "./undo-checkpoint.ts";
+import { workerCheckpoint } from "./worker-checkpoint.ts";
+import { workerBaseline } from "./worker-baseline.ts";
 import { renderTargetBoundary } from "./render-target.ts";
 import { renderTargetFailure } from "./render-target-failure.ts";
 import { rotationBoundary } from "./rotation.ts";
@@ -75,4 +77,12 @@ action("Run real pen checkpoint", async () => {
 action("Run Undo rendering checkpoint", async () => {
   await loadEngine();
   return undoCheckpoint(await loadRenderer(), canvas);
+});
+action("Run worker reference", async () => {
+  await loadEngine();
+  return workerBaseline(await loadRenderer(), canvas);
+});
+action("Run worker feasibility", async () => {
+  await loadEngine();
+  return workerCheckpoint(canvas);
 });
