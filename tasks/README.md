@@ -10,9 +10,10 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 ## R06 padded raster checkpoint
 
-[P05-R06](P05-R06.md) is owner-approved: verify padding against the unchanged whole CPU
-image, then run large-stroke performance only if the finite correctness corpus passes.
-Current previews remain unchanged; no production migration. Dependency PR #12 remains open.
+[P05-R06](P05-R06.md) completed with all approved padding sizes rejected. Padding 8px
+fixes the original control but fails a thin diagonal, including pixels well inside tiles.
+Large-stroke performance remains unrun under the approved correctness gate. Current previews
+remain unchanged; no production migration. Dependency PR #12 and owner review remain open.
 
 ## R05 CPU raster checkpoint
 
