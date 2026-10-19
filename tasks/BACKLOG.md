@@ -1,6 +1,6 @@
 # Product backlog
 
-This list records owner-approved functionality and priority. Positions 1–50 were explicitly
+This list records owner-approved functionality and priority. Positions 1–54 were explicitly
 approved in this chat. They are planned outcomes, not completed features or blanket approval
 of unresolved designs, ABI, numerical, storage or security choices. Execution begins only after
 applicable contracts and designs are approved. Split large outcomes into bounded child tasks,
@@ -63,6 +63,10 @@ by current owner policy. Preserve existing gallery/navigation, themes and Englis
 | 48 | Filter selection targets | Child task to scope before implementation | Approved backlog; filter/input/design contracts remain |
 | 49 | Export PDF | Child task to scope before implementation | Approved backlog; dimensions/fidelity/publication contracts remain |
 | 50 | Customize pen pressure response | Child task to scope before implementation | Approved backlog; response/input/style contracts remain |
+| 51 | Export selected artwork | Child task to scope before implementation | Approved backlog; selection snapshot/bounds/export design remains |
+| 52 | Find offscreen artwork | [S05 Navigation and editing](S05.md) | Approved backlog; indicators/navigation/design contracts remain |
+| 53 | Search and favorite reusable objects | Child task to scope before implementation | Approved backlog; search/favorite/storage design remains |
+| 54 | Assign layers automatically by tool | Child task to scope before implementation | Approved backlog; routing/layer/history design remains |
 
 ## Visual and interaction design approval
 
@@ -446,6 +450,36 @@ Tilt and velocity dynamics remain separate. Review response representation, boun
 pressure fallback, preset interaction and per-stroke settings capture. This expands the initial
 linear-width baseline; no new curve or hardware support is selected by backlog approval.
 Concepts reference: CS-DOC-008 (documented; physical pressure response not tested).
+
+## 51. Export selected artwork
+
+Export only the current selection using supported formats, with reviewed bounds, background
+and mask handling. Depends on selection and the applicable format exports; capture a coherent
+selection snapshot rather than letting later edits/navigation change an accepted export.
+Review hidden/locked/grouped content and empty-selection behavior. No new format is implied.
+Concepts reference: CS-DOC-022 and CS-OBS-018 (region option observed, output not verified).
+
+## 52. Find offscreen artwork
+
+Show indicators for artwork outside the viewport and provide navigation back to it without
+moving artwork. Review visibility rules, multiple offscreen regions, bounds, reduced motion
+and shared interaction guards. Indicators must not eagerly materialize all drawing content.
+Concepts reference: CS-DOC-017 (documented iOS behavior; not exercised in the device study).
+
+## 53. Search and favorite reusable objects
+
+Search locally saved objects by name and mark favorites for quick insertion. Depends on #26;
+review Unicode matching, bounded result loading, empty states and favorite persistence.
+No folders, marketplace or network service. Search/favorites do not alter inserted copies.
+Concepts reference: CS-DOC-024 and CS-OBS-017 (library controls inspected, operations not tested).
+
+## 54. Assign layers automatically by tool
+
+Optionally place new artwork into tool-associated layers. Review explicit rules for locked/hidden
+layers and switching back to manual placement. Depends on #11 and supported creation tools;
+do not move existing artwork retroactively or introduce new tools implicitly. Define creation,
+active-layer feedback, cancellation and history semantics before implementation.
+Concepts reference: CS-DOC-020 (documented; automatic mode observed but routing not exercised).
 
 ## Further candidates
 
