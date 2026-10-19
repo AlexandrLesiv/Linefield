@@ -2,8 +2,8 @@
 
 Part of [WMP-C2](web-memory.md). Owner G1/P1 includes pan/zoom and approves its controls; G2 approves screen/surface
 limits, G3 precision/normalization policy and G4 swept-disk geometry. Concrete zoom-aware
-mapping algorithms and new ABI details below remain engineering recommendations needing
-owner review as N1 before production adoption. This source separates the completed bounded
+mapping algorithm and projection policy below received owner N1 approval at51d9345
+on2026-10-19; actual product implementation still awaits its separately confirmed task. This source separates the completed bounded
 pan/zoom investigation from earlier fixed-view observations. Generated observations stay in ignored `.build-cache`.
 Owner-confirmed S02-W01 permits this bounded synthetic investigation only. It is not an
 E2E suite, Rust editor, production arithmetic adoption, renderer or benchmark.
@@ -133,7 +133,7 @@ zoom1 setup; they do not certify the now-required pan/zoom profile. Near-tangent
 sqrt conditioning, f64 radius construction, clipping/AA and workload require actual
 release CanvasKit E2E as WMP-08/09/11. Production acceptance cannot cite only these bounds.
 
-## N1 — completed bounded pan/zoom investigation; adoption recommendation
+## N1 — completed bounded pan/zoom investigation; owner-approved mechanism
 
 Recommend exact single-divisor normalization for input and captured-base pan using a
 fixed20×u64 (1280-bit) sign/magnitude workspace. The isolated candidate is
@@ -141,7 +141,7 @@ fixed20×u64 (1280-bit) sign/magnitude workspace. The isolated candidate is
 search over ordered positive binary64 bit patterns. The candidate generates quotient bits
 using integer division/remainder doubling, independently of that reference. Mathematical
 domain validation precedes local rounding and checked carry. Neither implementation is an
-application engine; adopting this arithmetic remains an owner decision before product code.
+application engine; the owner approved its adoption as N1, with runtime acceptance still required.
 
 For example, center(region0,local0.1), canvas−8191.5, extent1 and zoom0.125 yield
 region−1/local0.1 after exact normalization. Ordinary `local+(canvas−extent/2)/zoom`
@@ -261,9 +261,8 @@ Undo and scheduling still require real-app WMP-02/04/05/08/09/11 E2E. A stroke e
 65,536 samples does not increase this spatial span because its mapping stays fixed; the
 experiment does not allocate such a stroke or claim history/resource behavior was exercised.
 
-N1's exact arithmetic and outward regional projection policy need owner approval before
-adoption. Remaining ABI/cache/publication decisions belong to the identified WMP-C2 packet.
-No new product coordinate questionnaire or storage prerequisite is introduced. After
-approval, rust_engine and the web implementer own observable conformance; rendering_performance
+N1's exact arithmetic and outward regional projection policy are owner approved at51d9345,
+alongside A1 and R1 in WMP-C2. No new product coordinate questionnaire or storage prerequisite
+is introduced. After separate implementation-task confirmation, rust_engine and the web implementer own observable conformance; rendering_performance
 owns the renderer/AA review, with fresh independent review of implementation and evidence.
 Traceability: CT-02/06; INV-03/04/08; REG-PREC-01/03/04/06 and the WMP scenarios above.

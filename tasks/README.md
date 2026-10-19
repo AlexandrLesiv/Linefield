@@ -27,7 +27,7 @@ Historical PR/base statements below do not override the actual integrated state.
 
 | Order | Proposed task | Gate |
 | --- | --- | --- |
-| 1 | [S02-W01 memory editor contract/design](S02-W01.md) | [PR #9](https://github.com/AlexandrLesiv/Linefield/pull/9) owner review; investigation/reviews complete; core and P1/H1/S1–S4 approved; final N1/A1/R1 technical disposition and integration pending |
+| 1 | [S02-W01 memory editor contract/design](S02-W01.md) | [PR #9](https://github.com/AlexandrLesiv/Linefield/pull/9) owner review; investigation/reviews complete; core and P1/H1/S1–S4 approved; N1/A1/R1 approved at51d9345; integration pending |
 | 2 | [P05-E01 runtime foundation](P05-E01.md) | Separate task confirmation and approved/integrated prerequisite; no ink yet |
 | 3 | [P05-E02 usable pen and viewport](P05-E02.md) | Separate task confirmation and verified foundation; pen, pan/zoom, settings, cancellation and Undo/Redo together |
 

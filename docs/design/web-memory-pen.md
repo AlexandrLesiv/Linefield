@@ -460,12 +460,12 @@ Numbers/percentages use independent browser regional formatting; the table's 100
 meaning, not permission to hardcode formatting. Resource/layout/runtime/linguistic approval
 remain four distinct checks. No count/plural message is needed by this scope.
 
-## Pending R1 presentation mechanism
+## Owner-approved R1 presentation mechanism
 
-The companion contract proposes coherent full-frame staging and Rust acknowledgement before
-fresh ink after a mapping/content change. This is a material readiness/presentation addition
-for owner R1 disposition; P1's immediate viewport behavior and C4 soft targets do not already
-approve an arbitrary freeze. Reuse memory.loading in the existing fixed canvas overlay while
+The owner approved R1 at51d9345 on2026-10-19: coherent full-frame staging and Rust
+acknowledgement before fresh ink after a mapping/content change. This specifically approves
+the readiness/presentation addition below; it does not accept arbitrary freezes or waive
+measured interaction requirements. Reuse memory.loading in the existing fixed canvas overlay while
 the prior coherent image is retained. Mark canvas busy; preserve focus and unsaved disclosure.
 No modal, layout shift, fake progress percentage, failure wording or Retry during normal rebuild.
 Back, pan/zoom and cancel remain operable. Rejected ink requires release and a fresh contact
@@ -475,7 +475,7 @@ Designer reviewed this proposal on2026-10-19. Measure pan feedback and time to n
 cold/warm/evicted scenes and long strokes; continuous supersession must not be disguised as
 responsive pan. Bounded pages do not bound full-stroke rendering time. If measurements fail,
 return a concrete alternative for review rather than silently adding tiles/workers or weakening
-interaction expectations. This section is a pending technical presentation amendment, not a
+interaction expectations. This section records the approved technical presentation amendment, not a
 reopening of approved S1–S4 composition and lifecycle choices.
 
 ## Observable acceptance and evidence ownership

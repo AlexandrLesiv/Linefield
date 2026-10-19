@@ -1,6 +1,6 @@
 # In-memory web editor contract WMP-C2
 
-2026-10-19. **Recorded owner choices with remaining engineering recommendations; no production implementation authorization.**
+2026-10-19. **Owner-approved contract choices; production implementation awaits separate task confirmation and prerequisite integration.**
 S02-W01 is confirmed first. Task branch includes integrated main `545f222`; approval extension starts at `797ffb1`. The isolated
 synthetic candidate is evidence for this proposal, not an editor or passing browser E2E.
 Owners: rust_engine semantics; designer [WMP-D3](../design/web-memory-pen.md);
@@ -15,9 +15,9 @@ screen/surface limits, G3 precision/normalization policy and G4 swept-disk round
 W1–W4 approve generated checked bindings, one main-thread Rust owner, bounded batches and
 the reviewed security direction. C1 requires memory-based long strokes without a65,536
 lifetime-sample cap; C2 approves oldest whole-history retirement; C3 approves context
-recovery preserving accepted RAM. Exact new pan/zoom signatures, zoom-aware numerical
-admission, long-stroke indexing and renderer reporting/rebuild mechanisms still need the
-bounded engineering recommendation and evidence below. No unspecified ABI is approved.
+recovery preserving accepted RAM. The owner subsequently approved N1/A1/R1 against
+reviewed commit51d9345: exact arithmetic/projection, typed pan/index/presentation additions
+and coherent renderer/accounting mechanisms below. No unspecified ABI is approved.
 Owner direction on2026-10-19 retains CanvasKit for cross-platform continuity and permits
 increasing the web memory budget; native Canvas may be considered later. This supersedes
 the previous128MiB aggregate constraint for this web slice. The owner subsequently approved
@@ -28,16 +28,16 @@ disposable resources/reduce optional rendering work; reject only on actual resou
 Budget approval is not runtime acceptance and creates no reliable OS/browser warning guarantee.
 Owner also approved memory-based admission without a fixed document stroke quota: actual
 Rust allocation accounting, observed CanvasKit heap, measured renderer estimates and disposable
-cache eviction. Exact accounting/reporting and coherent redraw mechanisms still need review
-and runtime evidence. Remaining engineering choices are presented separately from the approved product behavior.
+cache eviction. N1/A1/R1 approve the concrete mechanisms; actual runtime evidence remains
+required. Material deviations return for review rather than inheriting this approval.
 Owner choices1A/2A retain the temporary drawing, accepted settings and both Undo/Redo
 stacks across gallery Back/Resume. History belongs to the page-lived document; editing
 session attachment generations do not define or reset its lifetime. This approved
 lifecycle does not authorize production implementation or imply survival after page loss.
 Owner choices3A/4B/5A approve browser-reported pen pressure, constant-width mouse ink,
 no finger drawing with browser touch gestures allowed, and native width/color controls
-for now (width8, opaque black defaults). These exact choices are settled. Remaining concrete
-mechanisms and evidence gaps are identified below; do not reopen the selected product choices.
+for now (width8, opaque black defaults). These exact choices are settled. Implementation
+evidence gaps are identified below; do not reopen the selected product choices.
 The numerical investigation supports a conservative candidate; browser/CanvasKit fidelity,
 allocation high-water and release workload gates remain P05-E02 acceptance requirements.
 
@@ -49,21 +49,23 @@ down, and the history retirement target with the owner-approved H1 exception. Th
 host, selection/transform editing, extra brushes, predictions, import/export or cloud.
 This packet is an additive web profile, not replacement of approved native C contracts.
 
-## Remaining owner decisions before production implementation
+## Owner-approved technical decisions
 
-P1, H1 and S1–S4 are approved against the797ffb1 recommendation batch. The remaining
-choices below concern new concrete mechanisms, not a reopening of those product decisions.
+P1, H1 and S1–S4 were approved against the797ffb1 recommendation batch. On2026-10-19
+the owner explicitly stated, “I approve N1, A1 and R1.” This approves the technical packet
+at51d9345 and the choices below. It does not confirm P05-E01, authorize implementation,
+accept future runtime evidence or authorize merging PR #9.
 
-| Choice | Recommendation | Tradeoff / gate |
+| Approved choice | Selected mechanism | Remaining evidence gate |
 | --- | --- | --- |
 | N1 — arithmetic and finite projection | Fixed20×u64 exact integer/rational input and captured-base pan normalization, nearest-even checked carry; exact regional painted-bounds classification before bounded relative projection. See numerical companion for candidate capacity, operation order, corpus and repaired counterexample. | More arithmetic than ordinary f64 division; no global Number flattening or new package. Release Wasm latency and CanvasKit fringe/geometry E2E still required. |
 | A1 — new typed boundary | Checked u64/bigint cumulative counts/cursors; named pan/step APIs and Rust-issued presentation acknowledgement as specified below. | Additional generation/readiness bookkeeping prevents stale frames from enabling ink; no raw memory views, generic protocol or TypeScript editing engine. |
 | R1 — rendering working set | One full-frame staging surface, whole strokes processed in paint order, coherent committed image plus complete active path; optional cache separate from mandatory single-stroke working resources. | Extra image/surface backing may exceed96MiB soft target. Requires measured path/snapshot/draw peaks and latency; no fixed stroke quota or partial-frame publication. |
 
-These recommendations are ready for disposition only with the final S02-W01 numerical and
-independent review evidence. Measurements, generated binding audit, browser E2E and actual
+These choices have owner disposition after numerical and independent review.
+Measurements, generated binding audit, browser E2E and actual
 screen review are implementation acceptance work, not claims made by this packet. Confirm
-P05-E01 separately after prerequisite integration; no product code starts from this document.
+P05-E01 separately; start only after prerequisite integration. No product code starts from this document.
 
 ## W1: exact named boundary and generated declarations
 
@@ -149,10 +151,10 @@ export function memoryDispose(owner: Id): Reply;
 ```
 
 The obsolete `activeSampleLimit` is removed: there is no lifetime sample-count quota.
-Remaining owner choice A1 proposes checked u64/bigint cumulative sample indices, stroke
+Owner-approved A1 selects checked u64/bigint cumulative sample indices, stroke
 counts and verb cursors exactly as shown above; bounded per-page array lengths remain Number.
-Pan/step signatures in this table are also part of A1, not approved generated source.
-The unchanged binding direction was already approved; these additions require owner disposition. Never wrap/truncate an index, silently split one stroke
+Pan/step signatures in this table are part of approved A1; actual generated source remains
+unbuilt and must match the approved contract. Never wrap/truncate an index, silently split one stroke
 into several Undo entries, or treat65,537 samples as intrinsically invalid. Mathematical
 counter exhaustion is a representability failure, not a product stroke-duration limit.
 
@@ -306,7 +308,7 @@ work cannot. Cover a newest stroke>16MiB through End→Undo→Redo→Back→Resu
 See [numerical candidate/evidence](web-memory-numerics.md) for exact normalization, finite
 envelope, construction/error analysis and experiment limitations. Rust owns all mapping,
 stroke geometry and f32 conversion. Browser only acquires logical canvas coordinates and
-executes bounded Rust scene instructions using CanvasKit. N1 proposes a2-logical-pixel
+executes bounded Rust scene instructions using CanvasKit. N1 selects a2-logical-pixel
 conservative culling guard around the viewport; its AA/clip adequacy requires pinned-renderer
 E2E. The numerical envelope supports guards up to4096 conditionally, not a selection of that
 larger value or proof of actual raster fringe. No false-negative culling or silent tolerance
@@ -326,7 +328,7 @@ viewport center/zoom and changes framing, never stored ink. Browser page gesture
 distinct from editor viewport commands and cannot silently mutate Rust's mapping.
 
 Recommend named checked `memoryPanBegin`, `memoryPanUpdate`, `memoryPanEnd` and shared
-Cancel, plus `memoryPanStep` and `memoryZoomStep` for the owner-approved P1 UI step origins. These are **pending interface recommendations**, not emitted/generated source.
+Cancel, plus `memoryPanStep` and `memoryZoomStep` for the owner-approved P1 UI step origins. These are **owner-approved interface contracts**, not emitted/generated source.
 Pan captures center/zoom/start point and an interaction token; ordered updates carry that
 token, captured mapping generation and current canvas point. Derive every preview from
 `capturedCenter−(current−start)/capturedZoom`, not accumulated rounded deltas. Each accepted
@@ -365,7 +367,7 @@ Stroke RGBA has alpha1, fill nonzero, antialias enabled; no outline stroke style
 Each disk and tangent quadrilateral has matching orientation. One filled path per stroke;
 separate per-segment draw calls would change antialiased union coverage and are forbidden.
 
-**Remaining owner choice R1 — whole-stroke streaming and coherent presentation.**
+**Owner-approved R1 — whole-stroke streaming and coherent presentation.**
 Each stroke has a geometry-generation token, stable while append adds complete contours
 with immutable prefix. Mapping change/reconstruction replaces it; cancellation removes the
 preview. StrokeState supplies token and available verb count. Rust keeps canonical samples
@@ -398,7 +400,7 @@ stroke once, never separate segments. Retain the last coherent image during reco
 publish only a complete image matching current content/mapping/surface generations. A late
 final frame after resize or viewport change is discarded. One rebuild request and one latest
 dirty marker; no queue of snapshots or stale builds. The retained frame is an updating presentation, never misrepresented as the current accepted
-mapping. Pending R1 reuses memory.loading in the existing fixed canvas status overlay,
+mapping. Approved R1 reuses memory.loading in the existing fixed canvas status overlay,
 marks the canvas busy and preserves focus/unsaved disclosure. No modal, layout shift, fake
 percentage, failure copy or Retry for ordinary progress. Keep Back/pan/zoom/cancel operable;
 this status cannot intercept their input. Rejected ink requires release and fresh contact
@@ -416,10 +418,10 @@ all permit it. An acknowledgement is accepted only for an attached, nonsuspended
 presentation; it cannot resume a suspended/detached owner. Stale acknowledgement rejects unchanged; it neither mutates artwork/history
 nor creates a viewport interaction. Active-prefix Append changes scene/geometry only and does
 not invalidate the committed background's token or stop already-admitted ink. Reserve terminal
-presentation increments with other generations. This is an addition for owner approval,
+presentation increments with other generations. This is an owner-approved addition,
 not a security proof against hostile same-origin JavaScript.
 
-R1 explicitly proposes temporarily withholding fresh ink until displayed mapping/content is current. Viewport requests may supersede a
+R1 explicitly permits temporarily withholding fresh ink until displayed mapping/content is current. Viewport requests may supersede a
 rebuild; Back/cancel remain available. System remap or actual renderer failure cancels
 unfinished ink through Rust before invalidating mapping. Preserve completed Rust state and
 history. Do not transform stale raster content as an unreviewed pan shortcut. If release
@@ -549,7 +551,7 @@ snapshot image handles during publication. Delete superseded handles; retire old
 resources before replacement. Conservatively account for up to four RGBA backing allocations
 during snapshot/copy-on-write handoff:128MiB at the approved pixel maximum, before stencil,
 Skia cache and driver overhead. Shared backing may reduce this only if measured. This explicitly
-replaces the earlier single-surface/no-doubled-surface restriction and needs owner approval.
+replaces the earlier single-surface/no-doubled-surface restriction under the N1/A1/R1 approval.
 The96MiB graphics/backing target remains soft; successful allocation above it is not a stop.
 Neither dimensional estimates nor CanvasKit counters promise whole-browser RSS accounting.
 

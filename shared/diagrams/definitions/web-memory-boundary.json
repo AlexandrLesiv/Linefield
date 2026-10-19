@@ -2,7 +2,7 @@
   "width": 1440,
   "height": 900,
   "title": "Proposed in-memory web editor boundary",
-  "description": "One page-owned Rust editor supplies immutable geometry to CanvasKit; product lifetime and controls are approved; remaining numerical, ABI and rendering mechanisms await approval.",
+  "description": "One page-owned Rust editor supplies immutable geometry to CanvasKit; product lifetime and controls are approved; numerical, ABI and rendering mechanisms are approved; implementation awaits task confirmation.",
   "elements": [
     {
       "tag": "rect",
@@ -28,7 +28,7 @@
         "y": "58",
         "class": "meta"
       },
-      "text": "TECHNICAL CHOICES PENDING"
+      "text": "CONTRACT APPROVED · NOT IMPLEMENTED"
     },
     {
       "tag": "text",
@@ -377,7 +377,7 @@
         "y": "800",
         "class": "body"
       },
-      "text": "Product choices approved; exact numerical, ABI and rendering additions are in the linked packet."
+      "text": "Contract and design choices approved; implementation needs a separately confirmed task."
     },
     {
       "tag": "text",
