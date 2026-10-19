@@ -8,6 +8,13 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 # Task board
 
+## R01 rendering checkpoint
+
+[P05-R01](P05-R01.md) is owner-approved and stopped with a rejected PathOps grouping candidate.
+See its current finding and [technical record](../docs/interfaces/web-rendering-r2-proposal.md).
+[R02](P05-R02.md), [R03](P05-R03.md) and [R04](P05-R04.md) remain conditional; do not
+start production migration from this failure. Owner PR review/integration remains pending.
+
 See the [approved product backlog](BACKLOG.md) for the owner-confirmed order of upcoming functionality.
 Those priorities do not mark the milestones below complete or waive implementation gates.
 [P05-L01](P05-L01.md) prepares the first saved-drawing slice; production work remains gated,
