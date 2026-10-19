@@ -1,6 +1,6 @@
 # Product backlog
 
-This list records owner-approved functionality and priority. Positions 1–35 were explicitly
+This list records owner-approved functionality and priority. Positions 1–40 were explicitly
 approved in this chat. They are planned outcomes, not completed features or blanket approval
 of unresolved designs, ABI, numerical, storage or security choices. Execution begins only after
 applicable contracts and designs are approved. Split large outcomes into bounded child tasks,
@@ -48,6 +48,11 @@ by current owner policy. Preserve existing gallery/navigation, themes and Englis
 | 33 | Customize keyboard shortcuts | [S00F Input contracts](S00F.md) | Approved backlog; binding/conflict/settings design remains |
 | 34 | Adjust layer opacity | Child task to scope before implementation | Approved backlog; compositing/storage/design contracts remain |
 | 35 | Duplicate and merge layers | Child task to scope before implementation | Approved backlog; appearance/history/storage contracts remain |
+| 36 | Mask artwork nondestructively | Child task to scope before implementation | Approved backlog; mask/render/storage design remains |
+| 37 | Reshape existing strokes | [S03 Pure editor](S03.md), [P05 Web](P05.md) | Approved backlog; deformation/transaction design remains |
+| 38 | Recognize drawn shapes | Child task to scope before implementation | Approved backlog; shape inventory/recognition design remains |
+| 39 | Import PDF references | [S06 Files and recovery](S06.md) | Approved backlog; decoding/scale/asset contracts remain |
+| 40 | Export SVG | Child task to scope before implementation | Approved backlog; format/fidelity/publication contracts remain |
 
 ## Visual and interaction design approval
 
@@ -316,6 +321,44 @@ Undo behavior. Depends on #11 and #34; review membership, identity, ordering, op
 states, grouping, image/text content and durable atomicity. Do not silently rasterize editable
 content or claim appearance equivalence before defining and verifying the supported cases.
 Concepts reference: CS-DOC-020 (documented, not exercised).
+
+## 36. Mask artwork nondestructively
+
+Hide parts of artwork without deleting underlying geometry. Support Undo, saving and export.
+Review mask ownership, layering/compositing, editing and format-specific fidelity before
+implementation; keep masking separate from segment deletion (#29). Do not assume every output
+format can preserve mask semantics. Concepts reference: CS-DOC-013 (documented, not exercised).
+
+## 37. Reshape existing strokes
+
+Provide a Nudge-style tool for local stroke reshaping, with cancellable previews and Undo.
+Review deformation geometry, bounds, pressure/style preservation, saved representation and
+interaction with selection/locked layers. No automatic reshaping or replacement of original
+stroke geometry before acceptance. Concepts reference: CS-DOC-013 (documented, not exercised).
+
+## 38. Recognize drawn shapes
+
+Optionally convert draw-and-hold gestures into supported geometric shapes. Review the supported
+shape inventory and acceptance/cancellation behavior before implementation. Preserve regular
+freehand drawing when recognition is disabled and define interaction with smoothing/guides.
+No recognition algorithm or universal shape inventory is selected by backlog approval.
+Concepts reference: CS-DOC-019 (documented, not exercised).
+
+## 39. Import PDF references
+
+Import selected PDF pages as local references, position them and preserve reviewed scale.
+No PDF text editing. Review decoder isolation/resource bounds, page dimensions, asset ownership,
+fidelity, cancellation and restart behavior; import as copies without source-file write-through.
+PDF export, page reauthoring and embedded active content execution are not included.
+Concepts reference: CS-DOC-023 (documented, not exercised).
+
+## 40. Export SVG
+
+Export supported artwork as vectors with explicit handling of features that cannot retain
+appearance or editability. Review the supported feature matrix, text/images/masks, conversions,
+resource bounds and destination publication. Do not silently promise lossless export or
+round-trip editing. Reuse approved export lifecycle semantics where applicable.
+Concepts reference: CS-DOC-022 (documented; SVG export was not exercised).
 
 ## Further candidates
 
