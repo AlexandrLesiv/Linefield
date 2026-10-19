@@ -28,13 +28,13 @@ Historical PR/base statements below do not override the actual integrated state.
 | Order | Task | Gate |
 | --- | --- | --- |
 | 1 | [S02-W01 memory editor contract/design](S02-W01.md) | [PR #9](https://github.com/AlexandrLesiv/Linefield/pull/9) merged; investigation/reviews complete; core and P1/H1/S1–S4 approved; N1/A1/R1 approved at51d9345; merged c28f56b, integrated tree verified |
-| 2 | [P05-E01 runtime foundation](P05-E01.md) | Owner-confirmed second task; implemented/reviewed from verified c28f56b; [PR #10](https://github.com/AlexandrLesiv/Linefield/pull/10) awaits owner review; no ink yet |
-| 3 | [P05-E02 usable pen and viewport](P05-E02.md) | Owner confirmed scope/third position; awaits verified integration of PR #10; pen, pan/zoom, settings, cancellation and Undo/Redo together |
+| 2 | [P05-E01 runtime foundation](P05-E01.md) | [PR #10](https://github.com/AlexandrLesiv/Linefield/pull/10) merged at3eaaff8; full integrated tree verified; complete |
+| 3 | [P05-E02 usable pen and viewport](P05-E02.md) | Scope/third position and performance v1 approved; one writer on codex/p05-e02-memory-pen from3eaaff8; early performance checkpoint first |
 
-S02-W01 is integrated at `c28f56b`; P05-E01 is confirmed and assigned to one implementation
-writer on `codex/p05-e01-memory-runtime` in its isolated worktree; implementation is frozen
-for owner-review handoff. Original checkout drafts
-remain preserved. P05-E02 is confirmed with no writer or PR; prerequisite integration remains pending. Existing regional C01
+S02-W01 is integrated at `c28f56b`; P05-E01 is complete at verified merge `3eaaff8`.
+Its implementation writer stopped; its worktree and original checkout drafts remain preserved.
+P05-E02 is assigned to rust_engine in `.worktrees/p05-e02-memory-pen`;
+PR pending, prerequisite verified, lead owns task records. Existing regional C01
 work must be coordinated before overlapping execution. Storage admission and durable/native
 milestones are independent. No task grants approval by being listed. E2E-only tests plus
 static/build checks apply; older unit/property/developer-tool suite wording is superseded.
