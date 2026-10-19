@@ -1,6 +1,6 @@
 # Product backlog
 
-This list records owner-approved functionality and priority. Positions 1–16 were explicitly
+This list records owner-approved functionality and priority. Positions 1–21 were explicitly
 approved in this chat. They are planned outcomes, not completed features or blanket approval
 of unresolved designs, ABI, numerical, storage or security choices. Execution begins only after
 applicable contracts and designs are approved. Split large outcomes into bounded child tasks,
@@ -29,6 +29,11 @@ by current owner policy. Preserve existing gallery/navigation, themes and Englis
 | 14 | Save reusable color palettes | Child task to scope before implementation | Approved backlog; palette ownership/storage/design remain |
 | 15 | Adjust stroke opacity | [S03 Pure editor](S03.md), [P05 Web](P05.md) | Approved backlog; rendering/editing contracts/design remain |
 | 16 | Smooth new strokes | [S03 Pure editor](S03.md), [P05 Web](P05.md) | Approved backlog; algorithm/input contracts/design remain |
+| 17 | Choose paper and background | Child task to scope before implementation | Approved backlog; appearance/storage/export design remains |
+| 18 | Display a canvas grid | Child task to scope before implementation | Approved backlog; grid types/mapping/settings design remains |
+| 19 | Snap while drawing and editing | [S05 Navigation and editing](S05.md) | Approved backlog; target/admission/precision contracts remain |
+| 20 | Draw with precision guides | Child task to scope before implementation | Approved backlog; straight-line guide design/contracts remain |
+| 21 | Measure artwork to scale | Child task to scope before implementation | Approved backlog; units/scale/numerical contracts remain |
 
 ## Visual and interaction design approval
 
@@ -154,6 +159,43 @@ responsive input; do not reshape existing artwork automatically. Depends on shar
 contracts and bounded performance evidence. The earlier unfiltered pen remains the baseline;
 backlog approval does not select a smoothing algorithm or change existing stroke geometry.
 Concepts reference: CS-OBS-006; the observed slider mismatch remains inconclusive.
+
+## 17. Choose paper and background
+
+Set a drawing’s background color or paper appearance independently of application theme.
+Review available paper treatments and persisted settings; no Concepts textures/assets are reused.
+Define preview, acceptance and export behavior with #9. This expands the earlier fixed-background
+scope; it does not approve a concrete new appearance or schema. Concepts reference: CS-OBS-013.
+
+## 18. Display a canvas grid
+
+Choose grid type and spacing, show/hide the grid, and save its settings. Snapping is separate.
+Review the supported grid inventory, coordinate mapping, zoom behavior, contrast and export
+inclusion without altering artwork geometry. Depends on #4 and #5.
+Concepts reference: CS-OBS-013 (settings inspected, not exercised).
+
+## 19. Snap while drawing and editing
+
+Optional snapping to grid points and eligible artwork points, with clear target feedback.
+Depends on #18 and the relevant drawing/editing operations. Define eligible targets, tolerance,
+priority and interaction/precision semantics before implementation; do not infer shape recognition
+or automatic completion. Cancellation preserves prior artwork and creates no history.
+Concepts reference: CS-OBS-016 (options inspected; accuracy not tested).
+
+## 20. Draw with precision guides
+
+Start with a straight-line guide for constrained pen strokes. Review placement, adjustment,
+constraint behavior and interaction with #19. Additional guide shapes remain separate scope.
+Use shared editing semantics and preserve the approved stroke transaction/cancellation rules.
+Concepts reference: CS-OBS-016 (Line guide control observed; operation not exercised).
+
+## 21. Measure artwork to scale
+
+Choose units and drawing scale, then measure distances. Review exact numeric representation,
+regional formatting, scale conversion, precision limits and saved settings before implementation.
+Clarify measurement endpoints and feedback through owner design review; do not infer persistent
+dimension annotations, areas or automatic geometry rescaling. Depends on navigation and relevant
+precision contracts. Concepts reference: CS-OBS-013/016 (measurement controls inspected only).
 
 ## Further candidates
 
