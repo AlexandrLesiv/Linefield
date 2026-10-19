@@ -9,6 +9,8 @@ async function open(page: Page) {
   await ready(page);
   await page.locator("[data-memory-canvas]").evaluate((canvas) => {
     new MutationObserver((records) => {
+      if (getComputedStyle(canvas).cursor === "progress")
+        canvas.setAttribute("data-test-unexpected-progress", "true");
       if (
         canvas.getAttribute("data-state") === "loading" ||
         records.some((v) => v.oldValue === "loading")
@@ -62,6 +64,11 @@ test("WMP-01/02 terminal pen zero pressure retains long ink without preparation 
     "data-test-unexpected-loading",
     "true",
   );
+  await expect(page.locator("[data-memory-canvas]")).not.toHaveAttribute(
+    "data-test-unexpected-progress",
+    "true",
+  );
+  await expect(page.locator("[data-memory-canvas]")).toHaveCSS("cursor", "auto");
   const clip = { x: 100, y: 200, width: 600, height: 350 };
   const ink = await page.screenshot({ clip });
   await page.screenshot({ path: info.outputPath("pen-finished.png") });

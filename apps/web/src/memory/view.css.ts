@@ -9,7 +9,6 @@ export const canvas = style({
   background: "#ffffff",
   selectors: {
     "&:focus-visible": { outline: `2px solid ${theme.focus}`, outlineOffset: "-3px" },
-    '&[data-state="updating"]': { cursor: "progress" },
   },
 });
 export const overlay = style({
