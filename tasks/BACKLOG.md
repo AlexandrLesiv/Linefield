@@ -1,6 +1,6 @@
 # Product backlog
 
-This list records owner-approved functionality and priority. Positions 1–60 were explicitly
+This list records owner-approved functionality and priority. Positions 1–63 were explicitly
 approved in this chat. They are planned outcomes, not completed features or blanket approval
 of unresolved designs, ABI, numerical, storage or security choices. Execution begins only after
 applicable contracts and designs are approved. Split large outcomes into bounded child tasks,
@@ -73,6 +73,9 @@ by current owner policy. Preserve existing gallery/navigation, themes and Englis
 | 58 | Import through paste and drag-and-drop | [S06 Files and recovery](S06.md) | Approved backlog; acquisition/validation/input design remains |
 | 59 | Assemble a multi-page PDF | Child task to scope before implementation | Approved backlog; page layout/snapshot/export contracts remain |
 | 60 | Open contextual tool help | Child task to scope before implementation | Approved backlog; localized content/accessibility design remains |
+| 61 | Mix palette colors | Child task to scope before implementation | Approved backlog; mixing model/color/design contracts remain |
+| 62 | Capture an image reference | Child task to scope before implementation | Approved backlog; camera/permission/import design remains |
+| 63 | Present artwork on another display | Child task to scope before implementation | Approved backlog; host/display/privacy design remains |
 
 ## Visual and interaction design approval
 
@@ -88,6 +91,9 @@ Keep current authored specifications in Git; generated previews/captures stay ig
 attachments. After implementation, verify fidelity and E2E behavior against the approved design.
 
 ## 1. Create a saved drawing
+
+Implementation brief: [P05-L01 — Create a saved drawing](P05-L01.md). Prepared; production
+implementation is blocked on storage adoption and identified contract/design approvals.
 
 From the gallery, create an automatically named blank drawing that survives closing and
 reopening the app. Include creation feedback, failure handling, opening the new drawing and
@@ -562,8 +568,30 @@ chat or external service is required. Review entry/dismissal, keyboard/focus res
 English/Ukrainian content and updates alongside supported features. Do not use help to expose
 unimplemented tools. Concepts references: CS-OBS-014/019 (help entries observed).
 
-## Further candidates
+## 61. Mix palette colors
 
-Additional candidates require owner confirmation before entering the ordered list. Do not treat research observations
-as approved Linefield requirements. Concepts research remains outside Git; retained finding IDs
-can support proposals without importing captures or duplicating the research archive.
+Create a new swatch by mixing existing colors. Review the mixing model rather than assuming
+realistic pigment simulation. Depends on palettes; define color-space handling, preview/accept,
+source-swatch preservation and saved result. Concepts reference: CS-DOC-014 (documented).
+
+## 62. Capture an image reference
+
+Use an available camera to capture and import a reference as a local copy. Reuse image-import
+validation and asset ownership. Review explicit permission, preview/confirmation, cancellation,
+metadata handling and unavailable-camera fallback. No background capture or remote upload.
+Concepts reference: CS-OBS-012 (camera import entry inspected, capture not exercised).
+
+## 63. Present artwork on another display
+
+Show a clean artwork view on an external display while retaining editing controls on the primary
+display. Review display selection, connection/loss, privacy, aspect ratios and input ownership.
+Platform support requires verification; no networking service or additional editor owner implied.
+Concepts reference: [external-display presentation](https://concepts.app/en/manual/settings)
+(documented iOS feature; Linefield host support is not established).
+
+## Scope boundary
+
+The owner closed backlog expansion after these 63 outcomes. The final three proposals were
+accepted in order and assigned consecutive positions. Do not add further research-derived
+features without a new owner request. Research remains outside Git. Backlog approval does not
+replace the implementation, design, architecture and verification gates above.
