@@ -20,7 +20,7 @@ export function list(values: readonly string[]): string {
 }
 export function attention(task: Task): string {
   if (task.stage === "blocked") return "Implementation is blocked";
-  if (task.stage === "owner-review") return "Ready for owner review";
+  if (task.stage === "owner-review") return "Awaiting your review";
   return title(task.stage);
 }
 export function shell(name: string, style: string, content: string): string {
@@ -29,8 +29,7 @@ export function shell(name: string, style: string, content: string): string {
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
 <title>${escape(name)} · Linefield tasks</title><style>${style}</style></head>
 <body><a class="skip" href="#main">Skip to task content</a><div class="page">${content}
-<footer>Linefield · Task documentation pilot v1 · Read-only review snapshot<br>
-Artifact hashes verify preserved records. They do not certify current code or a future merge.</footer></div></body></html>\n`;
+</div></body></html>\n`;
 }
 export function prose(source: string): string {
   // Conservative text rendering: raw HTML, links and embedded media never execute.

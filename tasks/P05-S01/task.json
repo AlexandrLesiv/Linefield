@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "id": "P05-S01",
-  "title": "Local styles, unchanged interface",
+  "title": "Local component styles",
   "kind": "leaf",
   "stage": "owner-review",
-  "summary": "Component styles are local. Verification is recorded; owner review and integration remain.",
+  "summary": "Component styling is now isolated.\nThe interface remains unchanged.",
   "outcome": "Preserve the gallery and drawing prototype while scoping component styles and simplifying evidence.",
   "nonGoals": ["No drawing engine or persistence", "No visual redesign", "No merge or release"],
   "ownership": {

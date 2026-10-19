@@ -1,7 +1,8 @@
 <!-- Generated from task.json. Do not edit. -->
-# P05-S01 — Local styles, unchanged interface
+# P05-S01 — Local component styles
 
-Component styles are local\. Verification is recorded; owner review and integration remain\.
+Component styling is now isolated\.
+The interface remains unchanged\.
 
 Stage: owner-review. Implementation: authorized.
 Branch: codex/p05-s01-local-styles.

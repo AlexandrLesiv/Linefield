@@ -10,8 +10,8 @@ main merge or release. Read AGENTS.md, objectives, latest decisions and the assi
 Current executable task: [DX-T02 task packages](../tasks/DX-T02.md), branch
 codex/dx-t02-task-packages in .worktrees/dx-t02-task-packages, stacked on PR #3 at afb82c5.
 Schema/pilots and read-only HTML/Markdown preview are verified:124 root tests,8 preview browser
-scenarios. Original task/evidence bytes preserved. Layout awaits owner review; no product change.
-See workflow/task-packages-v1.md and quality/task-packages-v1.
+scenarios. Original task/evidence bytes preserved. Owner-selected minimal v3 layout is implemented; no product change.
+See workflow/task-packages-v1.md and quality/task-packages-v3 (original v1 evidence preserved).
 [PR #4](https://github.com/AlexandrLesiv/Linefield/pull/4) awaits owner review; integrate parents first.
 
 Previous executable task: [P05-S01 local styles](../tasks/P05-S01.md), branch

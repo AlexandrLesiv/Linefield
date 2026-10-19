@@ -83,3 +83,13 @@ After owner review, migrate active leaves incrementally. Keep shared architectur
 location and pin its relevant revision. Generate the aggregate index from task packages instead
 of editing a shared mutable board from every branch. No hosted tracker or duplicate status database
 is required. Broader test-result import, current-source freshness and editing remain future work.
+
+## Selected minimal presentation — v3
+
+The owner selected docs/design/task-preview-minimal-v3/reference.svg and requested updating HTML.
+The current preview uses a white reading column, title/status/outcome and PR action, then four
+initially closed native disclosures: Scope and design; Verification; Review findings; Technical
+details and history. All previously accessible data stays within these sections. Blockers remain
+visible without expansion. The index shows task names/statuses only. The earlier v1 hierarchy
+above records the pilot's original design; quality/task-packages-v3 holds the superseding checks.
+The JSON schema remains version1; a visual revision does not change the data contract version.

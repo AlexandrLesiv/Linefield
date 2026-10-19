@@ -40,3 +40,9 @@ No native or production implementation authorization follows from a pilot task r
 Stop with verified pilot, visual review and one PR ready for owner review. Wider migration and
 execution/edit controls are separate slices. Root check, focused unit and preview browser checks
 are required; drawing-app browser rerun is unnecessary when its inputs are unchanged.
+
+## Owner-requested minimal layout revision
+
+Owner selected minimal mockup v3 and requested the HTML update. Four initially closed native
+disclosures and a name/status task list replace the expanded dashboard layout. Original records
+remain intact. Current checks/reviews: quality/task-packages-v3. Same task branch and PR #4.

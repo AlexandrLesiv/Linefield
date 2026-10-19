@@ -24,7 +24,7 @@ const tokens: unknown = JSON.parse(
 const fixture = await renderTask(root, malicious, previewStyle(loadTokens(tokens)));
 const { server, url } = await startPreview(new Map([["/hostile.html", fixture]]));
 const browser = await playwright.chromium.launch({ channel: "chrome", headless: true });
-const output = join(root, ".build-cache/task-preview");
+const output = join(root, ".build-cache/task-preview-v3");
 await mkdir(output, { recursive: true });
 const results: { id: string; status: string; screenshot?: string; sha256?: string }[] = [];
 try {
@@ -51,7 +51,16 @@ try {
       );
       await page.keyboard.press("Enter");
       assert.equal(new URL(page.url()).hash, "#main");
+      if (task !== "index") {
+        assert.equal(await page.locator("details.group[open]").count(), 0);
+        assert.equal(await page.locator("details.group").count(), 4);
+        await page.locator("#verification-group > summary").focus();
+        await page.keyboard.press("Enter");
+        assert.equal(await page.locator("#verification-group").getAttribute("open"), "");
+      }
       if (task === "P05-S01") {
+        assert.equal(await page.locator(".primary").isVisible(), true);
+        await page.locator("#technical-group > summary").click();
         assert.equal(
           await page
             .locator('#pr a[href="https://github.com/AlexandrLesiv/Linefield/pull/3"]')
@@ -59,9 +68,10 @@ try {
           1,
         );
         assert.match(await page.locator("#pr").innerText(), /Snapshot only/);
+        await page.locator("#technical-group > summary").click();
       }
       if (task === "S02L") {
-        assert.match(await page.locator(".attention").innerText(), /blocked/);
+        assert.match(await page.locator(".status").innerText(), /blocked/);
         assert.match(await page.locator("#evidence").innerText(), /Recorded failed/);
         assert.equal(await page.locator("#acceptance article").count(), 6);
       }
@@ -89,6 +99,8 @@ try {
           true,
         );
         await page.keyboard.press("Enter");
+        await page.locator("#verification-group > summary").click();
+        assert.equal(await page.locator("details.group[open]").count(), 0);
       }
       await page.evaluate(() => {
         (document.activeElement as HTMLElement)?.blur();
