@@ -9,9 +9,11 @@ import {
   retry as retryStyle,
 } from "./view.css.ts";
 import { back } from "../canvas.css.ts";
+import type { ReplyValue } from "./bridge.ts";
 export type Status =
   | "loading"
   | "ready"
+  | "updating"
   | "loadFailed"
   | "displayLost"
   | "resourceUnavailable"
@@ -20,6 +22,7 @@ export type Status =
 const messages = {
   loading: "memory.loading",
   ready: "memory.foundation",
+  updating: "memory.foundation",
   loadFailed: "memory.loadFailed",
   displayLost: "memory.displayLost",
   resourceUnavailable: "memory.resourceUnavailable",
@@ -48,6 +51,11 @@ export function createMemoryView(surface: HTMLElement, retry: () => void) {
   surface.append(overlay);
   const context = surface.querySelector<HTMLElement>(".drawing-context");
   const footer = surface.querySelector<HTMLElement>(".canvas-footer");
+  const inputNotice = element("span", statusText);
+  inputNotice.dataset.memoryInputFailure = "";
+  inputNotice.setAttribute("role", "status");
+  inputNotice.hidden = true;
+  surface.querySelector(".canvas-notice")?.append(inputNotice);
   const measure = () => {
     if (context) overlay.style.top = `${context.offsetTop + context.offsetHeight + 4}px`;
     if (footer) overlay.style.bottom = `${surface.clientHeight - footer.offsetTop + 4}px`;
@@ -58,11 +66,23 @@ export function createMemoryView(surface: HTMLElement, retry: () => void) {
   return {
     canvas,
     surface,
+    command(previous: ReplyValue, next: ReplyValue) {
+      if (previous.content !== next.content) this.status("updating");
+      if (previous.interaction === 0n && next.interaction !== 0n) inputNotice.hidden = true;
+      if (next.activeCancelled && next.code !== "ok") {
+        inputNotice.textContent =
+          " " + t(next.code === "capacity" ? "memory.inputCapacity" : "memory.inputInvalid");
+        inputNotice.hidden = false;
+      } else if (next.code === "unavailable" && previous.interaction === 0n) {
+        inputNotice.textContent = " " + t("memory.inputBusy");
+        inputNotice.hidden = false;
+      }
+    },
     status(status: Status) {
       canvas.dataset.state = status;
-      canvas.setAttribute("aria-busy", String(status === "loading"));
+      canvas.setAttribute("aria-busy", String(status === "loading" || status === "updating"));
       text.textContent = t(messages[status]);
-      overlay.hidden = status === "ready";
+      overlay.hidden = status === "ready" || status === "updating";
       action.hidden = !["loadFailed", "displayLost", "resourceUnavailable"].includes(status);
       action.textContent = t(status === "loadFailed" ? "memory.retry" : "memory.retryDisplay");
     },
@@ -70,6 +90,7 @@ export function createMemoryView(surface: HTMLElement, retry: () => void) {
       observer.disconnect();
       canvas.remove();
       overlay.remove();
+      inputNotice.remove();
     },
   };
 }

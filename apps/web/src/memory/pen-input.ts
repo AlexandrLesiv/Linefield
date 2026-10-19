@@ -1,12 +1,33 @@
 import { penBridge } from "./pen-bridge.ts";
+import { inputDiagnostic } from "./input-diagnostics.ts";
 import type { ReplyValue } from "./bridge.ts";
+type CancelCause = Parameters<typeof penBridge.cancel>[1];
 export interface EditorCommands {
   read(): ReplyValue;
   fail(): void;
   run(action: (state: ReplyValue) => ReplyValue): ReplyValue | undefined;
 }
 export function attachPenInput(canvas: HTMLCanvasElement, commands: EditorCommands) {
-  let contact: { pointer: number; token: ReplyValue; time: number; next: bigint } | undefined;
+  let contact:
+    | {
+        pointer: number;
+        token: ReplyValue;
+        time: number;
+        next: bigint;
+        source: string;
+        max: number;
+      }
+    | undefined;
+  const note = (value: NonNullable<typeof contact>, reason: string, outcome: string) =>
+    inputDiagnostic(
+      value.token,
+      value.source,
+      reason,
+      outcome,
+      value.next,
+      value.max,
+      commands.read(),
+    );
   const local = (event: PointerEvent) => {
     const rect = canvas.getBoundingClientRect();
     return [
@@ -20,10 +41,13 @@ export function attachPenInput(canvas: HTMLCanvasElement, commands: EditorComman
     if (previous && canvas.hasPointerCapture(previous.pointer))
       canvas.releasePointerCapture(previous.pointer);
   };
-  function cancel(cause: "escape" | "blur" | "pointer-cancel" | "capture-loss" | "queue-overflow") {
+  function cancel(cause: CancelCause, reason: string = cause) {
     const previous = contact;
     release();
-    if (previous) commands.run(() => penBridge.cancel(previous.token, cause));
+    if (previous) {
+      const result = commands.run(() => penBridge.cancel(previous.token, cause));
+      note(previous, reason, result?.code ?? "host-unavailable");
+    }
   }
   const matches = (event: PointerEvent) =>
     contact && event.pointerId === contact.pointer && event.timeStamp >= contact.time;
@@ -46,8 +70,26 @@ export function attachPenInput(canvas: HTMLCanvasElement, commands: EditorComman
         event.pointerType === "pen",
       ),
     );
-    if (!result || result.code !== "ok") return;
-    contact = { pointer: event.pointerId, token: result, time: event.timeStamp, next: 1n };
+    if (!result || result.code !== "ok") {
+      inputDiagnostic(
+        commands.read(),
+        event.pointerType,
+        "begin",
+        result?.code ?? "host-unavailable",
+        0n,
+        0,
+      );
+      return;
+    }
+    contact = {
+      pointer: event.pointerId,
+      token: result,
+      time: event.timeStamp,
+      next: 1n,
+      source: event.pointerType,
+      max: 0,
+    };
+    note(contact, "begin", result.code);
     canvas.focus({ preventScroll: true });
     try {
       canvas.setPointerCapture(event.pointerId);
@@ -60,6 +102,7 @@ export function attachPenInput(canvas: HTMLCanvasElement, commands: EditorComman
     if (!matches(event) || !contact) return;
     const coalesced = event.getCoalescedEvents?.() ?? [];
     const events = coalesced.length ? coalesced : [event];
+    contact.max = Math.max(contact.max, events.length);
     if (events.length > 1024) {
       cancel("queue-overflow");
       return;
@@ -86,6 +129,7 @@ export function attachPenInput(canvas: HTMLCanvasElement, commands: EditorComman
       const current = contact;
       const result = commands.run(() => penBridge.append(current.token, current.next, batch));
       if (!result || result.code !== "ok") {
+        note(current, "append", result?.code ?? "host-unavailable");
         release();
         return;
       }
@@ -98,7 +142,8 @@ export function attachPenInput(canvas: HTMLCanvasElement, commands: EditorComman
     if (!matches(event) || !contact) return;
     const previous = contact;
     release();
-    commands.run(() => penBridge.end(previous.token, previous.next));
+    const result = commands.run(() => penBridge.end(previous.token, previous.next));
+    note(previous, "end", result?.code ?? "host-unavailable");
     event.preventDefault();
   };
   const pointerCancel = (event: PointerEvent) => {
@@ -107,9 +152,10 @@ export function attachPenInput(canvas: HTMLCanvasElement, commands: EditorComman
   const captureLost = (event: PointerEvent) => {
     if (matches(event)) cancel("capture-loss");
   };
-  const blur = () => cancel("blur");
+  const blur = () => cancel("blur", "canvas-blur");
+  const windowBlur = () => cancel("blur", "window-blur");
   const visibility = () => {
-    if (document.hidden) blur();
+    if (document.hidden) cancel("blur", "hidden");
   };
   const key = (event: KeyboardEvent) => {
     if (event.isComposing || event.target !== canvas) return;
@@ -129,11 +175,14 @@ export function attachPenInput(canvas: HTMLCanvasElement, commands: EditorComman
   canvas.addEventListener("lostpointercapture", captureLost);
   canvas.addEventListener("keydown", key);
   canvas.addEventListener("blur", blur);
-  window.addEventListener("blur", blur);
+  window.addEventListener("blur", windowBlur);
   document.addEventListener("visibilitychange", visibility);
   return {
     sync() {
-      if (contact && commands.read().interaction !== contact.token.interaction) release();
+      if (contact && commands.read().interaction !== contact.token.interaction) {
+        note(contact, "shared-cancel", commands.read().code);
+        release();
+      }
     },
     dispose() {
       release();
@@ -144,7 +193,7 @@ export function attachPenInput(canvas: HTMLCanvasElement, commands: EditorComman
       canvas.removeEventListener("lostpointercapture", captureLost);
       canvas.removeEventListener("keydown", key);
       canvas.removeEventListener("blur", blur);
-      window.removeEventListener("blur", blur);
+      window.removeEventListener("blur", windowBlur);
       document.removeEventListener("visibilitychange", visibility);
     },
   };

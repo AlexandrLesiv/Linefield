@@ -4,9 +4,12 @@ import type { ReplyValue } from "./bridge.ts";
 import { penBridge } from "./pen-bridge.ts";
 import { appendPathPage } from "./path-page.ts";
 import type { Presentation } from "./presentation.ts";
-const nextTurn = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+import { drawCommitted, rebuildCommitted, nextTurn } from "./committed-scene.ts";
 export class SceneRenderer {
   private committed = "";
+  private committedState: ReplyValue | undefined;
+  private activeStroke = 0n;
+  private activeBase = "";
   private builder: PathBuilder | undefined;
   private prefix = 0n;
   private activeKey = "";
@@ -23,6 +26,7 @@ export class SceneRenderer {
     this.builder = undefined;
     this.prefix = 0n;
     this.activeKey = "";
+    this.activeStroke = 0n;
   }
   restore() {
     this.display.restore();
@@ -48,60 +52,44 @@ export class SceneRenderer {
     paint.setStyle(this.kit.PaintStyle.Fill);
     try {
       if (key !== this.committed) {
-        this.resetActive();
-        const target = staging.getCanvas();
-        target.clear(this.kit.WHITE);
-        const backing = bridge.mapping(initial.owner, initial.session).backing;
-        {
-          let after = 0n;
-          let done = false;
-          while (!done && valid()) {
-            const ids = bridge.scene(read(), after);
-            if (ids.code !== "ok") return;
-            done = ids.done;
-            for (const stroke of ids.ids) {
-              if (!valid()) return;
-              after = stroke;
-              const state = penBridge.stroke(read(), stroke);
-              if (state.code !== "ok") return;
-              if (!state.terminal) continue;
-              const builder = new this.kit.PathBuilder();
-              resources.add("builder");
-              try {
-                let offset = 0n;
-                while (valid()) {
-                  const page = penBridge.page(read(), stroke, state.geometry, offset);
-                  if (page.code !== "ok") return;
-                  appendPathPage(this.kit, builder, page);
-                  paint.setColor(this.kit.Color4f(page.red, page.green, page.blue, 1));
-                  if (page.done) break;
-                  offset = page.next;
-                  await nextTurn();
-                }
-                if (!valid()) return;
-                const path = builder.detach();
-                resources.add("path");
-                try {
-                  target.save();
-                  target.scale(backing, backing);
-                  try {
-                    target.drawPath(path, paint);
-                  } finally {
-                    target.restore();
-                  }
-                } finally {
-                  resources.release("path", path);
-                }
-              } finally {
-                resources.release("builder", builder);
-              }
-              await nextTurn();
-            }
+        const previous = this.committedState;
+        const reuse =
+          this.builder &&
+          previous &&
+          this.activeBase === this.committed &&
+          initial.owner === previous.owner &&
+          initial.session === previous.session &&
+          initial.mapping === previous.mapping &&
+          initial.content === previous.content + 1n &&
+          initial.interaction === 0n;
+        if (reuse) {
+          const terminal = penBridge.stroke(initial, this.activeStroke);
+          if (terminal.code !== "ok" || !terminal.terminal) return;
+          if (!(await this.extend(read, valid, this.activeStroke, terminal.geometry))) return;
+          if (!valid() || !this.builder) return;
+          paint.setColor(
+            this.kit.Color4f(this.activeColor[0]!, this.activeColor[1]!, this.activeColor[2]!, 1),
+          );
+          const path = this.builder.snapshot();
+          resources.add("path");
+          try {
+            drawCommitted(
+              this.display,
+              path,
+              paint,
+              bridge.mapping(initial.owner, initial.session).backing,
+            );
+          } finally {
+            resources.release("path", path);
           }
+        } else {
+          this.resetActive();
+          if (!(await rebuildCommitted(this.kit, this.display, paint, read, valid))) return;
         }
         if (!valid()) return;
         this.display.commit();
         this.committed = key;
+        this.committedState = read();
         publish(read());
       }
       if (!valid()) return;
@@ -127,25 +115,15 @@ export class SceneRenderer {
       if (activeKey !== this.activeKey) {
         this.resetActive();
         this.activeKey = activeKey;
+        this.activeBase = key;
+        this.activeStroke = stroke;
         this.builder = new this.kit.PathBuilder();
         resources.add("builder");
       }
       const builder = this.builder;
       if (!builder) return;
       const activeValid = () => valid() && read().interaction === current.interaction;
-      while (activeValid()) {
-        const latest = penBridge.stroke(read(), stroke);
-        if (latest.code !== "ok" || latest.geometry !== state.geometry) return;
-        if (this.prefix >= latest.verbs) break;
-        const page = penBridge.page(read(), stroke, state.geometry, this.prefix);
-        if (page.code !== "ok") return;
-        appendPathPage(this.kit, builder, page);
-        this.activeColor = [page.red, page.green, page.blue];
-        this.prefix += BigInt(page.verbs.length);
-        if (page.done) break;
-        if (page.next !== this.prefix) throw Error("invalid-scene");
-        await nextTurn();
-      }
+      if (!(await this.extend(read, activeValid, stroke, state.geometry))) return;
       if (!activeValid()) return;
       const backing = bridge.mapping(current.owner, current.session).backing;
       paint.setColor(
@@ -169,6 +147,29 @@ export class SceneRenderer {
     } finally {
       resources.release("paint", paint);
     }
+  }
+  private async extend(
+    read: () => ReplyValue,
+    valid: () => boolean,
+    stroke: bigint,
+    geometry: bigint,
+  ) {
+    const builder = this.builder;
+    if (!builder) return false;
+    while (valid()) {
+      const latest = penBridge.stroke(read(), stroke);
+      if (latest.code !== "ok" || latest.geometry !== geometry) return false;
+      if (this.prefix >= latest.verbs) break;
+      const page = penBridge.page(read(), stroke, geometry, this.prefix);
+      if (page.code !== "ok") return false;
+      appendPathPage(this.kit, builder, page);
+      this.activeColor = [page.red, page.green, page.blue];
+      this.prefix += BigInt(page.verbs.length);
+      if (page.done) break;
+      if (page.next !== this.prefix) throw Error("invalid-scene");
+      await nextTurn();
+    }
+    return valid();
   }
   dispose() {
     this.stopped = true;

@@ -7,7 +7,10 @@ export const canvas = style({
   height: "100%",
   display: "block",
   background: "#ffffff",
-  selectors: { "&:focus-visible": { outline: `2px solid ${theme.focus}`, outlineOffset: "-3px" } },
+  selectors: {
+    "&:focus-visible": { outline: `2px solid ${theme.focus}`, outlineOffset: "-3px" },
+    '&[data-state="updating"]': { cursor: "progress" },
+  },
 });
 export const overlay = style({
   position: "absolute",
@@ -89,5 +92,17 @@ export const colorInput = style({
       outlineOffset: "3px",
     },
     "&::-moz-color-swatch": { borderRadius: "50%", border: `1px solid ${theme.paperText}` },
+  },
+});
+export const diagnosticsControl = style({
+  pointerEvents: "auto",
+  flexShrink: 0,
+  selectors: {
+    "&:is(button)": {
+      minWidth: 0,
+      maxWidth: "100%",
+      whiteSpace: "normal",
+      overflowWrap: "anywhere",
+    },
   },
 });

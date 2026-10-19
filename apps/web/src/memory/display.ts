@@ -9,6 +9,7 @@ import { SceneRenderer } from "./scene-renderer.ts";
 import { attachPenInput } from "./pen-input.ts";
 import { attachEditorControls } from "./editor-controls.ts";
 import { recoverDisplay } from "./display-failure.ts";
+import { observePointerLifecycle } from "./pointer-diagnostics.ts";
 export function attachDisplay(
   kit: CanvasKit,
   view: MemoryView,
@@ -32,6 +33,7 @@ export function attachDisplay(
   let controls: ReturnType<typeof attachEditorControls> | undefined;
   const valid = () => !stopped && alive();
   function accept(next: ReplyValue): boolean {
+    view.command(state, next);
     state = next;
     update(next);
     input?.sync();
@@ -95,7 +97,6 @@ export function attachDisplay(
       }
       const currentRenderer = renderer;
       if (!currentRenderer) return;
-      if (!api.read(state.owner).canBeginInk && state.interaction === 0n) view.status("loading");
       try {
         await currentRenderer.render(
           () => state,
@@ -134,13 +135,11 @@ export function attachDisplay(
         failure();
       }
     },
-    changed: (previous, next) => {
-      if (previous.content !== next.content) view.status("loading");
-      schedule();
-    },
+    changed: schedule,
     fatal,
   });
   input = attachPenInput(view.canvas, commands);
+  const stopPointerTrace = observePointerLifecycle(view.canvas, () => state);
   controls = attachEditorControls(view.surface, commands);
   const remap = () => {
     if (!valid()) return;
@@ -191,6 +190,7 @@ export function attachDisplay(
     }
     stopped = true;
     input?.dispose();
+    stopPointerTrace();
     controls?.dispose();
     stopObserving();
     view.surface.removeEventListener("memory-entry-ready", schedule);

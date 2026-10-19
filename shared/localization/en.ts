@@ -19,6 +19,14 @@ export const en = {
   "memory.canvas": "Temporary drawing canvas",
   "memory.foundation":
     "Draw with mouse or pen. Long strokes may pause this preview. Pan and zoom are not available yet.",
+  "memory.copyDiagnostics": "Copy diagnostics",
+  "memory.diagnosticsCopied": "Diagnostics copied",
+  "memory.diagnosticsFailed": "Could not copy diagnostics",
+  "memory.inputCapacity":
+    "This stroke was cancelled because input or memory capacity was exceeded. Previous strokes are unchanged.",
+  "memory.inputInvalid":
+    "This stroke was cancelled because its input could not be accepted. Previous strokes are unchanged.",
+  "memory.inputBusy": "The drawing is still updating. Please try the stroke again.",
   "memory.color": "Pen color",
   "memory.displayLost":
     "Drawing display is unavailable. Your drawing remains in this tab’s memory.",

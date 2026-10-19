@@ -2,6 +2,7 @@ import { drawingIcon } from "../drawing-icons.ts";
 import { t } from "../locale.ts";
 import { button, element } from "../dom.ts";
 import { drawingTool } from "../drawing-controls.css.ts";
+import { copyDiagnosticsControl } from "./copy-diagnostics.ts";
 import {
   fixed,
   lifetime,
@@ -80,4 +81,5 @@ export function applyFoundationControls(
   notice.classList.add(lifetime);
   notice.tabIndex = 0;
   notice.textContent = t("memory.lifetime") + " " + t("memory.foundation");
+  notice.parentElement?.append(copyDiagnosticsControl());
 }

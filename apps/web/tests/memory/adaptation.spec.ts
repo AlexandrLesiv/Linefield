@@ -81,6 +81,21 @@ for (const [width, height] of [
         )
         .toBe(true);
       await page.keyboard.press("Home");
+      const diagnostics = page.locator("[data-memory-diagnostics]");
+      await expect(diagnostics).toBeInViewport();
+      expect(await diagnostics.evaluate((node) => node.scrollWidth <= node.clientWidth + 1)).toBe(
+        true,
+      );
+      expect(
+        await diagnostics.evaluate((node) => {
+          const text = document.createRange();
+          text.selectNodeContents(node);
+          return (
+            text.getBoundingClientRect().bottom <=
+            Math.min(node.getBoundingClientRect().bottom, innerHeight) + 1
+          );
+        }),
+      ).toBe(true);
       await page.screenshot({ path: info.outputPath("enlarged-ready.png") });
       await page.locator(".back").click();
       await expect(page.locator(".drawing-surface")).toHaveCount(0);

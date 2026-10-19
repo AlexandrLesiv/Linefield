@@ -25,6 +25,36 @@ export const catalog = {
       context: "In-memory web canvas foundation",
       arguments: { tool: "string" },
     },
+    "memory.copyDiagnostics": {
+      kind: "plain",
+      context: "Manual pen diagnostics and rejected input status",
+      arguments: {},
+    },
+    "memory.diagnosticsCopied": {
+      kind: "plain",
+      context: "Manual pen diagnostics and rejected input status",
+      arguments: {},
+    },
+    "memory.diagnosticsFailed": {
+      kind: "plain",
+      context: "Manual pen diagnostics and rejected input status",
+      arguments: {},
+    },
+    "memory.inputCapacity": {
+      kind: "plain",
+      context: "Manual pen diagnostics and rejected input status",
+      arguments: {},
+    },
+    "memory.inputInvalid": {
+      kind: "plain",
+      context: "Manual pen diagnostics and rejected input status",
+      arguments: {},
+    },
+    "memory.inputBusy": {
+      kind: "plain",
+      context: "Stroke admission waits for coherent frame",
+      arguments: {},
+    },
     "memory.color": { kind: "plain", context: "In-memory web pen color control", arguments: {} },
     "memory.undo": { kind: "plain", context: "In-memory web canvas foundation", arguments: {} },
     "memory.redo": { kind: "plain", context: "In-memory web canvas foundation", arguments: {} },
