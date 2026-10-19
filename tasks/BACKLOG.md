@@ -1,6 +1,6 @@
 # Product backlog
 
-This list records owner-approved functionality and priority. Positions 1–54 were explicitly
+This list records owner-approved functionality and priority. Positions 1–59 were explicitly
 approved in this chat. They are planned outcomes, not completed features or blanket approval
 of unresolved designs, ABI, numerical, storage or security choices. Execution begins only after
 applicable contracts and designs are approved. Split large outcomes into bounded child tasks,
@@ -67,6 +67,11 @@ by current owner policy. Preserve existing gallery/navigation, themes and Englis
 | 52 | Find offscreen artwork | [S05 Navigation and editing](S05.md) | Approved backlog; indicators/navigation/design contracts remain |
 | 53 | Search and favorite reusable objects | Child task to scope before implementation | Approved backlog; search/favorite/storage design remains |
 | 54 | Assign layers automatically by tool | Child task to scope before implementation | Approved backlog; routing/layer/history design remains |
+| 55 | Add pencil and marker brushes | Child task to scope before implementation | Approved backlog; brush/render/storage design remains |
+| 56 | Configure tilt and speed response | Child task to scope before implementation | Approved backlog; dynamics/input/fallback design remains |
+| 57 | Import through paste and drag-and-drop | [S06 Files and recovery](S06.md) | Approved backlog; acquisition/validation/input design remains |
+| 58 | Assemble a multi-page PDF | Child task to scope before implementation | Approved backlog; page layout/snapshot/export contracts remain |
+| 59 | Open contextual tool help | Child task to scope before implementation | Approved backlog; localized content/accessibility design remains |
 
 ## Stylus hover preview — requested top-ten addition
 
@@ -519,8 +524,46 @@ do not move existing artwork retroactively or introduce new tools implicitly. De
 active-layer feedback, cancellation and history semantics before implementation.
 Concepts reference: CS-DOC-020 (documented; automatic mode observed but routing not exercised).
 
+## 55. Add pencil and marker brushes
+
+Add two brush types with distinct appearances, compatible with history, saving and export.
+Review their exact rendering behavior and resource bounds; no asset marketplace or proprietary
+Concepts brush assets. Define editable representation and format-specific fidelity explicitly.
+Concepts reference: CS-DOC-013; the specific pair is a proposed Linefield adaptation now approved
+for the backlog, not a claim of reproduced Concepts rendering.
+
+## 56. Configure tilt and speed response
+
+Optional width/opacity response to supported stylus tilt and drawing speed, with preview,
+reset and explicit fallback behavior. Review units, sampling, bounds, preset ownership and
+missing-input handling. No barrel-roll dynamics are implicitly selected here. Keep hover
+preview faithful to accepted drawing behavior without inventing unavailable contact inputs.
+Concepts reference: CS-DOC-008 (documented; hardware dynamics were not tested).
+
+## 57. Import through paste and drag-and-drop
+
+Add entry points for already-supported formats, reusing validation and import-as-copy behavior.
+No background clipboard monitoring. Preserve text-field/IME paste and platform permissions;
+review offered formats, untrusted payload limits, duplicate delivery and cancellation. This task
+does not add new file formats or automatic remote-resource fetching.
+Concepts reference: CS-DOC-021 (documented, not exercised).
+
+## 58. Assemble a multi-page PDF
+
+Arrange reviewed drawing/artboard outputs into an ordered PDF with per-page dimensions.
+No PDF text editing. Depends on #49; review coherent source snapshots, page ordering/layout,
+resource bounds and destination publication. Do not imply multiple artboards per drawing or
+interactive PDF forms. Concepts reference: CS-DOC-023; this assembly flow is a Linefield adaptation.
+
+## 59. Open contextual tool help
+
+Explain the active tool or setting through accessible, localized help. No account, support
+chat or external service is required. Review entry/dismissal, keyboard/focus restoration,
+English/Ukrainian content and updates alongside supported features. Do not use help to expose
+unimplemented tools. Concepts references: CS-OBS-014/019 (help entries observed).
+
 ## Further candidates
 
-The next batch is awaiting owner confirmation in conversation. Do not treat research observations
+Additional candidates require owner confirmation before entering the ordered list. Do not treat research observations
 as approved Linefield requirements. Concepts research remains outside Git; retained finding IDs
 can support proposals without importing captures or duplicating the research archive.
