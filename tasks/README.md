@@ -10,9 +10,10 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 ## R05 CPU raster checkpoint
 
-[P05-R05](P05-R05.md) is owner-approved as the next isolated experiment. It compares the
-existing CanvasKit CPU/GPU rasterizers with unchanged Rust geometry. Current previews remain
-unchanged; results precede any production migration. PR #11 remains an unmerged dependency.
+[P05-R05](P05-R05.md) completed with a rejected unpadded CPU tiling candidate:256 coincident
+samples fail exact tile/whole parity. Thin case matched; long-stroke performance remains
+unmeasured. Current previews remain unchanged; no production migration follows. PR #11
+remains an unmerged dependency; R05 owner review is pending.
 
 ## R01 rendering checkpoint
 

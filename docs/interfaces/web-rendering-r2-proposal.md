@@ -11,8 +11,10 @@ no production rendering contract has been replaced.
 
 The owner subsequently approved [P05-R05](../../tasks/P05-R05.md) as the next isolated
 checkpoint: compare existing CanvasKit CPU/GPU rasterizers with unchanged shared geometry,
-returning results before production implementation. It does not revive the failed union
-mechanism or authorize the conditional capture/cache work below.
+returning results before production implementation. It stopped on exact CPU tile/whole
+pixel mismatch for256 coincident samples; long-stroke performance remains unmeasured.
+This rejects the tested unpadded tiling, not CPU rasterization generally. It does not revive
+the failed union mechanism or authorize the conditional capture/cache work below.
 
 ## Recommendation and evidence boundary
 

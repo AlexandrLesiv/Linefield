@@ -34,4 +34,11 @@ performance-profile-v1 acceptance. Do not turn a rejected candidate into a green
 - Do not substitute lower resolution, smaller tiles, masks, PathOps, contour reduction or a
   new renderer after failure. Return results for the owner's next decision.
 
-Current execution and review disposition: pending; maintained task records the final finding.
+Current finding at clean65a621f: thin case exact, then256 coincident samples rejected on
+CPU tile/whole mismatch (72 channels,max delta33). Timing did not trigger the stop.
+The centered probe matches; unpadded full tiling differs. No general CPU rejection or long-stroke
+speed claim follows. GPU comparison/submission for the rejected case were not reached, so its
+`coldSubmitMs` field is partial bookkeeping, not completed submission evidence. First GPU
+reference timings include cold work and cannot establish a CPU speedup.
+Later workload/lifecycle lanes remain unrun or unimplemented after the decisive stop.
+See the task for exact build identity, scope of designer/independent review and PR disposition.
