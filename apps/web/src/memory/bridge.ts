@@ -59,20 +59,26 @@ export function reply(value: Reply): ReplyValue {
     activeCancelled: value.activeCancelled,
   };
 }
+export class EngineBoundaryError extends Error {}
 export function consume<T extends Reply, R>(
   command: string,
   action: () => T,
   copy: (value: T) => R,
 ): R {
-  const snapshot = action();
   try {
-    const value = copy(snapshot);
-    diagnostic(command, snapshot.code, snapshot.session);
-    return value;
-  } finally {
-    snapshot.free();
+    const snapshot = action();
+    try {
+      const value = copy(snapshot);
+      diagnostic(command, snapshot.code, snapshot.session);
+      return value;
+    } finally {
+      snapshot.free();
+    }
+  } catch {
+    throw new EngineBoundaryError("engine-boundary-failed");
   }
 }
+
 export const bridge = {
   create: () => consume("create", api.memoryCreate, reply),
   enter: (owner: bigint) => consume("enter", () => api.memoryEnter(owner), reply),
@@ -147,10 +153,10 @@ export const bridge = {
     ),
   leave: (state: ReplyValue) =>
     consume("leave", () => api.memoryLeave(state.owner, state.session), reply),
-  scene: (state: ReplyValue) =>
+  scene: (state: ReplyValue, after = 0n) =>
     consume(
       "scene",
-      () => api.memorySceneIds(state.owner, state.session, state.scene, 0n),
+      () => api.memorySceneIds(state.owner, state.session, state.scene, after),
       (value) => ({ ...reply(value), ids: value.ids, done: value.done }),
     ),
   dispose: (owner: bigint) => consume("dispose", () => api.memoryDispose(owner), reply),

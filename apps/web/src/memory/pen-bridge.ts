@@ -8,6 +8,16 @@ export interface InputBatch {
   hasPressure: Uint8Array;
 }
 export const penBridge = {
+  settings: (state: ReplyValue, width: number, red: number, green: number, blue: number) =>
+    consume(
+      "settings",
+      () => api.memorySettings(state.owner, state.session, width, red, green, blue),
+      reply,
+    ),
+  undo: (state: ReplyValue) =>
+    consume("undo", () => api.memoryUndo(state.owner, state.session), reply),
+  redo: (state: ReplyValue) =>
+    consume("redo", () => api.memoryRedo(state.owner, state.session), reply),
   begin: (
     state: ReplyValue,
     pointer: number,

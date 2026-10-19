@@ -11,6 +11,15 @@ const commands = WebAssembly.Module.exports(module)
   .map((item) => item.name)
   .sort();
 const expected = [
+  "memoryBegin",
+  "memoryAppend",
+  "memoryEnd",
+  "memoryCancel",
+  "memorySettings",
+  "memoryUndo",
+  "memoryRedo",
+  "memoryScene",
+  "memoryStrokeState",
   "memoryCreate",
   "memoryDispose",
   "memoryEnter",
@@ -28,7 +37,7 @@ if (WebAssembly.Module.exports(module).some((item) => /fixture/i.test(item.name)
 const glue = await readFile(join(generated, "linefield_web_memory.js"), "utf8");
 const declarations = await readFile(join(generated, "linefield_web_memory.d.ts"), "utf8");
 if (/fixture/i.test(glue + declarations)) throw Error("Fixture glue leaked");
-for (const name of ["Reply", "State", "Mapping", "SceneIds"]) {
+for (const name of ["Reply", "State", "Mapping", "SceneIds", "ScenePage", "StrokeState"]) {
   if (!declarations.includes(`export class ${name}`)) throw Error("Generated snapshot absent");
 }
 if (!glue.includes("getArrayU64FromWasm0") || !glue.includes(".slice()"))
@@ -54,7 +63,7 @@ console.log(
     status: "passed",
     commands,
     engineSha256: createHash("sha256").update(bytes).digest("hex"),
-    generatedSnapshots: 4,
+    generatedSnapshots: 6,
     caveat:
       "Static export/glue/asset validation; browser E2E and independent glue inspection remain separate",
   }),

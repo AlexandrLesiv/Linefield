@@ -122,3 +122,16 @@ window.addEventListener("pagehide", (event) => {
     }
   }
 });
+
+window.addEventListener("beforeunload", (event) => {
+  if (!api || !owner || fatal) return;
+  try {
+    const state = api.read(owner);
+    if (state.strokeCount > 0n || state.canRedo) {
+      event.preventDefault();
+      event.returnValue = "";
+    }
+  } catch {
+    fatal = true;
+  }
+});

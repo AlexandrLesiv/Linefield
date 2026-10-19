@@ -25,6 +25,7 @@ export const catalog = {
       context: "In-memory web canvas foundation",
       arguments: { tool: "string" },
     },
+    "memory.color": { kind: "plain", context: "In-memory web pen color control", arguments: {} },
     "memory.undo": { kind: "plain", context: "In-memory web canvas foundation", arguments: {} },
     "memory.redo": { kind: "plain", context: "In-memory web canvas foundation", arguments: {} },
     "memory.opacityFixed": {

@@ -17,7 +17,9 @@ export const en = {
   "memory.opacityFixed": "Opacity 100% · fixed",
   "memory.smoothingOff": "Smoothing Off",
   "memory.canvas": "Temporary drawing canvas",
-  "memory.foundation": "Drawing and view controls are not available yet.",
+  "memory.foundation":
+    "Draw with mouse or pen. Long strokes may pause this preview. Pan and zoom are not available yet.",
+  "memory.color": "Pen color",
   "memory.displayLost":
     "Drawing display is unavailable. Your drawing remains in this tab’s memory.",
   "memory.resourceUnavailable":

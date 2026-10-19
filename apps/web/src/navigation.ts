@@ -82,6 +82,7 @@ export function createNavigation(gallery: HTMLElement, onReturn: (restoreFocus: 
       surface.append(chrome.root);
       document.body.append(surface);
       if (foundation) {
+        surface.dataset.entryReady = "false";
         detachMemory = attachMemory(surface);
         chrome.setReady(true);
       }
@@ -102,6 +103,8 @@ export function createNavigation(gallery: HTMLElement, onReturn: (restoreFocus: 
       document.removeEventListener("focusin", trackFocus);
       window.removeEventListener("blur", trackFocus);
       if (surface === current && !closing) {
+        current.dataset.entryReady = "true";
+        current.dispatchEvent(new Event("memory-entry-ready"));
         chrome?.setReady(true);
         if (
           !focusChanged &&

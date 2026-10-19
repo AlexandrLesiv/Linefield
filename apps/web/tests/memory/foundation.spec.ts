@@ -13,9 +13,9 @@ test("WMR-01 real Wasm and CanvasKit empty canvas retains page owner through gal
   await expect(page.locator("[data-memory-canvas]")).toHaveAttribute("data-state", "ready");
   await expect(page.locator(".canvas-title")).toHaveText("Temporary drawing");
   await expect(page.locator(".canvas-notice")).toContainText("Not saved");
-  await expect(page.locator(".canvas-notice")).toContainText("not available yet");
+  await expect(page.locator(".canvas-notice")).toContainText("Pan and zoom are not available yet");
   for (const control of await page
-    .locator(".drawing-rail button, .drawing-context button, .drawing-context input")
+    .locator(".drawing-rail button:not([data-memory-pen]), [data-memory-undo], [data-memory-redo]")
     .all()) {
     await expect(control).toBeDisabled();
   }

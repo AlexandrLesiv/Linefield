@@ -73,3 +73,21 @@ export const retry = style({
   maxWidth: "100%",
   alignSelf: "center",
 });
+export const colorInput = style({
+  marginTop: "8px",
+  borderTop: `1px solid ${theme.line}`,
+  borderRadius: 0,
+  padding: "14px 9px 9px",
+  height: "58px",
+  cursor: "pointer",
+  selectors: {
+    "&::-webkit-color-swatch-wrapper": { padding: 0 },
+    "&::-webkit-color-swatch": {
+      borderRadius: "50%",
+      border: `1px solid ${theme.paperText}`,
+      outline: `1px solid ${theme.paperText}`,
+      outlineOffset: "3px",
+    },
+    "&::-moz-color-swatch": { borderRadius: "50%", border: `1px solid ${theme.paperText}` },
+  },
+});

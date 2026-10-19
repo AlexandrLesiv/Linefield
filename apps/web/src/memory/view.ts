@@ -57,6 +57,7 @@ export function createMemoryView(surface: HTMLElement, retry: () => void) {
   measure();
   return {
     canvas,
+    surface,
     status(status: Status) {
       canvas.dataset.state = status;
       canvas.setAttribute("aria-busy", String(status === "loading"));

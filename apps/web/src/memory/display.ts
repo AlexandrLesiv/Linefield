@@ -1,8 +1,14 @@
+import { EngineBoundaryError } from "./bridge.ts";
+import { editorCommands } from "./commands.ts";
+import { observeSurface, surfaceMetrics, surfaceIsCurrent } from "./surface-events.ts";
 import type { CanvasKit } from "canvaskit-wasm";
 import type { Bridge, ReplyValue } from "./bridge.ts";
 import type { MemoryView } from "./view.ts";
 import { Presentation } from "./presentation.ts";
-import { diagnostic } from "./diagnostics.ts";
+import { SceneRenderer } from "./scene-renderer.ts";
+import { attachPenInput } from "./pen-input.ts";
+import { attachEditorControls } from "./editor-controls.ts";
+import { recoverDisplay } from "./display-failure.ts";
 export function attachDisplay(
   kit: CanvasKit,
   view: MemoryView,
@@ -15,98 +21,142 @@ export function attachDisplay(
 ): () => void {
   let state = initial;
   let presentation: Presentation | undefined;
+  let renderer: SceneRenderer | undefined;
   let frame = 0;
   let stopped = false;
   let lost = false;
   let size = "";
+  let running = false;
+  let dirty = false;
+  let input: ReturnType<typeof attachPenInput> | undefined;
+  let controls: ReturnType<typeof attachEditorControls> | undefined;
   const valid = () => !stopped && alive();
   function accept(next: ReplyValue): boolean {
     state = next;
     update(next);
+    input?.sync();
+    controls?.refresh();
     return next.code === "ok" || next.code === "noop";
   }
   function suspend(): void {
     if (!accept(api.suspend(state, nextSequence()))) throw Error("engine-unavailable");
   }
-  function render(): void {
+  function destroy(): void {
+    renderer?.dispose();
+    renderer = undefined;
+    presentation?.dispose();
+    presentation = undefined;
+  }
+  const failure = () => recoverDisplay(suspend, destroy, view, state.session, fatal);
+  function schedule(): void {
+    dirty = true;
+    if (valid() && !frame && !running && !lost) frame = requestAnimationFrame(() => void render());
+  }
+  async function render(): Promise<void> {
     frame = 0;
-    if (!valid() || lost) return;
-    const width = view.canvas.clientWidth;
-    const height = view.canvas.clientHeight;
-    const backing = devicePixelRatio;
-    const nextSize = `${width}:${height}:${backing}`;
-    if (presentation && nextSize === size) return;
+    if (!valid() || lost || view.surface.dataset.entryReady !== "true") return;
+    running = true;
+    dirty = false;
     try {
-      // Suspend before destroying/replacing any surface, even a same-size replacement.
-      if (presentation) {
-        suspend();
-        presentation.dispose();
-        presentation = undefined;
+      const { width, height, backing, key: nextSize } = surfaceMetrics(view.canvas);
+      if (!presentation || nextSize !== size) {
+        try {
+          if (presentation) {
+            suspend();
+            destroy();
+          }
+          if (width === 0 || height === 0) {
+            suspend();
+            view.status("sizeUnavailable");
+            return;
+          }
+          if (!accept(api.metrics(state, nextSequence(), width, height, backing))) {
+            view.status("sizeUnavailable");
+            return;
+          }
+        } catch {
+          fatal();
+          return;
+        }
+        view.status("loading");
+        try {
+          presentation = new Presentation(
+            kit,
+            view.canvas,
+            Math.ceil(width * backing),
+            Math.ceil(height * backing),
+          );
+          renderer = new SceneRenderer(kit, presentation);
+          size = nextSize;
+        } catch {
+          failure();
+          return;
+        }
       }
-      if (width === 0 || height === 0) {
-        suspend();
-        view.status("sizeUnavailable");
-        return;
+      const currentRenderer = renderer;
+      if (!currentRenderer) return;
+      if (!api.read(state.owner).canBeginInk && state.interaction === 0n) view.status("loading");
+      try {
+        await currentRenderer.render(
+          () => state,
+          () => valid() && renderer === currentRenderer,
+          (shown) => {
+            if (!valid() || renderer !== currentRenderer) return;
+            try {
+              if (!accept(api.presented(shown))) throw Error("engine-unavailable");
+              view.status("ready");
+            } catch {
+              fatal();
+            }
+          },
+        );
+      } catch (error: unknown) {
+        if (valid() && renderer === currentRenderer) {
+          if (error instanceof EngineBoundaryError) fatal();
+          else failure();
+        }
       }
-      if (!accept(api.metrics(state, nextSequence(), width, height, backing))) {
-        view.status("sizeUnavailable");
-        return;
-      }
-      const scene = api.scene(state);
-      if (scene.code !== "ok" || scene.ids.length !== 0 || !scene.done)
-        throw Error("engine-unavailable");
     } catch {
       fatal();
-      return;
+    } finally {
+      running = false;
+      if (dirty && valid()) schedule();
     }
-    view.status("loading");
-    try {
-      presentation = new Presentation(
-        kit,
-        view.canvas,
-        Math.ceil(width * backing),
-        Math.ceil(height * backing),
-      );
-      presentation.render();
-      if (!valid()) {
-        presentation.dispose();
-        presentation = undefined;
-        return;
+  }
+  const commands = editorCommands({
+    read: () => state,
+    valid: () => valid() && !lost && surfaceIsCurrent(view.canvas, size, remap),
+    accept,
+    cancelled: () => {
+      try {
+        renderer?.restore();
+      } catch {
+        failure();
       }
-      const metrics = presentation.stats();
-      if (
-        (metrics.canvasHeapBytes ?? 0) > 256 * 1024 * 1024 ||
-        metrics.backingEstimateBytes > 96 * 1024 * 1024
-      ) {
-        diagnostic("display", "soft-target", state.session);
-      }
-    } catch {
-      presentation?.dispose();
-      presentation = undefined;
+    },
+    changed: (previous, next) => {
+      if (previous.content !== next.content) view.status("loading");
+      schedule();
+    },
+    fatal,
+  });
+  input = attachPenInput(view.canvas, commands);
+  controls = attachEditorControls(view.surface, commands);
+  const remap = () => {
+    if (!valid()) return;
+    const measured = surfaceMetrics(view.canvas).key;
+    if (presentation && measured !== size) {
       try {
         suspend();
       } catch {
         fatal();
         return;
       }
-      view.status("resourceUnavailable");
-      diagnostic("display", "failed", state.session);
-      return;
+      destroy();
+      view.status("loading");
     }
-    try {
-      if (!accept(api.presented(state))) throw Error("engine-unavailable");
-      size = nextSize;
-      view.status("ready");
-    } catch {
-      fatal();
-    }
-  }
-  function schedule(): void {
-    if (valid() && !frame) frame = requestAnimationFrame(render);
-  }
-  const observer = new ResizeObserver(schedule);
-  observer.observe(view.canvas);
-  window.addEventListener("resize", schedule);
+    schedule();
+  };
   const lostContext = (event: Event) => {
     event.preventDefault();
     if (!valid() || lost) return;
@@ -119,17 +169,17 @@ export function attachDisplay(
       fatal();
       return;
     }
-    presentation?.dispose();
-    presentation = undefined;
+    destroy();
     view.status("displayLost");
   };
   const restored = () => {
-    if (!valid()) return;
-    lost = false;
-    schedule();
+    if (valid()) {
+      lost = false;
+      schedule();
+    }
   };
-  view.canvas.addEventListener("webglcontextlost", lostContext);
-  view.canvas.addEventListener("webglcontextrestored", restored);
+  const stopObserving = observeSurface(view.canvas, remap, lostContext, restored);
+  view.surface.addEventListener("memory-entry-ready", schedule);
   schedule();
   return () => {
     if (valid()) {
@@ -140,12 +190,11 @@ export function attachDisplay(
       }
     }
     stopped = true;
-    observer.disconnect();
-    window.removeEventListener("resize", schedule);
-    view.canvas.removeEventListener("webglcontextlost", lostContext);
-    view.canvas.removeEventListener("webglcontextrestored", restored);
+    input?.dispose();
+    controls?.dispose();
+    stopObserving();
+    view.surface.removeEventListener("memory-entry-ready", schedule);
     cancelAnimationFrame(frame);
-    presentation?.dispose();
-    presentation = undefined;
+    destroy();
   };
 }
