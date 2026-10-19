@@ -2,11 +2,15 @@
 
 Status: documentation extension requested 2026-10-16. Initial canonical floating-point sRGB
 remains selected. Future picker designs and wider color-space support are not implemented or
-approved by this note; identified Figma/format/ABI review precedes those features.
+approved by this note; identified design/format/ABI review precedes those features.
 
 ## Current boundary
 
-Native picker -> explicit color-space conversion -> typed shared color-setting command ->
+Decision 232 removes mandatory native picker appearance, not the existing color behavior or
+conversion/validation contract. A concrete replacement remains to review; wheel-based proposals
+are retired. OS-managed panels remain native where applicable.
+
+Host-rendered picker -> explicit color-space conversion -> typed shared color-setting command ->
 validated canonical sRGB -> current tool preferences -> properties captured by each new stroke.
 
 RGB sliders, hex and future HSB/HSV controls can edit the same color. Store one authoritative
@@ -57,7 +61,7 @@ rejected under the existing compatibility contract. No renderer replacement is i
 - COLOR-GAMUT-001 (future): sRGB/P3/OKLCH known vectors, explicit gamut mapping and meaningful
   tolerances; correct tagged render/thumbnail/export; unsupported-format rejection.
 - UI review: both en/uk labels, localized number entry, AX, gamut notices and native behavior.
-  Future controls still need owner-approved Figma and real native E2E on each implemented host.
+  Future controls still need owner-approved design review and real native E2E on each implemented host.
 
 Reference: [W3C CSS Color](https://www.w3.org/TR/css-color/) defines the distinct representations
 and gamut conversion issues. It is background, not a decision to use CSS or its runtime on native hosts.

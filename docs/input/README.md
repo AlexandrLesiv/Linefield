@@ -2,7 +2,7 @@
 
 Current owner direction (2026-10-16, decision 151): maintain an [input inventory](inventory.md) for UX.
 Do not settle shortcut/stylus/OS-action mappings now. UX proposes applicable platform behavior while
-designing each feature and submits it with the identified UI/Figma handoff for owner approval before
+designing each feature and submits it with the identified UI/design review handoff for owner approval before
 implementation. No P/V or other new binding was approved by the earlier question.
 
 The inventory includes native app menus and OS actions (including Services, Hide and Quit), keyboard,
@@ -19,5 +19,5 @@ only the relevant proposals in feature design. Preserve already approved shared 
 field/IME priority, actual-only initial samples, cancellation, active-interaction and save rules.
 Concrete ABI/state/security changes still require their separate review; no runtime implementation.
 
-[Historical review](../../quality/input-distribution-review.md) applies to its recorded snapshots;
+Historical review applies to its recorded snapshots;
 the latest workflow direction is documented here and in S00F, not certified by that older review.

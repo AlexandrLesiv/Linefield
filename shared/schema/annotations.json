@@ -1,0 +1,268 @@
+{
+  "provenance": {
+    "revision": "e08f304e9bc08886ee936ee620d8498809869a23",
+    "sha256": "059104124b0a86b67df6d2cfb0d9a13652357d861edf8090616caef6b66717fa",
+    "gitBlob": "0500f17fa5183b8cc74198a720d696eea664cb8d"
+  },
+  "projectNote": "\n# Linefield S02 deletion amendment v4.1\nPROPOSED AMENDMENT — NOT IMPLEMENTED OR SCHEMA-APPROVED, 2026-10-19.\nThe original regional v3 schema was approved in decision209; its tables are preserved below.\nDecision236 approves durable-library sequencing and recoverable removal lifecycle, not these new mechanisms.\n17 tables, 146 columns, 11 same-file relationships. Three namespaces represent separate SQLite files.\nNew catalog tables: removal_scopes, removals and departures. Drawing/jobs tables unchanged.\nStage preserves target bytes and Undo. Only an exact-set durable departure after destination readiness ends Undo.\nNo timeout finalization, persistent document edit Undo, new database or cross-file SQL foreign key.\nProposed scope ownership, acquisition reconciliation, bounds and partial SQL constraints require owner review.\nSee docs/database/removal.md for dictionary, sequence, migration and17 planned cases.\nschema source is review documentation, not executable migrations. Exact browser lock/flush and generated contracts remain gates.\nPrivate schema notes only; no drawing content, credentials or grants.\n",
+  "groups": [
+    {
+      "name": "Drawing document",
+      "tables": [
+        "drawing.document",
+        "drawing.tools",
+        "drawing.strokes",
+        "drawing.samples",
+        "drawing.command_receipts"
+      ]
+    },
+    {
+      "name": "Local library",
+      "tables": [
+        "catalog.library",
+        "catalog.drawings",
+        "catalog.tools",
+        "catalog.local_view",
+        "catalog.pen_preferences",
+        "catalog.lifecycle"
+      ]
+    },
+    {
+      "name": "Export processing",
+      "tables": ["jobs.snapshots", "jobs.destinations", "jobs.export_jobs"]
+    }
+  ],
+  "tables": {
+    "drawing.document": {
+      "note": "",
+      "columns": {
+        "singleton": "CHECK(singleton = 1)",
+        "document_id": "16-byte UUIDv4",
+        "database_incarnation": "16-byte instance UUID; changes on controlled replacement, not coordinator restart",
+        "display_name": "",
+        "content_revision": "",
+        "metadata_revision": "",
+        "created_utc_us": "",
+        "content_edited_utc_us": "",
+        "color_space": "srgb only initially"
+      }
+    },
+    "drawing.tools": {
+      "note": "",
+      "columns": {
+        "tool_key": "",
+        "tool_id": "16-byte stable UUID",
+        "name_key": "Stable machine key, not localized display text"
+      }
+    },
+    "drawing.strokes": {
+      "note": "",
+      "columns": {
+        "stroke_key": "",
+        "stroke_id": "16-byte UUIDv4",
+        "mutation_revision": "Resulting content revision of last stroke mutation; fresh on Undo restoration",
+        "tool_key": "",
+        "paint_order": "",
+        "base_width": "Logical units before transform; CHECK(value BETWEEN 1 AND 512)",
+        "red": "",
+        "green": "",
+        "blue": "",
+        "alpha": "",
+        "placement_region_x": "Signed i64 region address; Rust checked arithmetic",
+        "placement_region_y": "Signed i64 region address; positive Y down",
+        "placement_local_x": "Finite canonical local offset; CHECK(0 <= value AND value < 65536); +0",
+        "placement_local_y": "Finite canonical local offset; CHECK(0 <= value AND value < 65536); +0",
+        "uniform_scale": "CHECK(value BETWEEN 0.015625 AND 64); original points and base width preserved"
+      }
+    },
+    "drawing.samples": {
+      "note": "",
+      "columns": {
+        "stroke_key": "",
+        "sample_index": "Nonnegative contiguous from 0; sample 0 is derived immutable source anchor",
+        "region_x": "Signed i64 original region address",
+        "region_y": "Signed i64 original region address; positive Y down",
+        "local_x": "Finite canonical local offset; CHECK(0 <= value AND value < 65536); +0",
+        "local_y": "Finite canonical local offset; CHECK(0 <= value AND value < 65536); +0",
+        "pressure": "NULL unavailable, otherwise 0..1"
+      }
+    },
+    "drawing.command_receipts": {
+      "note": "",
+      "columns": {
+        "operation_id": "16-byte command UUID; private committed outcome only",
+        "client_session_id": "16-byte authenticated-session binding; not itself a credential",
+        "client_sequence": "",
+        "owner_generation": "16-byte generation under which command was admitted",
+        "database_incarnation": "",
+        "command_kind": "add_stroke, move_stroke, scale_stroke, delete_stroke, undo, redo, rename",
+        "argument_fingerprint": "32-byte private validated-argument digest, never exported or logged",
+        "base_content_revision": "",
+        "base_metadata_revision": "",
+        "result_content_revision": "",
+        "result_metadata_revision": "",
+        "committed_utc_us": ""
+      }
+    },
+    "catalog.library": {
+      "note": "",
+      "columns": {
+        "singleton": "CHECK(singleton = 1)",
+        "library_id": "",
+        "catalog_incarnation": "Fresh 16-byte UUID after rebuild/replacement",
+        "catalog_generation": "",
+        "automatic_name_highwater": "",
+        "activity_highwater": "Local monotonic gallery activity allocator; never use wall-clock time",
+        "sequence_recovery_state": ""
+      }
+    },
+    "catalog.tools": {
+      "note": "",
+      "columns": {
+        "tool_key": "",
+        "tool_id": "",
+        "name_key": ""
+      }
+    },
+    "catalog.drawings": {
+      "note": "",
+      "columns": {
+        "drawing_key": "",
+        "document_id": "",
+        "database_incarnation": "Last observed drawing incarnation; repairable projection",
+        "managed_file_id": "Opaque app-managed locator; not a display name or source path",
+        "display_name": "",
+        "content_revision": "",
+        "metadata_revision": "",
+        "created_utc_us": "",
+        "content_edited_utc_us": "",
+        "added_utc_us": "",
+        "activity_order": "Persistent local activity ordinal; descending order, timestamps remain independent",
+        "availability": ""
+      }
+    },
+    "catalog.local_view": {
+      "note": "",
+      "columns": {
+        "drawing_key": "",
+        "preference_revision": "",
+        "center_region_x": "Signed i64 saved viewport-center region; device-local preference",
+        "center_region_y": "Signed i64 saved viewport-center region; positive Y down",
+        "center_local_x": "Finite canonical local offset; CHECK(0 <= value AND value < 65536); +0",
+        "center_local_y": "Finite canonical local offset; CHECK(0 <= value AND value < 65536); +0",
+        "zoom": "CHECK(value BETWEEN 0.1 AND 8); 1 means 100 percent",
+        "active_tool_key": ""
+      }
+    },
+    "catalog.pen_preferences": {
+      "note": "",
+      "columns": {
+        "drawing_key": "",
+        "tool_key": "",
+        "preference_revision": "",
+        "width": "Maximum untransformed pen width; CHECK(value BETWEEN 1 AND 512)",
+        "red": "",
+        "green": "",
+        "blue": "",
+        "alpha": ""
+      }
+    },
+    "catalog.lifecycle": {
+      "note": "",
+      "columns": {
+        "operation_id": "",
+        "document_id": "",
+        "managed_file_id": "",
+        "operation_kind": "",
+        "phase": "",
+        "expected_database_incarnation": "Required for existing-file operations; nullable before new-file staging",
+        "expected_content_revision": "",
+        "expected_metadata_revision": "",
+        "automatic_name_number": "",
+        "confirmed_utc_us": "",
+        "updated_utc_us": ""
+      }
+    },
+    "jobs.snapshots": {
+      "note": "",
+      "columns": {
+        "snapshot_id": "",
+        "managed_file_id": "",
+        "document_id": "Logical source identity only",
+        "source_database_incarnation": "Captured source instance; independent snapshot has its own incarnation",
+        "content_revision": "",
+        "metadata_revision": "",
+        "byte_length": "",
+        "digest_sha256": "",
+        "state": ""
+      }
+    },
+    "jobs.destinations": {
+      "note": "",
+      "columns": {
+        "destination_id": "",
+        "access_kind": "",
+        "access_reference": "Bounded host-native bookmark/grant; no generic command codec",
+        "target_identity": "Bounded native identity, NULL if no target existed",
+        "destination_serialization_key": ""
+      }
+    },
+    "jobs.export_jobs": {
+      "note": "",
+      "columns": {
+        "job_id": "",
+        "source_document_id": "",
+        "snapshot_id": "",
+        "destination_id": "",
+        "format": "",
+        "state": "",
+        "admission_instance_id": "",
+        "claim_instance_id": "",
+        "claim_generation": "",
+        "accepted_utc_us": "",
+        "publication_phase": "",
+        "approved_target_identity": "",
+        "outcome_code": ""
+      }
+    },
+    "catalog.removal_scopes": {
+      "note": "Current scope/fencing state, NOT a durable Create/Claim request receipt. One verified runtime grant holder. Lost acquisition results use live bounded request lookup or Unknown followed by verified retirement and fresh claim; never infer grant from row existence/generation. See proposal.md. No persisted credential or timeout takeover.",
+      "columns": {
+        "scope_id": "UUID length16; runtime-created gallery visit, never a bearer capability",
+        "catalog_incarnation": "UUID length16; Rust matches current library incarnation",
+        "claim_generation": "Nonnegative i64; checked increment on exclusive claim",
+        "scope_revision": "Nonnegative i64; optimistic command precondition",
+        "state": "CHECK open or committed; transitions validated in Rust"
+      }
+    },
+    "catalog.removals": {
+      "note": "SQL partial UNIQUE(document_id) WHERE state IN (staged,finalizing) is required but not expressible here. Stage preserves existing drawings row/name/activity position. Terminal receipts survive drawing deletion. SQL state-dependent null CHECKs and Rust transaction checks are specified in proposal.md.",
+      "columns": {
+        "removal_id": "Stage operation UUID length16",
+        "scope_id": "",
+        "stage_fingerprint": "32-byte versioned canonical semantic request digest; private",
+        "document_id": "UUID length16; logical drawing reference, no SQL FK",
+        "managed_file_id": "UUID length16; immutable managed target, no path",
+        "database_incarnation": "UUID length16; exact expected instance",
+        "content_revision": "Nonnegative i64; exact protected revision",
+        "metadata_revision": "Nonnegative i64; exact protected revision",
+        "state": "CHECK staged, restored, finalizing or cleaned; legal transitions Rust",
+        "undo_operation_id": "UUID length16; present iff restored",
+        "undo_fingerprint": "32 bytes; present iff restored together with undo_operation_id",
+        "departure_id": "UUID length16; present iff finalizing or cleaned"
+      }
+    },
+    "catalog.departures": {
+      "note": "Immutable acceptance receipt; one or more catalog.removals. Insert with exact members, scope closure and lifecycle cleanup intents in one catalog transaction. Lost reply queries this outcome; absence is not permission to replay.",
+      "columns": {
+        "departure_id": "Committed departure operation UUID length16",
+        "scope_id": "At most one committed departure per scope",
+        "argument_fingerprint": "32 bytes; binds canonical exact removal set and destination",
+        "destination_document_id": "UUID length16; logical validated destination, no cross-file FK",
+        "destination_database_incarnation": "UUID length16",
+        "result_scope_revision": "Positive i64; matches committed closed scope",
+        "removal_count": "CHECK between 1 and 256; exact count/member equality checked in Rust transaction"
+      }
+    }
+  }
+}

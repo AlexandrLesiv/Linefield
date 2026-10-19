@@ -1,31 +1,25 @@
-# Acceptance and evidence
+# Quality documentation
 
-Planned registry fields: feature/acceptance/invariant ID, task, discovered executable test IDs, test layer, platform/device, applicability, exact source revision/build, execution result and artifact links. Keep automated coverage separate from whether the test was run successfully.
+This directory keeps maintained explanations, verification boundaries and unresolved findings.
+It does not store routine run output. Logs, result manifests, captures and generated resources
+remain ignored; link exact-build evidence from the relevant PR or task when available.
 
-SU-01 through SU-20 are defined in docs/successor/delivery.md. The planned native acceptance registry has not executed. Browser prototype and shared resource checks have separate executed evidence linked below. Do not copy Native Sketch pass statuses. Build_reliability installs the registry and discovery/reporting checks when S01 is authorized.
+| Topic | Maintained guidance |
+| --- | --- |
+| Browser storage | [Preservation blockers and adoption gates](storage/README.md) |
+| Regional arithmetic | [Precision limitations and required proof](precision/README.md) |
+| Shared resources | [Locale/theme validation and native-consumer limits](resources/README.md) |
+| Repository tooling | [Action, generation and editor verification boundaries](tooling/README.md) |
+| Web application | [App verification guidance](../apps/web/quality/README.md) |
 
-The [contract catalog](../docs/contracts.md) defines CT/INV IDs; the [shared E2E plan](../docs/testing/shared-e2e.md)
-defines scenario IDs. Registry records also include scenario/fixture versions and hashes,
-capabilities, platform variants, driver/test IDs, retry history and freshness. A native UI
-scenario must not pass through dispatcher injection. All catalog scenarios remain planned.
+Use [quality policy](../docs/quality.md), [shared E2E](../docs/testing/shared-e2e.md) and the
+[task template](../tasks/_template.md) for test ownership and reporting. These pages retain
+useful knowledge from previous reviews, not assertions that the current checkout passed those
+runs. Record revision/build, environment, discovered scenarios, failures, skips and retries with
+new executions. An old green result, unchanged file or successful generator exit is not current
+application acceptance.
 
-SU-20 and CT-09/INV-11 track i18n readiness; [locale scenarios](../docs/testing/internationalization.md) record language, region, direction, keyboard, resource/runtime version and translation review status separately. No real locales are yet certified.
-
-## Security task/review records
-
-[tasks/_template.md](../tasks/_template.md) requires impact, design approval references, negative
-acceptance cases and independent implementation review. [Review record](security-review-template.md)
-keeps reviewer independence, exact snapshot, findings, remediation/re-review and limitations explicit.
-No empty fields count as pass. Evidence registry must link those records once implemented; existing
-tasks remain planned until their actual records/tests exist. No retrospective fabricated approvals.
-
-S00F/S00G planning evidence: [input and distribution review](input-distribution-review.md).
-This records document review only; no native/physical-input/store-compliance passes.
-
-S00G channel-strategy assessment: [store strategy review](store-strategy-review.md), exact documentation snapshots only.
-
-Milestone-command setup: [workflow validation](milestone-workflow-review.md), including independent scenario walkthroughs and explicit discovery/validator limits.
-
-## Browser prototype evidence
-
-Browser-only prototype reports and captures live in [apps/web/quality](../apps/web/quality/README.md), alongside the application that owns them. This root directory retains shared contracts, cross-platform reviews and repository-tooling evidence. See the browser evidence index for retention policy and the relocation of historical web-* records.
+Keep unresolved findings until there is explicit resolution and supporting evidence. Do not
+restore obsolete review copies, retired tools, generated artifacts or developer-tool test suites
+merely to recover explanatory documentation. Primary-app tests and approved application-domain
+constraint/precision fixtures remain separate from generated evidence.

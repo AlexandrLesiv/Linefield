@@ -12,18 +12,13 @@ function frame(rect: DOMRect): Keyframe {
   };
 }
 
-export function placeMenu(
-  box: HTMLElement,
-  content: HTMLElement,
-  origin: HTMLElement,
-  point?: { x: number; y: number },
-): DOMRect {
-  const anchor = point ? new DOMRect(point.x, point.y, 0, 0) : origin.getBoundingClientRect();
+export function placeMenu(box: HTMLElement, content: HTMLElement, origin: HTMLElement): DOMRect {
+  const anchor = origin.getBoundingClientRect();
   const width = Math.min(224, Math.max(0, innerWidth - 16));
   box.style.width = `${width}px`;
   content.style.width = `${width}px`;
   const height = Math.min(content.scrollHeight, Math.max(0, innerHeight - 16));
-  const right = point ? point.x + width > innerWidth - 8 : anchor.right >= width + 8;
+  const right = anchor.right >= width + 8;
   const up = anchor.top + height > innerHeight - 8;
   const left = Math.max(
     8,
@@ -43,22 +38,12 @@ export function placeMenu(
   return anchor;
 }
 
-export function openMotion(
-  box: HTMLElement,
-  content: HTMLElement,
-  anchor: DOMRect,
-  contextual: boolean,
-): void {
+export function openMotion(box: HTMLElement, content: HTMLElement, anchor: DOMRect): void {
   if (reduced()) return;
-  box.animate(
-    contextual
-      ? [{ opacity: 0 }, { opacity: 1 }]
-      : [frame(anchor), frame(box.getBoundingClientRect())],
-    {
-      duration,
-      easing: "cubic-bezier(.2,.75,.25,1)",
-    },
-  );
+  box.animate([frame(anchor), frame(box.getBoundingClientRect())], {
+    duration,
+    easing: "cubic-bezier(.2,.75,.25,1)",
+  });
   content.animate([{ opacity: 0 }, { opacity: 1 }], {
     duration,
     easing: "ease-out",

@@ -1,0 +1,462 @@
+{
+  "width": 1440,
+  "height": 1176,
+  "title": "One authority, multiple local clients",
+  "description": "Decisions163–166 · Local incremental coordination; future cloud publication is separately scoped.",
+  "elements": [
+    {
+      "tag": "rect",
+      "attrs": {
+        "width": "1440",
+        "height": "1176",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "64",
+        "class": "meta"
+      },
+      "text": "LINEFIELD / DIAGRAM LANGUAGE v2"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "64",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "APPROVED DIRECTION · IMPLEMENTATION GATED"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "123",
+        "class": "title"
+      },
+      "text": "One authority, multiple local clients"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "161",
+        "class": "body"
+      },
+      "text": "Decisions163–166 · Local incremental coordination; future cloud publication is separately scoped."
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M224 348V396H672V448",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1172 348V396H672",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M672 564V664",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M520 734H376",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M224 664V604H48V290H72",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M224 664V604H48V200H1172V232",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M824 734H1008",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1172 780V920",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1008 978H896V824H672V804",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M880 872H912",
+        "fill": "none",
+        "stroke": "{diagram.color.canvas}",
+        "stroke-width": "{diagram.size.halo}"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1008 764H944V872H224V920",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "384",
+        "y": "838",
+        "width": "352",
+        "height": "25",
+        "rx": "{diagram.size.labelRadius}",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "392",
+        "y": "856",
+        "class": "meta"
+      },
+      "text": "future snapshots + conditional publication"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "232",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.presentation}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "260",
+        "class": "meta"
+      },
+      "text": "LOCAL CLIENT A"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "292",
+        "class": "node"
+      },
+      "text": "UI and input preview"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "232",
+        "width": "328",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.presentation}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "260",
+        "class": "meta"
+      },
+      "text": "LOCAL CLIENT B"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "292",
+        "class": "node"
+      },
+      "text": "UI and input preview"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "520",
+        "y": "448",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "476",
+        "class": "meta"
+      },
+      "text": "INTENT"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "508",
+        "class": "node"
+      },
+      "text": "Typed incremental"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "532",
+        "class": "node"
+      },
+      "text": "operations"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "520",
+        "y": "664",
+        "width": "304",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "692",
+        "class": "meta"
+      },
+      "text": "COORDINATOR"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "724",
+        "class": "node"
+      },
+      "text": "Authoritative Rust"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "748",
+        "class": "node"
+      },
+      "text": "document coordinator"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "664",
+        "width": "304",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "692",
+        "class": "meta"
+      },
+      "text": "CLIENT OUTCOMES"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "724",
+        "class": "node"
+      },
+      "text": "Ordered changes and"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "748",
+        "class": "node"
+      },
+      "text": "acknowledgements"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "664",
+        "width": "328",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "692",
+        "class": "meta"
+      },
+      "text": "PERSISTENCE"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "724",
+        "class": "node"
+      },
+      "text": "Bounded worker → local SQLite"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "920",
+        "width": "328",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "948",
+        "class": "meta"
+      },
+      "text": "DURABLE OUTCOME"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "980",
+        "class": "node"
+      },
+      "text": "Durable revision"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "1004",
+        "class": "node"
+      },
+      "text": "acknowledgement"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "920",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.unknown}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "948",
+        "class": "meta"
+      },
+      "text": "FUTURE"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "980",
+        "class": "node"
+      },
+      "text": "Cloud adapter"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M72 1104H1368",
+        "stroke": "{diagram.color.divider}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "1136",
+        "class": "meta"
+      },
+      "text": "Notation migration only · See source packet for authority and evidence"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "1136",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "2026-10-19 · Full-size SVG"
+    }
+  ]
+}

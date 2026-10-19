@@ -2,11 +2,13 @@
 
 Current order (decision 231): macOS remains the primary product target; web is the first implementation platform because the owner has the most experience with web. Develop macOS next, then iPhone/iPad as the next native priority. Retain all planned apps/ hosts and review portable boundaries from day one. This sequence update does not approve unreviewed contracts, new product features or certify any platform implementation.
 
+Visual policy (decision 232): app-owned UI uses one consistent Linefield style on every host. Mandatory native visual themes are superseded; existing toolkit choices below do not require their default styling. Adapt layout/targets/text to the device and retain native input, accessibility and OS-owned panels. The wheel is retired; desktop tools use the left rail with top contextual settings. Existing gallery visuals have not been rewritten.
+
 | Folder | Stack and capability | Responsibility |
 | --- | --- | --- |
 | apps/macos | Swift + AppKit. Apple Silicon only, latest stable macOS (decision 186); editable desktop app, primary product target and first native milestone after web. | macos_ui |
 | apps/ios | Swift + UIKit; SwiftUI where appropriate. iPhone and iPad editor with touch/Pencil-specific design; next native priority after macOS. | ios_ui |
-| apps/android | Kotlin + Jetpack Compose Material 3. Phone/tablet editor; Android desktop behavior shared with the ChromeOS route. | android_ui |
+| apps/android | Kotlin + Jetpack Compose; existing Material 3 component direction is subject to Linefield styling, not mandatory Material appearance. Phone/tablet editor; Android desktop behavior shared with the ChromeOS route. | android_ui |
 | apps/windows | C# + WinUI 3. Desktop editor with native pen, pointer, keyboard and file integration. | windows_ui |
 | apps/linux | Rust + GTK4/libadwaita. GNOME-oriented desktop editor; other Linux desktops need explicit support evidence. | Lead-assigned Linux implementer |
 | apps/web | TypeScript + semantic HTML, Rust/Wasm and Skia CanvasKit. First implementation platform. Browser editor with native browser semantics; no claim of AppKit or WinUI widgets. | Lead-assigned web implementer |
@@ -34,15 +36,15 @@ apps/android-xr is a planned host; [P11](../tasks/P11.md) defines its implementa
 - editor-native is the typed native ABI/composition boundary, not the sole universal host API. Swift/C# use reviewed generated declarations; Kotlin needs a separately reviewed typed JNI/binding adapter; web needs typed Wasm bindings/TypeScript declarations; Rust GTK may call Rust directly. Defer implementing these adapters until their tasks, but review representability/lifetimes now. No serialized command packet layer is introduced to make adapters look identical.
 - Thread topology is host-specific. A single editor owner, bounded work, immutable snapshots, cancellation, revision checks and no blocking ink path are common invariants. AppKit main-thread ownership is the macOS proposal, not a rule forcing every OS/browser to use the same scheduler.
 - Keep one portable document schema; do not create incompatible per-OS formats. Conformance fixtures cover editing semantics, ordering, cancellation, undo and file validation. File providers and recovery behavior still need host-specific evidence.
-- Match platform controls and appearance: AppKit/UIKit system styling (including system-provided Liquid Glass where available and appropriate), Android Compose Material 3, WinUI, GTK/libadwaita and semantic HTML. Do not reproduce one platform's visual style on another or hand-build glass effects without design/performance approval.
+- Render the shared Linefield component design through the selected host frameworks. Liquid Glass, Material and other OS-specific appearances are not required. Shared tokens/assets/specifications and host component work provide consistency; no style migration into Rust or universal widget engine is implied. System text/IME, focus, accessibility, safe areas and OS-owned panels retain host behavior.
 
 ## Rollout and acceptance
 
 S00–S02 include cross-platform design/contract review now. P05 is the first implementation platform and does not depend on macOS S08 acceptance. Its memory-only gallery prototype already exists; the full browser editor, Wasm boundary, storage and lifecycle need their reviewed slice plans. Shared Rust work supports both hosts. S03–S08 retain the macOS preview milestones after web; P01 targets iPhone/iPad next. The remaining P02–P12 hosts (excluding P05) follow macOS acceptance and explicit implementation direction, with scheduling based on hardware, tools and reviewed scope. S09 distribution is separate from implementation order.
 
-Every port requires approved platform-specific Figma, command/schema conformance, actual-host builds, native/browser E2E, input/focus/accessibility checks, storage/recovery failures, lifecycle/memory-pressure checks, logs and measured renderer behavior. Report planned, implemented, tested and accepted separately. No placeholders count as working support.
+Every port requires approved platform-specific design review, command/schema conformance, actual-host builds, native/browser E2E, input/focus/accessibility checks, storage/recovery failures, lifecycle/memory-pressure checks, logs and measured renderer behavior. Report planned, implemented, tested and accepted separately. No placeholders count as working support.
 
-ChromeOS delivery reuses Android desktop and/or web implementations. Review keyboard, mouse/pen/touch, resizing, density, file access, offline operation and lifecycle on real supported devices. Googlebook uses adaptive Android applications; see the official Googlebook guide linked in design/native-gallery-v4-plan.md. Verify actual supported devices and distribution at port implementation.
+ChromeOS delivery reuses Android desktop and/or web implementations. Review keyboard, mouse/pen/touch, resizing, density, file access, offline operation and lifecycle on real supported devices. Android desktop integration uses adaptive Android applications. Verify actual supported devices and distribution at port implementation.
 
 Apple TV and Watch are view-only. Watch planning preserves iPhone-first document acquisition with local cache and later authenticated network fallback when the phone is unavailable. Standalone operation must not rely on a paired phone being reachable. Define source precedence, freshness/offline errors and credential/privacy handling before implementing networking; no server/account feature is authorized by this scaffold. visionOS starts with an approved 2D interface; no implicit immersive authoring scope.
 
@@ -65,7 +67,7 @@ plus URL/deep-link safety where applicable. No universal native URL bar or route
 
 Owner added apps/wearos as a target on 2026-10-16, tracked by [P12](../tasks/P12.md). View-only
 is now owner-selected (decision 152); standalone/companion dependence, acquisition/cache and any later
-network/auth require review. Android phone/tablet Compose Material 3 is selected (decision 211). Wear-specific Compose libraries remain a separate toolkit review; phone/tablet approval does not establish watch component or capability parity.
+network/auth require review. Android phone/tablet Compose remains selected (decision 211), with mandatory Material appearance superseded by decision 232. Wear-specific Compose libraries remain a separate toolkit review; phone/tablet approval does not establish watch component or capability parity.
 Design small/round layouts, rotary input where available, native Back, TalkBack, reduced motion
 and lifecycle/battery limits. android_ui owns engineering; combined design ownership follows design/roles.md.
 

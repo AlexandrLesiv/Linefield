@@ -3,6 +3,49 @@ export const catalog = {
   version: 1,
   sourceLanguage: "en",
   messages: {
+    "canvas.tools": {
+      kind: "plain",
+      context: "Drawing UI prototype: Preview tools",
+      arguments: {},
+    },
+    "canvas.pen": { kind: "plain", context: "Drawing UI prototype: Pen", arguments: {} },
+    "canvas.select": { kind: "plain", context: "Drawing UI prototype: Select", arguments: {} },
+    "canvas.eraser": { kind: "plain", context: "Drawing UI prototype: Eraser", arguments: {} },
+    "canvas.line": { kind: "plain", context: "Drawing UI prototype: Line", arguments: {} },
+    "canvas.shapes": { kind: "plain", context: "Drawing UI prototype: Shapes", arguments: {} },
+    "canvas.colorUnavailable": {
+      kind: "plain",
+      context: "Drawing UI prototype: Color · unavailable in this preview",
+      arguments: {},
+    },
+    "canvas.settingsUnavailable": {
+      kind: "plain",
+      context: "Drawing UI prototype: Settings · unavailable in this preview",
+      arguments: {},
+    },
+    "canvas.width": { kind: "plain", context: "Drawing UI prototype: Width", arguments: {} },
+    "canvas.opacity": { kind: "plain", context: "Drawing UI prototype: Opacity", arguments: {} },
+    "canvas.smoothing": {
+      kind: "plain",
+      context: "Drawing UI prototype: Smoothing",
+      arguments: {},
+    },
+    "canvas.noSettings": {
+      kind: "plain",
+      context: "Drawing UI prototype: No settings for Select",
+      arguments: {},
+    },
+    "canvas.preview": {
+      kind: "plain",
+      context: "Drawing UI prototype: UI preview · artwork is not editable",
+      arguments: {},
+    },
+    "canvas.strokePreview": {
+      kind: "plain",
+      context: "Drawing UI prototype: Stroke preview",
+      arguments: {},
+    },
+    "canvas.zoom": { kind: "plain", context: "Drawing UI prototype: Zoom", arguments: {} },
     "app.name": {
       kind: "plain",
       context: "Product name; keep Linefield unchanged.",

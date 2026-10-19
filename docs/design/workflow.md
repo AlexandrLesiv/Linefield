@@ -1,93 +1,103 @@
-# Figma design and implementation handoff
+# Repository design and implementation handoff
 
-Design is a day-one activity. No Figma file/frame is currently approved for Linefield.
-The owner approves the identified version of every new page/screen/tool before implementation.
-This applies to the drawing apps and any later developer dashboard. A task brief or a designer's
-own approval is not the owner's approval.
+Design is a day-one activity owned alongside implementation in this repository. Use versioned
+specifications, approved reference assets, semantic resources and explicitly authorized live
+web prototypes. External design-tool accounts, editing access and connectors are not prerequisites.
+The owner reviews an identified design version before a new product/native screen or tool is
+implemented. Existing explicit prototype authorizations, including decisions214,233–234, remain
+valid; do not reopen their selected direction. Foundation approval does not approve unseen screens.
 
-## Organization
+## Artifacts and ownership
 
-Use one Linefield Figma project/file initially, organized into shared product concepts,
-platform-specific flows/components, developer workbench/report views, and approved snapshots.
-Split files later only for a concrete collaboration need. Keep common terminology/actions
-shared; native component appearance/layout follows AppKit/UIKit, Android Material, WinUI,
-GTK or browser conventions. Do not generate native production controls from arbitrary Figma
-rectangles or impose identical visuals on every OS.
+Keep durable briefs, state/flow specifications, component inventories, host mappings and review
+records under docs/design/. Keep executable prototype source in its authorized application or
+prototype directory, and test/capture evidence in the corresponding quality directory. Record
+reference provenance and preserve historical approval snapshots; an earlier proposal is not a
+current requirement merely because it remains available.
 
-Repository docs/design/ holds durable briefs, approval records and native behavior mappings.
-For each feature record task/scenario IDs, Figma file/frame links and explicit version or
-named immutable snapshot, target platform, owner decision/date/conditions, and implementation
-revision later. Mutable latest-frame URLs alone do not establish what was approved. Where
-permitted, retain exported reference images with attribution so review does not depend solely
-on live Figma access. Exports are design evidence, not replacement approval.
+Follow [combined ownership](roles.md): ui_ux_designer owns behavior, navigation, presentation,
+adaptive layout, locale expectations and motion together. Lead coordinates scope and one review
+packet. Platform engineers verify host feasibility; rust_engine checks authoritative command and
+capability semantics; a fresh reviewer independently assesses substantive changes and evidence.
+Use disjoint file ownership or isolated worktrees for concurrent writers. No extra coordinator
+or recursive delegation is introduced by this workflow.
 
-The designer prepares blank/active/selected/disabled/loading/error/cancel states, light/dark
-and resizing variants, keyboard/focus/gesture behavior, accessibility semantics and native
-control mappings. Platform implementers check feasibility; rust_engine checks command semantics.
-Link these expectations to shared E2E scenarios and platform-specific supplements.
+Each review packet identifies:
+
+- Task/scenario and CT/INV/SU/SEC IDs, included behavior and explicit scope exclusions.
+- Repository artifact paths, version or commit plus hashes for uncommitted reviewed files,
+  screen/state identifiers, and reference provenance.
+- Behavior checklist: triggers, preconditions, outcomes, guards, interruption, focus/IME,
+  accessibility, locale differences and recovery where applicable.
+- Visual checklist: component roles/states, semantic resources, adaptive rules, measured
+  viewport/text-scale/theme variants, artwork separation and motion choreography.
+- Exact prototype/build and browser/device, executed/failed/unrun cases, evidence paths and
+  limitations. A mutable local URL alone cannot identify the approved version.
+- Owner decision/date/conditions, unresolved questions and implementation revision when available.
+
+Decision232 requires consistent Linefield styling across hosts, with adaptive space/input/
+accessibility behavior. Host text/IME/focus, accessibility and OS-owned panels remain native.
+Repository mockups and browser simulations do not prove native controls, durability or latency.
 
 ## Handoff and drift
 
-Flow: scope brief → platform feasibility → versioned Figma proposal → owner approval →
-implementation with tests → running-app designer review → owner acceptance packet.
-Record material deviations and return them for review. Routine corrections within an approved
-design do not require repeating the entire design process.
+Flow: bounded scope brief → behavior/visual specification and platform feasibility → identified
+design review → required owner approval → authorized implementation with tests → designer review
+of runtime evidence and independent change review → owner handoff.
 
-Native controls use system metrics/appearance; portable design tokens cover only appropriate
-shared elements such as canvas overlays and the future web workbench/report presentation.
-Do not build a cross-platform widget framework or a token synchronization service now.
-Accessibility and interaction semantics are as important as the mockup pixels.
+Material behavior, design or architecture deviations return for review. Routine corrections
+within the approved scope do not restart design selection. A missing required design/approval
+blocks that UI slice; continue independent authorized documentation, tooling and contract work.
+Unavailable evidence remains a gap, rather than a reason to invent a pass or a new access gate.
 
-Missing Figma access blocks new UI implementation, not authorized contract/engine/test work.
-Do not upload private project material through an unapproved integration. Figma automation
-and credentials require their own tool availability/access; no connector is assumed installed.
+Shared theme/localization authoring remains trusted data-only TypeScript with generated host
+resources; see [shared resources](shared-resources-plan.md). Component geometry, icon roles,
+states and motion are specified as features need them. No universal widget framework, Rust style
+migration, synchronization service or additional product feature follows from this workflow.
 
-## Developer tool design
+## Adaptive foundations and review evidence
 
-Plan navigation for documentation/tasks, decisions/contracts, dependencies, feature/coverage
-matrix, run/build actions, logs/results, performance and Wasm preview. Present missing/stale/
-skipped results distinctly from pass. Run buttons must show platform and whether desktop focus
-is required. Reuse the future web report components/style in local and static CI presentations;
-keep command execution out of published static reports. See ../developer-experience.md.
+Start with [foundations](foundations.md) and [S00A](../../tasks/S00A.md). Specify reusable components
+through semantic roles, states and layout rules. Where a runnable prototype is authorized, use
+its actual layout engine and resize the viewport through minimum, intermediate, typical and wide
+dimensions. Fixed screenshots document samples; resize tests establish behavior between them.
+For unimplemented hosts, record the proposed mapping and the missing runtime evidence explicitly.
 
-## Foundations and adaptive mockups
+Headless browser tests and local captures are the default web review evidence. Record their
+configuration and exact source/build. Include focused keyboard/pointer/touch-emulation cases,
+accessible labels/states, expanded text, English/Ukrainian, pseudo-RTL/mixed scripts, light/dark,
+contrast and reduced motion where applicable. Review captures visually; do not auto-approve
+baselines. Distinguish runtime artifact inspection from an interactive designer walkthrough,
+screen-reader review, physical device input and user research. Honor current restrictions on
+Computer Use and foreground reservations; headless evidence does not grant those permissions.
 
-Begin with [design foundations](foundations.md) and task S00A before detailed macOS screens.
-Require reusable components, semantic variables/native mappings and actual resizable frames
-with explicit adaptive rules. Show foundations and screen flows for separate owner approvals.
-Do not substitute multiple fixed screenshots for demonstrated resizing. No Figma design has
-been created by adding these instructions.
+Follow [S00B](../../tasks/S00B.md) and [internationalization](../internationalization.md). Keep
+wording context and linguistic review separate from layout/resource/runtime checks. Preserve
+artwork and user names through locale/direction changes; pseudo-locales are test fixtures.
 
-Localization handoff: S00B defines language/resource policy; S00A and screen Figma reviews include expanded/RTL/Unicode cases from ../internationalization.md. Record tested locale/direction/text-scale variants, glossary context and native limitations. Approval of layout samples does not certify translations or real IME/accessibility behavior.
+## Research and navigation
 
-## Research before detailed design
+Use [S00C](../../tasks/S00C.md) and the research handoff for bounded evidence
+before substantial new design choices. Record accept/adapt/defer/reject reasoning. Research does
+not expand scope or require restarting the already-selected rail/top-settings direction.
 
-Use [S00C](../../tasks/S00C.md) and the [research handoff](../research/README.md) for a bounded
-competitor study. Both owner and designer receive sourced findings; designer records adaptation
-and disagreements. Competitor features do not enter scope automatically. Shared foundations
-may progress while research runs; resolve relevant findings before detailed screen approval.
+Follow [motion](motion.md), [navigation](../navigation.md) and [S00D](../../tasks/S00D.md). Specify
+state graphs, accepted route/history changes, Back/dirty guards, loading/error/cancel and focus
+restoration. Provide timing/interruption/reversal/reduced-motion expectations and executable
+examples only where authorized. Screenshots alone cannot demonstrate complete motion behavior.
+Animation completion never owns document/save/discard mutations or delays input/ink. Use OS-owned
+panels where the approved native workflow calls for them.
 
-## Interactive motion and navigation handoff
+## Input coverage and planned developer tools
 
-Follow [motion](motion.md), [navigation](../navigation.md) and [S00D](../../tasks/S00D.md).
-Deliver destination/state graphs, browser URL examples/native equivalents, Back/dirty guards,
-loading/error/cancel, restoration/focus and interactive transition specifications. Show normal
-and reduced-motion prototypes, interruption/reversal and platform differences. Record exact
-prototype versions with screen approvals; screenshots alone do not approve unshown motion.
-Use native panels for the initial macOS file workflow unless a separate chooser is approved.
+Use the [input inventory](../input/inventory.md) per feature: native fields/IME, keyboard, pointer,
+touch/pen/accessories, app menus/Services, assistive input and lifecycle. Specify applicability,
+availability, alternatives, interruption and scenario IDs. Annotate inputs the web prototype
+cannot demonstrate. Engineers verify acquisition and host conflicts; no incidental global
+shortcut/profile adoption. watchOS/tvOS/Wear OS/Android TV remain view-only.
 
-## UX/UI ownership
-
-Follow [combined ownership](roles.md): ui_ux_designer owns interaction briefs, routes, usability,
-visual foundations, adaptive components and motion together. Lead coordinates one review packet;
-platform engineers validate feasibility. Use both behavior and visual checklists for substantial flows. Existing foundation/screen owner gates stay.
-
-## Per-feature input coverage (decision 151)
-
-ui_ux_designer uses [input inventory](../input/inventory.md) for each feature and platform; include OS/app menus
-and Services, not only canvas gestures. Specify applicability, proposed action/context, native focus/
-IME conflicts, availability, cancellation/interruption, alternatives and test IDs. Engineers check
-feasibility; the same designer annotates these behaviors in the exact Figma handoff, including non-prototypable
-hardware/system interactions. Owner approves the feature's interactions and design before code.
-Do not make global shortcut/stylus decisions an up-front prerequisite or silently adopt old proposals.
-watchOS/tvOS/Wear OS/Android TV are view-only; their designs cannot introduce editing behavior.
+Future developer-tool designs may cover tasks/contracts, coverage, run/build actions and evidence
+under [developer experience](../developer-experience.md). Distinguish missing/stale/skipped results
+from pass and identify foreground requirements. This is planning guidance, not authorization for
+a dashboard, launcher or published command execution. Reuse approved presentation/resources when
+that work is authorized, without coupling applications to developer tools.

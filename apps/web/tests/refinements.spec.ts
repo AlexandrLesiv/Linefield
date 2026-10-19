@@ -30,9 +30,6 @@ test("WEB-R02 web leaves context menu and long press to browser", async ({ page 
   await page.waitForTimeout(650);
   await tile.dispatchEvent("pointerup");
   await expect(page.getByRole("menu")).toHaveCount(0);
-  await page.getByLabel("Preview platform").selectOption("macos");
-  await tile.dispatchEvent("contextmenu");
-  await expect(page.getByRole("menu")).toBeVisible();
 });
 
 test("WEB-R03 Rename starts at menu bounds, survives immediate Escape, and preserves literal names", async ({

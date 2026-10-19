@@ -31,9 +31,6 @@ export function readSurfaceAppearance(surface: HTMLElement) {
     background: getComputedStyle(surface).backgroundColor,
     radius: getComputedStyle(surface).borderRadius,
     shadow: getComputedStyle(surface).boxShadow,
-    edgeOpacity: Number(
-      getComputedStyle(surface.querySelector(".compose-edge") ?? surface).opacity,
-    ),
     opacity: label ? Number(getComputedStyle(label).opacity) : 0,
   };
 }

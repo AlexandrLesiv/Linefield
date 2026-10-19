@@ -1,6 +1,6 @@
-import { globalStyle } from "@vanilla-extract/css";
+import { style } from "@vanilla-extract/css";
 import { theme } from "./theme.css.ts";
-globalStyle(".gallery-menu", {
+export const galleryMenu = style({
   position: "fixed",
   zIndex: "1000",
   boxSizing: "border-box",
@@ -11,13 +11,13 @@ globalStyle(".gallery-menu", {
   color: theme.text,
   boxShadow: "0 12px 36px #0003,\n    0 2px 8px #0002",
 });
-globalStyle(".gallery-menu-content", {
+export const galleryMenuContent = style({
   boxSizing: "border-box",
   padding: "5px",
   overflowY: "auto",
   overscrollBehavior: "contain",
 });
-globalStyle(".gallery-menu button", {
+export const menuButton = style({
   display: "block",
   width: "100%",
   minHeight: "34px",
@@ -29,34 +29,28 @@ globalStyle(".gallery-menu button", {
   font: "inherit",
   textAlign: "start",
   cursor: "pointer",
-});
-globalStyle(".gallery-menu button:hover, .gallery-menu button:focus-visible", {
-  background: "color-mix(in srgb, currentColor 12%, transparent)",
-  outline: "2px solid transparent",
-  outlineOffset: "-2px",
-});
-globalStyle(".gallery-menu button.destructive", {
-  color: theme.destructive,
-});
-globalStyle('[data-platform="windows"] .gallery-menu', {
-  borderRadius: "7px",
-});
-globalStyle('[data-platform="android"] .gallery-menu', {
-  borderRadius: "16px",
-});
-globalStyle(
-  '[data-platform="android"] .gallery-menu button, [data-platform="ios"] .gallery-menu button, [data-platform="ipados"] .gallery-menu button',
-  {
-    minHeight: "44px",
-  },
-);
-globalStyle('[data-platform="ios"] .gallery-menu, [data-platform="ipados"] .gallery-menu', {
-  borderRadius: "14px",
-});
-globalStyle(".gallery-menu button:focus-visible", {
-  "@media": {
-    "(forced-colors: active)": {
-      outlineColor: "Highlight",
+  selectors: {
+    "&:hover": {
+      background: "color-mix(in srgb, currentColor 12%, transparent)",
+      outline: "2px solid transparent",
+      outlineOffset: "-2px",
+    },
+    "&:focus-visible": {
+      background: "color-mix(in srgb, currentColor 12%, transparent)",
+      outline: "2px solid transparent",
+      outlineOffset: "-2px",
     },
   },
+  "@media": {
+    "(forced-colors: active)": {
+      selectors: {
+        "&:focus-visible": {
+          outlineColor: "Highlight",
+        },
+      },
+    },
+  },
+});
+export const destructive = style({
+  color: theme.destructive,
 });

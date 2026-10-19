@@ -8,8 +8,7 @@ for (const colorScheme of ["light", "dark"] as const) {
       await page.emulateMedia({ colorScheme });
       await page.goto(`/?platform=${platform}`);
       const card = page.locator('[data-id="sample-0"]');
-      if (platform === "web") await card.locator(".more").click();
-      else await card.click({ button: "right" });
+      await card.locator(".more").click();
       await page.getByRole("menuitem", { name: "Delete", exact: true }).click();
       await expect(page.locator(".gallery-menu")).toHaveCount(0);
       const result = await card.locator(".undo").evaluate((node) => {

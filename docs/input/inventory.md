@@ -55,9 +55,9 @@ Consult engineers for feasibility and shared-command semantics. Native presentat
 remain native; app/document actions use the shared command architecture. No parallel editing policy
 in device adapters. Preserve approved cancellation, active-tool, one-operation Undo and save guards.
 UX specifies behavior; UI adds discoverability, adaptive controls, state/focus feedback and motion
-in the identified Figma version. Annotate OS menus/hardware actions that Figma cannot execute.
+in the identified design version. Annotate OS menus/hardware actions that design review cannot execute.
 Include accessibility alternatives, keyboard layout/IME, handedness, reduced motion and failure cases.
-Send the feature's complete interaction proposal with its Figma handoff to the owner before code;
+Send the feature's complete interaction proposal with its design review handoff to the owner before code;
 do not request all hardware mappings as a separate up-front questionnaire. Reuse approved conventions,
 and call out any material change for renewed review. Record deferred/inapplicable items honestly.
 

@@ -1,0 +1,52 @@
+[
+  {
+    "label": "Linefield: root typecheck",
+    "command": "node",
+    "args": ["scripts/action.ts", "root-typecheck"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "never",
+    "allow_concurrent_runs": false,
+    "use_new_terminal": false,
+    "save": "none"
+  },
+  {
+    "label": "Linefield: web typecheck",
+    "command": "node",
+    "args": ["scripts/action.ts", "web-typecheck"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "never",
+    "allow_concurrent_runs": false,
+    "use_new_terminal": false,
+    "save": "none"
+  },
+  {
+    "label": "Linefield: lint",
+    "command": "node",
+    "args": ["scripts/action.ts", "lint"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "never",
+    "allow_concurrent_runs": false,
+    "use_new_terminal": false,
+    "save": "none"
+  },
+  {
+    "label": "Linefield: locale resource check",
+    "command": "node",
+    "args": ["scripts/action.ts", "locales-check"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "never",
+    "allow_concurrent_runs": false,
+    "use_new_terminal": false,
+    "save": "none"
+  },
+  {
+    "label": "Linefield: theme resource check",
+    "command": "node",
+    "args": ["scripts/action.ts", "theme-resources-check"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "never",
+    "allow_concurrent_runs": false,
+    "use_new_terminal": false,
+    "save": "none"
+  }
+]

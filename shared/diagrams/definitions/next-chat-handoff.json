@@ -1,0 +1,446 @@
+{
+  "width": 1440,
+  "height": 1088,
+  "title": "Verify completion, then open the next chat",
+  "description": "A concise entry packet replaces transcript copying; it never replaces required governing instructions.",
+  "elements": [
+    {
+      "tag": "rect",
+      "attrs": {
+        "width": "1440",
+        "height": "1088",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "64",
+        "class": "meta"
+      },
+      "text": "LINEFIELD / DIAGRAM LANGUAGE v2"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "64",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "OWNER-APPROVED WORKFLOW · VERIFIED FACTS ONLY"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "123",
+        "class": "title"
+      },
+      "text": "Verify completion, then open the next chat"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "161",
+        "class": "body"
+      },
+      "text": "A concise entry packet replaces transcript copying; it never replaces required governing instructions."
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M376 306H520",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M824 318H1008",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1172 388V480H672V568",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "872",
+        "y": "444",
+        "width": "80",
+        "height": "25",
+        "rx": "{diagram.size.labelRadius}",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "880",
+        "y": "462",
+        "class": "meta"
+      },
+      "text": "verified"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M824 638H1008",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M672 388V430H224V568",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1008 340H944V430H672",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "776",
+        "y": "414",
+        "class": "meta"
+      },
+      "text": "required checks missing"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "240",
+        "y": "394",
+        "width": "176",
+        "height": "25",
+        "rx": "{diagram.size.labelRadius}",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "248",
+        "y": "412",
+        "class": "meta"
+      },
+      "text": "unverified / blocked"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "248",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.presentation}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "276",
+        "class": "meta"
+      },
+      "text": "OWNER SIGNAL"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "308",
+        "class": "node"
+      },
+      "text": "Owner reports the PR"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "332",
+        "class": "node"
+      },
+      "text": "merged"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "520",
+        "y": "248",
+        "width": "304",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "276",
+        "class": "meta"
+      },
+      "text": "VERIFY"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "308",
+        "class": "node"
+      },
+      "text": "Repository, destination,"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "332",
+        "class": "node"
+      },
+      "text": "merged state and merge SHA"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "248",
+        "width": "328",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "276",
+        "class": "meta"
+      },
+      "text": "VERIFY"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "308",
+        "class": "node"
+      },
+      "text": "Map tested tree; check"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "332",
+        "class": "node"
+      },
+      "text": "changed integration content"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "568",
+        "width": "304",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.unknown}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "596",
+        "class": "meta"
+      },
+      "text": "NOT READY"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "628",
+        "class": "node"
+      },
+      "text": "Integration pending or"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "652",
+        "class": "node"
+      },
+      "text": "next task blocked"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "520",
+        "y": "568",
+        "width": "304",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "596",
+        "class": "meta"
+      },
+      "text": "HANDOFF"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "628",
+        "class": "node"
+      },
+      "text": "Completion receipt + next"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "652",
+        "class": "node"
+      },
+      "text": "ready task prompt"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "568",
+        "width": "328",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "596",
+        "class": "meta"
+      },
+      "text": "NEXT TASK"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "628",
+        "class": "node"
+      },
+      "text": "Fresh chat, one task branch"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "652",
+        "class": "node"
+      },
+      "text": "and one PR"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "756",
+        "class": "meta"
+      },
+      "text": "Prompt includes task ID / outcome, exact base and approval links, prior PR / merge SHA, checks, exclusions and next-task reading."
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "792",
+        "class": "meta"
+      },
+      "text": "Use verified values, never placeholders. Do not start dependent work if integration or approval remains unresolved."
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "828",
+        "class": "meta"
+      },
+      "text": "Interrupted same-task chat: stop the prior writer, transfer checkout ownership, then reuse its existing branch and PR."
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "864",
+        "class": "meta"
+      },
+      "text": "A separately ready independent task may be suggested with the unresolved dependency explicitly stated."
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M72 1016H1368",
+        "stroke": "{diagram.color.divider}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "1048",
+        "class": "meta"
+      },
+      "text": "Notation migration only · See source packet for authority and evidence"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "1048",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "2026-10-19 · Full-size SVG"
+    }
+  ]
+}

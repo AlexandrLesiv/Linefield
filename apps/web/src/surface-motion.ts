@@ -1,4 +1,3 @@
-import { animateComposeEdge } from "./compose-edge.ts";
 import { animateCreationVisual } from "./creation-motion.ts";
 import { reducedMotion } from "./dom.ts";
 
@@ -24,7 +23,6 @@ export function moveSurface(
     background: string;
     opacity: number;
     radius: string;
-    edgeOpacity: number;
     shadow: string;
   },
   elevatedShadow: string,
@@ -61,7 +59,6 @@ export function moveSurface(
     { ...timing, easing: "linear" },
   );
   const shell = node.animate(shellFrames(to), timing);
-  const edge = animateComposeEdge(node, closing, appearance.edgeOpacity, timing);
   const creation = animateCreationVisual(node, closing, appearance.opacity, timing);
   const image = node.querySelector<HTMLImageElement>(".canvas-art");
   const imageFrames = (target: DOMRect, art: DOMRect) => [
@@ -78,14 +75,12 @@ export function moveSurface(
       if (art && artwork?.effect instanceof KeyframeEffect)
         artwork.effect.setKeyframes(imageFrames(target, art));
       elevation.finish();
-      edge?.finish();
       creation?.finish();
       artwork?.finish();
       shell.finish();
     },
     cancel() {
       elevation.cancel();
-      edge?.cancel();
       creation?.cancel();
       shell.cancel();
       artwork?.cancel();

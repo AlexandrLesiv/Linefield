@@ -1,0 +1,412 @@
+{
+  "width": 1440,
+  "height": 1008,
+  "title": "Localized presentation, stable semantics",
+  "description": "Language and numeric parsing belong to presenters; Rust commands and document data remain locale-independent.",
+  "elements": [
+    {
+      "tag": "rect",
+      "attrs": {
+        "width": "1440",
+        "height": "1008",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "64",
+        "class": "meta"
+      },
+      "text": "LINEFIELD / DIAGRAM LANGUAGE v2"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "64",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "MIXED · SHARED RESOURCES EXIST / NATIVE RUNTIME PLANNED"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "123",
+        "class": "title"
+      },
+      "text": "Localized presentation, stable semantics"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "161",
+        "class": "body"
+      },
+      "text": "Language and numeric parsing belong to presenters; Rust commands and document data remain locale-independent."
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M376 298H520",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M824 298H1008",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1172 356V472",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1008 530H824",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M520 530H376",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M672 720V588",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1172 588V720",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "240",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.presentation}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "268",
+        "class": "meta"
+      },
+      "text": "INPUT"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "300",
+        "class": "node"
+      },
+      "text": "Localized numeric field"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "520",
+        "y": "240",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "268",
+        "class": "meta"
+      },
+      "text": "HOST"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "300",
+        "class": "node"
+      },
+      "text": "Full-string numeric"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "324",
+        "class": "node"
+      },
+      "text": "validation"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "240",
+        "width": "328",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "268",
+        "class": "meta"
+      },
+      "text": "COMMAND"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "300",
+        "class": "node"
+      },
+      "text": "Typed numeric Rust command"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "472",
+        "width": "328",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "500",
+        "class": "meta"
+      },
+      "text": "CORE RESULT"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "532",
+        "class": "node"
+      },
+      "text": "Stable kind and typed values"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "520",
+        "y": "472",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "500",
+        "class": "meta"
+      },
+      "text": "PRESENTER"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "532",
+        "class": "node"
+      },
+      "text": "Native or web presenter"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "472",
+        "width": "304",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "500",
+        "class": "meta"
+      },
+      "text": "OUTPUT"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "532",
+        "class": "node"
+      },
+      "text": "Localized text, numbers"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "556",
+        "class": "node"
+      },
+      "text": "and accessibility"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "520",
+        "y": "720",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.presentation}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "748",
+        "class": "meta"
+      },
+      "text": "RESOURCES"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "780",
+        "class": "node"
+      },
+      "text": "Platform messages and"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "804",
+        "class": "node"
+      },
+      "text": "locale"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "720",
+        "width": "328",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "748",
+        "class": "meta"
+      },
+      "text": "DURABLE FORMAT"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "780",
+        "class": "node"
+      },
+      "text": "Locale-independent document"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "804",
+        "class": "node"
+      },
+      "text": "schema"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M72 936H1368",
+        "stroke": "{diagram.color.divider}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "968",
+        "class": "meta"
+      },
+      "text": "Notation migration only · See source packet for authority and evidence"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "968",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "2026-10-19 · Full-size SVG"
+    }
+  ]
+}

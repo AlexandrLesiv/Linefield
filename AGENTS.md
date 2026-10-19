@@ -1,24 +1,83 @@
 # Linefield agent instructions
 
+## Repository source policy
+
+The owner reviews PRs; agent design/independent review never implies owner review or acceptance.
+Read the assigned task, tasks/README.md, docs/objectives.md and current contracts first.
+Keep only current authored sources in Git. Superseded proposals, handoffs, research, screenshots,
+run logs and generated reports belong outside the repository or in PR attachments. Git history
+retains previous revisions; do not maintain history inventories or duplicate versions in source.
+Generate diagram previews locally into ignored paths. There is no task HTML service. Agents read shared diagram JSON,
+DTCG tokens, SQL/annotations and plain tasks/*.md rather than generated SVG or HTML.
+Use E2E tests only; do not add unit or developer-tool test suites. Static types, lint, formatting and build validation remain required. Retain source experiments
+needed to resolve primary-app storage/engine risks, with results in ignored .build-cache.
+Maintained quality READMEs are source: preserve useful acceptance mappings, verification guidance and unresolved findings. Exclude generated logs/results/captures, not documentation merely because it lives in quality/.
+Current authored owner-approved visual references are source assets, not generated output.
+This owner policy supersedes earlier evidence-retention and tooling-test requirements below.
+
+
+## Current workflow adoption — 2026-10-19
+
+Decision238 adopts native SVG diagram style v2 and one executable task / one branch / one PR.
+Follow docs/workflow/task-pr-chat.md and docs/reviews/workflow-style-approval-2026-10-19.md.
+Milestones contain bounded child tasks. Harness owns scoped implementation/tests/specialist and
+independent review; owner reviews/merges. Verify integration after completion notification, then
+provide a concise next-task prompt for a fresh chat. Replacement chats first stop/transfer the
+prior writer. Use one implementation writer per leaf task; do not create competing branches for it.
+Decision239 permits independent task branches/worktrees while PRs await review. Follow
+docs/workflow/parallel-tasks.md; declare dependencies/owned paths and serialize shared contracts.
+Current diagrams are generated native SVG from shared definitions and DTCG style tokens.
+Database review uses the same pipeline; previous hosted-tool requirements are superseded.
+Owner authorized bootstrap and public reviewed source/docs to AlexandrLesiv/Linefield; private
+captures/credentials/local backups remain excluded. No feature main merge or release is implied.
+
+## Current owner direction — 2026-10-18
+
+Design work uses versioned repository specifications, shared resources, reference images and the live web prototype. No external design-service account, file, connector or editing access is required. During this session the owner authorizes autonomous work through tasks/ until their return or09:35 Europe/Kyiv on2026-10-18. Preserve concrete architecture/security/product approval boundaries. Do not use Computer Use, foreground automation or actions needing explicit human approval; continue independent local work when blocked. Protected agent configuration text may remain stale because sandbox writes are prohibited; this current human instruction overrides it.
+
 ## Scope and authority
 
-Read docs/RESUME.md, docs/objectives.md, docs/decisions.md and the assigned task first. This project's instructions govern Linefield; old repository tasks and ancestry rules are historical reference, not successor requirements. Human instructions take precedence.
+Read tasks/README.md, docs/objectives.md, docs/decisions.md and the assigned task first. This project's instructions govern Linefield; old repository tasks and ancestry rules are historical reference, not successor requirements. Human instructions take precedence.
 
-Current authorization covers documentation/folder scaffold, root Node.js/TypeScript/pnpm development tooling, dbdiagram CLI, and the explicitly owner-requested apps/web Vite/TypeScript live gallery prototype (decision 214). Prototype UI, manifests and browser tests are authorized within docs/design/live-web-prototype.md. Real drawing engine, persistence, native applications and additional product behavior still require explicit authorization. Never interpret a task file as broader implementation approval.
+Current authorization covers documentation/folder scaffold, root Node.js/TypeScript/pnpm development tooling, shared diagram generation, and the explicitly owner-requested apps/web Vite/TypeScript live gallery prototype (decision 214). Prototype UI, manifests and browser tests are authorized within docs/design/live-web-prototype.md. Real drawing engine, persistence, native applications and additional product behavior still require explicit authorization. Never interpret a task file as broader implementation approval.
 
-macOS remains the primary product target: Swift/AppKit native controls and a custom Skia canvas. Develop web first because the owner has the most web experience, then macOS, with iPhone/iPad the next native priority. Shared Rust document/geometry/editing/persistence semantics and Skia/CanvasKit remain selected. First preview includes pen, pan/zoom, single-stroke select/move/uniform-scale/delete, undo/redo, open/save/recovery. No legacy document compatibility. Multiplatform planning and apps/ placeholders are authorized from day one; other platform features follow macOS, except web which leads implementation. See docs/platforms.md. Distribution, rotation/multi-select, agents/network features and exports require their own scope approval. Platform implementation still needs its reviewed task/design and implementation authorization. Preserve existing macOS-style color control in the proposed design; do not extend it to new platforms incidentally.
+macOS remains the primary product target: Swift/AppKit host and a custom Skia canvas. Develop web first because the owner has the most web experience, then macOS, with iPhone/iPad the next native priority. Shared Rust document/geometry/editing/persistence semantics and Skia/CanvasKit remain selected. First preview includes pen, pan/zoom, single-stroke select/move/uniform-scale/delete, undo/redo, open/save/recovery. No legacy document compatibility. Multiplatform planning and apps/ placeholders are authorized from day one; other platform features follow macOS, except web which leads implementation. See docs/platforms.md. Distribution, rotation/multi-select, agents/network features and exports require their own scope approval. Platform implementation still needs its reviewed task/design and implementation authorization. Preserve existing macOS color-control behavior until a concrete replacement is reviewed; its native appearance is no longer mandatory.
+
+## Shared visual direction (decision 232)
+
+Use one consistent Linefield visual system across all platforms. Mandatory Liquid Glass,
+Material, Fluent or other OS-specific appearance requirements are superseded. Retire the
+tool/preset wheel; desktop drawing direction is a left tools rail and top contextual settings.
+Earlier wheel and native-style gallery studies remain historical evidence, not requirements.
+Keep adaptive layouts, native input/text/IME/focus/accessibility, OS-owned panels and system
+preferences. Host toolkits remain selected; this is not approval of a universal widget engine,
+all-Skia chrome, new product behavior or a gallery rewrite. Shared style authoring stays in
+trusted data-only TypeScript with generated host resources; moving styles to Rust is not
+required or selected. Rust owns editing/document semantics. Follow docs/design/foundations.md
+and shared-resources-plan.md; the existing feature/design review/implementation gates remain.
 
 ## Design and architecture gates
 
-The owner approves an identified Figma version/frames before new native/product screens/tools are implemented. The explicitly requested live web design prototype is authorized before Figma; it is a review artifact, not native implementation approval. ui_ux_designer owns behavior/navigation and visual/adaptive/motion design together. The lead coordinates the integrated review and platform feasibility per docs/design/roles.md. Missing Figma access blocks that UI slice, not all independent authorized work.
+The owner approves an identified design version/states before new native/product screens/tools are implemented. The explicitly requested live web design prototype is authorized as a design review artifact; it is a review artifact, not native implementation approval. ui_ux_designer owns behavior/navigation and visual/adaptive/motion design together. The lead coordinates the integrated review and platform feasibility per docs/design/roles.md. Repository specifications, approved reference assets and running web prototypes provide the design handoff; no external design-service access is required.
 
 Typed FFI with generated declarations is the selected direction; shared Rust commands remain authoritative. Concrete ABI, document schema, state ownership/thread topology, framework/security changes require explicit owner review before implementation. General scaffold/refactor authorization is not that review. No custom binary command protocol or speculative transport.
 
 Input adapters translate system input/shortcuts/control actions into shared Rust commands. Native text editing keeps first-responder priority. One execution owner mutates each editor; immutable snapshots cross worker boundaries. Separate durable document, session, viewport, native presentation and disposable rendering caches.
 
+## Selected drawing-screen handoff
+
+Decision234 authorizes the next web UI prototype slice P05-D01: implement the owner-selected
+slim left rail/top settings screen from docs/design/drawing-screen/reference.png. Read the
+v2 screen contract and task; do not revive the archived circular v1 proposal or ask again for
+its approval. Tool/property affordances here are UI-only, not real editing/persistence/native
+implementation approval. Current work is indexed in tasks/README.md.
+
 ## Live web prototype conventions
 
-Within apps/web, author styles in Vanilla Extract .css.ts with semantic theme tokens; do not reintroduce parallel plain CSS styling. Keep English and Ukrainian in separate catalogues using stable semantic IDs and typed named placeholders. Author trusted data-only TypeScript catalogues; see docs/design/shared-resources-plan.md for generation invariants and platform boundaries. Browser/OS selects locale/theme. Web preserves browser context-menu/long-press behavior; native preview gestures are separate capabilities. See decision 215 and docs/design/live-web-prototype.md.
+Within apps/web, author styles in Vanilla Extract .css.ts with semantic theme tokens. Use exported
+local style()/styleVariants classes bound explicitly to owned DOM elements. Reserve globalStyle for
+reset/document defaults, root theme and genuine document-level scrollbar behavior. Stable query hooks
+are not styling selectors. Do not reintroduce parallel plain CSS styling or global component rules. Keep English and Ukrainian in separate catalogues using stable semantic IDs and typed named placeholders. Author trusted data-only TypeScript catalogues; see docs/design/shared-resources-plan.md for generation invariants and platform boundaries. Browser/OS selects locale/theme. Use the same responsive Web gallery pattern everywhere (decision233). Remove platform-query simulation and hidden review switches; all live cards use ellipsis actions. Preserve browser context-menu/long-press behavior. Future native viewer capabilities remain separately reviewed. See docs/design/live-web-prototype.md.
 
 ## Quality requirements
 
@@ -26,7 +85,7 @@ Handwritten source/tests/scripts: at most 200 physical lines after formatting, i
 
 Use Node native TypeScript .ts ES-module automation, strict type checking and Oxlint/Oxfmt when tooling is installed. Use strict erasable types, explicit .ts imports and import type. No runtime enums, parameter properties, decorators, any casts or type-check suppressions; no transpiler for owned automation. No owned shell/PowerShell/Python orchestration. Rust/Swift native build tools and upstream Skia C++ remain legitimate dependencies. Pin actual verified tools; do not call planned gates installed or passing.
 
-Every behavioral change names acceptance/invariant IDs and adds appropriate core, boundary and real native E2E tests. Record exact revision/build, platform/device, discovered test IDs, result and artifacts. Missing/skipped/flaky/stale evidence is not pass; replay is not native E2E. See docs/quality.md and quality/README.md.
+Every behavioral change names acceptance/invariant IDs and adds appropriate core, boundary and real native E2E tests. Record exact revision/build, platform/device, discovered test IDs, result and artifacts. Missing/skipped/flaky/stale evidence is not pass; replay is not native E2E. See docs/quality.md.
 
 Instrument native intent origins, central command outcomes/state transitions and worker operation boundaries with structured correlated diagnostics. Allowlist metadata; no content, raw coordinates, paths, credentials or serialized documents. No per-sample production logging. Bound queues/logs/caches; drain logs off input callbacks, count drops/sink failures without failing successful edits. Test redaction, correlation, overload and failure behavior.
 
@@ -34,9 +93,9 @@ Require ordered actual samples, transient predictions, atomic batch validation, 
 
 ## Agent workflow
 
-Lead owns scope, architecture coordination and integration. Use configured specialists for scoped work. ui_ux_designer specifies and reviews interactions, native visual design, adaptive Figma and motion; rust_engine owns shared semantics and typed boundary; macos_ui owns AppKit; rendering_performance owns measurements; build_reliability owns runners/evidence; fresh reviewer independently reviews substantive changes. Platform roles may review portability/design now; web leads implementation, while other native hosts follow macOS and their approved task/design. Keep shared semantics native/Wasm compatible, isolate OS storage/executor/render backends, and never make AppKit/Metal assumptions part of universal contracts.
+Lead owns scope, architecture coordination and integration. Use configured specialists for scoped work. ui_ux_designer specifies and reviews interactions, native visual design, adaptive design and motion; rust_engine owns shared semantics and typed boundary; macos_ui owns AppKit; rendering_performance owns measurements; build_reliability owns runners/evidence; fresh reviewer independently reviews substantive changes. Platform roles may review portability/design now; web leads implementation, while other native hosts follow macOS and their approved task/design. Keep shared semantics native/Wasm compatible, isolate OS storage/executor/render backends, and never make AppKit/Metal assumptions part of universal contracts.
 
-At most three concurrent subagents and two implementation writers; one feature in flight. Assign outcome, base commit, owned paths, dependencies/contracts, acceptance IDs, required evidence and stopping condition. Freeze contracts before parallel writers; one contract owner. Use isolated worktrees within this repository, not the reference repository. Do not delegate recursively without a specific approved independent task and capacity.
+At most three concurrent subagents and two implementation writers; independent ready tasks may be in flight. Assign outcome, base commit, owned paths, dependencies/contracts, acceptance IDs, required evidence and stopping condition. Freeze contracts before parallel writers; one contract owner. Use isolated worktrees within this repository, not the reference repository. Do not delegate recursively without a specific approved independent task and capacity.
 
 Implementers own feature tests and logging. Do not add permanent architecture/logging/test agents to replace that responsibility. Lead diagnoses after two unproductive repair cycles. Designer/reviewer agreement is not owner approval for a new feature or material architecture decision.
 
@@ -66,7 +125,7 @@ second platform demonstrates reuse. No speculative universal automation DSL or c
 Implementers own feature scenarios/tests; build_reliability owns discovery/reporting, rust_engine
 owns semantic conformance, designer reviews native expectations, reviewer audits evidence labels.
 
-## Logging, tooling, Figma and developer experience
+## Logging, tooling, design review and developer experience
 
 Follow docs/logging.md, docs/tooling.md, docs/design/workflow.md and docs/developer-experience.md.
 Use Node native .ts automation and Vite for browser/Wasm asset integration, with separate
@@ -77,13 +136,13 @@ launching. Do not introduce embedded shell programs or a universal zx dependency
 Zed tasks are the owner-selected integration, not a custom extension. Plan reusable action/
 report data now; create real launchers only after commands exist and implementation is authorized.
 Later GUI/CI views reuse that data and presentation without making apps depend on dev tools.
-Figma approval records name exact version/frames, task/scenario IDs and owner conditions;
-mutable links alone do not prove approval. No Figma design, task runner or workbench is implemented.
+design review approval records name exact version/frames, task/scenario IDs and owner conditions;
+mutable links alone do not prove approval. The web prototype is implemented; task-runner/workbench status is recorded in their tasks.
 
 ## Adaptive design foundations
 
 ui_ux_designer owns S00A including behavioral requirements, following docs/design/foundations.md: shared semantic foundations,
-platform-native control mappings, reusable Figma components/variables and verified resizable
+shared Linefield component styles with host behavior mappings, reusable design components/tokens and verified resizable
 frames. Approve identified foundations and screen versions separately. Native system controls
 retain platform behavior; UI theme colors must not alter saved drawing colors. Map future
 platforms now; detail the next authorized web slice first, then macOS. Exhaustive designs for all future platforms are not a prerequisite.
@@ -103,29 +162,29 @@ separate. IME/marked text and native text shortcuts take priority. RTL can adapt
 mirror artwork/world coordinates. Preserve Unicode user content/paths and logging privacy.
 
 Require source fallback, pseudo-expanded/RTL layout checks, numeric/IME/Unicode and stable-ID
-E2E coverage as each feature is built. Designers include locale variants in Figma. Translation
+E2E coverage as each feature is built. Designers include locale variants in design specifications. Translation
 completeness/linguistic review/runtime evidence are separate. English (en) and Ukrainian (uk)
 are required launch languages on every host; English remains source/fallback. Resolve OS/per-app
 preferences at launch (browser preferences on web); no in-app switch. Regional formatting stays
 independent. Other languages, translation services and text drawing tools need separate scope.
-UX coordinates terminology and proficient Ukrainian review; UI supplies both Figma variants;
+UX coordinates terminology and proficient Ukrainian review; UI supplies both design review variants;
 engineers own catalogs and E2E, build_reliability owns gates and reviewer checks evidence.
 Require I18N-LAUNCH-002/I18N-UK-002. No new permanent localization agent is introduced.
 
 ## Competitor research
 
 Use competitor_researcher for bounded workflow research before substantial new design choices.
-Follow docs/research/README.md and S00C. It provides sourced observations and ranked options to
+Follow the task-scoped research process (research stays outside the repository) and S00C. It provides sourced observations and ranked options to
 the owner and ui_ux_designer through the lead; it cannot add features or approve designs.
 Designer records adaptation/rejection reasoning; platform engineers assess native feasibility.
 Research is not a benchmark, user validation or implementation review. Keep existing agent
-concurrency limits and owner scope/Figma gates. Do not create recurring monitoring implicitly.
+concurrency limits and owner scope/design review gates. Do not create recurring monitoring implicitly.
 
 ## Motion and navigation
 
 Follow docs/design/motion.md, docs/navigation.md and S00D. Designer specifies interactive
 platform transitions, interruption/cancel, reduced motion, focus/AX and native feasibility
-alongside static/resizable Figma. Owner approval covers identified motion/flow versions too.
+alongside static/resizable design review. Owner approval covers identified motion/flow versions too.
 Native hosts own presentation/routes; Rust remains authoritative for dirty/save/open/cancel
 and capability semantics. Browser URLs/history and native stacks must reflect accepted state;
 external links are untrusted requests, never access grants or serialized editing commands.
@@ -138,7 +197,7 @@ Back/Forward/gestures, races, focus and normal/reduced motion per shared scenari
 Wear OS apps/wearos is a planned target (P12), owned by android_ui for engineering. View-only
 is owner-selected (decision 152); toolkit, standalone/acquisition and any network scope still need review.
 Decision 213 restores ui_ux_designer; follow docs/design/roles.md. One designer owns journeys,
-navigation, interaction acceptance, native visual foundations, adaptive Figma and motion.
+navigation, interaction acceptance, native visual foundations, adaptive design and motion.
 Lead coordinates platform feasibility; no additional coordinator or higher concurrency cap.
 Use behavior and visual checklists in one owner review packet. Engineers still own code/tests;
 fresh reviewer remains independent. Earlier split-role records are historical.
@@ -151,7 +210,7 @@ transaction recovery; draft creation and exact persistence scheduling still requ
 ## Database design specialist
 
 Use database_designer for scoped SQLite schema design and review per docs/database-design.md.
-Require a visual owner handoff: hosted conceptual/physical ER diagrams, table dictionary,
+Require a visual owner handoff: generated native SVG conceptual/physical schema views, table dictionary,
 persistence sequence, tradeoffs and migration/test plan. Record approval of an exact proposal
 version before schema/migration implementation; material deviations require renewed review.
 The specialist cannot self-approve, choose unresolved product behavior or create another mutable
@@ -159,16 +218,17 @@ editor owner. rust_engine retains shared command/persistence implementation; exi
 performance and test responsibilities remain. This scoped role is an explicit owner-requested
 addition, not permission to proliferate quality roles or raise concurrency limits.
 
-The owner selected DBML with dbdiagram for schema visualization. database_designer must use
-versioned DBML/layout and a hosted dbdocs review handoff; the owner does not want local rendered diagram exports. Tested SQLite
-migrations remain executable authority. See docs/database-design.md; do not reopen the tool
-comparison without new evidence or owner request.
+Decision239 replaces the hosted schema toolchain with generated native SVG from shared schema
+definitions and DTCG diagram tokens. Reference SQL remains executable constraint authority;
+annotations and documentation-only jobs definitions preserve the reviewed proposal. Future hosts
+consume generated shared data only after their implementation approvals. Never duplicate schema
+policy in hand-authored diagrams. See docs/database/README.md.
 
 ## Gallery-first scope
 
 Owner selected a Procreate-like app-managed library on 2026-10-16. Plan/design S02L as the first
 product UI milestone before S04 canvas: gallery entry, unnamed durable drawings, create/open/
-rename and reviewed deletion flow. Figma version and concrete library/schema approval still
+rename and reviewed deletion flow. design version and concrete library/schema approval still
 precede implementation. Keep one window/editor, shared Rust commands and native presentation.
 Decision 212 supersedes decision 8 ordinary deletion UX: stage recoverable removal with in-place Undo until successful departure. Review durable staging/recovery/finalization before code; no general Trash screen. Test cancellation, failures and pending-save races. Do not infer stacks/folders,
 bulk tools, sync or external-file write-through.
@@ -258,14 +318,14 @@ crash fencing; policy approval does not authorize an invented IPC protocol or da
 process tests plus separate native UI evidence. Proactive upgrades cannot bypass active ownership
 or validated backups. Restore approved recovery copies as explicit independent drawings, preserving
 originals. Imports use coherent captured source revisions. PNG channels are 8-bit; native sRGB
-values remain floating point. Concrete contracts/Figma and implementation permission still apply.
+values remain floating point. Concrete contracts/design review and implementation permission still apply.
 
 ## Durable export policy (decisions 121-126)
 
 Capture completed artwork when Export is accepted, before destination selection. Job-owned immutable
 snapshots outlive editor navigation. The owner selected durable jobs/source snapshots for crash
 recovery and serialized same-destination exports with valid replacement confirmation. This is not
-approval for an invented job protocol/schema/IPC or worker topology: obtain concrete S02/DBML review,
+approval for an invented job protocol/schema/IPC or worker topology: obtain concrete S02/shared schema review,
 including access/privacy/durability/retention, ambiguous publication and multi-process fencing.
 Preserve independent failures and safe progress; never silently replay an uncertain overwrite.
 The selected count is three accepted jobs including reservations, with byte/work limits and
@@ -318,7 +378,7 @@ adoption approval. No system security settings, credentials or dependency change
 After the current architecture-policy questions, execute owner-requested S00E (thorough day-zero
 security and specialist-role recommendation), S00F (all-platform input/binding/device contract),
 and S00G (current sourced store/channel requirements and responsibility matrix). See tasks/README.md.
-Keep these reviews before freezing affected Figma/S02 decisions; no implementation/publishing implied.
+Keep these reviews before freezing affected design review/S02 decisions; no implementation/publishing implied.
 
 Shared Rust owns command behavior; proposed shared binding profiles still require concrete review.
 Native adapters retain platform event acquisition, OS-reserved controls and native field/IME priority.
@@ -335,7 +395,7 @@ add SQLCipher/key hierarchy from earlier explanatory proposals. Future cloud sec
 separately; never interpret this as disabling OS encryption or omitting network protection.
 All issued Q1-61 are answered. Proceed to S00E/F/G and concrete review packets; do not invent further
 micro-question batches to meet prior estimates. Documentation-only scope and owner approval gates
-for concrete schemas/ABI/mechanisms and identified Figma remain in force.
+for concrete schemas/ABI/mechanisms and identified design remain in force.
 
 ## Recorded language/product direction and S00E proposal
 
@@ -363,7 +423,7 @@ if workload warrants, especially before cloud, and obtain approval before config
 Automated gates remain planned, not installed. Use editable vector sketching app as product wording.
 
 Use tasks/_template.md security sections for every new or activated implementation task, and
-quality/security-review-template.md for independent design/change assessments. Lead confirms impact
+docs/security/review-template.md for independent design/change assessments. Lead confirms impact
 classification before code. Sensitive work references actual applicable approvals; implementation
 includes negative acceptance/evidence; complete status requires independent change assessment and
 resolved findings. Do not fill placeholders with guessed consent or call the not-yet-installed
@@ -380,7 +440,7 @@ owns future local Node gate actions/reporting; current documentation is not inst
 
 Read docs/input/README.md and docs/distribution/README.md for affected tasks. New default bindings,
 touch arbitration and profiles remain proposals until owner approval; preserve selected active-tool
-and native focus/IME guards. ui_ux_designer owns behavior and identified Figma; engineers own feasibility/shared commands. Record actual native/hardware coverage separately from replay and accessibility claims.
+and native focus/IME guards. ui_ux_designer owns behavior and identified design; engineers own feasibility/shared commands. Record actual native/hardware coverage separately from replay and accessibility claims.
 
 Platform engineers own technical channel requirements; build reliability owns artifacts/provenance;
 UX/UI own necessary user flows/disclosures, lead current applicability and reviewer independent checks.
@@ -396,7 +456,7 @@ Use docs/input/inventory.md as a UX checklist, not a universal mapping specifica
 explicitly deferred up-front shortcut/stylus/OS-action choices. UX proposes applicable inputs and
 behavior with each feature/platform, including native app menus/Services, system/window actions,
 assistive and lifecycle input. Engineers verify feasibility/shared semantics; UI includes the plan
-in identified Figma; submit to the owner before implementation. Do not resume the P/V questionnaire
+in identified design; submit to the owner before implementation. Do not resume the P/V questionnaire
 or adopt historical matrix defaults implicitly. Existing approved invariants remain binding.
 watchOS, tvOS, Wear OS and Android TV/Google TV are owner-selected view-only hosts. Enforce content
 mutation rejection in shared Rust; no pen/keyboard/agent path can unlock editing. Toolkit, acquisition,
@@ -416,9 +476,11 @@ record actual participation/snapshots and report planned/missing evidence honest
 report and owner-decision list. Do not turn review requests into automatic repairs, foreground tests,
 new permissions, accounts, packaging/submission or publishing. No scheduled automation is created.
 
-## Database documentation CLI exception
+## Local schema documentation
 
-The owner authorized project-local dbdiagram tooling on 2026-10-16. Use the pinned CLI from the root package via pnpm run dbdiagram for DBML validation/sync/private documentation publishing; follow docs/database/cli-security.md. Application implementation remains unauthorized. Never directly read/search credentials or .env files, inspect process environments or print/request tokens. Prepare authenticated commands for the owner/approved isolated publisher when credentials are unavailable. These are workflow obligations, not a technical secret-isolation guarantee. Browser use is for visual/privacy review, not a CLI publishing workaround. Upstream CLI validation also attempts credential lookup/telemetry; strict isolation requires an externally constrained runner or owner-operated command. No secure publisher is configured.
+Decision239 retires the external schema CLI. Use pnpm schema:generate/schema:check/schema:test and
+shared diagram tokens; ordinary checks require no authentication. Do not read credentials or move
+former CLI settings. Existing remote publication is historical, not a required review destination.
 
 ## DB1–DB4 database decision batch
 
@@ -426,26 +488,29 @@ Follow decisions 156–159 and docs/reviews/S02-db-batch-1.md: retain three data
 
 ## Root tooling exception and commands
 
-Owner requested root Node.js/TypeScript/pnpm setup and removal of tools/dbdiagram. Use root package.json/pnpm-lock.yaml; do not recreate nested documentation-tool packages or npm lockfiles. Run pnpm install --frozen-lockfile with lifecycle scripts disabled by project configuration, then pnpm check for owned tooling changes. Use pnpm db:validate and pnpm dbdiagram for explicit schema work; never put authenticated publication into ordinary quality checks. CLI credentials are not moved or inspected. Read docs/tooling.md and docs/database/cli.md. App/native/browser implementation remains pending; Vite follows the authorized web slice.
+Use root package.json/pnpm-lock.yaml; do not recreate nested documentation packages or npm
+lockfiles. Run pnpm install --frozen-lockfile with lifecycle scripts disabled, then pnpm check.
+Diagram/schema generation and drift checks are local and credential-free. See docs/tooling.md and
+docs/database/README.md. App/native implementation gates remain separate from documentation tooling.
 
 ## Multi-client and future sync direction (163–166)
 
 Follow docs/architecture/incremental-collaboration.md and tasks/S02M.md. Multiple local clients edit incrementally through one authoritative Rust coordinator/database writer. Do not create independent whole-document autosaves per client or prohibit all second clients based on the ownership lock. Scope interactions, previews, selection/viewport and reviewed Undo per client; one client's focus loss must not cancel another's work. Exact conflict/hosting/failure/acknowledgement rules need review.
-Use in-process calls, reviewed native IPC or browser messaging as appropriate; NSXPC is not universal. Keep typed FFI in-process, viewer enforcement and platform lifecycle/VFS gates. Future cloud sync initially warns and offers explicit version-checked replacement; no automatic merge, blind force overwrite or implicit cloud implementation. Recovery-copy policy and identified conflict Figma remain review gates. Old single-client/rename-only drafts are incomplete.
+Use in-process calls, reviewed native IPC or browser messaging as appropriate; NSXPC is not universal. Keep typed FFI in-process, viewer enforcement and platform lifecycle/VFS gates. Future cloud sync initially warns and offers explicit version-checked replacement; no automatic merge, blind force overwrite or implicit cloud implementation. Recovery-copy policy and identified conflict design review remain review gates. Old single-client/rename-only drafts are incomplete.
 
-Decision 166 (2026-10-16): prioritize preventing data loss over automatically reconciling every edit. Preserve conflicting work and resolve explicitly. Local incremental coordination (163) and platform adapters (164) remain selected. Initial future cloud sync preserves both whole-document versions; automatic semantic merging and object-level conflict review are deferred. Concrete preservation/retention/failure contracts and identified Figma approval remain required; no application implementation authorized. Preserve both conflicting document versions before destructive resolution; block replacement if required preservation fails. Revalidate exact local/remote versions after confirmation. Define bounded retention and explicit cleanup rather than silently evicting unresolved unique work. Pending memory is not a durability guarantee. Advanced merge research is not an initial implementation dependency.
+Decision 166 (2026-10-16): prioritize preventing data loss over automatically reconciling every edit. Preserve conflicting work and resolve explicitly. Local incremental coordination (163) and platform adapters (164) remain selected. Initial future cloud sync preserves both whole-document versions; automatic semantic merging and object-level conflict review are deferred. Concrete preservation/retention/failure contracts and identified design approval remain required; no application implementation authorized. Preserve both conflicting document versions before destructive resolution; block replacement if required preservation fails. Revalidate exact local/remote versions after confirmation. Define bounded retention and explicit cleanup rather than silently evicting unresolved unique work. Pending memory is not a durability guarantee. Advanced merge research is not an initial implementation dependency.
 
 ## Completed database policy batch (through decision 180)
 
-Decisions 177–180 close the current policy batch: DB17-B uses SQLite FULL with fullfsync=OFF and checkpoint_fullfsync=OFF on macOS, without claiming identical cross-platform durability. DB20-A validates whole-stroke mutation state; DB21-A starts a fresh Undo/Redo session after coordinator recovery only after reconciling/preserving pending work; DB22-A permits proven-independent commands and pauses dependent/uncertain ones. Exact schema/ABI/budgets and UI remain review items. Read the current status at the top of docs/RESUME.md; older appended open-question notes are historical. Do not re-request settled DB1–DB22 choices. Concrete schema/interface review and implementation authorization are still separate gates.
+Decisions 177–180 close the current policy batch: DB17-B uses SQLite FULL with fullfsync=OFF and checkpoint_fullfsync=OFF on macOS, without claiming identical cross-platform durability. DB20-A validates whole-stroke mutation state; DB21-A starts a fresh Undo/Redo session after coordinator recovery only after reconciling/preserving pending work; DB22-A permits proven-independent commands and pauses dependent/uncertain ones. Exact schema/ABI/budgets and UI remain review items. Read the current status at the top of tasks/README.md; older appended open-question notes are historical. Do not re-request settled DB1–DB22 choices. Concrete schema/interface review and implementation authorization are still separate gates.
 
 ## S02 v2 approval (decision 181)
 
-The owner approved the consolidated schema, typed interfaces, recovery transitions, provisional resource limits and test plan on 2026-10-16. Follow docs/reviews/S02-v2-approval-2026-10-16.md and its exact snapshot evidence. Do not reopen approved choices. Signed/sandboxed IPC discovery, persistent native file grants, future browser/platform feasibility, Figma and actual runtime evidence remain gates. Design approval does not start application implementation or authorize material deviations.
+The owner approved the consolidated schema, typed interfaces, recovery transitions, provisional resource limits and test plan on 2026-10-16. Follow docs/reviews/contracts.md and its exact snapshot evidence. Do not reopen approved choices. Signed/sandboxed IPC discovery, persistent native file grants, future browser/platform feasibility, design review and actual runtime evidence remain gates. Design approval does not start application implementation or authorize material deviations.
 
 ## Authorized feasibility checks (2026-10-16)
 
-The owner authorized native IPC/file-access feasibility checks after decision 181. Keep disposable probes isolated from product code, use synthetic fixtures and background/headless execution, and preserve limitations. This is not application implementation, production entitlement/transport approval or a desktop reservation. Engineering budget recommendations beyond decision 181 remain proposals in docs/reviews/engineering-budgets-v1.md.
+The owner authorized native IPC/file-access feasibility checks after decision 181. Keep disposable probes isolated from product code, use synthetic fixtures and background/headless execution, and preserve limitations. This is not application implementation, production entitlement/transport approval or a desktop reservation. Engineering budget recommendations beyond decision 181 remain proposals in docs/reviews/engineering-budgets.md.
 
 ## Selected platform IPC defaults (decision 182)
 The owner delegated transport selection. Follow docs/architecture/platform-ipc-defaults.md and docs/distribution/ipc-compatibility.md; do not re-open transport choice without evidence. Direct typed Rust calls remain the in-process default. macOS has a narrow discovery-only sandboxed helper exception to no-extra-service; no helper registration/installation is authorized by documenting it. Keep private mobile services conditional, viewers read-only, browser writer authority tied to the actual worker lock, and OS IPC distinct from cross-device sync. Store compatibility has packaging/consent/security conditions, not blanket approval. Engineers own negative/lifecycle/packaging tests and redacted diagnostics; new implementation/UI still follows existing gates.
@@ -453,7 +518,7 @@ The owner delegated transport selection. Follow docs/architecture/platform-ipc-d
 ## Latest coordinate, budget and watch selections (193–195)
 
 Region addresses plus local coordinates replace the global-coordinate-only direction for
-affected contracts. Lead/Rust owns the concrete contract proposal, database_designer DBML,
+affected contracts. Lead/Rust owns the concrete contract proposal, database_designer shared schema definitions,
 rendering_performance precision validation, and reviewer independent assessment. Obtain owner
 review of concrete schema/ABI/normalization/cross-region transforms before implementation;
 do not rewrite S02 v2 historical approval hashes or treat direction approval as exact signatures.
@@ -462,7 +527,7 @@ Each port reconciles subordinate allocations, memory pressure and GPU/framework 
 WatchOS initial viewer uses advance Keep on Watch image downloads, native offline display
 and persistent downloaded revisions; no nearby phone is required for completed downloads.
 Ordinary cache eviction cannot remove explicit offline downloads. Concrete package/detail/
-disk/security contracts and identified Figma remain required; no live streaming is approved.
+disk/security contracts and identified design remain required; no live streaming is approved.
 Wear OS rendering/acquisition remains separate. See decisions 193–195 and P08.
 
 ## Coordinate contract completion (decisions 196–201)
@@ -508,9 +573,9 @@ validator introduced. Active handoffs must carry this requirement; TOML edits do
 RC9-A and RC10-A are selected directions for the consolidated review packet:
 flat region/local sample and placement columns; separate canvas-local and canonical-world
 types; Rust-owned viewport mapping and captured-base pointer transform calculations.
-Read docs/reviews/engineering-budgets-v1.md for the exact selected proposal. Keep native
+Read docs/reviews/engineering-budgets.md for the exact selected proposal. Keep native
 event-to-view conversion and metrics reporting in hosts; do not duplicate world geometry.
-Do not re-ask RC9/RC10. Exact generated ABI/ownership, visualized DBML/constraints,
+Do not re-ask RC9/RC10. Exact generated ABI/ownership, visualized shared schema definitions/constraints,
 transform UX and precision evidence remain required; no application implementation authorized.
 An empty RC11 entry does not select any policy.
 
@@ -524,9 +589,10 @@ Exact contracts and precision evidence remain part of the consolidated review pa
 
 ## S02 v3 schema review defaults (decision 208)
 
-The owner delegated conservative recommended defaults for the DBML review handoff.
-Current docs/database/review.dbml and schema-v3.md are the pending v3 proposal; do not
-inherit v2 approval for changed regional fields. Include saved viewport region/local
+The owner delegated conservative recommended defaults for the shared schema definitions review handoff.
+The v3 source/approval is historical in Git e08f304; current v4.1 review data is
+shared/schema/schema.json, with authority/status in docs/database/README.md. Do not
+inherit an older approval for changed regional fields. Include saved viewport region/local
 centers as well as samples and placement. Preserve exact historical sources/hashes.
 Do not restart preference questionnaires for routine defaults within this scope.
 Unmeasured numerical stroke-span support remains evidence-gated; no runtime or ABI claim.
@@ -534,15 +600,17 @@ Unmeasured numerical stroke-span support remains evidence-gated; no runtime or A
 ## S02 v3 owner approval (decision 209)
 
 Owner approved hosted Version8 and exact regional schema/defaults snapshot; follow
-docs/reviews/S02-v3-approval-2026-10-17.md and quality/S02-v3-review.json. Preserve reviewed
+docs/reviews/S02-v3-approval-2026-10-17.md and the corresponding owner decision. Preserve reviewed
 source bytes; pending wording inside the snapshot is historical, not an unanswered choice.
-Do not re-ask RC1–RC11. Exact revised ABI, numerical evidence and feature Figma are separate.
+Do not re-ask RC1–RC11. Exact revised ABI, numerical evidence and feature design review are separate.
 Proceed with delegated engineering defaults and coordinated UX/UI review proposals;
 schema approval alone is not application implementation authorization.
 
 ## Current gallery and Android direction (211–212)
 
 Owner approved Native Gallery redesign artifacts and Android Compose Material 3 planning.
+Decision 232 supersedes their mandatory native appearance; preserve these as historical
+artifacts and retain Compose as the Android toolkit with shared Linefield styling.
 Follow docs/design/native-gallery-v4-plan.md. This supersedes phone/tablet Views references and
 ordinary confirmation-based gallery deletion UX above; immutable approval snapshots remain history.
 Do not implement production deletion by reusing the old irreversible confirmed-delete intent.
@@ -551,5 +619,5 @@ Native controls remain platform-owned; Compose observes shared Rust projections 
 intent, with no duplicate editor model. Wear/TV/XR toolkit validation remains separate.
 Design/test window size independently of platform and device: tablets may be windowed, portrait or
 landscape; desktops may have narrow windows. Preserve identity/focus/scroll through adaptation.
-Prototype HTML materials are simulations; require native component feasibility and identified Figma
+Prototype HTML materials are simulations; require native component feasibility and identified design
 approval before app implementation. No native desktop reservation is granted by design work.

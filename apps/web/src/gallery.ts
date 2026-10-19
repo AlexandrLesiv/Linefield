@@ -1,87 +1,70 @@
-import { documentPlus } from "./icons.ts";
+import { newCell, mobileCreate, newTile, newLabel } from "./gallery-creation.css.ts";
+import { removed, empty } from "./states.css.ts";
+import {
+  drawingGrid,
+  drawingCard,
+  drawingTile,
+  artwork,
+  drawingName,
+  removal,
+  undo,
+  artworkImage,
+} from "./cards.css.ts";
 import { t } from "./locale.ts";
 import { button, element } from "./dom.ts";
-import { disposeGalleryActions, installGalleryActions } from "./gallery-actions.ts";
-import type { ActionPoint, DrawingAction } from "./drawing-actions.ts";
-import type { Drawing, Platform } from "./model.ts";
-import { viewer } from "./model.ts";
+import { installGalleryActions } from "./gallery-actions.ts";
+import type { Drawing } from "./model.ts";
 interface Actions {
   open: (drawing: Drawing, origin: HTMLElement) => void;
   create: (origin: HTMLElement) => void;
-  menu: (
-    drawing: Drawing,
-    origin: HTMLElement,
-    contextual: boolean,
-    point?: ActionPoint,
-    selected?: DrawingAction,
-  ) => void;
+  menu: (drawing: Drawing, origin: HTMLElement) => void;
   undo: (drawing: Drawing) => void;
 }
-export function renderGallery(
-  root: HTMLElement,
-  drawings: Drawing[],
-  platform: Platform,
-  actions: Actions,
-): void {
-  disposeGalleryActions(root);
+export function renderGallery(root: HTMLElement, drawings: Drawing[], actions: Actions): void {
   root.replaceChildren();
-  const readonly = viewer(platform);
-  const grid = element("div", "drawing-grid");
+  const grid = element("div", `drawing-grid ${drawingGrid}`);
   grid.setAttribute("aria-label", t("gallery.label"));
-  if (!readonly && (platform !== "ios" || drawings.length === 0)) {
-    const add = button("+", "new-tile", () => actions.create(add));
-    add.append(element("span", "", t("drawing.create")));
+  {
+    const add = button("+", `new-tile ${newTile}`, () => actions.create(add));
+    add.append(element("span", newLabel, t("drawing.create")));
     add.setAttribute("aria-label", t("drawing.create"));
-    const cell = element("article", "new-cell");
+    const cell = element("article", `new-cell ${newCell}`);
     cell.append(add);
     grid.append(cell);
   }
   for (const drawing of drawings) {
-    if (readonly && drawing.deleted) continue;
-    const card = element("article", "drawing-card");
+    const card = element("article", `drawing-card ${drawingCard}`);
     card.dataset.id = drawing.id;
-    const open = button("", "drawing-tile", () => actions.open(drawing, card));
+    const open = button("", `drawing-tile ${drawingTile}`, () => actions.open(drawing, card));
     open.setAttribute("aria-label", t("drawing.open", { name: drawing.name }));
-    const art = element("div", "artwork");
+    const art = element("div", `artwork ${artwork}`);
     if (drawing.image) {
-      const img = element("img");
+      const img = element("img", artworkImage);
       img.src = drawing.image;
       img.alt = "";
       img.draggable = false;
       art.append(img);
     }
-    open.append(art, element("span", "drawing-name", drawing.name));
+    open.append(art, element("span", `drawing-name ${drawingName}`, drawing.name));
     card.append(open);
     if (drawing.deleted) {
-      card.classList.add("removed");
+      card.classList.add("removed", removed);
       open.inert = true;
-      const pending = element("div", "removal");
+      const pending = element("div", `removal ${removal}`);
       pending.append(
         element("span", "", t("drawing.deleted", { name: drawing.name })),
-        button(t("action.undo"), "undo", () => actions.undo(drawing)),
+        button(t("action.undo"), `undo ${undo}`, () => actions.undo(drawing)),
       );
       card.append(pending);
     }
     grid.append(card);
   }
   root.append(grid);
-  if (!readonly) installGalleryActions(root, drawings, platform, actions.menu);
-  if (!readonly && platform !== "ios") {
-    const add = button("+ " + t("drawing.create"), "mobile-create", () => actions.create(add));
-    if (platform === "ipados") {
-      add.replaceChildren(documentPlus(), element("span", "", t("drawing.createShort")));
-      add.setAttribute("aria-label", t("drawing.create"));
-      const toolbar = element("div", "mobile-actions");
-      toolbar.setAttribute("role", "toolbar");
-      toolbar.setAttribute("aria-label", t("gallery.toolbar"));
-      toolbar.append(add);
-      root.append(toolbar);
-    } else root.append(add);
-  }
-  const hasVisibleDrawings = drawings.some((drawing) => !readonly || !drawing.deleted);
-  if (!hasVisibleDrawings) {
-    root.classList.add("empty");
-  } else root.classList.remove("empty");
-  if (readonly && !hasVisibleDrawings)
-    root.append(element("p", "empty-message", t("gallery.emptyViewer")));
+  installGalleryActions(root, drawings, actions.menu);
+  const add = button("+ " + t("drawing.create"), `mobile-create ${mobileCreate}`, () =>
+    actions.create(add),
+  );
+  root.append(add);
+  root.classList.toggle("empty", drawings.length === 0);
+  root.classList.toggle(empty, drawings.length === 0);
 }

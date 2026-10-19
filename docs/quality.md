@@ -1,13 +1,15 @@
 # Quality requirements
 
-The root pnpm check runner verifies owned tooling and apps/web strict types, Oxlint, Oxfmt and source size, plus shared locale/theme validation, generated resource drift and generator tests. `pnpm theme:native-check` separately parses XML and compiles Android resources when the corresponding tools are installed, reporting unavailable checks explicitly; it does not certify native app integration. pnpm web:build and pnpm web:test verify the live browser prototype (WEB-G01–G11); see apps/web/quality/web-prototype. Native, Rust editor, durability and security-record gates remain planned. See tooling.md and ../quality/root-tooling.md for exact scope and evidence.
+The root pnpm check runner verifies owned tooling and web strict types, lint, formatting, source size and shared-resource validation. pnpm web:build and pnpm web:test verify the browser prototype. Native, Rust editing and production durability gates remain planned until implemented and exercised. See [tooling](tooling.md) for actual commands.
 
-Use the SU-01 through SU-20 cases in [delivery](successor/delivery.md). SU-19 applies only if exports are approved. Each task maps requirements to discovered tests and records exact revision/build/device/results. Core tests, bridge tests, replay, native E2E, manual design/accessibility checks and physical measurements are distinct evidence categories.
+Authored test cases, acceptance mappings, reusable verification instructions, known limitations and unresolved findings are maintained source documentation, including useful quality READMEs. Classify by content rather than deleting an entire directory or file extension. Generated reports, logs, screenshots and exports stay local and untracked. Tasks link applicable tests and summarize verified results/limitations without requiring old report directories as inputs. Agents read current task definitions, SQL/JSON contracts and authored specifications. Generate visuals or run checks when needed; missing or stale evidence never becomes a pass. Preserve unresolved failure inputs outside disposable output cleanup. [Review template](security/review-template.md).
+
+Use the SU-01 through SU-20 cases in [delivery](testing/acceptance.md). SU-19 applies only if exports are approved. Each task maps requirements to discovered tests and records exact revision/build/device/results. Automated behavioral acceptance uses primary-app E2E only, as selected by the owner. Static types, lint, builds and resource validation remain. Diagnostics, manual design/accessibility checks and physical measurements are separate evidence; they do not count as E2E. Standalone unit, property, integration and developer-tool test suites are not maintained. Uncovered behavior remains an explicit gap.
 
 Required future gates:
-- Rust formatting, Clippy, unit/property/integration tests, targeted fuzzing, applicable sanitizers and dependency/license audit.
-- Swift formatter/linter, supported concurrency checks, XCTest/XCUITest, keyboard/focus and accessibility checks.
-- Node native .ts automation, strict type checking, Oxlint/Oxfmt and runner tests.
+- Rust formatting, Clippy, applicable sanitizers and dependency/license audit; behavior verified through authorized host E2E.
+- Swift formatter/linter, supported concurrency checks, XCUITest, keyboard/focus and accessibility checks.
+- Node native .ts automation, strict type checking, Oxlint/Oxfmt.
 - <=200 physical source lines, dependency direction, generated declaration drift, reproducible clean build without the old checkout.
 - Failure/recovery tests: invalid batches/files, cancellation, one-operation undo, revision races, interrupted writes, stale handles/results, surface loss, resource limits and logging failure/redaction.
 - Native E2E on the actual host for pen/mouse interactions, transforms, shortcuts/text fields, save dialogs, dirty navigation and recovery. Stable runner identity and disposable fixtures.
@@ -38,17 +40,17 @@ is a selection obligation, not an assertion that tools are already installed or 
 
 | Platform/language | Required selection and evidence |
 | --- | --- |
-| Kotlin/Android | Kotlin formatter/static analysis, Android lint, Gradle build/unit tests, native instrumentation/UI tests, emulator/device and desktop lifecycle lanes |
-| C#/WinUI | Formatting/compiler/analyzer rules, .NET tests, WinUI build and actual Windows UI automation, managed/native boundary checks |
-| Rust/GTK Linux | Existing Rust gates plus GTK/accessibility-aware UI automation, target desktop/session and portal/file behavior; Rust tests alone are insufficient |
+| Kotlin/Android | Kotlin formatter/static analysis, Android lint, Gradle build, native UI E2E tests, emulator/device and desktop lifecycle lanes |
+| C#/WinUI | Formatting/compiler/analyzer rules, WinUI build and actual Windows UI automation, managed/native boundary checks |
+| Rust/GTK Linux | Existing Rust gates plus GTK/accessibility-aware UI automation, target desktop/session and portal/file behavior; non-UI diagnostics are not E2E |
 | Browser TypeScript/Wasm | Oxc/strict types, Wasm conformance, browser E2E/AX, browser storage/permission/offline lanes, bundle/dependency audit; browser selection explicit |
-| Swift Apple hosts | Swift formatting/lint/concurrency and native unit/UI tests; each OS SDK, simulator/device and input/lifecycle differences explicitly covered |
+| Swift Apple hosts | Swift formatting/lint/concurrency and native UI E2E tests; each OS SDK, simulator/device and input/lifecycle differences explicitly covered |
 
 Owned Node .ts automation uses erasable types, explicit .ts imports and import type; no
 runtime enums, parameter properties, decorators, any casts or type-check suppressions.
 Tooling cannot add broad exceptions merely to make existing source pass.
 
-Detailed requirements: [structured diagnostics](logging.md), [Node/Vite/Oxc tooling](tooling.md), [Figma handoff](design/workflow.md) and [Zed task/report reuse](developer-experience.md). No installed-tool or implementation claim is made by these plans.
+Detailed requirements: [structured diagnostics](logging.md), [Node/Vite/Oxc tooling](tooling.md), [design review handoff](design/workflow.md) and [Zed task/report reuse](developer-experience.md). No installed-tool or implementation claim is made by these plans.
 
 ## Internationalization readiness
 
@@ -69,8 +71,7 @@ must not contaminate performance measurements. Disposable fixtures/privacy/reser
 
 Performance acceptance combines reviewed absolute budgets and same-host relative regression limits
 against measured release baselines. Review workloads/statistics/repeats/noise/thresholds before
-implementation; missing baselines are gaps. Short bounded seeded generated/fuzz checks accompany
-relevant background commit checks; extended campaigns precede milestones. Save failing inputs.
+implementation; missing baselines are gaps. Use bounded deterministic fixtures in relevant E2E scenarios. Save failing inputs.
 
 Automatically prune eligible old successful test payloads under reviewed age/space caps, preserving
 unresolved failures, pinned review evidence and required provenance. Mark pruned payloads honestly;
@@ -134,7 +135,7 @@ combinatorial exhaustive list or pad a quota with irrelevant hypothetical failur
 | Lead/integrator | Require the table in task handoff; identify affected domains, independent reviewers and decisions; reconcile findings and evidence |
 | Feature implementer (Rust/platform/DB/rendering) | Challenge own assumptions before code; specify outcomes and add relevant tests/diagnostics with implementation |
 | UX designer | Design interruption, unavailable/error/retry and recovery journeys; input/focus/accessibility/lifecycle expectations with owner-approved scope |
-| UI designer | Represent relevant states in adaptive Figma, en/uk, focus/AX and motion; no layout shifts; no invented features to fill edge cases |
+| UI designer | Represent relevant states in adaptive design, en/uk, focus/AX and motion; no layout shifts; no invented features to fill edge cases |
 | Reviewer | Independently challenge material design before code and implementation before acceptance; inspect actual state transitions/diff/tests, not just authored table |
 | Build reliability | Support deterministic fixtures, fault injection where reviewed, discovery and honest result/coverage reporting; implementers still own feature tests |
 | Competitor researcher | Identify documented failure/limit behavior as evidence and label unknowns; cannot decide Linefield policy or certify safety |
@@ -146,8 +147,8 @@ case/test and disposition; report no findings separately from not assessed.
 Design review does not replace later implementation review. New findings update the same
 table; bug fixes add meaningful regression coverage, retaining the failing sequence/seed.
 
-When implementation is authorized, exercise relevant core/property/boundary/process tests
-and real native/browser E2E. Native replay is not E2E; fixtures/mocks are not power-loss or
+When implementation is authorized, exercise relevant boundary and process-failure scenarios through
+real native/browser E2E. Native replay is not E2E; fixtures/mocks are not power-loss or
 physical latency proof. Test exact outcomes/state preservation, not just no crash.
 Record revision/build/device, result, retry/skip/flaky status and artifacts. Preserve native
 foreground reservations and approved test-hook/security boundaries.

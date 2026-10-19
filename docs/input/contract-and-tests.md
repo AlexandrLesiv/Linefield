@@ -9,7 +9,7 @@ prior pending-review wording; all four TV/watch hosts are view-only.
 
 ## Shared Rust policy, native acquisition
 
-~~~mermaid
+```text
 flowchart TD
     OS[OS devices and system gestures] --> Native[Native event and focus adapter]
     Native --> Priority{OS / IME / text / modal owns event?}
@@ -22,7 +22,9 @@ flowchart TD
     State --> Render[Skia scene]
     State --> Controls[Native menu/control projection]
     Controls -. approved accelerators and action IDs .-> Native
-~~~
+```
+
+Historical relationship notation; no diagram renderer is required.
 
 Native controls can directly dispatch semantic actions; they need not synthesize key/pointer events.
 Pure native text/navigation presentation remains native. Native menu registration and Rust matching
@@ -45,7 +47,7 @@ repeat for held navigation or native behavior only. Releasing focus/modifiers cl
 
 ## State and arbitration
 
-~~~mermaid
+```text
 stateDiagram-v2
     [*] --> Idle
     Idle --> Candidate: native contact awaiting classification
@@ -57,7 +59,9 @@ stateDiagram-v2
     Editing --> Idle: end commits one operation
     Editing --> Idle: cancel rolls back unfinished work
     Navigating --> Idle: end or cancel
-~~~
+```
+
+Historical relationship notation; no diagram renderer is required.
 
 Candidate is a proposed arbitration concept, not approval for a delay or new thread. A quick tap or
 short drag ending before classification must receive an explicit outcome; never silently discard it.
@@ -103,7 +107,7 @@ property update alter another session. Real events are ordered; bounded queues c
 
 Canvas pan/zoom and selection/move/scale need reviewed non-gesture or native accessibility actions
 where feasible; accessible menus alone do not prove an accessible authoring workflow. Exact controls
-and alternatives remain UX/Figma approval work. Do not silently add numeric editing, keyboard nudging,
+and alternatives remain UX/design review approval work. Do not silently add numeric editing, keyboard nudging,
 new tool settings or claim full accessibility. Record any unsupported task explicitly.
 
 Registry includes host/build/driver/device/input route, fixture version, discovery/execution status
@@ -117,5 +121,5 @@ Input crosses native/FFI boundaries; device events, URL/IPC or future agent sign
 authorize document access. Shared capabilities/session ownership and bounds still apply; renderer
 can't mutate document. Follow SEC-02/03/04/10/11/12/13 and threat-change records at implementation.
 Changing profiles must not grant viewer mutations or override native text/OS priority. Owner reviews
-this package and concrete S02 representation, then UX/UI hand off identified Figma; no new custom
+this package and concrete S02 representation, then UX/UI hand off identified design; no new custom
 protocol, global event tap, accessibility permission for the product or input SDK added incidentally.

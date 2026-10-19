@@ -1,0 +1,508 @@
+{
+  "width": 1440,
+  "height": 1128,
+  "title": "Recover authority before resuming",
+  "description": "Unknown work is retained; reconnecting does not replay old interaction handles or preserve old Undo history.",
+  "elements": [
+    {
+      "tag": "rect",
+      "attrs": {
+        "width": "1440",
+        "height": "1128",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "64",
+        "class": "meta"
+      },
+      "text": "LINEFIELD / DIAGRAM LANGUAGE v2"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "64",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "APPROVED DESIGN181 · NOT BUILT"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "123",
+        "class": "title"
+      },
+      "text": "Recover authority before resuming"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "161",
+        "class": "body"
+      },
+      "text": "Unknown work is retained; reconnecting does not replay old interaction handles or preserve old Undo history."
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M376 290H520",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "432",
+        "y": "254",
+        "width": "32",
+        "height": "25",
+        "rx": "{diagram.size.labelRadius}",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "440",
+        "y": "272",
+        "class": "meta"
+      },
+      "text": "1"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M824 266H1008",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "888",
+        "y": "230",
+        "width": "32",
+        "height": "25",
+        "rx": "{diagram.size.labelRadius}",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "896",
+        "y": "248",
+        "class": "meta"
+      },
+      "text": "2"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1008 322H824",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "888",
+        "y": "340",
+        "width": "32",
+        "height": "25",
+        "rx": "{diagram.size.labelRadius}",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "896",
+        "y": "358",
+        "class": "meta"
+      },
+      "text": "3"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1172 348V504",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1184",
+        "y": "414",
+        "width": "32",
+        "height": "25",
+        "rx": "{diagram.size.labelRadius}",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1192",
+        "y": "432",
+        "class": "meta"
+      },
+      "text": "4"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1008 562H824",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "896",
+        "y": "526",
+        "width": "32",
+        "height": "25",
+        "rx": "{diagram.size.labelRadius}",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "904",
+        "y": "544",
+        "class": "meta"
+      },
+      "text": "5"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M672 504V416H224V348",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "456",
+        "y": "382",
+        "width": "32",
+        "height": "25",
+        "rx": "{diagram.size.labelRadius}",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "464",
+        "y": "400",
+        "class": "meta"
+      },
+      "text": "6"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M520 562H376",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "432",
+        "y": "526",
+        "width": "32",
+        "height": "25",
+        "rx": "{diagram.size.labelRadius}",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "440",
+        "y": "544",
+        "class": "meta"
+      },
+      "text": "7"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "232",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.presentation}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "260",
+        "class": "meta"
+      },
+      "text": "CLIENT STATE"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "292",
+        "class": "node"
+      },
+      "text": "Attached"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "520",
+        "y": "232",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.unknown}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "260",
+        "class": "meta"
+      },
+      "text": "CLIENT STATE"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "292",
+        "class": "node"
+      },
+      "text": "Paused"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "232",
+        "width": "328",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "260",
+        "class": "meta"
+      },
+      "text": "DISCOVERY"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "292",
+        "class": "node"
+      },
+      "text": "Discovering"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "504",
+        "width": "328",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "532",
+        "class": "meta"
+      },
+      "text": "RECOVERY"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "564",
+        "class": "node"
+      },
+      "text": "Reloading"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "520",
+        "y": "504",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "532",
+        "class": "meta"
+      },
+      "text": "RECOVERY"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "564",
+        "class": "node"
+      },
+      "text": "Reconciling"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "504",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.unknown}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "532",
+        "class": "meta"
+      },
+      "text": "NEEDS EXPLICIT RECOVERY"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "564",
+        "class": "node"
+      },
+      "text": "RecoveryRequired"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "668",
+        "class": "meta"
+      },
+      "text": "1 · Attached → Paused: connection / authority lost. 2 · Paused → Discovering: reconnect requested."
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "704",
+        "class": "meta"
+      },
+      "text": "3 · Discovering → Paused: old lock still held or peer unavailable."
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "740",
+        "class": "meta"
+      },
+      "text": "4 · Discovering → Reloading: exclusive takeover or verified new owner."
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "776",
+        "class": "meta"
+      },
+      "text": "5 · Reloading → Reconciling: validated durable state + fresh owner generation."
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "812",
+        "class": "meta"
+      },
+      "text": "6 · Reconciling → Attached: known outcomes applied, unknown work retained, fresh empty history."
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "848",
+        "class": "meta"
+      },
+      "text": "7 · Reconciling → RecoveryRequired: invalid data or unavailable authority."
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M72 1056H1368",
+        "stroke": "{diagram.color.divider}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "1088",
+        "class": "meta"
+      },
+      "text": "Notation migration only · See source packet for authority and evidence"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "1088",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "2026-10-19 · Full-size SVG"
+    }
+  ]
+}

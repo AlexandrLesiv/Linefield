@@ -19,8 +19,8 @@ Recorded 2026-10-16. Do not promote a proposal to approval based on an agent's r
 | Concrete ABI, scheduler/queue capacities and other-platform thread topology | Pending separate review |
 | R11 native document: SQLite | Owner selected C on 2026-10-16; schema and save/recovery lifecycle pending |
 | R06 persistence: autosave to the document | Owner selected on 2026-10-16; app-managed drafts selected; concrete scheduling/lifecycle pending |
-| Native snapshot + PNG exports | Owner selected B, decision 18; SVG/PDF deferred; concrete contracts/Figma pending |
-| Identified Figma design/version | Not prepared or approved |
+| Native snapshot + PNG exports | Owner selected B, decision 18; SVG/PDF deferred; concrete contracts/design review pending |
+| Identified design/version | Not prepared or approved |
 | Preview verification hardware | Current Apple Silicon Mac/macOS, mouse/keyboard and Cintiq/Pro Pen 3 selected (decision 21); exact inventory, minimum OS and performance thresholds pending |
 
 Record future approvals with date, exact artifact revision/frame links, approved scope, conditions and superseded decisions. New material deviations return for review. Do not ask again for already-authorized routine work.
@@ -29,7 +29,7 @@ Record future approvals with date, exact artifact revision/frame links, approved
 
 The owner requested adding the shared contract catalog and E2E approach to the plan on
 2026-10-16. See [contracts](contracts.md), [shared E2E](testing/shared-e2e.md) and
-[architecture audit](architecture-decisions-audit.md). This authorizes documentation only;
+[architecture audit](decisions.md). This authorizes documentation only;
 actual contract signatures, formats, tools and runtime behavior remain subject to their gates.
 
 ## Established constraints index
@@ -43,20 +43,20 @@ actual contract signatures, formats, tools and runtime behavior remain subject t
 | Structured local redacted correlated diagnostics | contracts CT-07, quality |
 | <=200 physical lines per handwritten source/test/script | AGENTS, quality |
 | Native Node .ts, strict erasable types, Oxc gates and no owned shell/PowerShell/Python orchestration | AGENTS, quality; exact tool versions unselected |
-| Owner-approved Figma version before new screens/tools; native platform variants | AGENTS, S00, designer instructions |
+| Owner-approved design version before new screens/tools; native platform variants | AGENTS, S00, designer instructions |
 | Shared behavioral scenarios plus actual-host E2E and explicit coverage | testing/shared-e2e, quality; implementation not begun |
 | Existing specialists own quality; fresh reviewer; isolated concurrent writers | AGENTS and .codex/agents |
 
-The [architecture audit](architecture-decisions-audit.md) also lists proposals and deferred
+The [architecture audit](decisions.md) also lists proposals and deferred
 features; an established constraint does not approve a specific unshown implementation.
 
 ## Tooling and developer experience update
 
-Owner selected Zed tasks on 2026-10-16; no custom Zed extension. Node .ts, Vite and Oxc are the tooling direction; zx is an optional candidate, not an adopted dependency. Plan reusable reports/actions and Figma handoff from day one. Workbench GUI, concrete services/schemas and all implementation remain gated. See [tooling](tooling.md), [developer experience](developer-experience.md), [logging](logging.md) and [design workflow](design/workflow.md).
+Owner selected Zed tasks on 2026-10-16; no custom Zed extension. Node .ts, Vite and Oxc are the tooling direction; zx is an optional candidate, not an adopted dependency. Plan reusable reports/actions and design review handoff from day one. Workbench GUI, concrete services/schemas and all implementation remain gated. See [tooling](tooling.md), [developer experience](developer-experience.md), [logging](logging.md) and [design workflow](design/workflow.md).
 
 ## Adaptive design and additional platform planning
 
-Owner requested Android TV/Google TV and Android XR folders on 2026-10-16; apps/android-tv and apps/android-xr now hold documentation placeholders with P10/P11. Implementation remains deferred. Adaptive Figma mockups and design foundations are required in the design plan (S00A); no palette, component library, Figma file or screen design has yet been selected/approved.
+Owner requested Android TV/Google TV and Android XR folders on 2026-10-16; apps/android-tv and apps/android-xr now hold documentation placeholders with P10/P11. Implementation remains deferred. Adaptive design review mockups and design foundations are required in the design plan (S00A); no palette, component library, design artifact or screen design has yet been selected/approved.
 
 ## Internationalization direction
 
@@ -66,15 +66,15 @@ Owner requested day-one i18n planning on 2026-10-16. Shared Rust commands/data r
 
 Owner requested competitor_researcher on 2026-10-16, with recommendations delivered to both
 the owner and the design roles (now split into UX and UI). Role/workflow/task instructions are added; no competitor report
-or feature recommendation is approved. See [research](research/README.md) and S00C.
-The [planning walkthrough](planning-review.md) consolidates remaining recommendations; all
+or feature recommendation is approved. See research and S00C.
+The [planning walkthrough](objectives.md) consolidates remaining recommendations; all
 its proposals remain pending explicit owner decisions.
 
 ## Motion and navigation planning
 
 Owner requested platform-specific animations/transitions and in-app routing plans on 2026-10-16.
 S00D, [navigation](navigation.md) and [motion](design/motion.md) document the requirement.
-Interactive motion/reduced-motion handoff joins Figma approval. Custom chooser scope, route
+Interactive motion/reduced-motion handoff joins design review approval. Custom chooser scope, route
 grammar/identity, external-link registration and actual transitions remain proposals; no new
 screens, routing library or implementation approved. Existing Rust command ownership remains.
 
@@ -86,7 +86,7 @@ are not implemented. Additional translations and concrete English locale mapping
 Owner added Wear OS as a target: apps/wearos and P12; viewer capability is a recommendation,
 not an approved toolkit/network plan. Owner explicitly requested separate ux_designer and
 ui_designer roles; the combined configuration is replaced. See [responsibilities](design/roles.md).
-Existing implementation/Figma gates and concurrency limits remain unchanged.
+Existing implementation/design review gates and concurrency limits remain unchanged.
 
 ## Architecture review — decision 1 (R02)
 
@@ -97,7 +97,7 @@ Use independent EditorSession ownership of document, history and interaction sta
 than a process-wide current-document singleton. Async results identify session/operation
 so late completions cannot affect a replacement session. Tabs and multiple document windows
 are deferred; future support still requires design, implementation and testing. Concrete
-thread topology/ABI remain pending. This choice does not authorize implementation or Figma.
+thread topology/ABI remain pending. This choice does not authorize implementation or design review.
 
 ## Architecture review — decision 2 (R09 crate structure)
 
@@ -159,27 +159,7 @@ schema or implementation is approved by this choice. See [autosave policy](autos
 
 ## Database specialist and visual schema review
 
-On 2026-10-16 the owner requested database-specialist entity/relationship visualization and
-handoff of visualized schemas for review. Added database_designer and docs/database-design.md:
-Mermaid conceptual/physical ER diagrams plus a dictionary and persistence sequence; rendered
-SVG/HTML fallback when needed. Owner approves the identified proposal before implementation.
-Rust retains implementation and shared semantics. No concrete schema or new product feature is
-approved by this workflow; configured role runtime discovery remains unverified.
-
-Follow-up: owner objected to Mermaid ERDs and asked to evaluate dbdiagram/dbdocs. The Mermaid
-ERD mandate is removed. DBML plus dbdiagram is the recommended review format, with dbdocs an
-optional hosted reference; setup/publication is pending, not authorized by reading their docs.
-Track schema and layout in Git; tested SQLite migrations remain executable authority. See
-docs/database-design.md for verified tool limits and the visual handoff requirements.
-
-## Selected database visualization workflow
-
-On 2026-10-16 the owner selected DBML with dbdiagram for its preferred visual review experience,
-superseding the pending tool comparison above. Keep DBML and companion layout in Git and provide
-a rendered versioned handoff for explicit schema approval. SQLite migrations remain executable
-authority, with parity verification; no assumed lossless DBML-to-SQLite generation. dbdocs hosting
-and optional extraction/check tools remain separate choices. No concrete schema, application
-implementation, purchase or public publication is approved merely by selecting this workflow.
+The database designer prepares scoped SQLite schema proposals and visual review material. Shared schema inputs and DTCG styles generate local review views; owner approval names the exact proposal scope. The role cannot approve its own schema or implement production persistence without authorization.
 
 ## Architecture review — decision 7 (library lifecycle and first screen)
 
@@ -188,14 +168,14 @@ initial task before the canvas. New drawings persist as library items without na
 requirements; returning to the library or closing normally does not discard unnamed drawings.
 The library is the normal entry screen; one window presents it or one editor. This supersedes
 the proposed recents-only menu and optional-gallery scope. S02L is the first product UI milestone,
-after foundations and reviewed contracts/Figma, and blocks S04 canvas integration.
+after foundations and reviewed contracts/design review, and blocks S04 canvas integration.
 
 This adopts library-managed working documents; native file exchange is reviewed separately,
 with import-as-copy/export-as-copy the proposed Procreate-like semantics, not silent external
 file write-through. Exact import/export UI/identity and any edit-in-place exception require review.
 No stacks/folders, bulk operations, sync or additional export formats are implied. Deletion/trash,
 empty-item cleanup and exceptional startup restoration remain open. No concrete catalog/schema,
-new database, code implementation or Figma approval follows from this scope decision alone.
+new database, code implementation or design review approval follows from this scope decision alone.
 
 ## Architecture review — decision 8 (library deletion)
 
@@ -205,7 +185,7 @@ Cancel preserves the drawing; successful deletion cannot be undone through drawi
 This is a product policy, not approval of a concrete catalog schema or storage algorithm.
 S02 must review pending-write coordination, stale worker rejection and interrupted/failed deletion.
 Never report successful deletion before the reviewed durable boundary. No secure-erasure or
-removal of independently exported/backed-up copies is promised. Figma/implementation gates remain.
+removal of independently exported/backed-up copies is promised. design review/implementation gates remain.
 
 ## Architecture review — decision 9 (external native files)
 
@@ -310,7 +290,7 @@ accepted edits silently or claim pending work is durable. A process/device crash
 S02 defines byte/operation/age thresholds, headroom for an active gesture, safe rejection/cancel
 boundaries, retry/backoff, error classification and the conditions for resuming edits. Do not
 truncate a committed stroke or silently drop input at capacity. Exact UI states and exit-loss
-acknowledgement require Figma review and revision-specific contracts before implementation.
+acknowledgement require design review and revision-specific contracts before implementation.
 Future cloud upload failure is distinct from local save failure; successful local saving should
 not by itself pause edits due to remote unavailability. No cloud system is authorized here.
 
@@ -326,7 +306,7 @@ No brush library, adjustable stabilization or artwork background picker is appro
 Rust geometry defines stroke appearance. S02 proposes the pressure curve, width meaning,
 zero-pressure handling, algorithm version and any basic smoothing for review; evaluate tuning
 with the Cintiq rather than inheriting defaults silently. Predictions remain temporary and
-never become saved input. This records product behavior, not identified Figma approval or
+never become saved input. This records product behavior, not identified design approval or
 implementation authorization. Next product decision: selection/navigation interactions (R05).
 
 ## Architecture review — decision 17 (selection and navigation)
@@ -344,7 +324,7 @@ transforms add none. Native text fields retain normal shortcut/IME priority.
 
 Exact hit tolerances, handle sizes, scale/zoom limits and device gesture mappings remain reviewed
 S00/S02 specifications. Rotation, multi-select, keyboard nudging and a numeric scale field remain
-out of scope. Identified Figma approval and implementation authorization are still required.
+out of scope. Identified design review approval and implementation authorization are still required.
 
 ## Architecture review — decision 18 (preview export scope)
 
@@ -357,7 +337,7 @@ PNG provides a flattened image for sharing; neither PNG nor SVG import is approv
 S07E is now a required PNG export slice after S06 reliable persistence, included in S08 acceptance.
 Native snapshot exchange belongs to S06. Bounds, resolution, background/transparency, empty and
 extreme drawings, cancellation, overwrite/failure behavior and memory budgets still need concrete
-contracts and identified Figma review. Export must not mark pending autosave revisions durable.
+contracts and identified design. Export must not mark pending autosave revisions durable.
 No export code, dependencies or UI implementation is authorized by this scope decision.
 
 ## Architecture review — decision 19 (launch destination)
@@ -371,7 +351,7 @@ not silently disappear or block access to unaffected library items.
 Opening a drawing from the gallery creates a session with empty Undo/Redo history, consistent
 with decision 10. This choice establishes the launch destination; an explicit external-file
 request remains a separate reviewed import intent (decision 9), not permission for automatic
-editor restoration or a new deep-link feature. Concrete recovery states/contracts and Figma
+editor restoration or a new deep-link feature. Concrete recovery states/contracts and design review
 approval remain pending. Documentation only; no implementation authorization.
 
 ## Architecture review — decision 20 (gallery ordering)
@@ -384,7 +364,7 @@ items. Do not use asynchronous write-completion time as the editing timestamp.
 Concrete S02 library metadata contracts must define persisted ordering, stable tie-breaking,
 new/imported-item placement and clock-change handling. These details must preserve the selected
 content-edit semantics and revision-safe persistence. UX/UI specify stable focus and gallery
-updates in the reviewed Figma design. No implementation is authorized by this choice.
+updates in the reviewed design. No implementation is authorized by this choice.
 
 ## Architecture review — decision 21 (preview verification baseline)
 
@@ -399,7 +379,7 @@ Minimum deployment version remains an engineering proposal based on the required
 reviewed compatibility scope. This does not change multiplatform architecture or authorize
 other platform implementations. Physical pen-to-screen latency awaits a suitable camera;
 software timing must not be presented as that measurement. No desktop reservation, code or
-Figma approval is granted by selecting a test baseline.
+design review approval is granted by selecting a test baseline.
 
 ## Architecture review — decision 22 (library storage layout)
 
@@ -413,7 +393,7 @@ future provider locations; this layout does not implement cloud synchronization.
 S02 must define catalog/document metadata authority, cross-file reconciliation, staged creation/
 import and interrupted deletion. Never assume separate catalog and document updates succeed
 atomically. Concrete tables, constraints, journal/durability, connections, naming/file locations,
-export snapshots and catalog recovery still require a visualized DBML schema and owner review.
+export snapshots and catalog recovery still require a visualized schema source schema and owner review.
 This selects the storage layout only; no schema or application implementation is authorized.
 
 ## Architecture review — decision 23 (metadata authority)
@@ -434,7 +414,7 @@ Review schema fields and separate content/metadata version semantics in the visu
 packet. Import-as-independent-copy still assigns new identity; exporting a snapshot does not
 establish synchronization. Tests must cover rename failures, crash between writes, stale index
 completion and catalog reconstruction without resurrecting deliberately deleted documents.
-Documentation only; concrete schema, Figma and implementation authorization remain pending.
+Documentation only; concrete schema, design review and implementation authorization remain pending.
 
 ## Architecture review — decision 24 (stroke sample storage)
 
@@ -474,7 +454,7 @@ scale adds one Undo operation. Accepted content changes autosave with revision-s
 Tests must verify original samples survive move/scale/save/reopen unchanged, current transform
 and scaled width round-trip, opposite-corner anchoring, composed moves/scales, cancellation,
 Undo/Redo and agreement between visible artwork, selection/culling and exported output.
-No schema, Figma or application implementation is authorized by this documentation choice.
+No schema, design review or application implementation is authorized by this documentation choice.
 
 ## Architecture review — decision 26 (document schema upgrades)
 
@@ -494,7 +474,7 @@ transaction/rollback and interruption recovery, storage bounds/retention, concur
 status. Recovery copies are specific to format upgrades, not a second routine autosave journal
 or persistent Undo history. Catalog schema migration/reconstruction policy remains separate.
 Tests cover each supported migration fixture, semantic preservation, copy failure/disk-full,
-interrupted upgrade, retry and newer-version rejection. Concrete schema/Figma and implementation
+interrupted upgrade, retry and newer-version rejection. Concrete schema/design review and implementation
 approval remain pending; documentation only.
 
 ## Architecture review — decision 27 (saved acknowledgement durability)
@@ -583,7 +563,7 @@ Specify effect identity, consumption/acknowledgement and cancellation so a state
 replay a panel and a lost/stale completion cannot affect another session. Do not silently drop
 required effects or introduce unbounded queues. Tests cover command and async updates, stale
 completion, teardown, repeated reads, panel delivery and no per-sample full-control refresh.
-Concrete ABI, identified Figma and implementation authorization remain pending.
+Concrete ABI, identified design and implementation authorization remain pending.
 
 ## Architecture review — decision 31 (hybrid UI projections)
 
@@ -645,7 +625,7 @@ Pressure and other non-coordinate field representations remain separate review i
 Test original-sample/persistence round-trips, repeated move/scale/Undo, far-from-origin scenes,
 high supported zoom, cross-display mapping, bounds rejection, and rendering/hit-test/export
 agreement. Proposed tests are not evidence of measured precision or performance. Concrete
-numeric contracts/schema/Figma and implementation authorization remain pending.
+numeric contracts/schema/design review and implementation authorization remain pending.
 
 ## Architecture review — decision 34 (pressure response)
 
@@ -664,7 +644,7 @@ natural feel or precision. A nonlinear tuned curve requires evidence and renewed
 Tests cover endpoints/intermediate values and monotonic linear response, maximum/base width,
 constant-width fallback, pressure presence, unchanged opacity/ignored tilt, scaled appearance,
 reopen/render consistency and transient predictions. Real-device input evidence is separate
-from injected samples. Documentation only; no algorithm/schema/Figma implementation authorized.
+from injected samples. Documentation only; no algorithm/schema/design review implementation authorized.
 
 ## Architecture review — decision 35 (initial movement filtering)
 
@@ -684,7 +664,7 @@ Test sampled-path/endpoint/corner fidelity, degenerate samples, constant/variabl
 linear pressure consistency, cancellation, persistence/render/PNG parity and temporary
 prediction replacement. Record real Cintiq behavior separately from replay; no claim of
 natural feel, jitter elimination or measured latency from choosing this baseline. Documentation
-only; concrete algorithm/schema/Figma and implementation approval remain pending.
+only; concrete algorithm/schema/design review and implementation approval remain pending.
 
 ## Architecture review — decision 36 (PNG export bounds)
 
@@ -701,7 +681,7 @@ be silently ignored, cropped or removed to satisfy budgets. Report an oversized 
 image resolution remains separate from editor viewport zoom. Exact dimensions, background and
 export UI remain for review. Test all-artwork inclusion, transformed variable widths, extreme/
 empty bounds, viewport independence and no mutation/false autosave acknowledgement. No code
-or identified Figma approval is implied by this scope decision.
+or identified design approval is implied by this scope decision.
 
 ## Architecture review — decision 37 (PNG background)
 
@@ -714,7 +694,7 @@ S00/S02/S07E still review the exact shared background color, output color-space/
 rendering comparison tolerances; do not assume pure white merely from the word light. Test
 background/margin color, opaque output, edge compositing and unchanged export across system
 themes. Bounds remain all artwork (decision 36); resolution is a separate pending choice.
-No identified Figma, code or implementation approval is implied.
+No identified design, code or implementation approval is implied.
 
 ## Architecture review — decision 38 (PNG resolution policy)
 
@@ -732,7 +712,7 @@ cropping, stroke omission or changing document state. Cancellation and input res
 remain required. Test expected dimensions, fractional/extreme bounds, width/transform inclusion,
 zoom/density independence, budget rejection and independently decoded PNG fidelity.
 
-This selects the policy, not its numeric constant or identified Figma presentation. No code,
+This selects the policy, not its numeric constant or identified design presentation. No code,
 render worker topology or implementation authority is introduced.
 
 ## Architecture review — decision 39 (Undo budget policy)
@@ -775,7 +755,7 @@ cleanup of active failed-upgrade recovery state or independently exported user f
 
 Tests cover repeated upgrades, validated replacement, disk-full/copy failure, interruption at
 each publication/cleanup boundary, cleanup retries and recovery after failure. Documentation
-only; no filesystem cleanup, implementation or identified Figma approval authorized.
+only; no filesystem cleanup, implementation or identified design approval authorized.
 
 ## Architecture review — decision 41 (unexpected editor failure)
 
@@ -844,7 +824,7 @@ transaction/publication ordering and cancellation/crash cleanup. Reject malforme
 associations before silently guessing repairs. No partially remapped or incomplete item may be
 published as a successful import. Test source bytes unchanged, new document/stroke UUIDs,
 repeated-import disjointness, reference integrity and identity-independent artwork equivalence.
-No concrete schema, Figma or implementation authorization is implied.
+No concrete schema, design review or implementation authorization is implied.
 
 ## Architecture review — decision 44 (duplicate display names)
 
@@ -855,7 +835,7 @@ Do not enforce UNIQUE on document display names or automatically rename imported
 to avoid a duplicate library label. App-managed storage locations use internal identity.
 
 Create/rename/import/delete and gallery selection must target identity even when labels match.
-Figma must show usable disambiguation/accessibility within the approved thumbnail/metadata
+design review must show usable disambiguation/accessibility within the approved thumbnail/metadata
 presentation, without adding unapproved search or sorting features. Native export filename
 collisions are a separate file-panel/overwrite policy, not permission for library overwrites.
 
@@ -863,7 +843,7 @@ S02 reviews display-name validation/length/empty/default/localization handling s
 allowing duplicate labels does not disable input validation. Test same-name creation/import/
 rename, Unicode/case variants, stable identity-specific selection/deletion, persistence/catalog
 reconstruction and source preservation. Log no raw names. Documentation only; no exact name
-validation rule, new UI, schema implementation or identified Figma approval is implied.
+validation rule, new UI, schema implementation or identified design approval is implied.
 
 ## Architecture review — decision 45 (numbered default drawing names)
 
@@ -883,7 +863,7 @@ The number allocation policy (monotonic sequence versus gap reuse), counter scop
 handling of failed creation/retry, catalog rebuild and existing matching names still need review.
 No gapless numbering or unique-label guarantee is selected. Test numbered creation, persistence,
 rename/import duplicate compatibility, restart and failure handling under that reviewed policy.
-Documentation only; no schema, Figma or implementation approval is implied.
+Documentation only; no schema, design review or implementation approval is implied.
 
 ## Architecture review — decision 46 (increasing default-name numbers)
 
@@ -905,7 +885,7 @@ not permission to add a second persistence mechanism or schema without review.
 
 Extend LIBRARY-CREATE-001 with create 1-3/delete 2/create 4, rename/reopen and restart continuity;
 cover failed creation, retries and catalog recovery under the reviewed concrete contract.
-Documentation only; no implementation or Figma approval is implied.
+Documentation only; no implementation or design review approval is implied.
 
 ### Owner correction to decisions 45-46 (first default name)
 
@@ -938,7 +918,7 @@ Future resource-backed brushes require a separate reviewed extension, not premat
 Test independent stroke properties, settings changes leaving existing strokes unchanged,
 validation/rejection, Undo/Redo, save/reopen/import equivalence, transformed width, cache
 invalidation and PNG appearance. Native control E2E and shared semantic tests remain separate.
-Documentation only; concrete ABI/schema and identified Figma approval still precede implementation.
+Documentation only; concrete ABI/schema and identified design approval still precede implementation.
 
 ## Architecture review — decision 48 (sRGB initially; future color spaces)
 
@@ -965,7 +945,7 @@ Unsupported future color-space documents must not be silently treated as sRGB.
 Plan save/reopen/import color round-trips, native picker conversion, canvas/PNG equivalence,
 independent PNG metadata/decoder checks and system-theme invariance. Distinguish numerical/color
 management checks from actual display validation; identical physical appearance across unverified
-screens is not promised. Documentation only; no implementation or Figma approval is implied.
+screens is not promised. Documentation only; no implementation or design review approval is implied.
 
 ## Architecture review — decision 49 (confirmed exit after save failure)
 
@@ -973,7 +953,7 @@ On 2026-10-16 the owner selected A: when local autosave fails and leaving would 
 work, offer Retry, Stay and an explicitly confirmed Leave Without Unsaved Changes path. Stay is
 the safe default. Apply the same shared policy to gallery return, document replacement, window
 close and quit where they release the editing session. Exact native wording/layout and identified
-Figma version still require design approval; no ordinary prompt is needed for a saved drawing.
+design version still require design approval; no ordinary prompt is needed for a saved drawing.
 
 Consent covers only the current session's not-yet-persisted edits at the reviewed revision.
 Leaving does not revert committed SQLite changes, restore the document to its opening state,
@@ -993,7 +973,7 @@ Tests cover Retry, default Stay/cancel, explicit confirmed exit and independent 
 content remains, abandoned unsaved work is absent. Exercise newer revisions, in-flight commit
 races, repeated exits, failed replacement and stale completions. Log bounded redacted outcomes
 and correlation, never drawing content. Concrete state/ABI contracts and real native E2E remain
-pending. Documentation only; no implementation or Figma approval is implied.
+pending. Documentation only; no implementation or design review approval is implied.
 
 ## Architecture review — decision 50 (block style changes during active strokes)
 
@@ -1018,7 +998,7 @@ redacted command rejection/outcome events, not samples or color values.
 Extend DRAW-001/core/bridge cases with rejected changes from all implemented origins, unchanged
 pen and stroke state, no delayed replay/extra Undo, completion/cancellation re-enablement and
 native disabled/focus behavior. Actual native E2E is separate from injected command tests.
-Documentation only; concrete contracts/Figma and implementation remain subject to review.
+Documentation only; concrete contracts/design review and implementation remain subject to review.
 
 ## Architecture review — decision 51 (export latest completed artwork)
 
@@ -1044,7 +1024,7 @@ a second autosave journal or forcing a successful library flush as an export pre
 Test pending/failed autosave with newer completed artwork, concurrent later edits, independent
 native reopen and PNG decoding, and unchanged library durability/history after success/failure.
 Verify temporary interaction state is excluded under the separately reviewed gesture policy.
-Documentation only; exact schema/ABI/export contracts, Figma and implementation remain pending.
+Documentation only; exact schema/ABI/export contracts, design review and implementation remain pending.
 
 ## Architecture review — decision 52 (block export during editing gestures)
 
@@ -1066,7 +1046,7 @@ Test each active interaction, all implemented command origins, disabled native a
 gesture/history/save state on rejection, no deferred replay, and eligibility after end/cancel.
 Exercise begin/end races and previously captured exports independently. Log bounded redacted
 command outcomes without document data. Native UI acceptance is separate from injected tests.
-Documentation only; exact contracts/Figma and implementation approval remain required.
+Documentation only; exact contracts/design review and implementation approval remain required.
 
 ## Architecture review — decision 53 (blank PNG for empty drawings)
 
@@ -1089,7 +1069,7 @@ items remain retained, and native-document export continues under its existing p
 Extend EXPORT-001 with newly created empty drawings, deletion of the last stroke, Undo/Redo
 across empty/nonempty states, independent PNG dimensions/opaque-background/color checks and
 viewport/display independence. Resource, cancellation and destination failure handling still
-apply. Documentation only; dimensions, concrete contracts/Figma and implementation remain pending.
+apply. Documentation only; dimensions, concrete contracts/design review and implementation remain pending.
 
 ## Architecture review — decision 54 (empty PNG dimensions)
 
@@ -1102,7 +1082,7 @@ This is only the empty-drawing fallback, not a finite canvas/page, export-size c
 to nonempty all-artwork bounds plus margin. Keep existing active-gesture guards, snapshot and
 library-save-state rules. EXPORT-001 must independently decode and verify 1920-by-1080 output,
 background/opacity/color metadata and invariance under viewport/window/display changes.
-Documentation only; no implementation, executed app test or Figma approval is implied.
+Documentation only; no implementation, executed app test or design review approval is implied.
 
 ## Architecture review — decision 55 (macOS declaration generation)
 
@@ -1153,7 +1133,7 @@ retry/coalescing and native availability. Log bounded correlated intent/outcome 
 without document data. Test shortcut/menu equivalence, batching bypass, repeated requests,
 write failures/retry, older completion/newer edits, active gestures and unchanged history; native
 focus/shortcut E2E remains separate from injected command tests. Documentation only; concrete
-contracts, identified Figma states and implementation authorization remain pending.
+contracts, identified design states and implementation authorization remain pending.
 
 ## Architecture review — decision 57 (restore device-local viewport)
 
@@ -1180,7 +1160,7 @@ must not falsely change artwork Saved status. Do not log raw view coordinates or
 Test reopen and ordinary restart restoration, fallback for absent/invalid view, empty drawings,
 resized windows/display changes and stale writes/deletion. Verify unchanged content revisions,
 recency/history and exported artwork. Shared fixtures and real native navigation/pan/zoom E2E
-are separate evidence. Exact schema/geometry/Figma details remain review items; documentation only.
+are separate evidence. Exact schema/geometry/design review details remain review items; documentation only.
 
 ## Architecture review — decision 58 (per-drawing local pen settings)
 
@@ -1207,7 +1187,7 @@ or document paths in logs.
 Test two drawings with distinct settings, switching/reopen/restart, defaults/invalid metadata,
 active-stroke rejection and stale completions. Verify existing artwork, Undo, recency and exports
 remain unchanged. Shared tests and native control/restoration E2E remain separate. Documentation
-only; concrete schema/contracts/Figma and implementation still require review.
+only; concrete schema/contracts/design review and implementation still require review.
 
 ## Architecture review — decision 59 (extensible per-tool local settings)
 
@@ -1262,7 +1242,7 @@ Test import from gallery and editor, pending/failed-save guards including Stay, 
 failed validation/open, cancellation and late completions. Verify the correct imported UUID is
 opened, source bytes remain unchanged and prior history is cleared only on actual replacement.
 Native picker/navigation/focus E2E and shared state/storage tests remain separate. Documentation
-only; exact contracts/Figma and implementation remain pending.
+only; exact contracts/design review and implementation remain pending.
 
 ## Architecture review — decision 61 (restore active tool per drawing)
 
@@ -1287,7 +1267,7 @@ unavailable stored IDs are concrete contract items, not a generic plugin registr
 Test separate drawings last using Pen and Select, switch/reopen/restart, missing/invalid tool
 fallback, independent tool settings and native control state. Verify no selected stroke/gesture/
 history restoration and unchanged artwork/save status/recency/exports. Shared tests and native
-reopen/focus E2E remain separate. Documentation only; no implementation or Figma approval implied.
+reopen/focus E2E remain separate. Documentation only; no implementation or design review approval implied.
 
 ## Architecture review — decision 62 (gallery thumbnails fit all artwork)
 
@@ -1302,7 +1282,7 @@ export dimensions. Use the approved fixed light artwork background and color sem
 selection handles, predictions and unfinished gestures. Empty drawings use a reviewed blank
 thumbnail presentation, not an assumption that thumbnail pixels equal the empty PNG export size.
 Exact thumbnail dimensions/margin, visual empty/loading/error states and accessibility text
-belong in the identified Figma/S02 review.
+belong in the identified design/S02 review.
 
 S02 defines the content revision source, generation timing, bounded rendering/storage/work,
 cache keys, stale completion rejection and eviction/regeneration. Do not introduce a new render
@@ -1313,7 +1293,7 @@ specific current/saved revision policy is selected merely by choosing thumbnail 
 Test complete extents, distant/transformed marks, empty drawings, view independence, content
 update/Undo invalidation and stale results/deletion/cache eviction. Real gallery appearance/AX
 review and native E2E remain separate from geometry/cache fixtures. Documentation only; no
-implementation or identified Figma approval implied.
+implementation or identified design approval implied.
 
 ## Architecture review — decision 63 (confirm export replacement)
 
@@ -1338,7 +1318,7 @@ Test new destination, confirmed replace, cancel/rename, generation failure, publ
 interruption and target races for native/PNG output. Verify old bytes survive failure before
 replacement and validate the published artifact independently. Native confirmation/focus tests
 are separate from storage fault injection. No double confirmation dialog is required if native
-confirmation fulfills the reviewed contract. Documentation only; implementation/Figma remain pending.
+confirmation fulfills the reviewed contract. Documentation only; implementation/design review remain pending.
 
 ## Architecture review — decision 64 (one-second autosave batching cap)
 
@@ -1452,10 +1432,10 @@ Concrete keys and relationships must fit actual tables; do not introduce redunda
 merely to enforce a conceptual pattern. Active-tool selection and viewport remain distinct local
 metadata. Local preferences are not portable stroke properties, exports or rendering dependencies.
 
-S02/database_designer proposes the DBML table/field/key/constraint/index design, SQL constraints
+S02/database_designer proposes the schema source table/field/key/constraint/index design, SQL constraints
 versus Rust validation and schema migrations for owner visual review. Record introduction/default
 and incompatible-version handling; relational columns do not eliminate settings migrations.
-Future tools still require separate product/Figma approval. This decision does not select an ORM,
+Future tools still require separate product/design review approval. This decision does not select an ORM,
 SQL generator, SQLite STRICT mode or concrete data types without the pending contract review.
 
 Test per-tool/per-drawing isolation, defaults/validation, migration and rollback/rebuild/failure
@@ -1493,12 +1473,12 @@ local preferences. Do not introduce a mandatory external catalog dependency for 
 
 Review tests for stable seeded identities, localization-independent names, version uniqueness,
 missing/unsupported references, safe migrations and per-tool/per-drawing isolation. Concrete
-DBML and version compatibility policy remain review deliverables. Documentation only.
+schema source and version compatibility policy remain review deliverables. Documentation only.
 
 ## Architecture review — decision 70 (versioned tool registry direction; superseded by 71)
 
 On 2026-10-16 the owner approved the proposed stable tool ID plus explicit version-table
-structure as the direction for the DBML proposal. A tools table holds a stable standard 16-byte
+structure as the direction for the schema source proposal. A tools table holds a stable standard 16-byte
 UUID identity and locale-independent readable tool key. A tool_versions table identifies explicit
 supported contract versions for each tool. Tool-specific relational settings reference the
 appropriate tool/version while retaining explicit typed property columns under decision 68.
@@ -1513,7 +1493,7 @@ Perform joins during storage/query work and use validated typed settings in the 
 join per input sample. Portable drawing files must not depend on the local registry/preferences
 to render, and foreign keys cannot enforce references across catalog/drawing database files.
 Database designer must show the exact key/constraint/version-field design, seeded identities,
-migrations/unsupported-version behavior and self-contained artwork interpretation in DBML with
+migrations/unsupported-version behavior and self-contained artwork interpretation in schema source with
 owner visual review. Concrete constants/columns/DDL and implementation remain unapproved.
 
 Test stable identity/version relationships, localized names without identity change, referential
@@ -1545,7 +1525,7 @@ path. Portable drawing interpretation remains self-contained, not dependent on l
 
 Future incompatible artwork meaning requires reviewed top-level format/migration handling that
 preserves old appearance or rejects unsupported content; removing tool versions is not permission
-to reinterpret old files silently. Concrete DBML keys/types, seeded values, version numbering,
+to reinterpret old files silently. Concrete schema source keys/types, seeded values, version numbering,
 compatibility and conversion fixtures still require visual owner review. Test 16-byte round-trips,
 malformed lengths/UUIDs, canonical cross-host conversion, identity/FK mappings and existing import
 regeneration semantics. Documentation only; no code, schema or migration has been implemented.
@@ -1563,7 +1543,7 @@ reviewed 16-byte BLOB validation and semantic UUID checks. Numeric bounds, finit
 referential integrity and supported document interpretation remain explicit contracts. Review
 concrete supported type names and avoid using ANY to bypass the typed schema requirement.
 
-S02/database_designer shows STRICT in the physical schema specification and records any DBML
+S02/database_designer shows STRICT in the physical schema specification and records any schema source
 visualization limitations without pretending the diagram enforces it. Review executable migration
 DDL and effective table/runtime checks after implementation authorization. Top-level drawing and
 catalog version policies remain selected; no per-tool versions are reintroduced.
@@ -1598,7 +1578,7 @@ CT-02/INV interaction tests and DRAW-CANCEL-001/FOCUS-001 apply across all imple
 future tool tasks inherit them. Verify pre-interaction state, no partial autosave/history entry,
 preview cleanup, retained prior edits, repeated cancellation, stale events and successful next
 interaction. Shared/injected cases are separate from real host deactivation E2E; reserve the
-desktop before native tests. Documentation only; concrete contracts/Figma and implementation remain
+desktop before native tests. Documentation only; concrete contracts/design review and implementation remain
 pending.
 
 ## Architecture review — decision 74 (block document history during active interactions)
@@ -1619,7 +1599,7 @@ No agent transport or new UI is authorized. Record bounded redacted command outc
 Tests cover all implemented active interactions, unchanged preview/content/history on rejection,
 no delayed replay and correct availability after completion/cancellation, including an empty
 history. Shared/injected cases and actual native menu/shortcut/text-focus E2E remain separate.
-Documentation only; no implementation or Figma approval implied.
+Documentation only; no implementation or design review approval implied.
 
 ## Architecture review — decision 75 (block tool switching during interactions)
 
@@ -1642,7 +1622,7 @@ cancellation shortcut or future tool; explicit cancel mapping is reviewed separa
 Test native controls/menu/keyboard and shared command attempts during each active interaction,
 no state/history/persistence change, no deferred replay and valid explicit switching after end/
 cancel. Include rejected preference activation and stale events. Shared conformance and actual
-native UI E2E remain separate. Documentation only; implementation/Figma still require approval.
+native UI E2E remain separate. Documentation only; implementation/design review still require approval.
 
 ## Architecture review — decision 76 (common Escape cancellation)
 
@@ -1666,7 +1646,7 @@ Test active pen/move/scale and every future implemented tool, idle selected/unse
 repeat Escape, held input/late end, fresh next interaction and native dialog/field/IME priority.
 Verify unchanged selected tool, prior content/history/save status and no deferred blocked command
 replay. Shared cancellation tests and actual keyboard/focus native E2E remain separate. Documentation
-only; concrete input contracts/Figma and implementation still require review.
+only; concrete input contracts/design review and implementation still require review.
 
 ## Architecture review — decision 77 (block navigation during editing gestures)
 
@@ -1691,7 +1671,7 @@ navigation admission is affected, with no artwork/history/local-view change on r
 Test every current navigation origin during pen/move/scale, unchanged viewport/content/history,
 no delayed jump after end/cancel, normal idle navigation and selected-object navigation. Shared
 admission/ordering tests and native trackpad/keyboard/mouse E2E remain separate. Documentation
-only; concrete input contracts/Figma and implementation remain pending.
+only; concrete input contracts/design review and implementation remain pending.
 
 ## Architecture review — decision 78 (cancel before canvas mapping changes)
 
@@ -1713,7 +1693,7 @@ CT-02/CT-03/CT-06 and DRAW-CANCEL-001/NAV-001 cover pen/move/scale, repeated res
 backing-scale/display transitions, stale update/end events, preserved completed work and successful
 fresh input. Shared injected ordering tests are separate from real window/display E2E. Missing
 second-display hardware is an explicit coverage gap. No native tests or implementation ran;
-concrete contracts and Figma still require review. Decision 77's resize-policy question is resolved.
+concrete contracts and design review still require review. Decision 77's resize-policy question is resolved.
 
 ## Architecture review — decision 79 (logical sizing at 100% zoom)
 
@@ -1798,7 +1778,7 @@ preserved damaged artifacts, interrupted rebuild/retry, storage failure and stal
 Native acceptance verifies recovered gallery items, notification and honest preferences fallback;
 fault-injection tests remain distinct. Bounded background recovery and redacted operation logs
 must preserve input responsiveness and omit paths/document names. Concrete protocol/retention/
-reconciliation details and identified Figma recovery states still require review. Documentation only.
+reconciliation details and identified design recovery states still require review. Documentation only.
 
 ## Architecture review — decision 83 (retain unavailable gallery entries)
 
@@ -1820,7 +1800,7 @@ files, repeated retry, restoration, stale completions and identity mismatches. V
 no silent catalog removal and no changes to unrelated artwork. Native E2E covers retained entry,
 accessible unavailable status, explanation and retry separately from injected storage failures.
 
-S02/S02L must specify typed availability/reason outcomes and Figma states before implementation.
+S02/S02L must specify typed availability/reason outcomes and design review states before implementation.
 This does not authorize a locate-file feature, external-directory search, automatic salvage or
 new deletion behavior. Decision 82's missing/corrupt catalog rebuild remains separate. Documentation
 only; no code, native tests or UI design approval implied.
@@ -1841,7 +1821,7 @@ editor, merge feature or automatic salvage workflow.
 
 S02 specifies collision detection across eligible published files, stable conflict reporting,
 identity-safe references and behavior when a collision is found after provisional scan results.
-Do not report a conflicted identity as recovered or open it ambiguously. S02L/Figma must show an
+Do not report a conflicted identity as recovered or open it ambiguously. S02L/design review must show an
 honest unresolved state while allowing access to unrelated recovered drawings. Concrete resolution
 commands, if proposed, require separate review before implementation.
 
@@ -1872,7 +1852,7 @@ CT-05 and LIBRARY-DELETE-001/LIBRARY-FAILURE-001 test interruption before durabl
 intent and during each destructive/publication phase, repeated restart and storage failures.
 Verify exact identity, no collateral deletion, no stale save resurrection and honest pending/
 failure/completion outcomes. Native acceptance covers confirmation and resumed status separately
-from injected crash tests. Concrete schema/sequence and Figma remain for review; documentation only.
+from injected crash tests. Concrete schema/sequence and design review remain for review; documentation only.
 
 ## Architecture review — decision 86 (incremental autosave SQL updates)
 
@@ -1885,7 +1865,7 @@ change tracking, coalescing, dependency ordering, rollback and revision-gap hand
 needed change or advance durable revision after partial work. Test incremental results against a
 reference document across draw/move/scale/delete/Undo/Redo, restart and injected transaction failure.
 
-Documentation only. Concrete schema/ABI/numeric budgets, identified Figma and implementation
+Documentation only. Concrete schema/ABI/numeric budgets, identified design and implementation
 authorization remain required; no runtime checks were performed by recording this decision.
 
 ## Architecture review — decision 87 (SQLite cascade for owned samples)
@@ -1895,11 +1875,11 @@ On 2026-10-16 the owner selected A for B01-Q2.
 Use a reviewed same-database foreign-key cascade so deleting a stroke row removes its owned
 sample rows. Rust still decides command admission, editing, Undo and save revision semantics;
 SQLite does not implement application Undo. Enable and verify foreign-key enforcement on each
-relevant connection. Concrete DDL remains for DBML/schema approval. Test orphan rejection,
+relevant connection. Concrete DDL remains for schema source/schema approval. Test orphan rejection,
 transaction rollback and Undo restoring the complete stroke/sample set; no cross-file cascade
 or deletion of unrelated shared tool definitions is implied.
 
-Documentation only. Concrete schema/ABI/numeric budgets, identified Figma and implementation
+Documentation only. Concrete schema/ABI/numeric budgets, identified design and implementation
 authorization remain required; no runtime checks were performed by recording this decision.
 
 ## Architecture review — decision 88 (disposable in-memory stroke bounds)
@@ -1913,7 +1893,7 @@ hit testing and full-artwork export. Test move/scale/history invalidation, dista
 geometry and reload. S02 reviews computation and resource budgets; no startup performance claim
 is established by this choice.
 
-Documentation only. Concrete schema/ABI/numeric budgets, identified Figma and implementation
+Documentation only. Concrete schema/ABI/numeric budgets, identified design and implementation
 authorization remain required; no runtime checks were performed by recording this decision.
 
 ## Architecture review — decision 89 (bounded automatic transient-save retries)
@@ -1927,7 +1907,7 @@ are not transient retries. S02 defines classification, delays/caps, manual Retry
 coalescing and stale-session/deletion shutdown. Test backoff without busy loops, later success,
 nonretryable failure, queue bounds and no loss/duplicate application of accepted changes.
 
-Documentation only. Concrete schema/ABI/numeric budgets, identified Figma and implementation
+Documentation only. Concrete schema/ABI/numeric budgets, identified design and implementation
 authorization remain required; no runtime checks were performed by recording this decision.
 
 ## Architecture review — decision 90 (durable-revision gallery thumbnails)
@@ -1941,7 +1921,7 @@ results with document identity, revision and rendering inputs; reject stale/dele
 Do not generate unfinished gestures or change Saved status. Test delayed/failed saves, revisions
 advancing during rendering, restart, deletion and stale completion; source capture must be coherent.
 
-Documentation only. Concrete schema/ABI/numeric budgets, identified Figma and implementation
+Documentation only. Concrete schema/ABI/numeric budgets, identified design and implementation
 authorization remain required; no runtime checks were performed by recording this decision.
 
 ## Architecture review — decision 91 (on-demand gallery without loading layout shifts)
@@ -1962,7 +1942,7 @@ and stable positions/anchors. Real data edits/reordering have separately reviewe
 infer metadata sort order from thumbnail arrival. Native evidence is required on each implemented
 host, never claimed from the macOS result alone. Recovery conflict safeguards remain unchanged.
 
-Documentation only. Concrete schema/ABI/numeric budgets, identified Figma and implementation
+Documentation only. Concrete schema/ABI/numeric budgets, identified design and implementation
 authorization remain required; no runtime checks were performed by recording this decision.
 
 ## Architecture review — decision 92 (demand-driven thumbnail scheduling)
@@ -1976,7 +1956,7 @@ Bound queues/caches/prefetch and reject stale results after scrolling/deletion. 
 on-demand entries (decision 91) and durable-revision sources (decision 90). Test rapid scrolling,
 large libraries, revisits, cache eviction and no document/save-state mutation.
 
-Documentation only. Concrete schema/ABI/numeric budgets, identified Figma and implementation
+Documentation only. Concrete schema/ABI/numeric budgets, identified design and implementation
 authorization remain required; no runtime checks were performed by recording this decision.
 
 ## Architecture review — decision 93 (actual input only in the first preview)
@@ -1990,7 +1970,7 @@ coalesced actual samples and existing correction-contract review remain independ
 first-preview evidence to actual-input behavior; do not claim prediction behavior implemented or
 covered by planned tests. Measure actual responsiveness before proposing prediction support.
 
-Documentation only. Concrete schema/ABI/numeric budgets, identified Figma and implementation
+Documentation only. Concrete schema/ABI/numeric budgets, identified design and implementation
 authorization remain required; no runtime checks were performed by recording this decision.
 
 ## Architecture review — decision 94 (shared validity with host resource limits)
@@ -2004,7 +1984,7 @@ it. Enforce bounded decoding/admission before excessive allocation. S02 reviews 
 constraints, host budgets and typed outcomes. Test the same fixture with different configured caps,
 unchanged file semantics and honest unavailable states; future host evidence is not a macOS pass.
 
-Documentation only. Concrete schema/ABI/numeric budgets, identified Figma and implementation
+Documentation only. Concrete schema/ABI/numeric budgets, identified design and implementation
 authorization remain required; no runtime checks were performed by recording this decision.
 
 ## Architecture review — decision 95 (static Rust linkage for the macOS preview)
@@ -2018,7 +1998,7 @@ select linkage for future hosts or remove upstream Skia/native dependencies. S01
 actual supported build/link configuration, generated-header drift, symbols and clean-build
 reproducibility; no separate hot-swap/plugin mechanism is approved.
 
-Documentation only. Concrete ABI/schema/scheduling/resource contracts and identified Figma
+Documentation only. Concrete ABI/schema/scheduling/resource contracts and identified design
 still require review; no code, build or runtime test was performed by recording this choice.
 
 ## Architecture review — decision 96 (host and Rust core built together)
@@ -2032,7 +2012,7 @@ and ABI conformance checks must catch mismatches within the same build. This is 
 for unsafe layouts or unchecked data. Document format versioning/migrations remain separate;
 no public SDK, independent core updater or backward-compatibility negotiation layer is approved.
 
-Documentation only. Concrete ABI/schema/scheduling/resource contracts and identified Figma
+Documentation only. Concrete ABI/schema/scheduling/resource contracts and identified design
 still require review; no code, build or runtime test was performed by recording this choice.
 
 ## Architecture review — decision 97 (consistent grouped small UI reads)
@@ -2047,7 +2027,7 @@ the typed group selection, result structs, allocation/capacity failure and atomi
 no callbacks reenter mutation and no mixed-revision controls. Test coherent toolbar/selection/
 save snapshots after commands and validated worker completions.
 
-Documentation only. Concrete ABI/schema/scheduling/resource contracts and identified Figma
+Documentation only. Concrete ABI/schema/scheduling/resource contracts and identified design
 still require review; no code, build or runtime test was performed by recording this choice.
 
 ## Architecture review — decision 98 (collection gap recovery by bounded resync)
@@ -2062,7 +2042,7 @@ handoff. Do not eagerly load the full gallery; preserve decision 91's viewport/a
 constraints. S02 defines honest loading/stale states and stale response rejection. State resync
 must not replay native effects, erase document state or silently miss deletions.
 
-Documentation only. Concrete ABI/schema/scheduling/resource contracts and identified Figma
+Documentation only. Concrete ABI/schema/scheduling/resource contracts and identified design
 still require review; no code, build or runtime test was performed by recording this choice.
 
 ## Architecture review — decision 99 (explicit native-effect acceptance)
@@ -2077,7 +2057,7 @@ acknowledgements; insufficient output capacity must not consume an effect. Do no
 presentation within a Rust mutation. S02 reviews delivery/acceptance/lifetime/shutdown states and
 bounds; no durable exactly-once delivery across process crashes is promised.
 
-Documentation only. Concrete ABI/schema/scheduling/resource contracts and identified Figma
+Documentation only. Concrete ABI/schema/scheduling/resource contracts and identified design
 still require review; no code, build or runtime test was performed by recording this choice.
 
 ## Architecture review — decision 100 (priority for persistence and exit-critical work)
@@ -2092,7 +2072,7 @@ workers/executors. S02 defines priority classes, admission, chunk boundaries and
 measure latency under preview backlog and sustained saves. The autosave batching deadline is
 still not a disk-completion promise.
 
-Documentation only. Concrete ABI/schema/scheduling/resource contracts and identified Figma
+Documentation only. Concrete ABI/schema/scheduling/resource contracts and identified design
 still require review; no code, build or runtime test was performed by recording this choice.
 
 ## Architecture review — decision 101 (bounded main-thread completion delivery)
@@ -2107,7 +2087,7 @@ budget. This uses change-driven wakeups, not periodic polling. S02 reviews per-r
 slice budgets; a time budget alone cannot preempt an oversized single handler. Test bursts,
 rescheduling, shutdown, stale results and input responsiveness.
 
-Documentation only. Concrete ABI/schema/scheduling/resource contracts and identified Figma
+Documentation only. Concrete ABI/schema/scheduling/resource contracts and identified design
 still require review; no code, build or runtime test was performed by recording this choice.
 
 ## Architecture review — decision 102 (bounded FIFO export queue)
@@ -2127,7 +2107,7 @@ implementation. Do not silently choose that queued requests follow later edits o
 newer revision. The quit-during-export policy (B01-Q9) remains open and must account for all queued
 jobs, not only the active one. Queue cancellation does not waive unsaved-edit exit safeguards.
 
-Documentation only. Concrete ABI/schema/scheduling/resource contracts and identified Figma
+Documentation only. Concrete ABI/schema/scheduling/resource contracts and identified design
 still require review; no code, build or runtime test was performed by recording this choice.
 
 ## Architecture review — decision 103 (finish exports by default when quitting)
@@ -2143,11 +2123,11 @@ Respect the existing unsaved-edit exit guards independently. Before publication,
 cancellation preserves an existing destination; after successful publication do not remove the
 finished output or claim cancellation rolled it back. Cancel queued unstarted jobs without
 publishing them when cancellation is selected. S02 reviews closing-state admission, capture/
-publication races, cleanup and acknowledged completion. Figma must expose honest waiting/failure/
+publication races, cleanup and acknowledged completion. design review must expose honest waiting/failure/
 cancellation states. Force Quit/OS termination cannot guarantee completion. Test active and queued
 jobs, completion during cancellation, failed export, unsaved edits and repeated Quit.
 
-Documentation only. Concrete interfaces/schema/budgets and identified Figma still require review;
+Documentation only. Concrete interfaces/schema/budgets and identified design still require review;
 no implementation or runtime verification was performed by recording this choice.
 
 ## Architecture review — decision 104 (cancel after malformed actual-input batches)
@@ -2166,7 +2146,7 @@ No retained resend/suspended-gesture mechanism is selected. Define malformed ord
 range cases, atomic validation and bounded redacted diagnostics in S02. Test bad first/middle/
 last samples, unchanged prior work, preview cleanup, stale identities and fresh subsequent input.
 
-Documentation only. Concrete interfaces/schema/budgets and identified Figma still require review;
+Documentation only. Concrete interfaces/schema/budgets and identified design still require review;
 no implementation or runtime verification was performed by recording this choice.
 
 ## Architecture review — decision 105 (ten-percent minimum pressure width)
@@ -2183,7 +2163,7 @@ in the concrete S02 contract. Reject invalid values under reviewed rules rather 
 clamping malformed data. Verify endpoints, monotonic interpolation, absent/zero distinctions,
 transform/reopen/export parity and actual Cintiq feel; this selection is not measured validation.
 
-Documentation only. Concrete interfaces/schema/budgets and identified Figma still require review;
+Documentation only. Concrete interfaces/schema/budgets and identified design still require review;
 no implementation or runtime verification was performed by recording this choice.
 
 ## Architecture review — decision 106 (floating-point sRGB document channels)
@@ -2202,7 +2182,7 @@ the reviewed numeric contract. PNG channel depth is a separate output decision, 
 floating point. Test endpoints, intermediate values, invalid/nonfinite input and conversion parity;
 no claim of bit-identical rendering across GPUs is implied.
 
-Documentation only. Concrete interfaces/schema/budgets and identified Figma still require review;
+Documentation only. Concrete interfaces/schema/budgets and identified design still require review;
 no implementation or runtime verification was performed by recording this choice.
 
 ## Architecture review — decision 107 (selection against visible stroke shape)
@@ -2216,7 +2196,7 @@ only to centerlines. Viewport mapping must agree with rendering; exact tolerance
 and handle precedence remain reviewed. Test thick/thin/transformed strokes, interior/edge/gap
 hits, overlap ties, zoom and display scale. No new selection mode or multi-selection is introduced.
 
-Documentation only. Concrete interfaces/schema/budgets and identified Figma still require review;
+Documentation only. Concrete interfaces/schema/budgets and identified design still require review;
 no implementation or runtime verification was performed by recording this choice.
 
 ## Architecture review — decision 108 (preserve stroke order during transforms)
@@ -2229,7 +2209,7 @@ neither an order change nor a history entry. Rendering, hit-test ties, save/reop
 on stroke order. Test moving across overlapping strokes, scale, cancellation and Undo/Redo. No
 layer/reorder control or new ordering feature is authorized.
 
-Documentation only. Concrete interfaces/schema/budgets and identified Figma still require review;
+Documentation only. Concrete interfaces/schema/budgets and identified design still require review;
 no implementation or runtime verification was performed by recording this choice.
 
 ## Architecture review — decision 109 (PNG dimensions rounded from padded local bounds)
@@ -2247,7 +2227,7 @@ so fractional/extreme bounds neither clip visible content nor unexpectedly alloc
 Test translated fixtures, fractional/negative positions and transformed stroke extents. Empty
 output stays exactly 1920 by 1080 without extra margin. No size controls or silent resampling.
 
-Documentation only. Concrete interfaces/schema/budgets and identified Figma still require review;
+Documentation only. Concrete interfaces/schema/budgets and identified design still require review;
 no implementation or runtime verification was performed by recording this choice.
 
 ## Architecture review — decision 110 (broad native visual baseline coverage)
@@ -2368,7 +2348,7 @@ Test real independent processes, contested ownership, stale results and process 
 focus/open states in a reserved session. Never merge this policy into a claim of implemented support.
 
 Documentation only. Concrete schema/ABI/ownership/security/resource contracts and identified
-Figma remain for owner review; no runtime implementation or checks are claimed.
+design review remain for owner review; no runtime implementation or checks are claimed.
 
 ## Architecture review — decision 117 (proactive supported document upgrades)
 
@@ -2386,7 +2366,7 @@ in bounded batches does not authorize eager gallery/thumbnail materialization. T
 processes, backup/storage failure, update interruption/restart and no interference with active ink.
 
 Documentation only. Concrete schema/ABI/ownership/security/resource contracts and identified
-Figma remain for owner review; no runtime implementation or checks are claimed.
+design review remain for owner review; no runtime implementation or checks are claimed.
 
 ## Architecture review — decision 118 (restore recovery copy as an independent drawing)
 
@@ -2398,13 +2378,13 @@ Require confirmation explaining that edits newer than the copy may be absent. Va
 the recovered copy, use only safe supported migrations, then publish under the reviewed library
 lifecycle; failure must not damage either source or create a falsely usable recovered item.
 
-This approves the restore-as-copy policy for identified Figma/contract design, not automatic salvage,
+This approves the restore-as-copy policy for identified design/contract design, not automatic salvage,
 a merge/repair editor or routine historical backups. A known-bad upgrade must not be blindly rerun.
 Concrete naming/availability/UI placement and safe failure states remain reviewed. Test identity
 remapping, semantic preservation, partial failures and coexistence with the unavailable original.
 
 Documentation only. Concrete schema/ABI/ownership/security/resource contracts and identified
-Figma remain for owner review; no runtime implementation or checks are claimed.
+design review remain for owner review; no runtime implementation or checks are claimed.
 
 ## Architecture review — decision 119 (import a coherent captured source revision)
 
@@ -2422,7 +2402,7 @@ or ability to identify an arbitrary provider's revision is promised. Test a chan
 known coherent states, unchanged originals and no hybrid or partially published imported artwork.
 
 Documentation only. Concrete schema/ABI/ownership/security/resource contracts and identified
-Figma remain for owner review; no runtime implementation or checks are claimed.
+design review remain for owner review; no runtime implementation or checks are claimed.
 
 ## Architecture review — decision 120 (eight-bit PNG channel output)
 
@@ -2440,7 +2420,7 @@ channel depth, intermediate/edge colors, opaque output and unchanged native valu
 Compressed file size and consumer compatibility still require implementation evidence.
 
 Documentation only. Concrete schema/ABI/ownership/security/resource contracts and identified
-Figma remain for owner review; no runtime implementation or checks are claimed.
+design review remain for owner review; no runtime implementation or checks are claimed.
 
 ## Architecture review — decision 121 (capture exports at accepted command time)
 
@@ -2458,7 +2438,7 @@ question under decision 124. Active-interaction guards and meaningful failure ou
 Test panel delays/cancel, later edits/navigation, stale callbacks and capacity rejection.
 
 Documentation only. Concrete schema/ABI/coordination/security/resource contracts and identified
-Figma remain for review; no code, durable queue or runtime verification has been implemented.
+design review remain for review; no code, durable queue or runtime verification has been implemented.
 
 ## Architecture review — decision 122 (serialize queued exports to the same destination)
 
@@ -2476,7 +2456,7 @@ Test consecutive snapshots, changed/replaced targets, canceled predecessor and c
 Existing no-overwrite-without-confirmation and original-file preservation requirements remain.
 
 Documentation only. Concrete schema/ABI/coordination/security/resource contracts and identified
-Figma remain for review; no code, durable queue or runtime verification has been implemented.
+design review remain for review; no code, durable queue or runtime verification has been implemented.
 
 ## Architecture review — decision 123 (continue unrelated exports after a job failure)
 
@@ -2492,7 +2472,7 @@ job progress cannot bypass confirmation or predecessor ordering. Test bad destin
 faults, later successful jobs, preserved failed outcomes and honest Quit/status behavior.
 
 Documentation only. Concrete schema/ABI/coordination/security/resource contracts and identified
-Figma remain for review; no code, durable queue or runtime verification has been implemented.
+design review remain for review; no code, durable queue or runtime verification has been implemented.
 
 ## Architecture review — decision 124 (durable export queue and source snapshots)
 
@@ -2502,7 +2482,7 @@ Persist accepted export job intent and immutable source data for recovery/reconc
 crash or restart, rather than making the queue session-only. This is distinct from ordinary
 SQLite document autosave and does not authorize a new custom command protocol. Exact storage
 layout/schema, source snapshot encoding, durability boundary, destination access references,
-privacy/retention, quotas and worker claims require an owner-reviewed S02/DBML proposal.
+privacy/retention, quotas and worker claims require an owner-reviewed S02/schema source proposal.
 
 Recovery must distinguish unpublished work, known completed output and publication whose outcome
 is uncertain. Never blindly replay a possibly completed overwrite or promise exactly-once external
@@ -2516,7 +2496,7 @@ corrupt job data, stale workers and unchanged originals. Published files survive
 claim for intent that never reached the defined durable boundary. Normal Quit still follows 103.
 
 Documentation only. Concrete schema/ABI/coordination/security/resource contracts and identified
-Figma remain for review; no code, durable queue or runtime verification has been implemented.
+design review remain for review; no code, durable queue or runtime verification has been implemented.
 
 ## Architecture review — decision 125 (exports outlive editor navigation)
 
@@ -2528,12 +2508,12 @@ an editor/native-view lifetime merely to keep an export running, retarget its so
 drawing, or apply its completion to a replacement editor's state.
 
 Progress/status and cancellation must remain accessible outside the originating editor in an
-identified approved Figma design; no particular new window/page is selected. Account app/job-owned
+identified approved design; no particular new window/page is selected. Account app/job-owned
 snapshot resources and stale session results. Test navigation, completed/failed/queued export,
 new editor lifetime and cancellation. Deleting the source drawing is a separate unresolved policy.
 
 Documentation only. Concrete schema/ABI/coordination/security/resource contracts and identified
-Figma remain for review; no code, durable queue or runtime verification has been implemented.
+design review remain for review; no code, durable queue or runtime verification has been implemented.
 
 ## Architecture review — decision 126 (three accepted export jobs)
 
@@ -2552,7 +2532,7 @@ existing durable jobs to fit a new cap. No parallel worker/render topology is se
 edges, reservation races, queued/active cancellation and recovery admission before implementation.
 
 Documentation only. Concrete schema/ABI/coordination/security/resource contracts and identified
-Figma remain for review; no code, durable queue or runtime verification has been implemented.
+design review remain for review; no code, durable queue or runtime verification has been implemented.
 
 ## Architecture review — decision 127 (activate the existing drawing window before reporting contention)
 
@@ -2565,7 +2545,7 @@ create a second mutable editor, add read-only snapshot mode, steal ownership or 
 unrelated window based on stale identity. No unsolicited focus changes from background events.
 Concrete host activation/acknowledgement, race handling and trust mechanisms remain S02 review.
 
-Documentation only. Concrete contracts/schema/host mechanisms and identified Figma remain for
+Documentation only. Concrete contracts/schema/host mechanisms and identified design remain for
 review; no runtime, new protocol, database or native acceptance evidence is implemented.
 
 ## Architecture review — decision 128 (defer upgrades of actively owned drawings)
@@ -2577,7 +2557,7 @@ work. Upgrade after verified release and renewed validation; do not request clos
 live file or infer release from a missed notification. Keep backup, bounded-work and crash recovery
 requirements. Maintenance coordinator policy Q44 is still pending.
 
-Documentation only. Concrete contracts/schema/host mechanisms and identified Figma remain for
+Documentation only. Concrete contracts/schema/host mechanisms and identified design remain for
 review; no runtime, new protocol, database or native acceptance evidence is implemented.
 
 ## Architecture review — decision 129 (pause mutation and persistence after ownership loss)
@@ -2591,7 +2571,7 @@ worker writes/completions; do not silently reacquire and flush divergent work. R
 in-flight transaction boundaries, safe recovery and explicit continuation before implementation.
 The runtime cannot promise to reverse a write already durably committed before loss was detected.
 
-Documentation only. Concrete contracts/schema/host mechanisms and identified Figma remain for
+Documentation only. Concrete contracts/schema/host mechanisms and identified design remain for
 review; no runtime, new protocol, database or native acceptance evidence is implemented.
 
 ## Architecture review — decision 130 (platform notifications with authoritative catalog validation)
@@ -2604,7 +2584,7 @@ reordered and missing notifications and reconcile on lifecycle/focus return. Eve
 ownership or authorize mutations. Exact supported mechanisms and trust boundaries need S02 review;
 no custom command IPC, raw document payload, daemon or polling UI is authorized by this choice.
 
-Documentation only. Concrete contracts/schema/host mechanisms and identified Figma remain for
+Documentation only. Concrete contracts/schema/host mechanisms and identified design remain for
 review; no runtime, new protocol, database or native acceptance evidence is implemented.
 
 ## Architecture review — decision 131 (refuse deletion while another process owns the drawing)
@@ -2617,7 +2597,7 @@ or infer consent from notifications. After release require valid explicit deleti
 the established confirmation/durable recovery policy. Close/delete/ownership races need tests.
 Source deletion with outstanding exports remains the separate pending Q53 policy.
 
-Documentation only. Concrete contracts/schema/host mechanisms and identified Figma remain for
+Documentation only. Concrete contracts/schema/host mechanisms and identified design remain for
 review; no runtime, new protocol, database or native acceptance evidence is implemented.
 
 ## Architecture review — decision 132 (separate SQLite export-job database)
@@ -2626,10 +2606,10 @@ On 2026-10-16 the owner selected B08-Q48 A.
 
 Store durable export metadata in a separate SQLite job database. Keep immutable drawing snapshots
 in a dedicated managed area using the reviewed Linefield snapshot representation. Catalog rebuild
-must not discard accepted job intent. Exact DBML/schema, source representation, cross-file staging,
+must not discard accepted job intent. Exact schema source/schema, source representation, cross-file staging,
 reconciliation, cleanup, identity and privacy remain concrete S02 review; no custom codec implied.
 
-Documentation only. Exact contracts/schema/security/resource bounds and identified Figma require
+Documentation only. Exact contracts/schema/security/resource bounds and identified design require
 review before implementation. No database, runtime queue or native verification is implemented.
 
 ## Architecture review — decision 133 (persist export source after destination confirmation)
@@ -2642,7 +2622,7 @@ confirmation. Show preparation until intent/source reach the reviewed durable ac
 Canceled panels release reservations. Crash before durable acceptance cannot promise job recovery;
 never silently recapture later artwork. Define partial staging cleanup and admission failures.
 
-Documentation only. Exact contracts/schema/security/resource bounds and identified Figma require
+Documentation only. Exact contracts/schema/security/resource bounds and identified design require
 review before implementation. No database, runtime queue or native verification is implemented.
 
 ## Architecture review — decision 134 (automatically resume verified safe recovered export jobs)
@@ -2655,7 +2635,7 @@ permissions and changed targets for explicit action. Resume the immutable captur
 the current drawing. Reconcile potentially completed publication before retrying; no exactly-once
 external publication promise, consent bypass or new background service is selected.
 
-Documentation only. Exact contracts/schema/security/resource bounds and identified Figma require
+Documentation only. Exact contracts/schema/security/resource bounds and identified design require
 review before implementation. No database, runtime queue or native verification is implemented.
 
 ## Architecture review — decision 135 (pause exports when approved destinations change)
@@ -2667,7 +2647,7 @@ or a different destination. Preserve the captured source while unresolved within
 Unrelated safe jobs may continue; same-destination dependencies stay ordered. Native/provider race
 handling must cover publication, not merely a check-then-write. Do not overwrite on stale consent.
 
-Documentation only. Exact contracts/schema/security/resource bounds and identified Figma require
+Documentation only. Exact contracts/schema/security/resource bounds and identified design require
 review before implementation. No database, runtime queue or native verification is implemented.
 
 ## Architecture review — decision 136 (release terminal export snapshots after safe reconciliation)
@@ -2680,7 +2660,7 @@ cleanup. No completed/failed/canceled snapshot retry-retention period is selecte
 retry may require a new export request and a newly captured source; do not promise exact old-content
 retry. Cleanup uses validated managed identity, reviewed quotas and interruption-safe references.
 
-Documentation only. Exact contracts/schema/security/resource bounds and identified Figma require
+Documentation only. Exact contracts/schema/security/resource bounds and identified design require
 review before implementation. No database, runtime queue or native verification is implemented.
 
 ## Architecture review — decision 137 (cancel outstanding exports when deleting their source drawing)
@@ -2694,7 +2674,7 @@ Reconcile publication/cancel races, including uncertain outcomes; do not claim c
 completed write or delete external output. Preserve durable deletion intent and busy-owner rejection.
 Review recoverable cross-database ordering and blocked deletion states; no force-discard shortcut.
 
-Documentation only. Exact contracts/schema/security/resource bounds and identified Figma require
+Documentation only. Exact contracts/schema/security/resource bounds and identified design require
 review before implementation. No database, runtime queue or native verification is implemented.
 
 ## Architecture review — decision 138 (three accepted export jobs per process)
@@ -2708,7 +2688,7 @@ processes, bypassing caps by relaunch, or losing durable jobs to fit a cap. S02 
 identity, abandoned-job reassignment, recovered-job admission and accounting across transfer without
 assuming a permanent process ID. Queue ownership and worker topology remain separate review items.
 
-Documentation only. Exact contracts/schema/security/resource bounds and identified Figma require
+Documentation only. Exact contracts/schema/security/resource bounds and identified design require
 review before implementation. No database, runtime queue or native verification is implemented.
 
 ## Architecture review — decision 139 (one logical maintenance coordinator)
@@ -2723,7 +2703,7 @@ suspended participant is not automatically dead: require safe release/fencing be
 Exact native/browser mechanisms remain S02 review; concurrent distributed migration workers are
 not selected.
 
-Documentation only. Concrete schema/interfaces/platform mechanisms and identified Figma still
+Documentation only. Concrete schema/interfaces/platform mechanisms and identified design still
 require review before implementation; no code or runtime verification is included.
 
 ## Architecture review — decision 140 (library-wide automatic naming sequence)
@@ -2736,7 +2716,7 @@ numbers after rename/deletion or promise gap-free allocation. Explicit duplicate
 allowed; names are not identity keys. Review transactional allocation, failed creation, counter
 recovery and catalog rebuild without inventing lost historical numbering from visible names.
 
-Documentation only. Concrete schema/interfaces/platform mechanisms and identified Figma still
+Documentation only. Concrete schema/interfaces/platform mechanisms and identified design still
 require review before implementation; no code or runtime verification is included.
 
 ## Architecture review — decision 141 (new imports appear first in the gallery)
@@ -2749,7 +2729,7 @@ edit. This is an explicit import-arrival ordering exception, not permission to r
 open/rename/save completion. Specify ordering keys/ties and paging reconciliation in S02; retain
 stable item identity, scrolling/focus and the existing no-loading-layout-shift requirement.
 
-Documentation only. Concrete schema/interfaces/platform mechanisms and identified Figma still
+Documentation only. Concrete schema/interfaces/platform mechanisms and identified design still
 require review before implementation; no code or runtime verification is included.
 
 ## Architecture review — decision 142 (coordinate rename through the owning editor)
@@ -2768,7 +2748,7 @@ races and durable confirmation for explicit review. Advisory catalog notificatio
 are not mutation authority or proof of success. Do not blindly retry after a lost acknowledgement.
 Document fields and exact transport remain unimplemented and require owner review.
 
-Documentation only. Concrete schema/interfaces/platform mechanisms and identified Figma still
+Documentation only. Concrete schema/interfaces/platform mechanisms and identified design still
 require review before implementation; no code or runtime verification is included.
 
 ## Architecture review — decision 143 (trim outer whitespace in user-entered names)
@@ -2781,7 +2761,7 @@ reviewed single-line/length rules. Do not strip legitimate directional marks or 
 an incidental shortcut. Define a shared deterministic trimming/validation policy for host parity.
 Names remain metadata, not managed paths. This does not silently rewrite imported source names.
 
-Documentation only. Concrete schema/interfaces/platform mechanisms and identified Figma still
+Documentation only. Concrete schema/interfaces/platform mechanisms and identified design still
 require review before implementation; no code or runtime verification is included.
 
 ## Architecture review — decision 144 (fixed local library, future cloud boundary)
@@ -2833,7 +2813,7 @@ flows discussed as options are not selected or authorized. Future cloud transpor
 policy remains a separate review before cloud implementation; this choice is not a perpetual ban
 on encryption or permission for insecure networking. No system setting or dependency is changed.
 
-All issued numbered questions Q1-61 are now answered. Remaining schema/ABI/resource/Figma and
+All issued numbered questions Q1-61 are now answered. Remaining schema/ABI/resource/design review and
 requested security/input/store review packets still require concrete owner review; answering the
 question batches does not authorize implementation. Documentation only.
 
@@ -2882,7 +2862,7 @@ native OS/menu inputs and other applicable inputs, rather than deciding their ma
 consider them when designing each feature/platform, propose interactions and submit them to the owner
 with the design before implementation. The screenshot illustrates native app-menu/Services actions;
 it is not approval to add the pictured app's features. P/V and other new defaults remain unapproved.
-Preserve existing approved semantics and separate concrete architecture/Figma gates. See docs/input/.
+Preserve existing approved semantics and separate concrete architecture/design review gates. See docs/input/.
 
 ## Decision 152 — TV and watch hosts are view-only
 
@@ -2907,7 +2887,7 @@ On 2026-10-16 the owner replaced English-only launch scope with English (en) and
 preferences at launch, with browser preferences as the web equivalent. No in-app switch.
 This supersedes earlier English-only/additional-Ukrainian-pending statements; decision 147's
 launch selection remains. Both languages require real catalogs, linguistic review, adaptive
-Figma and host E2E. No implementation is authorized by this documentation update.
+design review and host E2E. No implementation is authorized by this documentation update.
 Recommendation: retain existing engineering/design/review roles with explicit locale ownership,
 rather than add a permanent i18n agent; the owner has not requested a new role.
 
@@ -2922,7 +2902,7 @@ a metadata timestamp is a separately documented recommendation, not a silently a
 
 ## Decision 155 — S02 table structure approved; hosted diagram review
 
-On 2026-10-16 the owner approved the table structure shown in dbdocs Version 3, not the remaining interfaces/ownership/recovery contract or application implementation. See reviews/S02-table-structure-approval-2026-10-16.md for exact scope/hashes. The owner declined local rendered diagram files; retain source/layout and hosted version evidence instead.
+On 2026-10-16 the owner approved the identified table structure, not the remaining interfaces/ownership/recovery contract or application implementation. Subsequent concrete approvals are scoped in decisions 181, 209 and 237.
 
 
 ## Decision 156 — DB1-A: conservative catalog-loss recovery
@@ -2944,7 +2924,7 @@ Owner selected B: Rust owns localized default-name creation in en/uk using host-
 
 ## Decision 160 — Root Node/TypeScript/pnpm tooling
 
-Owner explicitly requested removing tools/dbdiagram and setting up root Node.js/TypeScript/pnpm for future scripting. Root tooling and .ts check runner are authorized; app implementation remains pending. Keep dbdiagram 0.6.3 in root devDependencies, one pnpm lockfile, strict type/lint/format/size checks and disabled lifecycle scripts. CLI credential boundaries are unchanged. See tooling.md and ../quality/root-tooling.md for installed scope and evidence.
+Owner authorized root Node.js/TypeScript/pnpm tooling and a .ts check runner. Keep one pnpm lockfile, strict type/lint/format/size checks and disabled lifecycle scripts. See tooling.md for the current commands and verification boundaries.
 
 
 ## Decision 161 — DB7-A: caller-owned query buffers
@@ -2966,7 +2946,7 @@ Owner accepts IPC if platform support works. Direction: direct calls in one proc
 
 ## Decision 165 — Initial cloud conflict warnings and replacement
 
-Owner prefers initially warning about sync conflicts and suggesting explicit document override instead of automatic cross-device merging. Future sync planning only; no cloud implementation approval. Use exact-version conditional replacement so an old confirmation never authorizes overwriting subsequent changes. Recovery copy of the displaced version is recommended, with retention/failure policy pending. Incoming replacement coordinates all local clients. Provider/auth/schema/Figma and implementation remain separate gates.
+Owner prefers initially warning about sync conflicts and suggesting explicit document override instead of automatic cross-device merging. Future sync planning only; no cloud implementation approval. Use exact-version conditional replacement so an old confirmation never authorizes overwriting subsequent changes. Recovery copy of the displaced version is recommended, with retention/failure policy pending. Incoming replacement coordinates all local clients. Provider/auth/schema/design review and implementation remain separate gates.
 
 
 ## Decision 165 follow-up — conflict policy reopened for merge review
@@ -2976,7 +2956,7 @@ Owner subsequently requested proper planning for different file versions, includ
 
 ## Decision 166 — Preserve conflicting work before automatic reconciliation
 
-Decision 166 (2026-10-16): prioritize preventing data loss over automatically reconciling every edit. Preserve conflicting work and resolve explicitly. Local incremental coordination (163) and platform adapters (164) remain selected. Initial future cloud sync preserves both whole-document versions; automatic semantic merging and object-level conflict review are deferred. Concrete preservation/retention/failure contracts and identified Figma approval remain required; no application implementation authorized.
+Decision 166 (2026-10-16): prioritize preventing data loss over automatically reconciling every edit. Preserve conflicting work and resolve explicitly. Local incremental coordination (163) and platform adapters (164) remain selected. Initial future cloud sync preserves both whole-document versions; automatic semantic merging and object-level conflict review are deferred. Concrete preservation/retention/failure contracts and identified design approval remain required; no application implementation authorized.
 
 The first local milestone rejects incompatible stale operations without silently discarding pending client work. Accepting independent commands through one coordinator is distinct from merging divergent offline histories. Future cloud resolution can keep both versions as separate drawings or explicitly select the active version while preserving the displaced version. Revalidate both reviewed versions before replacement; newer edits invalidate stale consent. If required preservation fails, block destructive resolution and report the failure. Exact snapshot storage, bounded retention/quota, cleanup consent, recovery and acknowledgement semantics require review. In-memory pending work is not crash-durable by assertion. CRDT adoption, durable collaboration history, agent integration and visual per-object merge tools remain separately scoped. This resolves the decision-165 follow-up; retain earlier records as history.
 
@@ -3026,7 +3006,7 @@ Documentation choice only; concrete contracts/schema/ABI and implementation stil
 
 ## Decision 172 — DB14-A: command preconditions rather than object reservations
 
-Owner selected A on 2026-10-16. Validate relevant object/property preconditions at authoritative command acceptance. The first valid incompatible change succeeds; later stale incompatible work rejects and remains available under the reviewed pending-work lifecycle. Independent work need not conflict solely because the global revision advanced. No object reservation protocol, wall-clock winner or automatic geometric merge selected. Exact per-operation preconditions, atomicity and Figma conflict presentation remain review items.
+Owner selected A on 2026-10-16. Validate relevant object/property preconditions at authoritative command acceptance. The first valid incompatible change succeeds; later stale incompatible work rejects and remains available under the reviewed pending-work lifecycle. Independent work need not conflict solely because the global revision advanced. No object reservation protocol, wall-clock winner or automatic geometric merge selected. Exact per-operation preconditions, atomicity and design review conflict presentation remain review items.
 
 Documentation choice only; concrete contracts/schema/ABI and implementation still require their review gates. Relevant failure/race/native E2E tests are planned, not executed.
 
@@ -3053,36 +3033,36 @@ Owner selected A on 2026-10-16. Initially use auto_vacuum=NONE for drawing datab
 
 Owner selected this policy on 2026-10-16. Owner explicitly chose not to use F_FULLFSYNC to keep platform behavior as similar as practical. For the initial macOS WAL baseline use synchronous=FULL, fullfsync=OFF and checkpoint_fullfsync=OFF; the latter prevents requesting F_FULLFSYNC only at checkpoints. Retain synchronized-commit Saved acknowledgement, effective-configuration verification and off-input storage work. Do not weaken synchronous to NORMAL/OFF or claim this creates identical physical durability across native OSes and browsers. Other native VFS and browser storage mechanisms require their own reviewed persistence guarantees; no web VFS/WAL compatibility selected. This supersedes the earlier fullfsync ON proposal.
 
-Documentation only. Concrete contracts, identified Figma approval where applicable and implementation authorization remain required. Relevant negative/conformance/native E2E tests are planned, not executed.
+Documentation only. Concrete contracts, identified design approval where applicable and implementation authorization remain required. Relevant negative/conformance/native E2E tests are planned, not executed.
 
 
 ## Decision 178 — DB20-A: whole-stroke mutation preconditions
 
 Owner selected this policy on 2026-10-16. For initial existing-stroke commands, reject stale work when that stroke has changed since the expected state, even if different properties changed. Independent strokes need not conflict solely on a global revision change. Detect intervening mutations rather than merely equal current values. Concrete stroke-token lifetime/encoding, deletion/Undo ABA cases and document-level dependencies remain contract/schema review items. No property-level merge or new table implicitly approved.
 
-Documentation only. Concrete contracts, identified Figma approval where applicable and implementation authorization remain required. Relevant negative/conformance/native E2E tests are planned, not executed.
+Documentation only. Concrete contracts, identified design approval where applicable and implementation authorization remain required. Relevant negative/conformance/native E2E tests are planned, not executed.
 
 
 ## Decision 179 — DB21-A: fresh Undo session after coordinator recovery
 
 Owner selected this policy on 2026-10-16. After coordinator failure and successful reconnection, reconcile pending outcomes and preserve unresolved work separately, then start a fresh editing session with empty Undo/Redo. Make the history reset explicit in the approved UI. Clearing history cannot discard pending artwork. Do not restore stale coordinator history or introduce persistent Undo; replay of uncertain operations still requires outcome/precondition validation.
 
-Documentation only. Concrete contracts, identified Figma approval where applicable and implementation authorization remain required. Relevant negative/conformance/native E2E tests are planned, not executed.
+Documentation only. Concrete contracts, identified design approval where applicable and implementation authorization remain required. Relevant negative/conformance/native E2E tests are planned, not executed.
 
 
 ## Decision 180 — DB22-A: continue proven-independent queued commands
 
 Owner selected this policy on 2026-10-16. When a command conflicts, pause dependent commands and permit demonstrably independent commands to proceed under their own preconditions. If independence is unproven, pause conservatively. Preserve pending work, client sequence dependencies, paint-order invariants and all-or-none operation groups. This does not authorize arbitrary queue reordering or automatic reconciliation of conflicting edits. Concrete dependency representation, admission bounds and conflict UI remain review items.
 
-Documentation only. Concrete contracts, identified Figma approval where applicable and implementation authorization remain required. Relevant negative/conformance/native E2E tests are planned, not executed.
+Documentation only. Concrete contracts, identified design approval where applicable and implementation authorization remain required. Relevant negative/conformance/native E2E tests are planned, not executed.
 
 
 ## Decision 181 — consolidated S02 v2 proposal approved
 
-On 2026-10-16 the owner replied “I approve” to the consolidated schema, typed interfaces, recovery transitions, resource limits and test plan. Approve the exact v2 snapshot recorded in quality/S02-v2-review.json and private hosted Version 6. Resource caps are approved provisional starting values, not measured guarantees. See reviews/S02-v2-approval-2026-10-16.md for scope and remaining feasibility/Figma/runtime gates. This is design approval, not application implementation authorization. No material design deviation is implicitly approved.
+On 2026-10-16 the owner replied “I approve” to the consolidated schema, typed interfaces, recovery transitions, resource limits and test plan. Approval covers the identified schema, typed interface, recovery and capacity proposal. Resource caps are approved provisional starting values, not measured guarantees. See reviews/contracts.md for scope and remaining feasibility, design and runtime gates. This is design approval, not application implementation authorization. No material design deviation is implicitly approved.
 
 ## Decision 182 — delegated platform IPC defaults
-On 2026-10-16 the owner explicitly asked the lead to choose and document safe defaults, then asked that store compatibility be checked. Under that delegated authority select docs/architecture/platform-ipc-defaults.md: direct typed Rust calls within processes; macOS NSXPC with discovery-only sandboxed SMAppService LaunchAgent; Windows local named pipes/standard JSON-RPC; Linux typed session D-Bus; in-process Apple-mobile scenes and Android JNI with private AIDL only for required secondary processes; browser postMessage/BroadcastChannel and coordinator-worker-owned Web Locks; no editable IPC on viewer hosts. This narrowly supersedes the no-extra-service macOS assumption and resolves IPC1 as A with store constraints. It is not registration, app implementation, new platform features or store approval. Concrete implementation/security/probe evidence and identified Figma where relevant remain gates; do not re-ask the user to choose these transport defaults. See docs/distribution/ipc-compatibility.md for packaging/consent restrictions. New budget options EB1–EB5 are not selected by this decision.
+On 2026-10-16 the owner explicitly asked the lead to choose and document safe defaults, then asked that store compatibility be checked. Under that delegated authority select docs/architecture/platform-ipc-defaults.md: direct typed Rust calls within processes; macOS NSXPC with discovery-only sandboxed SMAppService LaunchAgent; Windows local named pipes/standard JSON-RPC; Linux typed session D-Bus; in-process Apple-mobile scenes and Android JNI with private AIDL only for required secondary processes; browser postMessage/BroadcastChannel and coordinator-worker-owned Web Locks; no editable IPC on viewer hosts. This narrowly supersedes the no-extra-service macOS assumption and resolves IPC1 as A with store constraints. It is not registration, app implementation, new platform features or store approval. Concrete implementation/security/probe evidence and identified design where relevant remain gates; do not re-ask the user to choose these transport defaults. See docs/distribution/ipc-compatibility.md for packaging/consent restrictions. New budget options EB1–EB5 are not selected by this decision.
 
 ### Decision 182 follow-up — file-event alternative declined
 On 2026-10-16 the owner declined the proposed SQLite-inbox/file-event replacement comparison and asked to proceed to remaining decisions. Keep selected IPC defaults. File-system notifications may remain advisory invalidation signals under existing catalog/reconciliation policy; they are not a new command transport. Do not schedule the declined comparison or reinterpret this as approval of EB1–EB5.
@@ -3100,7 +3080,7 @@ navigation guards. Boundary/precision/performance tests remain required; no app 
 On 2026-10-17 the owner selected at most 0.25 native-point visible geometry approximation
 error throughout supported zoom. Preserve original samples exactly; the bound applies to
 derived geometry, not input filtering or saved-sample simplification. UX proposes hit slop,
-control sizes, gesture thresholds and device mappings with each identified Figma feature.
+control sizes, gesture thresholds and device mappings with each identified design feature.
 Conformance tests remain required; selection is not measured accuracy evidence.
 
 ## Decision 185 — EB3-A: provisional software timing targets
@@ -3183,7 +3163,7 @@ On 2026-10-17 the owner selected region/chunk addresses plus local coordinates i
 the previously proposed global-coordinate envelope. This selects a redesign direction,
 not a concrete representation. Prepare region size, address types/ranges, local precision,
 canonical normalization, cross-region strokes/transforms, viewport conversion, indexing,
-typed ABI and DBML changes for explicit owner review before implementation.
+typed ABI and schema source changes for explicit owner review before implementation.
 The old global-f64 contract is a historical approved snapshot, not implementation authority
 for the affected fields after this choice. Preserve its unrelated approved behavior.
 Do not equate coordinate regions with raster tiles or introduce a tiled renderer implicitly.
@@ -3224,7 +3204,7 @@ Only mark available offline after validation and durable installation. Keep the 
 complete revision until a replacement is safely installed, reserving staging space first.
 Explicit offline downloads are managed persistent data and survive ordinary cache eviction.
 Exact package/region-detail guarantees, disk limits, removal/revocation/security, transfer
-scheduling and typed metadata remain a concrete contract/Figma review before implementation.
+scheduling and typed metadata remain a concrete contract/design review before implementation.
 No continuous video streaming, guaranteed background deadline or always-running phone process.
 Uncached detail/new drawings/new revisions require a source; future server acquisition stays
 separately scoped. Native drawing files are not independently rendered by this watch viewer.
@@ -3320,7 +3300,7 @@ compute new placement around the gesture pivot and new scale from the captured b
 not accumulated event deltas. Preserve one-operation Undo and existing interaction guards.
 Use checked relative arithmetic before narrowing; never collapse huge absolute addresses
 to a global f64 merely to subtract them afterward. Reject unsupported precision/overflow
-atomically under the selected stroke-span contract. Exact DBML/typed declarations and
+atomically under the selected stroke-span contract. Exact schema source/typed declarations and
 numerical evidence remain for consolidated review; no schema publication or runtime code.
 
 ## Decision 204 — explicit feature edge-case responsibility and review
@@ -3331,17 +3311,17 @@ section6, implemented through existing specialist roles and independent reviewer
 own expected outcomes/tests; UX/UI own user-facing states; lead coordinates accountability;
 build reliability supports evidence and later authorized validation. No extra permanent role,
 model/concurrency change, runtime scanner or guarantee of exhaustive coverage. Existing
-material architecture/Figma approval, native foreground and implementation gates remain.
+material architecture/design review approval, native foreground and implementation gates remain.
 
 ## Decision 205 — RC9-A: flat region/local database columns
 
 On 2026-10-17 the owner selected RC9-A in engineering-budgets-v1.md. For the revised
-DBML review packet, replace samples.x/y with region_x/region_y (signed i64 INTEGER)
+schema source review packet, replace samples.x/y with region_x/region_y (signed i64 INTEGER)
 and local_x/local_y (finite REAL in [0,65536)); replace strokes.translation_x/y with
 placement_region_x/placement_region_y and placement_local_x/placement_local_y.
 Retain uniform_scale and existing identity/order/revision/transaction semantics.
 Derive the source anchor from the first original sample; no redundant anchor/region table.
-Exact constraints, visualized DBML and measured storage costs remain review/evidence items.
+Exact constraints, visualized schema source and measured storage costs remain review/evidence items.
 This records the column-layout direction, not unseen schema approval or implementation.
 
 ## Decision 206 — RC10-A: distinct canvas/world types and Rust-owned mapping
@@ -3369,27 +3349,25 @@ AppKit view orientation. RTL presentation never mirrors artwork.
 Preserve selected logical units, regional addressing, positive scale and normalization.
 Require known-point round trips, positive/negative region crossings, pan/zoom,
 selection/render/export parity and applicable flipped/unflipped native adapter checks.
-RC1–RC11 directions are now selected; exact DBML/ABI/ownership and numerical stroke-span
+RC1–RC11 directions are now selected; exact schema source/ABI/ownership and numerical stroke-span
 evidence remain for consolidated review. This records a convention, not runtime implementation.
 
-## Decision 208 — delegated conservative defaults and DBML handoff
+## Decision 208 — delegated conservative defaults and schema source handoff
 
-On 2026-10-17 the owner requested automatic selection of recommended defaults and a DBML
+On 2026-10-17 the owner requested automatic selection of recommended defaults and a schema source
 review handoff rather than further preference questions. Prepare the minimal v3 amendment
 consistent with RC1–RC11: include regional saved viewport centers, explicit validated field
 initialization, existing indexes and bounds, and no redundant/persistent derived geometry.
-These are lead-selected proposals for owner review, not approval of unseen DBML, runtime
+These are lead-selected proposals for owner review, not approval of unseen schema source, runtime
 implementation or measured optimality. Do not invent a supported stroke span without evidence.
 Preserve prior approval snapshots. Scope here is the schema handoff; exact generated ABI and
 feature UX remain separate review artifacts.
 
 ## Decision 209 — approval of S02 v3 regional schema
 
-On 2026-10-17 the owner approved the S02 v3 DBML handoff, private dbdocs Version8,
-and accompanying recommended schema defaults/constraints/cases. Exact reviewed hashes
-are retained in quality/S02-v3-review.json. See docs/reviews/S02-v3-approval-2026-10-17.md.
+On 2026-10-17 the owner approved the regional-coordinate schema handoff and accompanying defaults/constraints. See docs/database/regional-coordinates.md.
 This settles the regional schema amendment; it does not approve unseen revised generated
-ABI, unmeasured stroke-span guarantees, application implementation or Figma designs.
+ABI, unmeasured stroke-span guarantees, application implementation or designs.
 Preserve exact reviewed source bytes and historical approvals. Do not reopen RC1–RC11.
 
 ## Decision 210 — gallery visual exploration across requested platforms
@@ -3397,10 +3375,10 @@ Preserve exact reviewed source bytes and historical approvals. Do not reopen RC1
 On 2026-10-17 the owner requested competitor/UX/UI collaboration and many visual alternatives,
 then directed design to start with the documents/gallery screen. Authorized design exploration
 covers macOS, web, Android, iPadOS, iOS, watchOS, Wear OS, tvOS and Windows, with native traits
-and transferable shared theme. PNG examples are allowed before later Figma reconstruction.
+and transferable shared theme. PNG examples are allowed before later design review reconstruction.
 Prepare three distinct gallery families using identical scope/content; viewer hosts stay read-only.
 This is design-artifact authorization, not app implementation, extra features, exact design approval
-or a bypass of identified editable/adaptive Figma before implementation.
+or a bypass of identified editable/adaptive design before implementation.
 
 ## Decision 211 — Native Gallery revision and Compose Material 3
 
@@ -3430,32 +3408,32 @@ Preserve historical schema/approval snapshots; any concrete schema/ABI amendment
 
 On 2026-10-17 the owner requested undoing the designer-role split. Configure ui_ux_designer
 as the single accountable owner of interaction flows, native visual foundations, adaptive
-Figma, motion, accessibility/locale design and running-interface design review. Retire the
+design review, motion, accessibility/locale design and running-interface design review. Retire the
 separate ux_designer and ui_designer configurations; earlier split records remain historical.
 Use behavior and visual checklists within one feature packet. Lead coordinates feasibility;
 platform engineers retain implementation/tests and fresh reviewer retains independent review.
-Identified Figma owner approval, architecture gates, scope and concurrency limits are unchanged.
+Identified design review owner approval, architecture gates, scope and concurrency limits are unchanged.
 See docs/design/roles.md. This configuration update does not rename already running agents.
 
 ## Decision 214 — selected gallery and live Vite prototype
 
-On 2026-10-17 the owner selected mobile artwork cards (A), Monochrome with a distinct New tile, whole-card edge-to-edge drawing transitions and reference-style menu morph. Owner explicitly authorized a production-quality Vite/TypeScript live prototype in apps/web, browser-controlled resize/theme and a platform selector, replacing and deleting gallery-v1–v4 experiments. Preserve original watch references. This authorizes prototype code/manifests/tests, not Rust/native implementation, persistent deletion or a new storage/FFI architecture. Read docs/design/live-web-prototype.md; identified native Figma approval remains required.
+On 2026-10-17 the owner selected mobile artwork cards (A), Monochrome with a distinct New tile, whole-card edge-to-edge drawing transitions and reference-style menu morph. Owner explicitly authorized a production-quality Vite/TypeScript live prototype in apps/web, browser-controlled resize/theme and a platform selector, replacing and deleting gallery-v1–v4 experiments. Preserve original watch references. This authorizes prototype code/manifests/tests, not Rust/native implementation, persistent deletion or a new storage/FFI architecture. Read docs/design/live-web-prototype.md; identified native design review approval remains required.
 
 ## Decision 215 — live web refinement and typed styling/locales
 
-Owner requested separate JSON locale files with stable IDs, Vanilla Extract styling, smaller adaptive minmax tiles, no scrollbar layout shifts, web overflow-only actions (native gestures remain native-platform work), continuity from menu to Rename/Delete, coherent Android shapes and a quieter dashed New tile. Implemented within the authorized live prototype. This supersedes the fixed three-column preference and web context-menu interception in decision 214. It changes no Rust, storage or native framework boundary. Current behavior and verification: docs/design/live-web-prototype.md and apps/web/quality/web-refinements.
+Owner requested separate JSON locale files with stable IDs, Vanilla Extract styling, smaller adaptive minmax tiles, no scrollbar layout shifts, web overflow-only actions (native gestures remain native-platform work), continuity from menu to Rename/Delete, coherent Android shapes and a quieter dashed New tile. Implemented within the authorized live prototype. This supersedes the fixed three-column preference and web context-menu interception in decision 214. It changes no Rust, storage or native framework boundary. Current behavior and verification: docs/design/live-web-prototype.md.
 
 ## Decision 216 — attached Apple creation control and overlay scrolling
 
-Owner rejected the iPhone floating action button, reserved scrollbar gutter, dark hover outline and Delete collapsing back into its removed trigger. Within the authorized prototype, use an edge-attached Apple bottom toolbar, zero-width custom overlay scrollbar with native scroll behavior, soft pointer-hover shadow and preserved keyboard focus ring. Committed Delete fades the menu in place while artwork crossfades into same-slot Undo; cancellation retains the ordinary anchor-collapse animation. Android keeps its FAB. This supersedes decision 215’s gutter implementation only, without changing native/engine/storage scope. See apps/web/quality/web-feedback for exact-source evidence.
+Owner rejected the iPhone floating action button, reserved scrollbar gutter, dark hover outline and Delete collapsing back into its removed trigger. Within the authorized prototype, use an edge-attached Apple bottom toolbar, zero-width custom overlay scrollbar with native scroll behavior, soft pointer-hover shadow and preserved keyboard focus ring. Committed Delete fades the menu in place while artwork crossfades into same-slot Undo; cancellation retains the ordinary anchor-collapse animation. Android keeps its FAB. This supersedes decision 215’s gutter implementation only, without changing native/engine/storage scope.
 
 ## Decision 217 — nearby Rename and artwork continuity
 
-Owner explicitly approved all three refinements: compact iPhone document-plus/New toolbar; Rename anchored near its action menu; smooth artwork sizing throughout whole-tile expansion/collapse. The prototype keeps menu-corner placement after morph cleanup and clamps to keyboard-visible bounds. Shell and artwork animate independent geometry on a shared clock; the underlying source stays hidden until the handoff. This corrects a mismatch between full-surface artwork and the padded gallery image, while preserving an edge-to-edge drawing view. Native controls, persistence and engine scope are unchanged. See apps/web/quality/web-continuity.
+Owner explicitly approved all three refinements: compact iPhone document-plus/New toolbar; Rename anchored near its action menu; smooth artwork sizing throughout whole-tile expansion/collapse. The prototype keeps menu-corner placement after morph cleanup and clamps to keyboard-visible bounds. Shell and artwork animate independent geometry on a shared clock; the underlying source stays hidden until the handoff. This corrects a mismatch between full-surface artwork and the padded gallery image, while preserving an edge-to-edge drawing view. Native controls, persistence and engine scope are unchanged.
 
 ## Decision 218 — reversible Rename and creation appearance
 
-Owner requested outside-press dismissal and a Rename-to-ellipsis return for Cancel and successful Save, plus gradual New drawing background/text transitions in both directions. All Rename exits now share the same current-bounds morph, including Escape; Save commits once immediately and resolves the replacement live trigger. Outside dismissal cancels without click-through. New tile plus/name/dashed border fade while its neutral surface blends to white, reversing on return. Interrupted motion starts from current presentation; reduced motion settles immediately. This is a routine refinement within the authorized prototype, with no new native, storage or engine scope. See apps/web/quality/web-return-motion.
+Owner requested outside-press dismissal and a Rename-to-ellipsis return for Cancel and successful Save, plus gradual New drawing background/text transitions in both directions. All Rename exits now share the same current-bounds morph, including Escape; Save commits once immediately and resolves the replacement live trigger. Outside dismissal cancels without click-through. New tile plus/name/dashed border fade while its neutral surface blends to white, reversing on return. Interrupted motion starts from current presentation; reduced motion settles immediately. This is a routine refinement within the authorized prototype, with no new native, storage or engine scope.
 
 ## Decision 219 — centered gallery and platform action paths
 
@@ -3465,7 +3443,7 @@ Owner requested three moderately larger centered desktop tiles, Delete menu-to-U
 
 Owner requested that opening/closing New drawing without changes never adds gallery tiles, and that Web Undo morphs back to the ellipsis. New now opens one transient preview outside the sample collection; repeated entry, history traversal and reload create no gallery record. This prototype cannot edit yet. This does not change future durable draft policy. Undo restores immediately, then the current Undo/Delete presentation morphs to the restored Web ellipsis with a single visual handoff. Interruption, focus and reduced motion remain safe.
 
-Mobile Delete/Rename changes are proposals only: continue the artwork card left out of its slot after explicit Delete, reveal same-slot Undo, and slide the card back on Undo; Rename closes the swipe rail and reveals a compact form with a short fade rather than stretching the action. Owner review is pending. See apps/web/quality/web-preview-undo.
+Mobile Delete/Rename changes are proposals only: continue the artwork card left out of its slot after explicit Delete, reveal same-slot Undo, and slide the card back on Undo; Rename closes the swipe rail and reveals a compact form with a short fade rather than stretching the action. Owner review is pending.
 
 ## Decision 221 — clean drawing paths and mobile action motion
 
@@ -3485,7 +3463,7 @@ The shared authoring catalog owns semantic message IDs, translator context, type
 
 Owner requested a desktop artwork fade on Undo, consistent rail travel on settled mobile Undo, and review of generated/local visual artifacts in Git. Non-swipe restoration fades artwork/name while retaining the existing overflow-control morph where applicable. Mobile return includes artwork and action rail even after Delete has completed or the gallery has rerendered; rail closure follows the visible return. Restored data/focus remains immediate; reduced motion and interruptions settle safely. No new product behavior is added.
 
-shared/localization/generated is reproducible and Git-ignored. Web dev/build/typecheck/test and root typecheck prepare resources; check bootstraps only when the generated folder is absent, retaining stale-output rejection otherwise. Unchanged generation does not rewrite timestamps. apps/web/quality/web-* screenshots/videos are ignored and kept locally; small test/review reports and source hashes remain versioned. Source artwork and retained design references stay included. Historical binary links require retained/uploaded run artifacts; this change does not create artifact hosting.
+shared/localization/generated is reproducible and Git-ignored. Web dev/build/typecheck/test and root typecheck prepare resources; check bootstraps only when the generated folder is absent, retaining stale-output rejection otherwise. Unchanged generation does not rewrite timestamps. apps/web/quality/web-* screenshots/videos are ignored and kept locally; generated reports and captures remain local; authored task summaries identify verified results. Source artwork and retained design references stay included. Historical binary links require retained/uploaded run artifacts; this change does not create artifact hosting.
 
 ## Decision 224 — iPhone creation placement, button feedback and shared colors
 
@@ -3519,7 +3497,7 @@ Owner reported the iPhone blank canvas visually merging with gallery cards durin
 
 Owner requested removal of WebKit touch tap highlights; set transparent tap-highlight color on prototype elements, including native selects whose user-agent styles override inheritance while preserving explicit pressed and keyboard-focus feedback. New drawing uses the same restrained hover shadow as drawing cards on fine pointers that support hover, preserving its dashed border and geometry; touch interaction does not acquire a sticky hover treatment.
 
-Move browser-only quality/web-* evidence into apps/web/quality, preserving historical report/capture bytes. Shared contracts, cross-platform reviews and repository tooling evidence remain at root quality. Update active links/capture destinations and Git ignores; historical paths in immutable reports describe their original runs and are interpreted through the relocation note.
+Generated browser and repository verification artifacts remain local and untracked. Authored task records link test source and state exact results, limitations and unresolved failures. Preserve required failure fixtures and private recovery data.
 
 ## Decision 229 — layered themes and continuous action elevation
 
@@ -3540,3 +3518,115 @@ Owner requested removing or hiding the web platform picker. Normal web entry omi
 Owner clarified that macOS remains the primary product target, but web will be developed first because it is the platform they know best and can review most effectively. Implementation order is web, then macOS, followed by the native platform backlog with iPhone/iPad retaining the next native priority. This supersedes prior macOS-first sequencing and the P05 dependency on macOS S08 acceptance. It does not replace shared Rust editing/document/persistence semantics, Skia/CanvasKit or platform-native controls. Browser storage, Wasm bindings and execution need their own concrete reviewed contracts where not already approved; a development-order change does not itself implement those systems or launch a new feature slice in this turn.
 
 Owner clarified that the entire review-controls section is unnecessary in normal web use. Omit the platform picker, Reset samples and Browser simulation together from normal entry, without leaving an empty controls row or keyboard stop. Existing explicit preview links retain the section for review/testing; product title and gallery remain. This supersedes decision230's retention of Reset samples and simulation text on normal entry.
+
+## Decision 232 — one Linefield visual system; retire the tool wheel
+
+On 2026-10-18 the owner rejected the tool wheel and removed the requirement to follow each platform's native visual language, including Liquid Glass and Material styling. App-owned UI must use a consistent Linefield visual system across platforms. The desktop drawing direction is the left tools rail with contextual settings across the top. Wheel/preset-wheel/color-face explorations are historical, not a backlog requirement. The reference does not approve extra tools, smoothing/opacity behavior, exact controls or implementation.
+
+This supersedes mandatory platform-specific appearance in earlier foundations, gallery/material directions and platform mappings, including the visual obligations of decisions 211 and 225. Historical approval records and existing gallery code/evidence remain intact; a redesign is not implemented by this documentation change. Shared component appearance, icons, typography, shapes, colors, states and motion should be designed consistently, with adaptive layouts for window size, input and accessibility. Consistency is not a requirement for identical pixel dimensions on phones, desktop, watches and TVs.
+
+Native text/IME, keyboard/focus, accessibility, safe areas, window/lifecycle integration, OS-owned file and permission panels and system preference handling remain host responsibilities. AppKit/UIKit, Compose, WinUI, GTK and semantic HTML remain the selected host direction; their default visual themes are no longer mandatory. This does not choose a replacement framework, an all-Skia UI or a custom universal widget engine. Existing macOS color-control behavior remains until a concrete replacement is reviewed; native appearance is no longer a requirement for that app-owned control.
+
+The owner's question about Rust is not authorization to migrate styles. Retain existing trusted data-only TypeScript theme authoring and deterministic platform-resource generation. Designer/lead recommendation: extend shared visual resources and component specifications as reviewed features need them; Rust continues to own editing/document/tool semantics and validation. A renderer may consume generated values if required, without becoming the design authoring source. Detailed tokens, component implementations and host adaptation remain scoped design/engineering work. Feature, design review, contract and implementation gates are unchanged.
+
+## Decision 233 — one Web gallery; remove hidden platform simulation
+
+On 2026-10-18 the owner requested dropping the gallery's platform-dependent pattern and hidden switch: “Drop it. Use web everywhere.” Implement the existing Web gallery pattern at all responsive widths in apps/web. Remove URL-selected platform presentation/capabilities, hidden platform/reset/simulation controls, native-style overrides, custom native-preview context menus, phone swipe actions and Apple-only creation controls. Former ?platform and ?preview links load the same Web interface without selecting another mode.
+
+Preserve the existing Web ellipsis actions, browser context/long-press behavior, responsive three/two/one-column grid, dashed New tile and narrow populated-gallery New button, shared themes/locales, anchored Rename, same-slot Delete/Undo, browser routes and whole-card/artwork transitions. This is a scoped authorized gallery-prototype implementation under decision214, superseding previous platform-simulation requirements. Current task/evidence: P05-G01. Historical evidence is retained; obsolete native-preview assertions are retired explicitly.
+
+“Web everywhere” here selects this gallery UI pattern. It does not authorize replacing future native application frameworks with web views, moving styles into Rust, or adding an engine/persistence layer. Planned view-only watch/TV hosts still need trusted capability enforcement and VIEWER-001 tests; query-selected browser simulation was never native enforcement evidence.
+
+## Decision 234 — selected drawing screen v2 and recoverable design cleanup
+
+On 2026-10-18 the owner requested handoff to another chat, whose first task is to implement the attached slim left rail + top settings bar screen. Record the exact attachment at docs/design/drawing-screen/reference.png and update P05-D01 to that UI slice. This selects and authorizes the web UI prototype screen, superseding circular v1's pending approval. It is not authorization for real drawing/eraser/shapes/smoothing engines, persistence, native applications or a framework/ABI migration. Detailed unspecified panels should stay minimal and within UI-only scope; current native/design review/engine gates remain. No screen implementation occurs in the handoff turn.
+
+The owner selected the drawing reference and authorized removing unused explorations from the repository. Keep the authored [drawing reference](design/drawing-screen/reference.png) and current specification. This is not permission to delete private recovery data, merge or release.
+
+## Decision 235 — repository-owned design workflow and autonomous task continuation
+
+On 2026-10-18 the owner removed the external design-service requirement and requested removal of its mentions from the project. Use versioned repository design specifications, semantic resources, reviewed reference images and running web prototypes. Designer/engineer feasibility and identified design approval still distinguish reviewed scope from unseen product changes; no third-party design account, connector, subscription or editable service file is a prerequisite.
+
+Current work follows scoped task authorization, specialist/independent review and owner merge authority. No material ABI, schema, security mechanism or unseen product design is approved by general autonomous-work permission.
+
+## Decision 236 — durable-library sequence and recoverable removal lifecycle
+
+On 2026-10-19 the owner approved the following sequencing and removal-lifecycle policies and requested concrete storage, deletion-schema and engine contracts for review. Deliver the durable web library before real
+pen drawing. Preserve staged Deleted/Undo placeholders across crash/reload/close before an
+accepted in-app departure. Finalize the exact staged set only at a durable logical departure
+commit after destination readiness. Failure/cancel before that boundary retains Undo; lost
+reply/crash after commit reconciles accepted finalization, without promising restored Undo.
+Gallery removal recovery is separate from session-only document edit Undo.
+
+This approves product sequencing/lifecycle, not unseen schema fields, browser VFS/topology,
+regional ABI, normalization or span limits. Prepare identified artifacts and evidence for review.
+The owner permits requesting Computer Use and other necessary permissions; no blanket desktop
+focus reservation or arbitrary privileged/system change follows. The expired heartbeat stays
+paused; ordinary continuation proceeds in this chat.
+
+## Decision 237 — browser storage experiment and removal-scope review direction
+
+On 2026-10-19 the owner approved these three recommendations: run the bounded synthetic SQLite/OPFS
+storage experiment with its pinned candidate and isolated-origin/SharedArrayBuffer requirement;
+accept browser-local storage with honest site-data-clearing/eviction limitations; and accept
+the per-gallery removal-scope behavior and schema amendment. Another live gallery cannot
+Undo or finalize a scope it does not own; verified owner loss permits explicit fenced recovery,
+with multiple orphan scopes kept separate. Persistent-storage refusal is reported honestly.
+
+The owner requested finishing the remaining contracts and design review, then returning with
+a concrete durable-library implementation scope for approval. This authorizes the disposable
+synthetic experiment, not production persistence, application Rust/Wasm integration, tested
+DDL/migrations, all proposed numerical capacities, or an unreviewed bridge/deployment mechanism.
+Schema review approval is distinct from runtime conformance and executable migration evidence.
+
+## Decision 238 — diagram style and task/PR/chat workflow
+
+On2026-10-19 the owner explicitly approved the shared diagram style and the proposed task/PR/fresh-chat
+workflow, authorized repository/workflow bootstrap with preservation of all existing work, and
+requested conversion of existing diagrams plus workflow SVG documentation. The approval covers the selected diagram appearance and task/PR workflow; it does not approve example architecture or production implementation.
+Explanatory diagrams use generated native SVG from shared definitions and tokens.
+
+One executable task owns one branch and PR. The harness prepares design, implementation, tests
+and independent review within approved scope; the owner reviews/merges or requests changes.
+After completion notification the harness verifies integration and provides a concise next-task
+prompt for a fresh chat. Milestones contain child tasks; they are not single implementation PRs.
+Routine conforming documentation needs no new approval. Material architecture gates remain.
+
+The owner configured origin as https://github.com/AlexandrLesiv/Linefield.git and explicitly
+authorized public publication of reviewed source and documentation. Exclude private research
+captures, credentials, local recovery snapshots and regenerable downloads. This permits bootstrap
+publication/PR preparation, not merging its changes to main or approving durable engine code.
+Preserve the approved proposal snapshots and record probe limitations and any required changes.
+
+## Decision 239 — parallel task review and shared generated documentation
+
+On2026-10-19 the owner requested independent tasks progressing while PRs await review, retirement
+of the hosted database diagram toolchain in favor of native SVG, shared reusable definitions and
+W3C-community design-token format where appropriate, plus obsolete documentation cleanup.
+Use explicit hard/contract/independent dependencies, isolated worktrees, one branch/PR per leaf,
+shared-path ownership and parent-first integration for stacked PRs. Owner merge authority remains.
+
+DTCG2025.10 JSON is selected for diagram style tokens. It is a Community Group specification,
+not a W3C Recommendation. Diagram structure/schema data is separate from style tokens. Current
+app theme migration is a distinct parity-preserving task; no recolor or native rollout is implied.
+Generate schema SVGs/dictionary from unchanged reference SQL, reviewed notes and documentation-only
+job definitions. Shared sources are authoritative; generated exports remain local and untracked. No schema/ABI/runtime authority is broadened by changing review format.
+
+## Decision 240 — local component styles and evidence cleanup
+
+On2026-10-19 the owner requested full retirement of old schema-tool names, an explanation of the
+quality folder and local Vanilla Extract styles wherever possible. Component rules use exported
+local classes with explicit DOM bindings; globals are limited to resets and genuine document-wide
+preferences/integration. This is a behavior/appearance-preserving refactor, not a redesign.
+
+Generated reports remain local; authored task documentation records test linkage and verification limits. Schema fixture changes are editorial metadata only and must prove all semantic fields unchanged before updating their pinned hash.
+Keep unresolved failure fixtures, current source/test evidence and approval scope. No history
+rewrite, account deletion, schema behavior change or production implementation is authorized.
+
+## Decision 241 — task documentation and test scope
+
+The owner selects plain Markdown task files under tasks/, with PR and relevant design/test links.
+Use one task, one branch and one PR. The owner reviews and merges; verify integration before
+starting dependent work. Automated tests are E2E only. Static type checking, lint, formatting,
+builds and source validation remain development checks; do not add unit or developer-tool suites.
+Task documentation grants no new product, persistence, native or architecture approval.

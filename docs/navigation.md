@@ -1,9 +1,11 @@
 # Navigation, routes and document lifecycle
 
-Status: planning requested 2026-10-16; concrete route schema/adapters await S00D/S02 review.
-No router, library screen, URL scheme, link association or deployment configuration exists.
-User requested planning of document-selection-to-editor navigation with corresponding browser
-URLs. Screen scope/layout and identified Figma approval still precede implementation.
+Status: authorized web prototype navigation is implemented, including gallery/drawing URLs,
+browser history and focus restoration; see P05-D01 evidence.
+Concrete durable/native route adapters and lifecycle guards still await S00D/S02 review.
+No native URL scheme, link association or deployment configuration is established by that evidence.
+The product contracts below describe future durable/native behavior; disposable web state does
+not implement Rust/storage authority. Unseen screens and native flows retain their design gates.
 
 ## Boundaries and terminology
 
@@ -41,7 +43,15 @@ Tool choice, selected stroke, hover, pan/zoom and transient dialogs are normally
 not URL history entries. Do not put every brush action into browser Back. No settings/library/
 account page is introduced merely to populate a route map.
 
-## Proposed web URLs
+## Implemented prototype URLs and future durable routing
+
+The authorized prototype uses `/` and `/drawing/<known-id>` in apps/web/src/routes.ts.
+Unknown/unavailable drawing IDs return to the gallery; direct sample links establish an in-app
+Back destination. This is disposable gallery availability, not a durable registry or access grant.
+See the exact browser evidence above. No route rewrite is requested by this document.
+
+The following hash-route examples are historical planning alternatives for a future durable
+deployment review, not the current prototype grammar or a requirement to replace it.
 
 For an initial static host without rewrite rules, recommend hash routes under the deployment
 base. Illustrative shapes (not approved grammar):
@@ -86,7 +96,7 @@ Same-origin history behavior and local storage access are browser-specific test 
 
 ## Common document navigation flow
 
-~~~mermaid
+```text
 flowchart TD
     Request[Native action, Back or validated route request] --> Guard[Shared interaction and dirty-state policy]
     Guard -->|cancel| Stay[Keep current session and restore host navigation]
@@ -98,7 +108,9 @@ flowchart TD
     Resolve -->|valid target and current operation| Accept[Accept destination and session change]
     Accept --> Host[Update native presentation or browser history]
     Host --> Motion[Approved transition and focus restoration]
-~~~
+```
+
+Historical relationship notation; no diagram renderer is required.
 
 Keep the old session until the replacement loads successfully, so failed Open preserves the
 drawing. Save success for revision N cannot authorize leaving N+1 silently; recheck or prevent
@@ -181,7 +193,7 @@ requests follow separately reviewed import handling, never implicit last-editor 
 
 Decision 20 selects most-recently-edited-first gallery ordering without sorting controls.
 Only accepted content edits update editing recency; opening, exporting and autosave completion
-do not. Specify stable keyboard/accessibility focus during list refresh in Figma. Persisted
+do not. Specify stable keyboard/accessibility focus during list refresh in design specifications. Persisted
 ordering, ties and new/imported-item placement require concrete S02 contracts.
 
 ## Selected save-failure exit guard
@@ -191,7 +203,7 @@ request would end a session after local autosave failure. Offer Retry and Stay (
 Leave Without Unsaved Changes; no automatic discard. Committed drawing content remains intact.
 Bind consent to state/revision, coordinate pending writes, and invalidate stale route requests.
 A failed replacement keeps the original session; confirmation alone does not release it.
-Stay/cancel preserves session/history/focus. Concrete state transitions and identified Figma
+Stay/cancel preserves session/history/focus. Concrete state transitions and identified design
 remain review deliverables; test real native exit flows separately from injected shared cases.
 
 ## Reopening viewport (decision 57)

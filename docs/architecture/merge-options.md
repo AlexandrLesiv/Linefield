@@ -1,6 +1,6 @@
 # Conflict preservation and deferred merge options
 
-Decision 166 (2026-10-16): prioritize preventing data loss over automatically reconciling every edit. Preserve conflicting work and resolve explicitly. Local incremental coordination (163) and platform adapters (164) remain selected. Initial future cloud sync preserves both whole-document versions; automatic semantic merging and object-level conflict review are deferred. Concrete preservation/retention/failure contracts and identified Figma approval remain required; no application implementation authorized.
+Decision 166 (2026-10-16): prioritize preventing data loss over automatically reconciling every edit. Preserve conflicting work and resolve explicitly. Local incremental coordination (163) and platform adapters (164) remain selected. Initial future cloud sync preserves both whole-document versions; automatic semantic merging and object-level conflict review are deferred. Concrete preservation/retention/failure contracts and identified design approval remain required; no application implementation authorized.
 
 ## Separate three situations
 
@@ -58,9 +58,9 @@ Treat submitted operations as untrusted and validate capabilities, sizes, object
 ## Delivery plan and acceptance
 
 1. First local milestone: review concrete coordinator, per-client Undo, stale-operation rejection and pending-work preservation contracts; implement only after authorization. Prove bounded resources, failure states and accepted-versus-durable acknowledgements.
-2. First future cloud milestone: preserve coherent local and remote snapshots, inspect either, keep both or explicitly select the active version. Revalidate local and remote versions before resolution. Define retention/quota/cleanup and block destructive resolution if preservation fails. UX/UI obtain identified Figma approval before implementation.
+2. First future cloud milestone: preserve coherent local and remote snapshots, inspect either, keep both or explicitly select the active version. Revalidate local and remote versions before resolution. Define retention/quota/cleanup and block destructive resolution if preservation fails. UX/UI obtain identified design approval before implementation.
 3. Later scope: evaluate safe independent semantic merges and required lineage/base/history using realistic native/Wasm fixtures. A lost base must not trigger guessed reconciliation. This evaluation does not block the local milestone.
-4. Later scope: object/property conflict review, agent proposals and any CRDT/OT dependency require separate owner approval, contracts, Figma and tests. No silent live-WAL file synchronization.
+4. Later scope: object/property conflict review, agent proposals and any CRDT/OT dependency require separate owner approval, contracts, design review and tests. No silent live-WAL file synchronization.
 
 Planned MERGE-01 independent additions and stable paint order; MERGE-02 disjoint properties; MERGE-03 overlapping assignments/transforms; MERGE-04 delete/edit and references; MERGE-05 actor-aware Undo; MERGE-06 stale agent read assumptions/atomic groups; MERGE-07 duplicate/reordered/delayed delivery; MERGE-08 offline divergence/history compaction/schema mismatch; MERGE-09 coordinator crash and accepted/durable gap; MERGE-10 hostile actor/capability/oversized payloads; MERGE-11 user review becomes stale; MERGE-12 same semantic results native/Wasm. Compare golden semantic outcomes and actual UI; no tests executed.
 
@@ -71,4 +71,4 @@ Planned MERGE-01 independent additions and stable paint order; MERGE-02 disjoint
 - SQLite Session extension: https://www.sqlite.org/sessionintro.html
 - HTTP conditional requests: https://www.rfc-editor.org/rfc/rfc9110.html#section-13.1.1
 
-Libraries are examples, not selected dependencies. No Figma-like conflict-free product guarantee is implied.
+Libraries are examples, not selected dependencies. No design review-like conflict-free product guarantee is implied.

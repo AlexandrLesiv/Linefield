@@ -37,8 +37,8 @@ Delegate read-only specialist assessments in waves within the existing three-sub
 | Applicable macos_ui / ios_ui / android_ui / windows_ui | Native adapter/focus/lifecycle/permissions, host feasibility and actual input/device evidence; assigned Apple viewers explicitly included |
 | rendering_performance | Skia/cache/GPU lifetime, resource limits and measurement validity; no unmeasured latency claims |
 | build_reliability | Reproducibility, dependency/licenses, exact artifact/test/coverage freshness, packaging/signing/update evidence and missing gates |
-| ui_ux_designer | Feature input inventory, routes, recovery and accessible task completion together with identified Figma/adaptive/motion/i18n/native-control fidelity; static planning is not a running-app review |
-| database_designer when affected | DBML/schema approval, SQLite transactions/migrations/ownership/recovery and cross-channel/library implications |
+| ui_ux_designer | Feature input inventory, routes, recovery and accessible task completion together with identified design/adaptive/motion/i18n/native-control fidelity; static planning is not a running-app review |
+| database_designer when affected | shared schema/SVG approval, SQLite transactions/migrations/ownership/recovery and cross-channel/library implications |
 | Fresh reviewer | Independent assessment of material findings and actual boundary/evidence; must not be the author of the change under assessment |
 
 Lead explicitly assigns Linux/web/viewer coverage and records excluded platforms/reasons. Normally
@@ -57,8 +57,7 @@ when applicable; responsibility does not permit signing/accounts/submissions or 
 
 ## Review report and handoff
 
-Lead writes a new report under quality/milestones/ with a unique milestone/date/run name; preserve
-previous reports. Include scope/snapshot, actual reviewers and exclusions, assessment by domain/host,
+Lead produces a local untracked assessment with a unique milestone/date/run identity and summarizes actionable findings in the task. Include scope/snapshot, actual reviewers and exclusions, assessment by domain/host,
 findings with evidence, approval drift, missing/stale tests, prioritized follow-up tasks and a small
 owner decision list linked to [owner responsibilities](../owner-responsibilities.md). Verdict is ready
 for the next stated stage, needs changes, or incomplete evidence; never a generic production-safe seal.

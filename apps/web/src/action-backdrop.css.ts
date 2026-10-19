@@ -1,9 +1,9 @@
-import { globalStyle } from "@vanilla-extract/css";
-
-globalStyle(".action-backdrop", {
+import { theme } from "./theme.css.ts";
+import { style } from "@vanilla-extract/css";
+export const actionBackdrop = style({
   position: "fixed",
   inset: "0",
   zIndex: "999",
-  background: "var(--scrim)",
+  background: theme.scrim,
   touchAction: "none",
 });

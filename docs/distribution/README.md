@@ -43,7 +43,7 @@ already-approved sandbox/privacy/quality constraints apply to the preview indepe
 
 Native engineers implement technical requirements; Rust/rendering specialists own shared/native
 libraries; build reliability owns artifact and provenance evidence. ui_ux_designer owns necessary disclosures, permission/recovery/navigation flows and their
-approved Figma/adaptive presentation. Lead owns
+approved design review/adaptive presentation. Lead owns
 applicability and current source versions; independent reviewer checks claims and gaps. Owner chooses
 license, channels, territories, legal/account/commercial matters and authorizes distribution. No new
 permanent store agent is recommended or configured. Legal uncertainties are not resolved by an agent

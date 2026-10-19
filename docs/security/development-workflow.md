@@ -69,7 +69,7 @@ this workflow does not retroactively claim implementation or independent assessm
 
 ## Concrete workflow artifacts
 
-Use [task template](../../tasks/_template.md) and separate [design/implementation review records](../../quality/security-review-template.md).
+Use [task template](../../tasks/_template.md) and separate design/implementation review records.
 Existing tasks adopt the fields when activated; no bulk declaration that unassessed tasks are safe.
 Lead assigns reviewers and enforces transitions, implementer provides test/evidence rows, reviewer
 records actual scope/results and fixes. S01 will implement field/link/status validation when code is

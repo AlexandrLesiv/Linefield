@@ -1,17 +1,41 @@
-# Browser prototype evidence
+# Web verification guide
 
-This directory owns browser-only acceptance reports, review records and source/build manifests for the [live web prototype](../README.md). Shared contracts, cross-platform reviews and repository-tooling evidence remain in [root quality](../../../quality/README.md). Browser platform previews do not certify native device behavior.
+Maintained acceptance guidance belongs here. Generated logs, result JSON, source/build manifests,
+screenshots and one-run review reports belong in ignored local output or PR attachments.
+These pages explain what to verify; they are not a current pass certificate.
 
-## Retention
+- [Gallery and navigation](gallery/README.md): responsive actions, routes, focus and motion.
+- [Drawing preview](drawing/README.md): disposable controls, cancellation and keyboard access.
+- [Localization](localization/README.md): language/region, literal text and remaining review gaps.
+- [Appearance](appearance/README.md): themes, elevation, touch feedback and paper continuity.
 
-Version small reports, acceptance records and source/build hash manifests. PNG, JPEG, WebP, GIF and video captures under web-* run folders are disposable local artifacts and Git-ignored. Keep app fixtures in apps/web/public and intentional design references in docs/design/references versioned. Shared review or CI should publish captures as retained run artifacts; artifact hosting is not configured here.
+The [live prototype specification](../../../docs/design/live-web-prototype.md) owns current behavior;
+[app tests](../tests) contain executable assertions. This is one responsive Web interface over
+in-memory samples. Browser evidence cannot establish persistent storage, a drawing engine,
+native hosts or physical-device acceptance.
 
-## Historical relocation
+## Running and recording verification
 
-On 2026-10-17, all 13 root quality/web-* directories moved here with their existing names. All 176 files, including ignored captures, were retained byte-for-byte (6,528,501 bytes). Historical logs, JSON reports, source manifests and run READMEs preserve original recorded paths and commands; interpret their quality/web-* artifact locations as apps/web/quality/web-* after relocation. Their recorded source hashes and execution claims describe the original runs, not this move. Active documentation and capture destinations use the new location.
+From the repository root, use `pnpm check`, `pnpm web:build` and
+`pnpm web:test` as appropriate. [App setup](../README.md) lists prerequisites;
+[Playwright configuration](../playwright.config.ts) defines the browser/server setup.
+For a focused case, use `pnpm --filter @linefield/web exec playwright test tests/<file>.spec.ts`.
+Keep sources frozen: a reused development server can reload changing files during a run.
 
-Capture links resolve only where their local or uploaded artifacts were retained. Do not edit old reports merely to make historical commands appear current.
+Record the tested commit plus dirty-source identification, build, browser/OS, scenario IDs,
+failures/skips/retries and artifact location in the task PR. A focused rerun does not turn a
+failed full-suite run into a full pass. Missing tools, blocked startup and unrun native checks
+remain explicit gaps. Preserve unresolved failure material outside disposable-artifact cleanup.
+Browser output belongs in ignored `apps/web/test-results/`; other local captures/reports can
+use ignored `.build-cache/`. Do not add those payloads to this documentation directory.
 
-## Latest verification
+## Open finding
 
-See [menu source elevation](web-menu-shadow/README.md) for the latest scoped fix (12 focused cases plus quality checks/build), and [clean header](web-clean-header/README.md) for the preceding full 126-case browser run. These are different source snapshots; the full suite was not rerun after the menu-shadow fix. Current handoff and remaining gaps: [RESUME](../../../docs/RESUME.md).
+The intermittent WEB-D2-08 failure remains open: the literal renamed title was expected, but “Coastal house” remained.
+The cleanup run had 120 passes and one failure; five explicit focused reruns passed without
+source changes. The cause remains unconfirmed. This documentation restoration neither reruns
+the app suite nor closes that finding.
+
+Physical touch/stylus, system keyboards/IME, screen-reader walkthroughs, native hosts and
+proficient Ukrainian linguistic review remain separate acceptance work. Headless WebKit touch
+emulation is browser coverage, not physical Safari/iPhone certification.

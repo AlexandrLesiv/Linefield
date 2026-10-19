@@ -5,10 +5,13 @@ import { fileURLToPath } from "node:url";
 import { resolve } from "node:path";
 
 function object(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
+  if (typeof value !== "object" || value === null || Array.isArray(value)) return false;
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
 }
 function exactKeys(value: Record<string, unknown>, expected: readonly string[]): boolean {
-  return Object.keys(value).length === expected.length && expected.every((key) => key in value);
+  const actual = Object.keys(value);
+  return actual.length === expected.length && actual.every((key) => expected.includes(key));
 }
 function luminance(hex: string): number {
   const channels = [1, 3, 5].map((offset) => {

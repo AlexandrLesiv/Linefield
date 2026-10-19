@@ -1,8 +1,13 @@
 # Developer experience planned from day one
 
+See the [Git strategy](workflow/git-strategy.md) for branch/review/evidence planning and
+[visual architecture documentation](workflow/visual-architecture.md) for planner deliverables,
+diagram formats, source/export ownership and the distinction between documentation and approval.
+
 Owner selected **Zed tasks** as the integration on 2026-10-16. Do not implement a custom Zed
-extension. Current work is documentation only; actual task configuration and scripts follow
-implementation authorization. A rich GUI workbench remains a later reviewed UI scope.
+extension. Decision235 authorized the bounded local action/report CLI and five project task
+launchers described in docs/developer-actions.md. CLI checks are verified; actual Zed runtime
+focus/cancellation remains unrun. A rich GUI workbench remains a later reviewed UI scope.
 
 ## Shared foundation
 
@@ -12,17 +17,8 @@ execution records, artifacts and metric summaries. Source task/design decisions 
 reviewed repository records; results come from actual runners, never manually invented dashboard
 statuses. Do not create duplicate mutable status databases in the editor and dashboard.
 
-```mermaid
-flowchart LR
-    Zed[Zed project tasks] --> CLI[Node .ts actions]
-    Terminal[Command line] --> CLI
-    CLI --> Tools[Cargo, Xcode and later platform tools]
-    Tools --> Reports[Versioned evidence and metrics]
-    Reports --> Local[Future local workbench views]
-    Reports --> Static[Future static CI report views]
-    Docs[Tasks, decisions and Figma approval records] --> Local
-    Docs --> Static
-```
+[Developer evidence flow source](../shared/diagrams/definitions/developer-evidence-flow.json)
+
 
 App runtime logging is specified in logging.md. Tool-job events use a compatible correlation
 model but a distinct payload. Keep data schemas/pure selectors separate from process execution
@@ -52,7 +48,7 @@ launching common project actions. A future browser workbench can be opened from 
 
 ## Later workbench and reusable reports
 
-After separate owner/Figma approval, a Vite/TypeScript browser workbench can show documentation,
+After separate owner/design review approval, a Vite/TypeScript browser workbench can show documentation,
 tasks, dependency graph, feature/E2E coverage, build/run results, logs/metrics, design links and
 Wasm preview. It consumes the shared report model. Reuse web presentation components/tokens
 for static reports so local/CI views share terminology and appearance; no CI implementation
@@ -60,7 +56,7 @@ or publishing now. Plain HTML reports remain useful without a running action ser
 
 Possible future layout, not source scaffolding required now:
 - scripts/: Node action entry points and process adapters.
-- quality/: reviewed metadata/evidence schemas and registry.
+- Local verification output: untracked runner records, logs and captures; task records link source checks.
 - .zed/tasks.json: thin task launchers, created only when real commands exist.
 - apps/workbench/: later approved developer GUI, separate from apps/web drawing product.
 - packages/dev-model/ and packages/dev-ui/: extract when shared model/views actually need them.
@@ -79,7 +75,7 @@ report foundations only after authorization. DX01 adds real Zed task launchers a
 commands exist. DX02 is a separately approved post-macOS workbench/report UI slice, not a
 prerequisite for the editor. Later CI consumes existing reports without changing engine logic.
 
-Lead owns scope; build_reliability owns process/report foundations; designer owns Figma and
+Lead owns scope; build_reliability owns process/report foundations; designer owns design review and
 report UX; platform agents own tool adapters; reviewer checks authority, data safety and
 honest evidence. No new permanent agent or Zed-extension development is required.
 

@@ -3,7 +3,7 @@
 Date: 2026-10-16. Scope: architecture/documentation assessment of the uncommitted Linefield scaffold;
 repository has no HEAD commit. No application implementation, penetration test, entitlement probe,
 dependency audit or runtime pass exists. Review snapshot hashes will be retained separately.
-Owner approved this review, not every proposed mitigation mechanism. Concrete S02/DBML/ABI/trust
+Owner approved this review, not every proposed mitigation mechanism. Concrete S02/schema source/ABI/trust
 choices still require review before code. Current decisions include no app encryption (146),
 sandbox from first macOS preview (145), fixed local library/future cloud boundary (144), typed Rust
 commands and generated FFI, one editor owner per drawing, multiple processes and durable exports.
@@ -32,7 +32,7 @@ compromised dependency/build input; future hostile page/origin/provider. Root/ke
 protecting plaintext during execution of a compromised authorized app are beyond this preview's
 protection claim. Still minimize consequences and avoid treating process-local pointers as security.
 
-~~~mermaid
+```text
 flowchart LR
     File[Untrusted external drawing] --> Import[Bounded host access and import staging]
     Import --> Validate[Restricted SQLite reader and semantic validation]
@@ -46,7 +46,9 @@ flowchart LR
     Publish --> Output[User-selected external output]
     Rust --> Logs[Allowlisted bounded diagnostics]
     Cloud[Future cloud adapter: deferred] -. reviewed replication boundary .-> Rust
-~~~
+```
+
+Historical relationship notation; no diagram renderer is required.
 
 The diagram is a trust/data-flow map, not a new process/thread topology. Typed FFI is an in-process
 language boundary, not a sandbox against arbitrary memory access. Advisory catalog notifications
@@ -164,7 +166,7 @@ reviews now. This is a role recommendation, not a new configured agent or securi
 Lead integrates the threat register and owner approval packets; rust_engine owns shared validation/
 authority, native engineers capabilities, DB specialist persistence design, build_reliability checks/
 provenance, UX/UI honest permission/failure flows. Implementers add security cases with their feature.
-Reviewer independently challenges boundaries and evidence. Security findings do not bypass Figma
+Reviewer independently challenges boundaries and evidence. Security findings do not bypass design review
 or expand features. External expert assessment may be appropriate before strong cloud/privacy claims.
 
 See [security gates and response](gates-and-response.md) for traceability and evidence requirements.

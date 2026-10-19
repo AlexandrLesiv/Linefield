@@ -1,0 +1,388 @@
+{
+  "width": 1440,
+  "height": 1024,
+  "title": "Authority stays with one coordinator",
+  "description": "Native controls and rendering stay local; immutable batches and bounded completions cross storage boundaries.",
+  "elements": [
+    {
+      "tag": "rect",
+      "attrs": {
+        "width": "1440",
+        "height": "1024",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "64",
+        "class": "meta"
+      },
+      "text": "LINEFIELD / DIAGRAM LANGUAGE v2"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "64",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "APPROVED DESIGN181 · NOT BUILT"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "123",
+        "class": "title"
+      },
+      "text": "Authority stays with one coordinator"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "161",
+        "class": "body"
+      },
+      "text": "Native controls and rendering stay local; immutable batches and bounded completions cross storage boundaries."
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M376 310H520",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M824 286H1008",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1008 334H824",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1172 380V496",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1172 612V728",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1008 786H824",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M672 844V888H1392V310H1336",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1008 360H944V664H224V728",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "240",
+        "width": "304",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.presentation}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "268",
+        "class": "meta"
+      },
+      "text": "CLIENT B · MAIN THREAD"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "300",
+        "class": "node"
+      },
+      "text": "Native controls, read-only"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "324",
+        "class": "node"
+      },
+      "text": "projection and preview"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "520",
+        "y": "240",
+        "width": "304",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "268",
+        "class": "meta"
+      },
+      "text": "AUTHENTICATED ADAPTER"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "300",
+        "class": "node"
+      },
+      "text": "Bounded typed mailbox"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "240",
+        "width": "328",
+        "height": "140",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "268",
+        "class": "meta"
+      },
+      "text": "HOST A · MAIN THREAD"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "300",
+        "class": "node"
+      },
+      "text": "Native controls, Rust"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "324",
+        "class": "node"
+      },
+      "text": "coordinator and Skia"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "496",
+        "width": "328",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "524",
+        "class": "meta"
+      },
+      "text": "SAVE WORK"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "556",
+        "class": "node"
+      },
+      "text": "Owned immutable save batch"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1008",
+        "y": "728",
+        "width": "328",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "756",
+        "class": "meta"
+      },
+      "text": "STORAGE OWNER"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1032",
+        "y": "788",
+        "class": "node"
+      },
+      "text": "SQLite connections"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "520",
+        "y": "728",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "756",
+        "class": "meta"
+      },
+      "text": "COMPLETION"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "788",
+        "class": "node"
+      },
+      "text": "Bounded queue + readiness"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "544",
+        "y": "812",
+        "class": "node"
+      },
+      "text": "signal"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "728",
+        "width": "304",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "756",
+        "class": "meta"
+      },
+      "text": "LOG SINK"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "788",
+        "class": "node"
+      },
+      "text": "Bounded redacted"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "812",
+        "class": "node"
+      },
+      "text": "diagnostics"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M72 952H1368",
+        "stroke": "{diagram.color.divider}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "984",
+        "class": "meta"
+      },
+      "text": "Notation migration only · See source packet for authority and evidence"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "984",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "2026-10-19 · Full-size SVG"
+    }
+  ]
+}

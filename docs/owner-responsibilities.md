@@ -9,9 +9,9 @@ It consolidates existing authority rather than transferring engineering work to 
 | Area | Your responsibility | Agents prepare / timing |
 | --- | --- | --- |
 | Product scope and priorities | Select milestones, approve new features/platform extensions and material scope changes | Lead/UX provide a bounded proposal with benefit, alternatives and cost before implementation |
-| Feature interaction and visual design | Approve identified Figma version/frames and behavior, including relevant inputs, adaptive states and motion | UX/UI plus platform feasibility; inputs are reviewed with each feature, not a global shortcut questionnaire |
+| Feature interaction and visual design | Approve identified design version/states and behavior, including relevant inputs, adaptive states and motion | UX/UI plus platform feasibility; inputs are reviewed with each feature, not a global shortcut questionnaire |
 | Material architecture | Approve concrete ABI/language boundaries, document format/schema, mutable ownership/thread topology, custom protocols, renderer/framework or trust-model changes | Rust/native/DB/performance engineers supply interfaces, diagrams, alternatives, risks, migration/removal and tests before code; existing approved choices aren't reopened casually |
-| Database design | Review exact schema proposal with rendered DBML diagram, relationships and migration/recovery behavior | database_designer and rust_engine; visual review precedes schema implementation |
+| Database design | Review exact schema proposal with rendered schema source diagram, relationships and migration/recovery behavior | database_designer and rust_engine; visual review precedes schema implementation |
 | License and identity | Select project license, legal/publisher identity and controlled production identifiers; resolve concrete legal/commercial uncertainties | Lead/build/platform specialists provide dependency obligations and channel implications before reuse/provisioning/publication |
 | Distribution and business | Select channels, audience/territories, pricing if any, account enrollment/fees and factual declarations | Platform/build agents prepare current requirements and release packet; proposed channels are not selected by reviewing them |
 | Host/account permissions | Provide sign-ins or OS security permissions that tools cannot/should not grant; authorize desktop sessions when needed | Lead completes preparation first, asks only for required access, continues independent work while blocked |
@@ -41,7 +41,7 @@ cannot turn an unrun test into a pass. Live secrets never belong in prompts or c
 - Documentation/configuration workflows only; no Linefield application implementation authorized.
 - Local macOS developer preview selected; public channels in S00G remain recommendations.
 - Skia/shared Rust/native controls and recorded architecture policies remain selected. Concrete S02
-  contracts, schema/mechanisms and identified Figma still need their specific approvals.
+  contracts, schema/mechanisms and identified design still need their specific approvals.
 - watchOS, tvOS, Wear OS and Android TV/Google TV are view-only. Toolkit/acquisition and standalone
   claims remain separate; no editing capability can be inferred from attached input devices.
 - Project license/production identity, public channel/commercial choices and actual releases are pending.

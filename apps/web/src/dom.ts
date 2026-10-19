@@ -1,10 +1,11 @@
+import { buttonControl } from "./button.css.ts";
 export function element<K extends keyof HTMLElementTagNameMap>(
   tag: K,
   className = "",
   text = "",
 ): HTMLElementTagNameMap[K] {
   const node = document.createElement(tag);
-  node.className = className;
+  node.className = tag === "button" ? `${className} ${buttonControl}` : className;
   node.textContent = text;
   return node;
 }

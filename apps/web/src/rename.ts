@@ -1,5 +1,14 @@
+import {
+  renameDialog,
+  error as errorStyle,
+  dialogActions,
+  primary,
+  dialogHeading,
+  dialogLabel,
+  dialogInput,
+  dialogButton,
+} from "./dialog.css.ts";
 import { acquireBackdrop } from "./action-backdrop.ts";
-import { fadeMobileRename, closeMobileRename } from "./mobile-rename-motion.ts";
 import { t } from "./locale.ts";
 import { exitRename } from "./rename-exit.ts";
 import { morphRename } from "./rename-motion.ts";
@@ -10,23 +19,22 @@ export function renameDrawing(
   restore: () => void,
   sourceBounds: DOMRect,
   sourceCard: HTMLElement | null,
-  mobile = false,
 ): void {
   const backdrop = acquireBackdrop();
-  const dialog = element("dialog", "rename-dialog");
+  const dialog = element("dialog", `rename-dialog ${renameDialog}`);
   const form = element("form");
-  const heading = element("h2", "", t("rename.title"));
+  const heading = element("h2", dialogHeading, t("rename.title"));
   heading.id = "rename-heading";
   dialog.setAttribute("aria-labelledby", heading.id);
-  const label = element("label", "", t("rename.label"));
-  const input = element("input");
+  const label = element("label", dialogLabel, t("rename.label"));
+  const input = element("input", dialogInput);
   input.value = name;
   input.maxLength = 240;
   input.required = true;
   label.append(input);
-  const error = element("p", "error");
+  const error = element("p", `error ${errorStyle}`);
   error.setAttribute("role", "alert");
-  const actions = element("div", "dialog-actions");
+  const actions = element("div", `dialog-actions ${dialogActions}`);
   let closed = false;
   let disposeMotion = () => {};
   const cardId = sourceCard?.dataset.id;
@@ -35,7 +43,7 @@ export function renameDrawing(
   const close = () => {
     if (closed) return;
     closed = true;
-    backdrop.close(mobile ? 130 : 260);
+    backdrop.close(260);
     const trigger = liveCard()?.querySelector<HTMLElement>(".more") ?? null;
     const done = () => {
       sourceCard?.removeAttribute("data-renaming");
@@ -47,12 +55,11 @@ export function renameDrawing(
       if (currentTrigger) currentTrigger.focus({ preventScroll: true });
       else restore();
     };
-    if (mobile) closeMobileRename(dialog, disposeMotion, done);
-    else exitRename(dialog, form, trigger, disposeMotion, done);
+    exitRename(dialog, form, trigger, disposeMotion, done);
   };
-  const submit = element("button", "primary", t("action.rename"));
+  const submit = element("button", `primary ${primary} ${dialogButton}`, t("action.rename"));
   submit.type = "submit";
-  actions.append(button(t("action.cancel"), "", close), submit);
+  actions.append(button(t("action.cancel"), dialogButton, close), submit);
   form.append(heading, label, error, actions);
   dialog.append(form);
   document.body.append(dialog);
@@ -93,9 +100,7 @@ export function renameDrawing(
   });
   sourceCard?.setAttribute("data-renaming", "true");
   dialog.showModal();
-  disposeMotion = mobile
-    ? fadeMobileRename(dialog, sourceBounds)
-    : morphRename(dialog, form, sourceBounds);
+  disposeMotion = morphRename(dialog, form, sourceBounds);
   input.focus({ preventScroll: true });
   input.select();
 }

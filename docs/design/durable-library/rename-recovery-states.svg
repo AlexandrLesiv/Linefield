@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100" role="img" aria-labelledby="title desc">
+  <title id="title">Durable empty library v1 — rename and recovery</title>
+  <desc id="desc">Proposed anchored rename outcome, unknown rename, durable name with delayed library repair, and recovered gallery with unavailable creation.</desc>
+  <defs>
+    <style>text{font-family:Arial,sans-serif;fill:#171717;font-size:16px}.heading{font-size:22px;font-weight:600}.label{font-size:14px;fill:#555}.app{fill:#e8e8e8;stroke:#aaa}.panel{fill:white;stroke:#aaa}.button{fill:#171717}.white{fill:white}.night{fill:#eeeeef}.muted{fill:#c2c2c5}.focus{fill:none;stroke:#005fcc;stroke-width:3}</style>
+    <g id="base"><rect width="720" height="380" rx="12" class="app"/><text x="32" y="44" class="heading">Linefield</text><rect x="32" y="88" width="200" height="238" rx="12" fill="white"/><text x="48" y="302">Untitled</text><text x="196" y="302">···</text></g>
+  </defs>
+  <rect width="1600" height="1100" fill="#fafafa"/>
+  <text x="32" y="42" class="heading">Durable empty library · v1 / Rename and recovery</text>
+  <text x="32" y="70" class="label">Proposed identified state compositions · No implemented storage, linguistic or runtime acceptance claim</text>
+  <text x="32" y="112" class="heading">DLW-05b · Submitted Rename / pending</text>
+  <g transform="translate(32 134)">
+    <use href="#base"/>
+    <rect width="720" height="380" rx="12" fill="#000" fill-opacity=".33"/>
+    <rect x="268" y="44" width="360" height="288" rx="14" class="panel"/>
+    <text x="292" y="80" style="font-size:18px;font-weight:600">Rename drawing</text>
+    <text x="292" y="120" class="label">Drawing name</text>
+    <rect x="292" y="132" width="312" height="44" rx="6" fill="#e8e8e8" stroke="#aaa"/>
+    <text x="304" y="160">Sketch notes</text>
+    <text x="292" y="210">Saving name…</text>
+    <text x="292" y="234" class="label">Closing does not cancel a submitted rename.</text>
+    <rect x="426" y="264" width="78" height="44" rx="8" class="panel"/>
+    <text x="444" y="292">Close</text>
+    <rect x="514" y="264" width="90" height="44" rx="8" fill="#dedede"/>
+    <text x="530" y="292" fill="#555">Rename</text>
+  </g>
+  <text x="32" y="540" class="label">Field read-only after submission; complete value retained. Outcome area reserves space.</text>
+  <text x="792" y="112" class="heading">DLW-05d · Unknown / same frozen request</text>
+  <g transform="translate(792 134)">
+    <use href="#base"/>
+    <rect width="720" height="380" rx="12" fill="#000" fill-opacity=".33"/>
+    <rect x="268" y="44" width="360" height="288" rx="14" class="panel"/>
+    <text x="292" y="80" style="font-size:18px;font-weight:600">Rename drawing</text>
+    <text x="292" y="120" class="label">Drawing name</text>
+    <rect x="292" y="132" width="312" height="44" rx="6" fill="#e8e8e8" stroke="#aaa"/>
+    <text x="304" y="160">Sketch notes</text>
+    <text x="292" y="210">Checking whether the name was saved…</text>
+    <text x="292" y="234" class="label">Last confirmed name: Untitled</text>
+    <rect x="392" y="264" width="78" height="44" rx="8" class="panel"/>
+    <text x="410" y="292">Close</text>
+    <rect x="480" y="264" width="124" height="44" rx="8" class="button"/>
+    <text x="494" y="292" class="white">Check again</text>
+  </g>
+  <text x="792" y="540" class="label">Close dismisses the form; accessible per-item pending status remains in gallery.</text>
+  <text x="32" y="590" class="heading">DLW-05e · Durable rename / projection pending</text>
+  <g transform="translate(32 612)">
+    <rect width="720" height="380" rx="12" class="app"/>
+    <text x="32" y="44" class="heading">Linefield</text>
+    <rect x="32" y="68" width="656" height="72" rx="8" class="panel"/>
+    <text x="48" y="98">Name saved; the library list is updating.</text>
+    <text x="48" y="122" class="label">Do not submit the rename again.</text>
+    <rect x="32" y="164" width="200" height="188" rx="12" fill="white"/>
+    <text x="48" y="328">Sketch notes</text><text x="196" y="328">···</text>
+    <rect x="186" y="302" width="40" height="40" rx="8" class="focus"/>
+    <text x="260" y="198" class="label">Confirmed name shown in owning projection.</text>
+    <text x="260" y="224" class="label">No activity-order change.</text>
+    <text x="260" y="250" class="label">Late repair cannot replace a newer name.</text>
+  </g>
+  <text x="32" y="1020" class="label">Only status text inside the panel is app copy; explanatory notes beside card are annotations.</text>
+  <text x="792" y="590" class="heading">DLW-08b · Reconstructed / naming unavailable</text>
+  <g transform="translate(792 612)">
+    <rect width="720" height="380" rx="12" fill="#2d2d2f" stroke="#747478"/>
+    <text x="32" y="44" class="heading night">Linefield</text>
+    <rect x="32" y="68" width="656" height="104" rx="8" fill="#39393c" stroke="#747478"/>
+    <text x="48" y="98" class="night">Cannot create drawings until library naming is recovered.</text>
+    <text x="48" y="126" class="muted">Recovered drawings are shown by creation date.</text>
+    <text x="48" y="150" class="muted">Their previous order could not be restored.</text>
+    <rect x="32" y="196" width="190" height="158" rx="12" fill="#343437" stroke="#747478" stroke-dasharray="5 4"/>
+    <text x="62" y="270" class="muted">New unavailable</text>
+    <rect x="246" y="196" width="190" height="158" rx="12" fill="#eeeeec"/>
+    <text x="262" y="328">Sketch notes</text><text x="402" y="328">···</text>
+    <rect x="460" y="196" width="190" height="158" rx="12" fill="#39393c"/>
+    <text x="476" y="262" class="night">Unavailable drawing</text>
+    <text x="476" y="290" class="muted">Recovery needed</text>
+  </g>
+  <text x="792" y="1020" class="label">Valid items remain usable. No guessed numbering, reset button or chosen conflict winner.</text>
+  <text x="32" y="1070" class="label">Normal/reduced motion share identical durable boundaries. Static frames cannot demonstrate ownership, recovery or accessibility correctness.</text>
+</svg>

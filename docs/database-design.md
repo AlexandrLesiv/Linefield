@@ -29,40 +29,21 @@ open questions and proposed CT/INV/SU/scenario coverage. Use synthetic examples 
 
 ## Diagram format and maintenance
 
-On 2026-10-16 the owner selected DBML with dbdiagram for schema design and visual review.
-Use DBML schema text and versioned diagram layout for the required owner handoff. The owner now selects dbdocs as the visual review surface. The pinned CLI is installed and
-private publication is verified. Mermaid can still describe persistence sequences; use dbdiagram for ERDs.
+Use [shared schema inputs](database/README.md), generated local SVG, a dictionary, persistence sequences and explicit approval scope. Generated exports are untracked; agents read SQL and shared definitions.
 
-Proposed review assets are schema.dbml, its companion schema.dbdiagram layout, and review.md
-under docs/database/. Track both schema and layout in Git; reference the exact commit (or content
-hash for uncommitted proposals) in the approval record. Remote editor changes must return to Git
-and receive review; a changing hosted link alone is not an approved version. Record hosted version/URL, source hashes and approval scope. Do not keep local rendered diagram
-exports or recreate docs/database/rendered; the owner explicitly declined them.
+Reference SQL is executable constraint authority for the fourteen catalog/drawing tables. Shared
+annotations preserve reviewed descriptions and conceptual relationships; three jobs tables remain
+proposal-only definitions, without invented executable migration authority. Generated shared JSON
+and SVG views come from those inputs, using DTCG diagram tokens. Never hand-edit outputs or maintain
+a duplicate physical table model just for drawings. Future platform consumers need their normal
+implementation review; schema generation itself is tooling, not a persistence implementation.
 
-Use a small overview plus focused views when crowded, with plain-language descriptions and a
-legend. Do not rely on color alone. The dictionary covers constraints beyond the visual notation.
-The owner reviews the hosted dbdocs diagram alongside DBML source. dbdiagram's CLI syncs/publishes
-but does not render locally; its documented local live preview is a VS Code extension, not a
-verified Zed integration. Choose an authorized renderer/export workflow before promising local
-SVG/HTML output. No custom Zed extension is implied by this selection.
+Run schema generation/check and parity tests with every affected change. Check names/order/types,
+nullability, primary/foreign keys, deletion actions, indices and notes against reviewed expectations.
+Keep SQLite-specific CHECK/partial-index details in the dictionary; a picture cannot encode every
+constraint. Distinguish conceptual cross-file links from actual SQLite foreign keys. Use focused
+views, explicit labels and a small overview; color alone must not communicate authority/status.
 
-The documented DBML CLI dialects do not list SQLite import/export or direct connection support.
-DBML therefore documents the design; do not assume it can generate lossless SQLite migrations.
-Document SQLite-specific constraints, indexes and storage settings explicitly, and validate
-against actual SQLite schema/migration fixtures once implementation is authorized. No alternative
-SQL engine, ORM or bespoke SQL generator is implied to work around that limitation.
-
-Hosted dbdocs is optional: its build command publishes, not merely generates local documentation.
-Verify destination, visibility, account/plan and owner authorization before upload. Official pages
-currently describe different defaults for dbdiagram (private) and dbdocs (public); do not infer one
-service's settings from the other. No credentials, real drawings or personal records in examples.
-Paid version history/multiple-view features are optional; Git remains the review history.
-
-During planning, proposed DDL may appear in documentation but is not executable implementation.
-Once implementation is authorized, migrations/schema definitions become the executable authority.
-Keep diagrams/dictionary synchronized in the same change; compare schema introspection against
-those definitions and migration fixtures. Do not create a second handwritten schema model merely
-for diagrams. Diagram generation/check tooling is planned, not an installed gate.
 
 ## Ownership and approval
 
@@ -76,27 +57,14 @@ and any conditions in the decision record. Before approval, do not implement the
 migrations. Schema changes affecting meaning, integrity, format compatibility or migration risk
 require renewed review. No agent can self-approve. Existing concurrency limits are unchanged.
 
-See [S02](../tasks/S02.md), [format plan](successor/formats.md), [autosave](autosave.md) and
+See [S02](../tasks/S02.md), [format plan](database/document-format.md), [autosave](autosave.md) and
 [contracts](contracts.md). App-managed draft retention and naming/publication policy remain open;
 the specialist must surface those questions rather than resolve them by choosing tables.
-
-## Evaluated primary sources (2026-10-16)
-
-- [dbdiagram CLI](https://docs.dbdiagram.io/cli/): DBML/layout sync, hosted publication, no local rendering.
-- [Diagram views](https://docs.dbdiagram.io/diagram-views/) and [version history](https://docs.dbdiagram.io/version-history/): organization and plan limits.
-- [DBML CLI dialects](https://dbml.dbdiagram.io/cli/) and [syntax](https://dbml.dbdiagram.io/docs/): representations and conversion boundaries.
-- [dbdocs](https://dbdocs.io/): hosted documentation workflow and stated public default.
-- [dbdiagram privacy](https://docs.dbdiagram.io/password-private/): separately stated private default.
-
-The [options evaluation](database-visualization-options.md) is retained as decision context.
-DBML/dbdiagram is selected; do not reopen the visualization choice without new evidence or owner
-request. SQLite synchronization/check tooling remains to be evaluated when implementation is
-authorized; neither tbls nor SchemaCrawler is mandatory. No tool has been trialed in Linefield.
 
 ## Selected library storage layout
 
 Decision 22 selects a separate SQLite catalog and one SQLite file per drawing. Present catalog
-and document schemas as separate database boundaries in DBML/views; relationships across those
+and document schemas as separate database boundaries in generated schema views; relationships across those
 files are application-managed, not assumed SQL foreign keys. Artwork lives only in document
 files; thumbnails are disposable. Define metadata authority before choosing duplicate fields.
 Show creation/import/delete interruption sequences and reconciliation, including a catalog or
@@ -108,7 +76,7 @@ updates are not implicitly atomic. Schema/SQL/durability approval remains pendin
 
 Decision 23: documents own portable identity/name/content-revision/editing metadata; catalog
 copies are indexes, while location/availability is catalog-owned. Label authoritative versus
-indexed columns and reconciliation sources in the DBML dictionary. Rename persists document
+indexed columns and reconciliation sources in the shared schema dictionary. Rename persists document
 metadata before updating its index; no competing writable authorities. Define metadata versus
 content revision semantics so renaming cannot reorder gallery content-edit recency.
 
@@ -120,7 +88,7 @@ recover arbitrary catalog-only settings or unavailable files. No cross-file atom
 ## Selected sample representation
 
 Decision 24 selects one row per validated actual sample, associated with its stroke and explicit
-ordering; stroke-level properties are separate. Show this relationship in DBML and specify
+ordering; stroke-level properties are separate. Show this relationship in shared schema and specify
 keys/constraints, pressure absence, numeric validation and resource bounds. Do not store transient
 predictions or adopt packed sample blocks. Row layout does not imply per-sample disk writes:
 completed edits persist asynchronously in reviewed SQLite transactions. Include round-trip,
@@ -198,7 +166,7 @@ interruption boundary; never treat staging-count excess as permission for unsafe
 ## Selected identifiers
 
 Decision 42 selects UUIDv4 portable document/stroke IDs alongside local integer SQLite keys.
-In DBML/dictionary distinguish public identity, database-local key and order fields. Sample
+In shared schema/dictionary distinguish public identity, database-local key and order fields. Sample
 rows reference local stroke keys plus ordered indices, without per-sample UUIDs. Catalog links
 to document UUID are conceptual/application-managed across files. Do not leak local row numbers
 into durable command/external identities; remapping must preserve association correctness.
@@ -244,7 +212,7 @@ or a change to identity, duplicate-name permission or no-gap-reuse policy.
 
 Decision 47 selects per-stroke color/base width/approved pen properties, without a shared style
 table. Keep ordered sample rows and separate transforms under the existing decisions. Specify
-explicit validated property fields/types and color encoding in the DBML/dictionary; do not store
+explicit validated property fields/types and color encoding in the shared schema/dictionary; do not store
 Skia/native objects or introduce a custom property blob implicitly. Uniform scale changes the
 transform, not original samples/base width. Review schema/version compatibility and round-trip
 fixtures. Shared resource-backed brushes remain future scope, not initial schema requirements.
@@ -252,7 +220,7 @@ fixtures. Shared resource-backed brushes remain future scope, not initial schema
 ## Selected initial artwork color space
 
 Decision 48 selects sRGB initially. Show explicit document color-space semantics and validated
-per-stroke color fields in the DBML/dictionary; channel representation/precision remains reviewed.
+per-stroke color fields in the shared schema/dictionary; channel representation/precision remains reviewed.
 Do not store native picker/Skia objects or infer color space from the display. Document possible
 future color-space extensions with version/migration and old-artwork preservation requirements,
 without adding speculative profile tables or wide-gamut implementation now.
@@ -279,7 +247,7 @@ settings from stroke data. No preference synchronization or active-tool restorat
 
 Decision 59 requires settings for each future approved tool, not only pen-specific color/width
 columns as the universal abstraction. Key logical ownership by drawing and stable tool identity;
-propose concrete relational fields/tables/versioning in the DBML review. Typed defaults,
+propose concrete relational fields/tables/versioning in the shared schema review. Typed defaults,
 validation, unknown settings, migration, bounds and isolation require explicit contracts.
 Extensibility does not select JSON/BLOB, EAV or generic dynamic schema storage. Begin with approved
 pen settings only. Keep preference data out of portable artwork and never rely on it to reproduce
@@ -306,7 +274,7 @@ not document corruption and must not block opening otherwise valid artwork.
 Decision 68 selects explicit named fields in tool-specific relational tables for local settings.
 Start with approved pen preferences; add future approved tools through reviewed schema migrations.
 Avoid one wide optional-field table or JSON/BLOB/EAV preference payloads. Show keys/relationships,
-SQL constraints, Rust validation and migration/default handling in DBML/dictionary; avoid redundant
+SQL constraints, Rust validation and migration/default handling in shared schema/dictionary; avoid redundant
 IDs. Active-tool selection and viewport remain separate concepts, and portable artwork never
 requires these local tables to render. Exact schema/STRICT mode/types are still review items.
 
@@ -314,12 +282,12 @@ requires these local tables to render. Exact schema/STRICT mode/types are still 
 
 Keep tools with stable 16-byte UUID and locale-independent readable key, referenced by explicit
 per-tool relational preference tables where needed. No tool_versions table, tool-version FK or
-per-tool settings version. Decisions 69-70 are superseded. Use the top-level drawing format version
+per-tool settings version. Use the top-level drawing format version
 for artwork interpretation, and the catalog's own top-level schema version for local migrations.
 Neither native exports nor rendering may depend on catalog preferences.
 
 Document, stroke and tool UUIDs use standard 16-byte SQLite BLOB values. Review exact length/type/
-UUID validation, byte order and native/Wasm conversion in DBML/dictionary. Instance UUIDv4 and
+UUID validation, byte order and native/Wasm conversion in shared schema/dictionary. Instance UUIDv4 and
 fixed built-in tool identity policies remain distinct. Retain local integer relationship keys
 and ordered sample indices, without UUID per sample or generic universal identity table.
 
@@ -333,8 +301,7 @@ no SQL per pen sample. Native localized labels remain separate from stable tool 
 Decision 72 selects STRICT tables for owned catalog/drawing schemas. Use supported physical type
 names and explicit NOT NULL/CHECK/UNIQUE/foreign-key constraints; do not substitute ANY for proper
 types. STRICT permits lossless coercion and does not enforce UUID length, numeric domain limits
-or business semantics by itself. Document physical STRICT declarations alongside DBML if its
-notation cannot express them; migration DDL is executable authority after approval.
+or business semantics by itself. Include exact physical STRICT declarations in the generated dictionary; migration DDL is executable authority after approval.
 
 Require compatible SQLite >=3.37 and actual runtime/table checks, including future Wasm adapters.
 No silent flexible-schema fallback. Test wrong types, valid conversions, domain/relationship
@@ -347,7 +314,7 @@ drawings within the managed library. Preserve the damaged catalog/relevant recov
 leave invalid/unsupported drawing files untouched and report unresolved items. Recovered metadata
 comes from drawings; local preferences may fall back to defaults. Notify after recovery.
 
-The DBML/lifecycle packet must define staged publication, interruption/retry and failure behavior,
+The shared schema/lifecycle packet must define staged publication, interruption/retry and failure behavior,
 source preservation, bounded work, duplicate identities and eligibility of files. Never confuse
 staging/backup/deletion remnants with live drawings, nor permissions/locking/newer-version errors
 with corruption. Exact reconciliation/retention and numbering recovery remain review items;
@@ -396,7 +363,7 @@ report capacity failures separately from corruption; specify bounded admission i
 
 ## Color precision and transform order (decisions 106/108)
 
-Canonical saved sRGB channels use normalized floating-point values. DBML/schema must specify
+Canonical saved sRGB channels use normalized floating-point values. shared schema must specify
 actual numeric representation, finite/range/alpha constraints and conversion/round-trip tests;
 no incidental channel quantization, new color space or per-tool version. Keep PNG pixel encoding
 separate. Moving/scaling updates transforms without changing document stroke order; test SQL
@@ -423,7 +390,7 @@ source revisions or write through to the original. Tests must use real process r
 
 Exports capture immutable completed artwork on command acceptance before the destination panel;
 source retention counts against reservations. Job intent and source data are persisted for crash
-recovery. Propose exact job schema/location and snapshot representation in DBML/S02 before code:
+recovery. Propose exact job schema/location and snapshot representation in S02/shared schema before code:
 no incidental custom codec, mutable document dependency or unreviewed job protocol. Define durable
 admission/publication/completion boundaries, corruption/version checks, quotas, access-reference
 privacy, crash cleanup and multi-process claims/fencing.
@@ -436,7 +403,7 @@ scope and recovery admission are separately pending, not an implicit three-per-p
 
 ## Batch 8 approved durable-export policies (decisions 132-138)
 
-Use a separate SQLite job database and dedicated immutable snapshot area; exact DBML/source
+Use a separate SQLite job database and dedicated immutable snapshot area; exact shared schema/source
 representation still needs review. Accepted Export captures before its panel in bounded memory;
 persist after destination confirmation, with an honest preparing/durable boundary. Automatically
 resume only validated safe recovered work; pause uncertain publication/access and changed targets.
@@ -469,5 +436,5 @@ must cover concurrent edits, deletions, retries, remote versions, authentication
 recovery. No cloud SDK/provider/CRDT/trust model or implementation is selected. Q60 stays pending.
 
 Decision 146: no application-level encryption for initial preview; retain standard SQLite/rusqlite.
-Previously discussed SQLCipher/key hierarchy is an unselected option, not an implementation task.
+No application encryption/key-management feature is approved.
 Review privacy/access/copy handling under this actual scope. Future cloud security stays separate.

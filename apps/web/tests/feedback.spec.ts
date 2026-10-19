@@ -1,24 +1,5 @@
 import { test, expect } from "@playwright/test";
 
-test("WEB-F01 iPhone uses round compose; iPad toolbar and Android FAB remain", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/?platform=ios");
-  await expect(page.locator(".iphone-create")).toBeVisible();
-  const toolbar = page.getByRole("toolbar", { name: "Drawing actions" });
-  await expect(toolbar).toHaveCount(0);
-  await page.getByLabel("Preview platform").selectOption("ipados");
-  await expect(page.locator(".iphone-create")).toBeHidden();
-  await expect(toolbar).toBeVisible();
-  const bounds = await toolbar.boundingBox();
-  expect(bounds?.x).toBe(0);
-  expect(bounds?.width).toBe(390);
-  expect((bounds?.y ?? 0) + (bounds?.height ?? 0)).toBe(844);
-  await expect(toolbar.locator(".mobile-create")).toHaveCSS("position", "static");
-  await page.getByLabel("Preview platform").selectOption("android");
-  await expect(toolbar).toHaveCount(0);
-  await expect(page.locator(".mobile-create")).toHaveCSS("position", "fixed");
-});
-
 test("WEB-F02 pointer hover is a soft shadow without an outline or size change", async ({
   page,
 }) => {

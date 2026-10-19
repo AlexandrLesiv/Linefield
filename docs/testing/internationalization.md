@@ -1,12 +1,12 @@
 # Internationalization acceptance and locale matrix
 
-Status: planned, no executable tests/catalogs/translations. Implements the test requirements
+Status: web/shared-resource checks are implemented; native integration, physical input/AX and linguistic review remain pending. See [current readiness](../localization-web-readiness.md). Defines the test requirements
 for [i18n architecture](../internationalization.md), CT-09/INV-11 and SU-20.
 
 Both English (en) and Ukrainian (uk) are required from the first web UI and at each native
 host launch. Use real reviewed catalogs plus artificial expanded LTR/RTL resources; these
 pseudo-locales supplement rather than replace either real language. Additional languages
-remain separately scoped. No resource or runtime pass is claimed yet.
+remain separately scoped. Only the linked, executed web/shared-resource lanes are claimed; future native lanes remain unrun.
 
 ## Common scenarios
 

@@ -1,0 +1,15 @@
+# S02 inverse-mapping arithmetic diagnostic v1
+
+Scope: test-only continuation of REG-PREC-06 in regional-precision-followup.md. Existing S02 task work is authorized; no production mapping, normalization, rounding policy, ABI, schema or supported-span decision is made. Lead owns code; rust_engine supplies numerical review; independent reviewer assesses contract and results.
+
+For supplied finite binary64 pointer coordinate p, canvas center c and positive finite zoom z, reference the exact rational (p−c)/z. The diagnostic candidate is JavaScript `(p-c)/z`, including both ordinary binary64 subtraction and division. Decode every input exactly using the existing dyadic oracle, then use reduced BigInt fractions. Exact division by binary64 0.1 generally needs a denominator with an odd factor; it is not division by mathematical 1/10.
+
+Report the signed world-relative error and its exact projection back to native-point units by multiplying by the supplied zoom. The latter may be compared with1/4 as a diagnostic relation only: this is not acceptance of original-input rounding or full inverse/forward mapping. No canonical region/local output is produced, no viewport center world address is flattened, and no region-address admission policy is selected.
+
+Use seven fixed synthetic pairs: zero; one point; fractional subtraction; negative direction; point2^52 with center−0.25 (subtracting a negative quarter); minimum subnormal; maximum finite stress. Evaluate zoom0.1/1/8 for21 rows. Tag nonfinite candidate values separately. All test inputs are source fixtures, with no CLI arguments, external data or unbounded work. Fractions and exact errors serialize as decimal numerator/denominator strings. Report capped at1MiB; source hashes/Node/host accompany results. No performance claim.
+
+REG-INVERSE-01 verifies reduced positive denominators, exact zero/sign, division-by-zero rejection and known fractions including binary64 0.1=3602879701896397/36028797018963968. REG-INVERSE-02 verifies exact/non-dyadic division and projected error independently by hand-derived ratios. REG-INVERSE-03 verifies21 deterministic rows, explicit overflow and subnormal underflow observations without treating counterexamples as failed software tests. Root checks cover source style/types/size and all probe tests. CT-02/03/06, INV-02/08 and REG-09 motivate evidence only; native/SU conformance remains open.
+
+Limitations: one relative axis, no mapping generation/rotation/input events, no Rust/native/Wasm arithmetic, no region normalization, no painted geometry, no renderer/hit/export parity and no admission-boundary evidence. This experiment measures an ordinary diagnostic expression; it does not recommend adopting that expression.
+
+Record ordinary Number round-trip error separately, tagged if nonfinite. It is not the exact projected error: for p=1,c=0,z=binary64(0.1), candidate10 differs from exact inverse by2/3602879701896397 and projects to2^-54 native points, yet Number `(1/z)*z` equals1. This supplied rust_engine example is an independent expected-value test.

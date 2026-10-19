@@ -17,7 +17,7 @@ claim every just-finished stroke is durable immediately. SQLite owns atomicity/j
 
 Track current revision separately from last durably persisted revision. Writing revision N
 cannot mark N+1 saved. Proposed presentation states are Saved, Saving and Could not save;
-wording, indicators and retry interactions require UX/UI and identified Figma approval.
+wording, indicators and retry interactions require UX/UI and identified design approval.
 Failures preserve current in-memory content and expose pending persistence; never silently
 claim success, discard pending edits or keep accepting unlimited queued work.
 
@@ -82,11 +82,11 @@ failed Open retains current drawing; explicit recovery candidates preserve origi
 and FILE/ROUTE cases must cover automatic persistence, undo/redo persistence, continued editing
 while a write completes, close during pending work, disk/lock failure and independent reopen.
 Test abrupt termination separately from orderly close; state which revision was durable and
-which pending edits were lost. Native status/focus/exit flows need actual E2E after Figma approval.
+which pending edits were lost. Native status/focus/exit flows need actual E2E after design review approval.
 
 ui_ux_designer owns lifecycle wording, flows and status presentation; Rust owns revision/command policy;
 services delegate database mechanisms to SQLite; host engineers own dialogs/access. Follow
-[format review](successor/formats.md). No runtime tests or app behavior exist yet.
+[format review](database/document-format.md). No runtime tests or app behavior exist yet.
 
 Library lifecycle takes precedence over earlier references to choosing a permanent location for
 a draft. Library documents already have durable app-managed storage. Exported copies are proposed
@@ -153,7 +153,7 @@ revert-to-open or delete. Stay/cancel retains history and pending content. S02 d
 bound consent, queued/in-flight write resolution, stale-result rejection and accepted session
 release. A concurrent commit cannot be cancelled retroactively. Do not release the old session
 on failed replacement or falsely acknowledge saving/abandonment while the outcome is unresolved.
-Native wording, focus/default controls and Figma require review; test all exit paths and races.
+Native wording, focus/default controls and design review require review; test all exit paths and races.
 
 ## Selected manual save behavior (decision 56)
 

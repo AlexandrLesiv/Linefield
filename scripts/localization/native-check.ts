@@ -1,7 +1,7 @@
 import { catalog as sourceCatalog } from "../../shared/localization/catalog.ts";
 import { en } from "../../shared/localization/en.ts";
 import { uk } from "../../shared/localization/uk.ts";
-import { spawnSync } from "node:child_process";
+import { invokeTool, ToolFailure } from "../resource-tool.ts";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -48,8 +48,8 @@ try {
     ["xmllint", /\.(xml|resw)$/],
     ["msgfmt", /\.po$/],
   ] as const) {
-    const probe = spawnSync(tool, ["--version"], { encoding: "utf8" });
-    if (probe.error && "code" in probe.error && probe.error.code === "ENOENT") {
+    const label = tool === "xmllint" ? "xml" : "gettext";
+    if (invokeTool(tool, ["--version"], label, "probe") === undefined) {
       console.log(JSON.stringify({ check: tool, status: "not-run", reason: "tool unavailable" }));
       continue;
     }
@@ -65,9 +65,7 @@ try {
           tool === "xmllint"
             ? ["--noout", location]
             : ["--check", "--check-format", "-o", join(directory, "messages.mo"), location];
-        const result = spawnSync(tool, args, { encoding: "utf8", timeout: 30_000 });
-        if (result.error || result.status !== 0)
-          throw Error(`${tool}: ${path}: ${result.error?.message ?? result.stderr}`);
+        invokeTool(tool, args, label, "compile");
       }
     }
     console.log(
@@ -79,6 +77,16 @@ try {
       }),
     );
   }
+} catch (error: unknown) {
+  console.error(
+    JSON.stringify({
+      check: "localization-native",
+      status: "failed",
+      reason: "resource validation failed",
+      ...(error instanceof ToolFailure ? error.diagnostic : {}),
+    }),
+  );
+  process.exitCode = 1;
 } finally {
   await rm(directory, { recursive: true, force: true });
 }

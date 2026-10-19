@@ -16,8 +16,8 @@ xcuserdata/
 node_modules/
 
 # Never commit CLI authentication material
-**/.dbdiagram/.credentials.json
-**/.dbdiagram/.telemetry.json
+**/.credentials.json
+**/.telemetry.json
 
 /apps/web/dist/
 /apps/web/test-results/
@@ -26,14 +26,52 @@ node_modules/
 # Reproducible locale output; authored catalogues remain versioned.
 /shared/localization/generated/
 
-# Local visual verification captures; retain small reports and source manifests.
-/apps/web/quality/web-*/**/*.png
-/apps/web/quality/web-*/**/*.jpg
-/apps/web/quality/web-*/**/*.jpeg
-/apps/web/quality/web-*/**/*.webp
-/apps/web/quality/web-*/**/*.gif
-/apps/web/quality/web-*/**/*.webm
-/apps/web/quality/web-*/**/*.mp4
-
 # Reproducible native theme resources.
 /shared/theme/generated/
+
+# Local verification output and research; publish selected evidence with PRs, not source.
+/quality/*
+!/quality/README.md
+/apps/web/quality/*
+!/apps/web/quality/README.md
+/docs/research/
+/docs/RESUME*.md
+
+# Reproducible documentation; edit shared definitions and authored task packages.
+/docs/diagrams/v2/
+/docs/database/generated/
+/docs/workflow/task-preview/
+/shared/schema/schema.json
+/tasks/*/TASK.generated.md
+
+!/apps/web/quality/gallery/
+/apps/web/quality/gallery/*
+!/apps/web/quality/gallery/README.md
+
+!/apps/web/quality/drawing/
+/apps/web/quality/drawing/*
+!/apps/web/quality/drawing/README.md
+
+!/apps/web/quality/localization/
+/apps/web/quality/localization/*
+!/apps/web/quality/localization/README.md
+
+!/apps/web/quality/appearance/
+/apps/web/quality/appearance/*
+!/apps/web/quality/appearance/README.md
+
+!/quality/storage/
+/quality/storage/*
+!/quality/storage/README.md
+
+!/quality/precision/
+/quality/precision/*
+!/quality/precision/README.md
+
+!/quality/resources/
+/quality/resources/*
+!/quality/resources/README.md
+
+!/quality/tooling/
+/quality/tooling/*
+!/quality/tooling/README.md

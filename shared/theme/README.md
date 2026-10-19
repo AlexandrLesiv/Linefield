@@ -31,10 +31,11 @@ critical normal/hover/pressed, paper, error and destructive text pairs.
 snapshot of all colors (THEME-01–04, THEME-06–07). Both run within `pnpm check`.
 These checks are not complete accessibility or native-device acceptance.
 
-Native resource generation is available; host adapters/consumers remain future work. Hosts retain
-system semantic colors, appearance selection, native materials, accessibility overrides
-and control presentation. Native applications will not execute TypeScript. Do not
-replace native system behavior with literal web CSS or a universal widget library.
+Native resource generation is available; host adapters/consumers remain future work. Decision 232
+requires common Linefield app styling rather than mandatory native materials/control appearance.
+Hosts retain system appearance selection, accessibility overrides, text/input/focus and OS
+integration. Native applications will not execute TypeScript. No Rust style migration or universal
+widget library is selected; additional token categories and component styles remain future work.
 
 ## Paper presentation
 

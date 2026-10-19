@@ -1,0 +1,442 @@
+{
+  "width": 1440,
+  "height": 1288,
+  "title": "Shared meaning, real platform execution",
+  "description": "Shared scenarios and evidence; actual host drivers own real controls, gestures and lifecycle.",
+  "elements": [
+    {
+      "tag": "rect",
+      "attrs": {
+        "width": "1440",
+        "height": "1288",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "64",
+        "class": "meta"
+      },
+      "text": "LINEFIELD / DIAGRAM LANGUAGE v2"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "64",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "PLANNED CONTRACT · NOT A RUNNER CLAIM"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "123",
+        "class": "title"
+      },
+      "text": "Shared meaning, real platform execution"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "161",
+        "class": "body"
+      },
+      "text": "Shared scenarios and evidence; actual host drivers own real controls, gestures and lifecycle."
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M720 348V384H184V420",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M720 384H448V420",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M720 384H712V420",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M720 384H976V420",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M720 384H1248V420",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M184 536V592H720V640",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M448 536V592",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M712 536V592",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M976 536V592H720",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M1248 536V592H976",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M720 756V840",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M720 956V1040",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "504",
+        "y": "232",
+        "width": "432",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.presentation}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "528",
+        "y": "260",
+        "class": "meta"
+      },
+      "text": "SHARED INPUT"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "528",
+        "y": "292",
+        "class": "node"
+      },
+      "text": "Scenario catalog and fixture definitions"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "72",
+        "y": "420",
+        "width": "224",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "448",
+        "class": "meta"
+      },
+      "text": "DRIVER"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "96",
+        "y": "480",
+        "class": "node"
+      },
+      "text": "macOS native"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "336",
+        "y": "420",
+        "width": "224",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "360",
+        "y": "448",
+        "class": "meta"
+      },
+      "text": "DRIVER"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "360",
+        "y": "480",
+        "class": "node"
+      },
+      "text": "iOS + Android"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "600",
+        "y": "420",
+        "width": "224",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "624",
+        "y": "448",
+        "class": "meta"
+      },
+      "text": "DRIVER"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "624",
+        "y": "480",
+        "class": "node"
+      },
+      "text": "Windows + Linux"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "864",
+        "y": "420",
+        "width": "224",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "888",
+        "y": "448",
+        "class": "meta"
+      },
+      "text": "DRIVER"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "888",
+        "y": "480",
+        "class": "node"
+      },
+      "text": "Browser"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1128",
+        "y": "420",
+        "width": "240",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1152",
+        "y": "448",
+        "class": "meta"
+      },
+      "text": "DRIVER"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1152",
+        "y": "480",
+        "class": "node"
+      },
+      "text": "TV + Watch viewers"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "504",
+        "y": "640",
+        "width": "432",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "528",
+        "y": "668",
+        "class": "meta"
+      },
+      "text": "ACTUAL EXECUTION"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "528",
+        "y": "700",
+        "class": "node"
+      },
+      "text": "Real controls, gestures and lifecycle"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "504",
+        "y": "840",
+        "width": "432",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "528",
+        "y": "868",
+        "class": "meta"
+      },
+      "text": "ASSERTIONS"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "528",
+        "y": "900",
+        "class": "node"
+      },
+      "text": "Shared semantics plus platform checks"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "504",
+        "y": "1040",
+        "width": "432",
+        "height": "116",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "528",
+        "y": "1068",
+        "class": "meta"
+      },
+      "text": "OUTPUT"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "528",
+        "y": "1100",
+        "class": "node"
+      },
+      "text": "Common evidence report"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M72 1216H1368",
+        "stroke": "{diagram.color.divider}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "72",
+        "y": "1248",
+        "class": "meta"
+      },
+      "text": "Notation migration only · See source packet for authority and evidence"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1368",
+        "y": "1248",
+        "class": "meta",
+        "text-anchor": "end"
+      },
+      "text": "2026-10-19 · Full-size SVG"
+    }
+  ]
+}

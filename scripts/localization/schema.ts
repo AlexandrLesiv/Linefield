@@ -12,6 +12,8 @@ export type {
 } from "../../shared/localization/types.ts";
 function object(value: unknown): asserts value is Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value)) throw Error("Expected object");
+  const prototype = Object.getPrototypeOf(value);
+  if (prototype !== Object.prototype && prototype !== null) throw Error("Expected plain record");
 }
 function keys(value: object, allowed: string[]): void {
   for (const key of Object.keys(value))
