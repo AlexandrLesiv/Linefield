@@ -73,9 +73,9 @@ export function observePointerLifecycle(canvas: HTMLCanvasElement, read: () => R
       time: Math.round(performance.now()),
     });
   };
-  for (const name of events) document.addEventListener(name, observe, true);
+  for (const name of events) window.addEventListener(name, observe, true);
   return () => {
-    for (const name of events) document.removeEventListener(name, observe, true);
+    for (const name of events) window.removeEventListener(name, observe, true);
   };
 }
 export function pointerDiagnostics() {

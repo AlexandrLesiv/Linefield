@@ -394,6 +394,18 @@ sends the key intent, never a precomputed world delta. Right/down increase view-
 anchored zoom arithmetic and visible painted envelope must be revalidated as specified in
 the numerical companion before implementation; old zoom1 diagnostics do not supply that evidence.
 
+The owner extended Space-drag to primary pen-tip contact as well as mouse/trackpad on2026-10-19.
+The browser chooses the existing pan command before ink admission; pressure does not affect pan.
+Capture ownership includes pointer ID, source kind and contact timestamp. Other-source or older
+events cannot update/end/cancel that pan. Space-up ends pan but suppresses the remaining held
+contact through pointer-up; a fresh unarmed contact draws normally. The approved mouse/pen
+zero-button capture-loss normalization also applies to pan: freeze the last accepted view,
+ignore hover and await the genuine matching release without a timeout or inferred End. Release
+ends at that frozen position; explicit Space-up remains an accepted PanEnd action. Pressed movement,
+conflicting capture, pointercancel, Escape, blur or remap cancels to the captured view. A fresh
+down cancels the pending interaction before ordinary admission. Use the existing localized
+pending-release indication and lifecycle/source/time fences; no new Rust signature or touch binding.
+
 SceneIds returns<=128 stroke IDs in paint order with preview last (reserved transient stroke
 identity). ScenePage returns one stroke's<=4,096 complete path verbs, no verb split, from
 integer offset; one scene revision throughout. Query mismatch returns `stale-scene`, empty

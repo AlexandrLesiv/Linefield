@@ -43,6 +43,14 @@ release, captured-view cancellation, native held-key behavior and viewport reten
 isolated Wasm viewport fixture checks hostile arguments, exact regional examples, stale
 tokens and terminal generation reservations; it is browser boundary evidence, not native UI.
 
+`viewport-pen.spec.ts` drives Chrome CDP pen input through the actual app: Space+tip moves
+artwork before release, exact replacement preserves position, pan creates no history, Space-up
+cannot turn a held tip into ink, and fresh unarmed pen contact draws. Escape and browser-generated
+pressed capture loss restore the captured view. Wrong-device/old-timestamp events are explicit
+hostile DOM fixtures. `viewport-pen-release.spec.ts` checks trusted zero-button loss before
+delayed release, frozen hover, cancellation and fresh contact under the same event-driven
+normalization as ink. Physical Wacom pan remains a manual hardware gap.
+
 `viewport-throughput.spec.ts` collects bounded32/64-stroke diagnostics without ready waits
 between strokes. Inspect its explicit `continuousPanVerdict`, publication count during
 movement, pending age and cold-rebuild parity: collection completion is not a performance

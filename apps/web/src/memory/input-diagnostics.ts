@@ -28,6 +28,9 @@ const reasons = new Set([
   "release-pending",
   "fresh-contact",
   "pressed-move",
+  "pan-release-pending",
+  "pan-end",
+  "pan-cancel",
 ]);
 const outcomes = new Set([
   "ok",

@@ -3,6 +3,7 @@ import { inputDiagnostic } from "./input-diagnostics.ts";
 import type { ReplyValue } from "./bridge.ts";
 import { contactOwner } from "./pen-contact.ts";
 import { localPoint, sampleBatch } from "./pen-samples.ts";
+import { pendingReleaseLoss, pendingReleaseEnd } from "./pointer-release.ts";
 export interface EditorCommands {
   read(): ReplyValue;
   fail(): void;
@@ -96,15 +97,7 @@ export function attachPenInput(
   const up = (event: PointerEvent) => {
     const previous = owner.current;
     if (!matches(event) || !previous) return;
-    if (
-      previous.pending &&
-      (!event.isTrusted ||
-        event.timeStamp < previous.releaseTime ||
-        !event.isPrimary ||
-        event.pointerType !== previous.source ||
-        event.button !== 0 ||
-        event.buttons !== 0)
-    )
+    if (previous.pending && !pendingReleaseEnd(event, previous.source, previous.releaseTime))
       return;
     release();
     const result = commands.run(() => penBridge.end(previous.token, previous.next));
@@ -116,15 +109,7 @@ export function attachPenInput(
   };
   const captureLost = (event: PointerEvent) => {
     if (!matches(event)) return;
-    if (
-      event.isTrusted &&
-      owner.current?.source === event.pointerType &&
-      event.isPrimary &&
-      ["mouse", "pen"].includes(event.pointerType) &&
-      event.target === canvas &&
-      event.buttons === 0 &&
-      event.button === -1
-    ) {
+    if (owner.current && pendingReleaseLoss(event, canvas, owner.current.source)) {
       owner.freeze(event.timeStamp);
     } else cancel("capture-loss");
   };

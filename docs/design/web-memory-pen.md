@@ -160,7 +160,7 @@ late loaders, renderer work and focus restoration. Repeated requests are coalesc
 | D3-10 Fatal engine failure | Wasm trap/poison or unusable authority | Fail closed; disable edits/history/settings. Keep last completed image only if safely available, visibly marked unavailable. Explain RAM cannot be recovered here. Back remains available; no Retry that silently replaces owner/content. |
 | D3-11 Temporary content unavailable | Cold temporary URL or missing owner after page restoration | Gallery, unavailable announcement, New available. Do not claim previous content intact, saved or recoverable. |
 | D3-12 Preview | Open existing raster sample | Existing non-editable sample screen; no pen intake/history command. Return preserves temporary owner if present. |
-| D3-13 Panning | Idle canvas, accepted Space + primary mouse/trackpad drag | Rust captures viewport and pointer base. Updates derive from that base; release Space or pointer ends at the accepted viewport. Escape/blur/capture loss restores pre-pan viewport. Resize/display remap cancels before installing new mapping. No ink, document revision or Undo operation; fresh input required after cancellation. |
+| D3-13 Panning | Idle canvas, accepted Space + primary mouse/trackpad or pen-tip drag | Rust captures viewport and pointer base. Updates derive from that base; release Space or pointer ends at the accepted viewport. Escape/blur/capture loss restores pre-pan viewport, except the qualified zero-button release-pending normalization below. Resize/display remap cancels before installing new mapping. No ink, document revision or Undo operation; fresh input required after cancellation. |
 | D3-03 View change | Idle canvas, zoom button or focused Arrow key | Rust accepts a bounded center-anchored zoom step or directional pan step, publishes new mapping and keeps artwork/history unchanged. Invalid or stale requests reject unchanged; no delayed replay after ink ends. |
 
 If a fatal owner still exists, Resume opens D3-10, never allocates a blank replacement. Only a
@@ -261,15 +261,24 @@ browser Back/Forward. The approved initial web mapping uses no app wheel handler
 trackpad pinch/scroll classification; trackpad click-and-drag works like a mouse.
 
 - **Pan by drag:** when canvas owns keyboard focus, Space with no modifiers arms temporary
-  pan; primary mouse/trackpad drag starts it if Rust is idle. Pen remains the selected tool;
+  pan; primary mouse/trackpad or pen-tip drag starts it if Rust is idle (owner-approved pen
+  extension2026-10-19). Pen remains the selected tool;
   use grab/grabbing cursors without adding a Pan tool. Rust captures viewport and pointer
-  base and derives every update from it. Release mouse or Space to finish; after Space-up
+  base and derives every update from it. Release pointer or Space to finish; after Space-up
   while the pointer remains down, require pointer-up and a fresh begin before ink. Escape,
-  blur, pointercancel/capture loss or route departure cancels and restores the pre-pan view.
+  blur, pointercancel/capture loss or route departure cancels and restores the pre-pan view,
+  except the qualified zero-button loss described below.
   A system remap cancels first, then installs the new metrics. Clear the Space latch on blur,
   native field/IME takeover and cancel; a key held while an ink interaction rejects pan must
   be released and pressed again, never activate belatedly on pen-up. Key repeat cannot begin
   extra pan interactions. No inertia or animated camera movement.
+- **Pan release ordering:** reuse the D3-04R trusted primary same-source zero-button capture-loss
+  normalization for mouse/pen pan. Freeze the last accepted viewport, show the existing localized
+  pending-release notice, and ignore hover until matching genuine pointer-up ends at that view.
+  Explicit Space-up may also finish pan. No timeout or inferred release. Pressed movement,
+  conflicting capture, Escape/blur/cancel/remap restores the captured pre-pan view. A fresh down
+  cancels pending pan before ordinary admission; competing down during nonpending pan cannot
+  replace its pointer owner. This creates no stroke or history operation.
 - **Keyboard pan:** unmodified Arrow keys on the focused canvas move the view by 40 CSS px
   per native keydown, including eligible native repeat; no custom repeat timer or Shift
   multiplier. Right reveals content

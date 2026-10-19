@@ -9,8 +9,12 @@ const arrows: Readonly<Record<string, PanDirection>> = {
   ArrowUp: "up",
   ArrowDown: "down",
 };
-export function attachViewportInput(canvas: HTMLCanvasElement, commands: EditorCommands) {
-  const contact = viewportContact(canvas, commands);
+export function attachViewportInput(
+  canvas: HTMLCanvasElement,
+  commands: EditorCommands,
+  pending: (active: boolean) => void,
+) {
+  const contact = viewportContact(canvas, commands, pending);
   let space = false;
   const blocked = new Set<string>();
   const controller = new AbortController();
@@ -72,10 +76,10 @@ export function attachViewportInput(canvas: HTMLCanvasElement, commands: EditorC
   canvas.addEventListener("keydown", keydown, options);
   window.addEventListener("keyup", keyup, options);
   canvas.addEventListener("pointerdown", (event) => contact.down(event, space), options);
-  canvas.addEventListener("pointermove", contact.move, options);
+  window.addEventListener("pointermove", contact.move, options);
   window.addEventListener("pointerup", contact.up, options);
-  for (const name of ["pointercancel", "lostpointercapture"] as const)
-    canvas.addEventListener(name, contact.interrupt, options);
+  for (const name of ["pointercancel", "lostpointercapture", "gotpointercapture"] as const)
+    window.addEventListener(name, contact.interrupt, options);
   canvas.addEventListener("blur", reset, options);
   window.addEventListener("blur", reset, options);
   document.addEventListener(
