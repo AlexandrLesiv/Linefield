@@ -18,6 +18,8 @@ references, app test coverage and experiments required by unresolved storage/eng
   and retired-tool inventories are removed, with active references repaired.
 - CLEAN-04: developer-tool suites removed; primary-app semantic and browser checks preserved.
 - CLEAN-05: research retained outside the repository, with independent review of the final diff.
+- CLEAN-06: inspect deleted quality READMEs individually; retain maintained verification guidance,
+  acceptance mappings and unresolved findings. Run logs and generated artifacts stay excluded.
 
 Retire the HTML task tracker. Keep readable task briefs and structured JSON links without a task UI.
 No product behavior, storage adoption, approval boundary, history rewrite or main merge is included.

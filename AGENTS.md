@@ -11,6 +11,7 @@ Generate diagram previews locally into ignored paths. There is no task HTML serv
 DTCG tokens, SQL/annotations and task JSON/briefs rather than parsing generated SVG or HTML.
 Keep only primary-app tests; do not add suites for developer tools. Retain source experiments
 needed to resolve primary-app storage/engine risks, with results in ignored .build-cache.
+Maintained quality READMEs are source: preserve useful acceptance mappings, verification guidance and unresolved findings. Exclude generated logs/results/captures, not documentation merely because it lives in quality/.
 Current authored owner-approved visual references are source assets, not generated output.
 This owner policy supersedes earlier evidence-retention and tooling-test requirements below.
 
