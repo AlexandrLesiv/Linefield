@@ -2,7 +2,7 @@
 
 Type: executable leaf. Parent: P05-D01. Status: bounded investigation prepared; original failure remains open.
 Owner/writer: replacement Codex lead (prior writer stopped and transferred ownership); isolated worktree .worktrees/web-d2-08-rename.
-Branch: codex/web-d2-08-rename. PR: not opened; base main.
+Branch: codex/web-d2-08-rename. PR: [#7](https://github.com/AlexandrLesiv/Linefield/pull/7), draft for owner review; base main.
 Verified base: 55d0cbad108969448ac4302a5b1f2a32ca1b6d57.
 PR #5 is merged (69b320cf4f91b7bce24bbb152cb9ca6e379a550e, into its stacked base).
 Default main and PR #5 final head a78494c have identical tree eefe8e687e4d396a31b5cbb5b30eafb33cff01dd.
