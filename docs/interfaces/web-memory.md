@@ -1,23 +1,31 @@
 # In-memory web editor contract WMP-C2
 
-2026-10-19. **Proposal for owner approval; no production implementation authorization.**
-S02-W01 is confirmed first. Current integrated base `f18b44f` includes merged PR8. The isolated
+2026-10-19. **Recorded owner choices with remaining engineering recommendations; no production implementation authorization.**
+S02-W01 is confirmed first. Current integrated base `454ab65`. The isolated
 synthetic candidate is evidence for this proposal, not an editor or passing browser E2E.
 Owners: rust_engine semantics; designer [WMP-D3](../design/web-memory-pen.md);
 rendering_performance geometry review; lead [security](../security/web-memory.md).
 
 ## Approval items and settled inputs
 
-Approve these identified amendments together with WMP-D3 before P05-E01: W1 generated
-checked Wasm calls/lifetimes; W2 single page owner and RAM/session lifecycle; W3 fixed
-mapping/envelope/normalization; W4 swept-disk scene and bounded presentation; W5 accounting
-reservations/failure policy. Confirmation of this task is not any of those approvals.
+The owner approved review choices G1–G4, W1–W4 and C1–C3, with C4 explicitly clarified
+below. Those review labels are distinct from this document's W1–W5 section labels.
+G1 requires actual editor pan/zoom in this slice; fixed-view-only is rejected. G2 approves
+screen/surface limits, G3 precision/normalization policy and G4 swept-disk round geometry.
+W1–W4 approve generated checked bindings, one main-thread Rust owner, bounded batches and
+the reviewed security direction. C1 requires memory-based long strokes without a65,536
+lifetime-sample cap; C2 approves oldest whole-history retirement; C3 approves context
+recovery preserving accepted RAM. Exact new pan/zoom signatures, zoom-aware numerical
+admission, long-stroke indexing and renderer reporting/rebuild mechanisms still need the
+bounded engineering recommendation and evidence below. No unspecified ABI is approved.
 Owner direction on2026-10-19 retains CanvasKit for cross-platform continuity and permits
 increasing the web memory budget; native Canvas may be considered later. This supersedes
 the previous128MiB aggregate constraint for this web slice. The owner subsequently approved
 the revised320MiB owned-CPU operating budget (CanvasKit256,Rust32,JS32) and separate96MiB
-graphics allowance, with the stated distinction from a hard ceiling. Other concrete contract,
-failure-policy and design choices remain pending; budget approval is not runtime acceptance.
+graphics target. C4 clarifies **soft monitoring targets**, not admission cutoffs: crossing
+320MiB CPU, a category share or96MiB graphics does not itself stop editing. First reclaim
+disposable resources/reduce optional rendering work; reject only on actual resource failure.
+Budget approval is not runtime acceptance and creates no reliable OS/browser warning guarantee.
 Owner also approved memory-based admission without a fixed document stroke quota: actual
 Rust allocation accounting, observed CanvasKit heap, measured renderer estimates and disposable
 cache eviction. Exact accounting/reporting and coherent redraw mechanisms still need review
@@ -28,8 +36,8 @@ session attachment generations do not define or reset its lifetime. This approve
 lifecycle does not authorize production implementation or imply survival after page loss.
 Owner choices3A/4B/5A approve browser-reported pen pressure, constant-width mouse ink,
 no finger drawing with browser touch gestures allowed, and native width/color controls
-for now (width8, opaque black defaults). These exact choices are settled; other contract,
-numerical, ownership, failure and design categories remain pending where identified below.
+for now (width8, opaque black defaults). These exact choices are settled. Remaining concrete
+mechanisms and evidence gaps are identified below; do not reopen the selected product choices.
 The numerical investigation supports a conservative candidate; browser/CanvasKit fidelity,
 allocation high-water and release workload gates remain P05-E02 acceptance requirements.
 
@@ -43,7 +51,7 @@ This packet is an additive web profile, not replacement of approved native C con
 
 ## W1: exact named boundary and generated declarations
 
-Recommend `wasm-bindgen` crate and CLI **0.2.129**, locked identically, `--target web`.
+Owner-approved binding direction uses `wasm-bindgen` crate and CLI **0.2.129**, locked identically, `--target web`.
 Its release and parameter-annotation support were verified in upstream docs and local
 registry source; no generator executable is installed here and generated production
 bindings are **unrun**. P05-E01 must generate/compile declarations and inspect actual
@@ -73,8 +81,7 @@ type Reply = Readonly<{ code: Code; owner: Id; session: Id; interaction: Id;
   content: Id; scene: Id; mapping: Id; activeCancelled: boolean }>;
 type State = Readonly<Reply & { phase: "gallery" | "ready" | "suspended";
   width: number; red: number; green: number; blue: number;
-  canUndo: boolean; canRedo: boolean; strokeCount: number; cpuCharge: number;
-  activeSampleLimit: number }>;
+  canUndo: boolean; canRedo: boolean; strokeCount: number; cpuCharge: number }>;
 type Mapping = Readonly<Reply & { available: boolean; width: number;
   height: number; backing: number; regionX: bigint; regionY: bigint;
   localX: number; localY: number; zoom: number }>;
@@ -112,6 +119,14 @@ export function memorySceneIds(owner: Id, session: Id, scene: Id,
   after: Id): Readonly<Reply & { ids: BigUint64Array; done: boolean }>;
 export function memoryDispose(owner: Id): Reply;
 ```
+
+The obsolete `activeSampleLimit` is removed: there is no lifetime sample-count quota.
+Existing index/count/offset Number fields above are provisional pending long-stroke ABI
+finalization; choose exact checked indexing (recommend bigint-backed u64 for cumulative
+sample/verb cursors, bounded Number lengths per copied page). This recommendation is not
+an implemented signature change. Never wrap/truncate an index, silently split one stroke
+into several Undo entries, or treat65,537 samples as intrinsically invalid. Mathematical
+counter exhaustion is a representability failure, not a product stroke-duration limit.
 
 Each exported Rust function receives **JsValue for every caller-controlled argument**,
 annotated with the corresponding emitted parameter type. Before coercion: verify bigint
@@ -224,7 +239,8 @@ which returns `capacity,activeCancelled=true` and announces capacity,
 never silently drops. Pointerup ends after queued moves; it adds no synthetic zero-pressure
 sample. A stationary begin/end is a dot. Predictions/tilt ignored, actual duplicates retained.
 
-Append firstIndex must equal accepted count; indices contiguous, total<=65,536. Duplicate
+Append firstIndex must equal accepted count; indices contiguous with checked arithmetic,
+without a fixed lifetime sample-count ceiling. Duplicate
 or skipped current sequence cancels current unfinished stroke (`sequence`). No replay or
 retry protocol exists for these synchronous calls. Validate complete batch and reserve before
 append. Current invalid/numerically inadmissible/capacity batch cancels whole interaction,
@@ -248,6 +264,16 @@ future capacity without mutating those stacks, or rejects. Only successful End a
 clears redo, retires eligible oldest complete entries and installs new model/history state.
 Begin→cancel and invalid current batch near capacity must preserve prior Undo/Redo exactly.
 
+**Remaining oversized-history decision:** a memory-admitted long stroke can itself retain
+more than the separately selected16MiB history allowance. Retiring older entries cannot
+fit that newest indivisible operation. Do not silently reject it because of a soft memory
+share, split it, commit without Undo, reinterpret retained-state bytes as metadata only,
+or make its first Undo discard Redo. Recommend retaining that newest whole operation even
+above16MiB after retiring eligible older entries, with16MiB acting as a retirement target
+for this case. This is a specific additional recommendation requiring owner approval;
+C1/C2 do not themselves resolve it. Before implementing End/Undo, record the exact policy
+and cover a newest stroke>16MiB through End→Undo→Redo→Back→Resume.
+
 ## W3 and W4: numerical and scene definition
 
 See [numerical candidate/evidence](web-memory-numerics.md) for exact normalization, finite
@@ -261,8 +287,34 @@ height finite in[1,8192], backing finite[1,4], ceil(width×backing) and ceil(hei
 uses explicit Suspend, not invalid Metrics. Valid changed metrics cancel unfinished work,
 install mapping generation and keep completed world ink. Unchanged metrics with newer
 sequence are `noop` and retain generation/interaction. Stale/invalid metrics reject unchanged.
-Zoom and original stroke scale fixed1. World center region(0,0)/local(+0,+0) fixed; canvas
-center(width/2,height/2) maps there. Resize changes framing, never translates stored ink.
+Original stroke scale remains1; selection scaling remains excluded. Editor pan/zoom is
+required (G1), with the already selected zoom range[0.1,8]. Initial viewport center is
+regional world0 and initial zoom1, then Rust owns accepted center/zoom independently of
+samples. Canvas center(width/2,height/2) maps to that center. Resize preserves accepted
+viewport center/zoom and changes framing, never stored ink. Browser page gestures remain
+distinct from editor viewport commands and cannot silently mutate Rust's mapping.
+
+Recommend named checked `memoryPanBegin`, `memoryPanUpdate`, `memoryPanEnd` and shared
+Cancel, plus `memoryZoomStep` for approved UI step origins when their exact design is
+confirmed. These are **pending interface recommendations**, not emitted/generated source.
+Pan captures center/zoom/start point and an interaction token; ordered updates carry that
+token, captured mapping generation and current canvas point. Derive every preview from
+`capturedCenter−(current−start)/capturedZoom`, not accumulated rounded deltas. Each accepted
+preview gets a new presentation mapping/scene generation; no new ink while pan is active.
+End retains accepted viewport, no document Undo. Cancel/Escape/blur/capture loss restores
+captured viewport; a system remap cancels pan before installing new metrics. Stale tokens
+or wrong sequences cannot alter a newer pan/ink interaction. Reserve terminal generations
+before Begin. Active ink rejects pan/zoom without queuing or forcing cancellation.
+
+Designer recommends center-anchored1.25 zoom button steps: Rust selects next zoom within
+[0.1,8], reaches boundary explicitly and no-ops at that boundary. This discrete stepping
+policy requires concrete approval; it is distinct from silently clamping an invalid raw
+factor. Any later arbitrary-factor API must validate resulting zoom and define its anchor
+explicitly. Initial browser touch/wheel gestures remain browser-owned, not Rust pan/zoom
+commands. Input origins, viewport retention across Back and exact typed signatures remain
+review items. Native field/IME handling retains priority. Exact inverse division/normalization,
+anchored zoom arithmetic and visible painted envelope must be revalidated as specified in
+the numerical companion before implementation; old zoom1 diagnostics do not supply that evidence.
 
 SceneIds returns<=128 stroke IDs in paint order with preview last (reserved transient stroke
 identity). ScenePage returns one stroke's<=4,096 complete path verbs, no verb split, from
@@ -302,19 +354,19 @@ measured before acceptance; this count bound is not an SU14 timing claim.
 ## W5: accounting and failure
 
 The owner approved replacing decision194's former128MiB web aggregate with a
-320MiB owned-CPU operating budget:256MiB CanvasKit allowance,32MiB Rust and32MiB
-JS. This is an admission/observed-capacity target, not an enforceable hard memory ceiling.
+320MiB owned-CPU **soft monitoring target**:256MiB CanvasKit,32MiB Rust and32MiB
+JS. These shares guide observation/reclamation, not admission cutoffs or enforced ceilings.
 Stock CanvasKit permits growth to2GiB; a single call can overshoot the target before detection.
 The extra128MiB above its initial heap is proposed headroom, not measured sufficient capacity.
 The page-lived document's history<=16MiB; existing32MiB cross-client ceiling is irrelevant to one client.
 Count capacities/overhead and old/new/copy peaks, not only logical lengths. Subordinate
 pools remain inside their category; do not add them again to the operating budget.
 
-| Reserved category | Ceiling / policy |
+| Observed category | Monitoring target / policy |
 | --- | --- |
-| Stock CanvasKit linear heap | Initial128MiB, binary maximum2GiB; proposed observed allowance256MiB, including path cache<=16MiB, engine allocations and retained allocator space. The256MiB allowance does not change the binary maximum. |
-| Rust linear heap | Initial8MiB, maximum32MiB; reserve full32MiB; within it canonical/retained samples16MiB, unfinished4MiB, scratch4MiB, metadata+runtime+allocator8MiB |
-| JS acquisition, copied outputs, staging and owned headroom | 32MiB; includes acquisition1,024×40, one<=256KiB output, module loading byte arrays and simultaneous old/new bridge copies; release loading bytes before editing |
+| Stock CanvasKit linear heap | Initial128MiB, binary maximum2GiB; observed target256MiB, including paths, engine allocations and retained allocator space. The target does not change the binary maximum. |
+| Rust linear heap | Monitoring share32MiB; initial8MiB is an unverified build recommendation. No32MiB linker maximum is approved. Actual declared maximum/growth/allocator behavior must be reported with the runtime build. Canonical, unfinished, scratch and metadata capacities are observed, not forced into old16/4/4/8 quotas. |
+| JS acquisition, copied outputs, staging and owned headroom | Monitoring share32MiB; includes bounded acquisition1,024×40, one<=256KiB output, module loading byte arrays and old/new bridge copies. Release loading bytes before editing. |
 
 Owner approved memory-based admission rather than the proposed128-stroke restriction.
 Withdraw the fixed64KiB-plus-multiplier per-path reservation and the4,096-stroke count ceiling.
@@ -322,7 +374,8 @@ Approved policy direction: charge Rust records/containers by actual allocated ca
 including headers, alignment, spare capacity and allocation overhead established by the build.
 The earlier64-byte sample/256-byte header/128-byte history figures are sizing estimates,
 not substitutes for actual layout/capacity accounting. Page-lived history retained-state
-charge<=16MiB; shared visible/redo canonical samples counted once physically in Rust16MiB.
+charge<=16MiB under the separately approved history-retirement policy; shared visible/redo
+canonical samples counted once physically in Rust's observed capacity.
 No extra16MiB physical history allocation is implied. Geometry cache<=16MiB combines any
 Rust cached geometry with CanvasKit paths; each is charged inside its respective heap,
 never again above the heap reservation. Browser/compiler/driver overhead is measured separately;
@@ -333,19 +386,20 @@ Reserve terminal commit/cancel metadata before admitting an interaction, then gr
 capacity incrementally with checked batches, rather than reserving its maximum duration at Begin.
 Each worst sample contributes
 one circle (6 verbs,18 floats,4 weights) and<=one quad(5 verbs,8 floats):<=11 verbs,
-26×4+4×4+11=131 encoded geometry bytes/sample before allocator/path overhead. A full65,536
-sample stroke is8.1875MiB encoded; with the earlier64-byte sample estimate, the4MiB Rust
-transient reserve cannot hold both samples and geometry. Recheck against actual layout.
+26×4+4×4+11=131 encoded geometry bytes/sample before allocator/path overhead. This is a
+per-sample construction estimate, not a total permitted sample count. Recheck actual layout.
 Do **not** allocate full geometry copies:
 keep samples authoritative, stage bounded pages, charge retained CanvasKit path to cache and
-account for actual page/path capacity and measured rendering headroom. Count ceilings do not guarantee
-every65,536-sample path is admissible. Current capacity failure cancels unfinished stroke.
+account for actual page/path capacity and measured rendering headroom. Actual fallible
+allocation/resource failure cancels the unfinished stroke atomically; crossing a soft
+monitoring share alone does not cancel it.
 
 No fixed document stroke count is proposed. Many short strokes should cost less than a few
 long strokes according to their actual samples, metadata and rendering requirements. The
-65,536-sample per-interaction work ceiling remains separately proposed; it is not a document
-stroke count or a guarantee that every stroke fits. Update the emitted `activeSampleLimit`
-definition during contract finalization: it must not imply a pre-reserved memory guarantee.
+owner removed the65,536-sample lifetime limit (C1). Bound each batch/page/scheduling slice
+while growing retained input incrementally by available resources; never drop samples or
+split the user's stroke/history to satisfy a work-slice limit. Finalize exact long-stroke
+index/count fields before implementation; no `activeSampleLimit` is emitted.
 
 Exact CanvasKit live-path bytes are not exposed by the pinned public Path API. Its
 `Picture.approximateBytesUsed()` is for pictures and excludes large objects; do not substitute
@@ -363,7 +417,8 @@ scene limits. Do not claim that eviction alone solves live-path memory or full-s
 The former requirement to keep every path resident needs explicit replacement in the scene
 contract if streaming is proposed; no sequential flush workaround is silently approved here.
 E01/E02 must return measured allocation and cold/warm/evicted-render findings before finalizing
-admission. Insufficient headroom rejects/cancels only the unfinished interaction; completed
+resource handling. A measured target/headroom overage triggers reclamation, not rejection.
+Actual resource failure rejects/cancels only the unfinished interaction; completed
 content/history stay intact. This policy direction is approved; its concrete mechanisms and
 runtime acceptance remain pending.
 
@@ -381,43 +436,56 @@ removes that initial-footprint conflict; it does not establish release workload 
 Use pinned stock0.41.1 under the proposed operating budget, subject to E01 validating actual
 startup, heap instrumentation and graphics allocation. No native Canvas switch is selected.
 Observe linear-memory buffer capacity before/after allocating CanvasKit calls and at bounded
-frame/rebuild boundaries. No per-sample production logging. If CanvasKit exceeds256MiB or
-owned CPU exceeds320MiB, stop input/presentation, cancel unfinished interaction through Rust,
-preserve completed Rust RAM/history and retire disposable rendering resources. Display the
-unavailable state; stale pixels must not imply that new accepted work was presented.
-An individual allocation can overshoot before observation; do not promise pre-allocation
-enforcement inside CanvasKit. Deleting paths cannot shrink linear memory. Do not automatically
-resume, restart the engine or reload/discard the drawing after this budget failure.
-Keep this budget-failure state suspended for the page lifetime: Back remains available,
-but Retry and Resume cannot restart rendering or replace the retained Rust owner. Re-entering
-the temporary route shows the same unavailable state. Accepted Back releases only the
-input attachment and preserves both history stacks under W2. This is distinct from recoverable context loss. WMP-05/09 must cover
-budget excess → Back → Resume/Forward and prove no restart, blank replacement or false recovery.
-E01 must verify access to pinned heap capacity and safe handling; unavailable instrumentation or an
-insufficient allowance returns measured options for review. A hard256MiB CanvasKit ceiling
-would require a separately reviewed mechanism/build; it is not claimed here.
+frame/rebuild boundaries. No per-sample production logging. If any soft target is exceeded,
+first evict eligible disposable paths/caches, release obsolete bridge buffers and reduce
+optional rendering work; preserve actual input, canonical artwork and both history stacks.
+Do not cancel a live stroke, lock the page, disable Resume or reject a command merely because
+CanvasKit exceeds256MiB, Rust/JS exceed32MiB, CPU exceeds320MiB or graphics exceeds96MiB.
+Optional work reduction cannot change stored geometry or hide newly accepted input indefinitely;
+its exact bounded scheduling/presentation mechanism remains a reviewed implementation detail.
+No automatic reload, blank replacement or target-triggered fatal tombstone.
+
+If a real allocation, surface, context or other required resource operation fails, classify
+that observed failure and apply its existing safe outcome: reject/cancel only unfinished
+work if needed, preserve completed Rust RAM/history while the owner is usable, and rebuild
+recoverable renderer resources. A Wasm trap/uncertain owner remains fatal under the distinct
+integrity rule. Deleting paths does not shrink Wasm linear capacity; a persistent high-water
+observation is not proof of continuing live-allocation failure. Back/Resume after a target
+overage preserves ordinary eligibility unless an actual failure independently blocks it.
+WMP-05/09 must distinguish over-target-but-working, recoverable allocation/context failure
+and fatal owner loss, without manufacturing a restart or false recovery.
+
+Actual module maximum pages, addressability limits and allocator failure are technical
+boundaries that must be reported with the pinned runtime; monitoring shares are not those
+boundaries. Do not set a32MiB Rust maximum or256MiB CanvasKit maximum and call the resulting
+forced failure owner-approved. E01 verifies instrumentation and returns observed capacity,
+growth and recovery findings. Browser/OS termination can occur without any reliable low-memory
+warning or cleanup callback; surviving RAM cannot be promised after page/process loss.
 This operating policy is **not hard RSS control**. Count physical memory once: paths inside its linear
 heap consume that heap's live category share, and remaining retained heap capacity is
 headroom, not an additional full heap charge. Include JS copied arrays separately. E01/E02
 must measure pinned release heap high-water/retained path peaks and
-validate reservations; insufficient headroom fails the proposal's acceptance, not permission
-to increase caps. Cache eviction calls `.delete()`; `rewind()` retains storage. No eviction
-of accepted drawing state. When history eviction cannot free enough eligible bytes, reject
-admission; do not clear protected content to render. Rendering page/query overhead stays
+validate accounting and observed reclamation. Cache eviction calls `.delete()`; `rewind()`
+retains storage. No eviction of accepted drawing state. The separately approved16MiB history
+retirement policy may retire eligible oldest entries on successful commit, never as a fake
+remedy for a soft monitoring crossing. Actual resource failure still must not clear protected
+content to render. Rendering page/query overhead stays
 bounded even while semantic admission stopped.
 
-Surface budget separately approved96MiB graphics/backing reservation (one nominal RGBA8
-surface<=32MiB, same-size presentation allowance,32MiB attachment/cache headroom), outside the320MiB CPU target and not a
+Surface monitoring target is96MiB graphics/backing (one nominal RGBA8
+surface<=32MiB, same-size presentation estimate,32MiB attachment/cache headroom), outside the320MiB CPU target and not a
 browser RSS guarantee. Retire surface before replacement; no doubled live surfaces. Browser/
 driver overhead and real framebuffer format require measured headroom. Explicit context
 attributes depth:false, antialias:false, stencil:true; pinned default depth allocation must
-not slip in. Stencil attachment padding/cache must fit graphics headroom; otherwise fail
-initialization and return revised measured proposal. No silent DPR reduction
+not slip in. Report actual stencil attachment padding/cache and reclaim disposable resources
+on target pressure; fail initialization only for actual resource/validation failure, not
+the monitoring overage itself. G2's approved pixel/dimension validation limits remain
+distinct hard input bounds. No silent DPR reduction
 or software fallback. Explicit audited CanvasKit context/surface constructors are required:
 `MakeWebGLCanvasSurface` may internally fall back and replace canvas. Rendering reviewer
 must approve pinned calls and memory measurement in E01 before enabling them.
 
-Surface/context loss: stop admission, cancel unfinished work, preserve accepted Rust RAM and
+Owner-approved C3 surface/context loss: stop admission, cancel unfinished work, preserve accepted Rust RAM and
 history; delete invalid resources, bounded rebuild on restoration, resume only fresh mapping.
 Initialization/asset failure before owner exists changes no drawing. Panic/trap/OOM or uncertain
 Wasm owner integrity: fail closed, stop all commands, keep fatal tombstone, no synthetic success
@@ -437,14 +505,15 @@ reviewer evidence labels. No new unit/property/bridge-only/developer-tool suites
 | --- | --- |
 | WMP-01 | Mouse/pen dot, sharp turn, duplicate center/changed pen pressure, alternating pressure → same-winding swept disk; constant full-width mouse ink and effective reported pen pressure; no finger ink, seams or mutation of old color/width |
 | WMP-02 | A/B/lostcapture/C/lateA; touch contact during pen; browser gesture takeover; Escape, blur, resize, Back → unrelated touch alone does not cancel pen; actual matching cancellation removes only unfinished work with no history; browser gestures and fields/IME keep priority |
-| WMP-03 | Undo during input rejects; completed stroke Undo/Redo as one; Back/Resume retains ink/settings and both history stacks; Undo-all→Back→Resume preserves Redo; no save claim |
-| WMP-04 | Bound±adjacent value, batch256/257, sample65,536/65,537, invalid pressure/sequence → current batch atomic cancel; stale unrelated event does not cancel current work |
+| WMP-03 | Undo during input rejects; completed stroke Undo/Redo as one; newest indivisible stroke>16MiB follows the separately resolved oversized-history policy; Back/Resume retains ink/settings and both history stacks; Undo-all→Back→Resume preserves Redo; no save claim |
+| WMP-04 | Bound±adjacent value, batch256/257, stroke growing beyond65,536 samples while resources remain, actual allocation failure, invalid pressure/sequence → no lifetime-count rejection; failed current batch atomic cancel, stale unrelated event does not cancel current work |
 | WMP-05 | Capacity including Begin→cancel/invalid batch with full history, context loss/recovery, asset failure, stale scene page, disposed owner, trapped engine, generation exhaustion → declared state/failure, no accepted artwork/history silently replaced; terminal cancellation/leave still works |
 | WMP-06 | en/uk, native width/color controls with8/black defaults, field staging, theme changes, reduced motion, gallery/history → unchanged navigation/AX, honest RAM lifecycle, artwork colors unchanged |
 | WMP-07 | Huge bigint/u32-like Number, fake/detached/shared array, mismatched lengths, reentrancy → reject before coercion/copy/mutation; reviewed browser-only fault facility, no production fault endpoint |
 | WMP-08 | Offscreen crossing segment, thick offscreen centerline, near containment, subpixel/min pressure, projected extreme → visible clipping/round geometry; semantic and screenshot expectations both |
-| WMP-09 | Cold/warm bounded maximum scene, cancellation during rebuild, cache eviction, repeated resize/context recovery → bounded queues/live resources; report actual release timings/heap, no fabricated physical latency |
+| WMP-09 | Cold/warm/evicted scene, soft-target overage while allocations succeed, actual resource failure, cancellation during rebuild, repeated resize/context recovery → reclaim/reduce optional work without target-triggered lock; bounded queues, actual timings/heap and distinct failure outcomes |
 | WMP-10 | Failed loader/browser-history write, delayed Back popstate, superseded route request, renderer fault after accepted Leave → preflight before Leave; document Undo/Redo preserved on failed or accepted departure, no post-Leave false rollback, stale completion cannot navigate newer session |
+| WMP-11 | Pan/zoom at0.1/8, region crossings, active ink, stale pan token, cancelled pan, system remap, zoomed long-stroke geometry → Rust-owned viewport and generation-safe completion; no content/history mutation or queued viewport work; exact numerical reference and visible geometry both required |
 
 The isolated diagnostic is not any row's browser pass. Exact release revision/browser/device,
 discovered E2E IDs, results and ignored artifacts belong with each implementing task. No main

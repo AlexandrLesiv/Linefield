@@ -1,29 +1,48 @@
 # WMP-C2 numerical candidate and evidence
 
-Part of [WMP-C2](web-memory.md), proposed, not approved. This source defines the current
-candidate and reproducible experiment; generated observations stay in ignored `.build-cache`.
+Part of [WMP-C2](web-memory.md). Owner G1 requires pan/zoom; G2 approves screen/surface
+limits, G3 precision/normalization policy and G4 swept-disk geometry. Concrete zoom-aware
+mapping algorithms and new ABI details below remain engineering recommendations needing
+review/evidence. This source also describes the earlier fixed-view diagnostic; its
+observations are not pan/zoom validation. Generated observations stay in ignored `.build-cache`.
 Owner-confirmed S02-W01 permits this bounded synthetic investigation only. It is not an
 E2E suite, Rust editor, production arithmetic adoption, renderer or benchmark.
 
-## Fixed mapping envelope
+## Approved screen limits and remaining pan/zoom admission
 
 For each axis require exact logical canvas offset `canvas − extent/2` in[-8192,8192].
 Extent[1,8192]; division by2 is exact in this normal range. Check this bound on the exact
 dyadic difference before rounding. Captured off-canvas points are admitted within the
-envelope; outside cancels current stroke atomically, never clamps. This bounds original
-stroke per-axis span at16,384, derived from the envelope rather than a guessed global
-document limit. With fixed world center0, zoom1, original scale1, no accumulated mapping
-or transform arithmetic exists. This limited profile does not change future selected
-zoom0.1–8/scale1/64–64 or regional address range. It does not define a finite page.
+envelope; outside cancels current stroke atomically, never clamps. G2 approves this screen
+envelope, not a fixed world-span bound valid at every zoom. G1 requires Rust viewport
+pan/zoom in[0.1,8]; original stroke scale remains1, with selection scaling excluded.
+Neither viewport nor sample addresses are restricted to origin-adjacent regions. No
+finite page or fixed document stroke/sample quota follows from these screen bounds.
+
+Recommended semantics for each axis: `world=center+(canvas−extent/2)/zoom`, all supplied
+binary64 values interpreted exactly, then V4-B normalization before acceptance. Pan uses
+captured base center/zoom and start/current points, deriving every preview from that base;
+cancel restores captured viewport, never document history. Anchor-preserving Zoom derives
+new center from the old world position under its anchor and the new zoom. Center-anchored
+UI steps simplify this to unchanged center, but do not make inverse input division dyadic.
+Do not flatten region integers to Number or substitute unreviewed f64 operation order.
+
+Because zoom is fixed throughout an ink interaction (pan/zoom rejects while ink is active),
+the screen envelope implies a conservative pre-normalization per-axis stroke span<=163,840
+world units at minimum zoom. Add normalization allowance for accepted samples; this is a
+derived spatial bound, **not** a lifetime sample-count limit. Panning between strokes can
+place different strokes at any admissible regional address. C1 removes the65,536-sample
+lifetime cap: per-call work stays bounded while resources, not stroke duration, govern growth.
 
 Canonical samples remain regional i64+local f64[0,65536), +0. First sample is immutable
 source/placement anchor. Original−source is evaluated with checked relative region
-subtraction, never absolute Number flattening. For this profile placement==source,
-scale1: renderer evaluates original relative to fixed viewport directly, avoiding an
-unnecessary subtract/add anchor round trip. Regions are at most−1 or0 in admitted ink;
-the generic normalization candidate separately checks all i64 region boundaries.
+subtraction, never absolute Number flattening. With placement==source and scale1, evaluate
+original relative to current viewport directly rather than subtract/add the source anchor.
+First classify offscreen regional bounds using checked integer arithmetic; only narrow
+relative coordinates for candidate-visible strokes after their magnitude is bounded. This
+is needed after long pans to prevent large intermediate cancellation or f32 overflow.
 
-Require V4-B: exact mathematical domain check, floor region/residue, nearest-even local
+Owner-approved precision direction uses V4-B: exact mathematical domain check, floor region/residue, nearest-even local
 rounding (including65536 candidate), checked carry; reject a carry beyond maximum i64.
 Do not saturate. Canonical accepted samples stay immutable. Derived geometry budget0.25
 logical points after zoom is separate from this input normalization error<=2^-38 per
@@ -39,10 +58,14 @@ uses i128 and converts only after mathematical-domain validation. Remainder extr
 and nearest-even rounding use integer bit/half/sticky inspection, including subnormals.
 No heap big integer, floating rounding-mode dependency or global f64 coordinate. This
 candidate is bounded but has not been measured in release Wasm input handling; it is
-not selected production code. Production may optimize only with equivalent exact semantics
+not selected production code. **It only adds dyadic operands; it does not implement division
+by arbitrary binary64 zoom or anchor-preserving zoom.** Production may optimize only with equivalent exact semantics
 and browser E2E boundary evidence, without importing this diagnostic binary into the app.
 
 ## Painted geometry definition
+
+G4 approves this round swept-disk geometry direction. Numerical construction details and
+actual CanvasKit rendering remain verification obligations, including zoomed views.
 
 For present pressure p, effective diameter is width×(0.10+0.90×p); absent uses width.
 The literal decimal formula denotes real values of validated binary64 inputs with decimal
@@ -82,9 +105,12 @@ culling. Two endpoints outside may cross screen, and an offscreen center may pai
 For eventual whole-stroke culling, per-axis swept bounds are extrema of endpoint center±
 radius (both linear across segment), unioned across samples. Compute bounds outward with
 the conversion/error allowance, then include the pinned renderer's measured AA fringe.
-Only strict disjointness permits culling; touching/uncertain bounds draw. Until that fringe
-is established, draw the bounded scene and let the surface clip; never substitute endpoint
-or centerline culling. Cache identity uses geometry/mapping tokens, never locale/theme.
+Only strict disjointness permits culling; touching/uncertain near-boundary bounds stay
+eligible for drawing after proving finite conversion bounds. The old fixed-view fallback
+of drawing every path and letting the surface clip does not apply after arbitrary regional
+pan: conservative regional classification and the finite conversion envelope are prerequisites.
+Do not narrow distant strokes to f32 or substitute endpoint/centerline culling while the
+AA/fringe analysis remains pending. Cache identity uses geometry/mapping tokens, never locale/theme.
 
 Numerical handling near containment: computing d and radius difference in f64 can select
 the wrong branch. Diagnostic found `(0,0,.45,0,r0=.05,r1=.5)` as a concrete example: exact
@@ -97,15 +123,49 @@ quad lies inside its endpoint-disc union. Corpus verifies no false omission and 
 conservative extra hulls separately. The threshold remains a proposed arithmetic policy,
 not a complete transcendental error proof or acceptance gate passed by these observations.
 
-Envelope: world offset<=8192, canvas half<=4096, radius<=256 gives final coordinate
+The **earlier fixed-view-only analysis** used world offset<=8192, canvas half<=4096,
+radius<=256 and gave final coordinate
 magnitude<=12544. Nearest-f32 coordinate error<=2^-11 per component, Euclidean<=0.000691.
 Circle weight error<=2^-25 and positive rational denominator>0.8535; sensitivity bound
 `1.415*r*weight_error` adds<0.0000108. Combined conic control/weight perturbation<0.000702
 logical points, before tangent construction and renderer rasterization. At DPR4 the
-same position error is<0.002808 backing pixels. These analytical bounds explain the
-conservative8192 envelope. They are not a complete Skia pixel error claim. Near-tangent
+same position error is<0.002808 backing pixels. These bounds apply only to that earlier
+zoom1 setup; they do not certify the now-required pan/zoom profile. Near-tangent
 sqrt conditioning, f64 radius construction, clipping/AA and workload require actual
-release CanvasKit E2E as WMP-08/09. Production acceptance cannot cite only these bounds.
+release CanvasKit E2E as WMP-08/09/11. Production acceptance cannot cite only these bounds.
+
+## Bounded engineering recommendation before pan/zoom implementation
+
+1. Extend the reference to exact rational inverse mapping at zoom0.1,8, intermediate
+   binary64 values and button-step boundaries. Decode operands exactly; compare accepted
+   canonical bits/domain rejection after division and nearest-even normalization. Reuse
+   existing rational reference sources where sound. Do not treat f64 round trips as proof:
+   matching forward/inverse approximations can hide error. No new experiment is run here.
+2. Recommend a bounded fixed-storage integer/rational normalization implementation for
+   these finite operands, with explicit checked numerator/denominator capacity derived
+   before coding. Input mapping has one binary64 zoom divisor; general anchored zoom may
+   involve two. The old19-word addition candidate does not establish required capacity or
+   latency. Compare this route with a proven expansion algorithm; select exact operation
+   order only after the bounded evidence packet, not by adopting ordinary division silently.
+3. Before f32 conversion, conservatively cull complete strokes by outward regional painted
+   bounds. For an ink stroke captured at zoom>=0.1, its per-axis span remains bounded even
+   when duration is memory-based. If those bounds meet the current viewport, maximum
+   projected center span is roughly163,840×8=1,310,720 logical points; width radius after
+   zoom is at most2048. This suggests a bounded render window below2^21 after exact
+   intersection/normalization allowances. It is an **engineering envelope candidate**:
+   derive the full outward bound, AA margin and cross-boundary cases before approving it.
+   Under a proven |coordinate|<2^21 bound, f32 component rounding<=2^-4 and Euclidean
+   error<=0.088389; conic weight error at radius2048 adds<0.0000864. These estimates leave
+   room within0.25 logical points but are not total tangent/raster error evidence.
+4. Require both axes, min/max i64 centers, tiny/negative local remainders, repeated base-
+   derived pan, cancelled/stale pan, region crossings, min/max zoom, offscreen crossing
+   segments, zooming old minimum-zoom strokes to8, and long strokes exceeding65,536 samples.
+   Confirm normalization, clipping/culling, f32 geometry, bounded scheduling and coherent
+   visible scene separately. Point probes alone cannot pass WMP-11 or browser E2E.
+
+This recommendation retains regional representation, selected zoom range and Rust authority.
+It does not reopen G1–G4, supply new production code, approve additional input gestures or
+claim that the earlier fixed-view proof supports the required editor.
 
 ## Experiment and limitations
 
@@ -115,7 +175,7 @@ No file/network/user drawing input, no app import and no new dependency. Sources
 native Node TypeScript and dependency-free Rust. Cargo target/report are ignored under
 `.build-cache/web-memory`; source Cargo.lock contains only the diagnostic package.
 
-Current corpus543 observations:315 normalization/mapping and228 painted segment cases.
+Earlier fixed-view corpus543 observations:315 normalization/mapping and228 painted segment cases.
 Includes signed zero serialized explicitly, ±minimum subnormal,±0.1, half ties, safe/
 overflow carry/borrow and all i64 extremes; mapping at selected widths; pressure-radius
 extremes, duplicate/coincident centers, ordinary and near-containing segments, both-axis
@@ -137,13 +197,14 @@ conservative hulls,102 hull observations,126 omitted hulls, maximum radial resid
 mismatch or false containment sets nonzero exit; raw report preserves all543 rows and
 source SHA256. A prior false containment was repaired by the current conservative rule;
 the retained fixture prevents concealing it. Numerical results are observations, not
-unit tests, E2E or universal proof of the proposed numerical profile.
+unit tests, E2E or proof of the required pan/zoom profile. Sources/results are unchanged by
+this documentation update; no new experiment or runtime check was executed.
 
 Recorded native toolchain: Rust1.99.0 (`b940084d7`,2026-09-28), Cargo1.99.0, Node24.12.0,
 darwin arm64; source base8dbd9b1 plus identified experiment source hashes. Cargo build,
 Clippy warnings denied, rustfmt, TypeScript strict check and Oxlint/Oxfmt are static/build
 validation only. No Wasm compilation/run, generated binding execution, CanvasKit rendering,
 physical pen, browser numerical E2E or runtime latency acceptance is present in this task.
-Relevant IDs REG-PREC-01/03/04/06, WMP-01/04/08/09; future E2E owner rust_engine semantics
+Relevant IDs REG-PREC-01/03/04/06, WMP-01/04/08/09/11; future E2E owner rust_engine semantics
 with web implementer driver and rendering_performance review. Historical probes remain
 historical; none certify this slice. Owner approval and P05-E01 confirmation remain gates.

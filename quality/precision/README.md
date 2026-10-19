@@ -35,9 +35,11 @@ No historical count or developer-tool test suite is reinstated by this documenta
 ## S02-W01 memory-web candidate
 
 The [WMP-C2 proposal](../../docs/interfaces/web-memory.md) and
-[numerical definition](../../docs/interfaces/web-memory-numerics.md) narrow the investigation
-to fixed zoom/scale 1, bounded canvas input and a solid round pen. This does not adopt
-general transforms, the old global-f64 ABI, browser storage or product code.
+[numerical definition](../../docs/interfaces/web-memory-numerics.md) document the original
+fixed-zoom1 diagnostic for a solid round pen. Owner subsequently required pan/zoom: these
+existing observations do not certify variable-zoom mapping, translated viewports or expanded
+painted bounds. Extend the exact-reference investigation before claiming that coverage.
+No old global-f64 ABI, browser storage or product code is adopted here.
 
 Run `node scripts/probes/web-memory/run.ts` from the repository root with the documented
 Node/Rust tools. It builds the isolated [Rust candidate](../../experiments/web-memory/Cargo.toml)

@@ -27,9 +27,9 @@ Historical PR/base statements below do not override the actual integrated state.
 
 | Order | Proposed task | Gate |
 | --- | --- | --- |
-| 1 | [S02-W01 memory editor contract/design](S02-W01.md) | [PR #9](https://github.com/AlexandrLesiv/Linefield/pull/9) owner review; CanvasKit and320MiB CPU/96MiB graphics budget approved; remaining WMP-C2/design choices pending |
+| 1 | [S02-W01 memory editor contract/design](S02-W01.md) | [PR #9](https://github.com/AlexandrLesiv/Linefield/pull/9) owner review; grouped core approvals recorded; pan/zoom added;320MiB CPU/96MiB graphics are soft targets; screen/input amendment pending |
 | 2 | [P05-E01 runtime foundation](P05-E01.md) | Separate task confirmation and approved/integrated prerequisite; no ink yet |
-| 3 | [P05-E02 usable pen session](P05-E02.md) | Separate task confirmation and verified foundation; pen, settings, cancellation and Undo/Redo together |
+| 3 | [P05-E02 usable pen and viewport](P05-E02.md) | Separate task confirmation and verified foundation; pen, pan/zoom, settings, cancellation and Undo/Redo together |
 
 S02-W01 is assigned on `codex/s02-w01-memory-contract` from integrated main `8dbd9b1`
 (PR #7 browser-test fixes). The original checkout/drafts are preserved. P05-E01/E02 remain

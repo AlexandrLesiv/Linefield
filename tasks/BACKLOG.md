@@ -163,6 +163,11 @@ recovery, navigation and ownership contracts. No cloud sync or external-file wri
 
 ## 6. Pan and zoom the canvas
 
+Owner now requires a bounded web pan/zoom subset in the first in-memory editor slice;
+[S02-W01](S02-W01.md) owns its reviewed contract and [P05-E02](P05-E02.md) proposes the
+implementation. This does not complete the outcome or approve its exact input/screen design.
+Keep the existing backlog order; other hosts and broader navigation remain separately scoped.
+
 Navigate artwork through supported pointer, touch and keyboard input without changing drawing
 geometry or losing coordinate accuracy. Define platform-supported input explicitly; verify
 interaction guards, cancellation on mapping changes, focus and viewport/render agreement.

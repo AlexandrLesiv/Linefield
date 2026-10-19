@@ -1,11 +1,13 @@
 # In-memory web pen — drawing screen amendment v3
 
 Status: **owner approved choices 1A/2A (RAM drawing/settings and Undo/Redo retention),
-3A/4B (mouse/pen input with browser-owned touch gestures), and 5A (width/native color controls);
-remaining design/contract choices pending; no product implementation or visual acceptance**.
+3A/4B (mouse/pen input with browser-owned touch gestures), 5A (width/native color controls),
+G1 pan/zoom in the first slice, and G2–G4/W1–W4/C1–C3 as recorded in the companion approval
+packet. C4 means soft operating targets without automatic suspension at target excess.
+New pan/zoom mappings and S1–S4 remain pending; no implementation or visual acceptance**.
 Task: [S02-W01](../../tasks/S02-W01.md), confirmed first on 2026-10-19, including bounded
 synthetic numerical experiments. Base: integrated `8dbd9b1` (PR #7). Design identity:
-`WMP-D3`, states `D3-01`–`D3-12` below, together with this file's final PR revision/hash.
+`WMP-D3`, states `D3-01`–`D3-13` below, together with this file's final PR revision/hash.
 The 3A/4B/5A documentation amendment starts from revision `f18b44f`.
 The lead records that exact snapshot when requesting approval. A mutable link is insufficient.
 
@@ -23,9 +25,14 @@ settings, and retain both Undo/Redo stacks across gallery Back/Resume. The owner
 **3A** browser-reported effective pen pressure with constant-width mouse input, **4B** touch
 does not draw and remains browser-owned, and **5A** width slider 1–512/default 8, initial black
 and browser-native color picker for now. These choices are approved for this in-memory web
-slice; do not request them again. Remaining screen, wording, interaction details, numerical,
-ABI and budget proposals require their applicable approval. P05-E01 and P05-E02 each require
-their own scope/position confirmation. Later touch configuration or picker replacement is
+slice; do not request them again. The owner also selected **G1** pan/zoom in this first slice
+and approved G2–G4/W1–W4/C1–C3 as identified in the companion contract/approval record. G1
+supersedes fixed zoom/center for this slice; exact new input mappings, pan transactions and
+zoomed numerical evidence still need the concrete amendment below and in the contract.
+**C4** clarifies 320 MiB CPU / 96 MiB graphics as soft operating targets: excess alone does
+not stop editing. The S1–S4 security/lifecycle choices remain unanswered, including S3's
+proposed best-effort reload/close warning. Do not infer approval or rejection of that warning.
+P05-E01 and P05-E02 each require their own scope/position confirmation. Later touch configuration or picker replacement is
 separate backlog/review scope, not an implied setting or new picker in this slice.
 
 1. **Approved 1A/2A:** retain one temporary Rust document, accepted pen settings and its bounded
@@ -37,8 +44,9 @@ separate backlog/review scope, not an implied setting or new picker in this slic
    second temporary drawing, clear/reset command, extra gallery tile or launch restoration.
 3. Show an always-visible not-saved disclosure in the editor, plus a gallery disclosure when
    retained. Explain reload/tab-close loss and retention of drawing/history across gallery return.
-4. Enable only Pen, width, color and in-memory Undo/Redo. Other tools remain visible but unavailable;
-   opacity is fixed at 100%, smoothing is Off, zoom is a noninteractive 100% readout.
+4. Enable Pen, width, color, in-memory Undo/Redo and the selected pan/zoom scope. Other tools
+   remain unavailable; opacity is fixed at 100% and smoothing is Off. Propose explicit zoom
+   buttons and mouse/keyboard pan below; zoom starts at 100% and spans the selected 10%–800%.
 5. **Approved 3A/4B/5A:** mouse and pen draw; browser-reported pen pressure drives width, while
    mouse uses constant width and touch retains browser gestures without drawing. Use the
    browser-owned opaque sRGB color input for now, width slider 1–512/default 8 and initial
@@ -53,13 +61,15 @@ excluded by decision 19. No storage decision is reopened or made a prerequisite.
 
 ## User goal, authority and routes
 
-Goal: open New, make visible solid round strokes with chosen width/color, cancel an unfinished
-stroke and undo/redo completed strokes. The drawing is visibly temporary. Existing sample-card
+Goal: open New, make visible solid round strokes with chosen width/color, pan/zoom the view,
+cancel an unfinished stroke and undo/redo completed strokes. The drawing is visibly temporary. Existing sample-card
 names, gallery rename/removal behavior and preview artwork remain as in the integrated build.
 Samples do not become imported/editable documents. The existing sample preview disclosure
 remains, and its controls retain their current prototype-only semantics; the new real Undo/Redo
 pair is not shown for samples. Opening a sample while the temporary document is retained leaves
 that document alone. The existing Reset samples action never releases the temporary document.
+The new shared pan/zoom controls also belong only to the temporary editor; sample previews
+retain their existing presentation and acquire no Rust viewport/editing authority.
 
 Rust owns document/interaction/history/settings/capability state. Browser code acquires events,
 performs native event-to-element conversion, hosts native controls and presents accepted Rust
@@ -99,7 +109,10 @@ may pretend it is. A reconciliation failure keeps editing suspended and Back ava
 If authority is fatal, use D3-10; Back changes host presentation while keeping the tombstone,
 without invoking unsafe Rust commands or claiming usable preserved history after engine failure.
 
-No special unload prompt is recommended: there is no reliable recovery behind it. The disclosure
+**S3 remains pending:** the new best-effort browser reload/close warning has not been selected.
+Neither a no-warning policy nor a warning implementation is approved by this document. A native
+browser warning, if approved, would remain best-effort and could not guarantee prevention or
+recovery; its trigger/lifetime must follow the reviewed S3 contract. The persistent disclosure
 is present before first ink. Browser reload/close/origin navigation may lose RAM; no saving,
 storage permission, export download or guarantee is implied. BFCache is not durable recovery:
 on a genuine restored live page, cancel stale input and revalidate owner/surface before editing;
@@ -118,17 +131,20 @@ late loaders, renderer work and focus restoration. Repeated requests are coalesc
 | D3-03 Ready, empty or completed ink | Admitted primary mouse/pen contact on canvas, idle, surface ready | D3-04 active stroke with captured Rust settings/mapping/identity. Touch never begins ink and retains browser gesture handling. An empty ready canvas needs no instructional modal. |
 | D3-04 Drawing | Ordered actual mouse/pen samples, then matching end | One complete round stroke, one history operation; D3-03. Brief mouse/pen contact gives a dot. Duplicate-position/pressure behavior follows exact Rust geometry contract. No prediction, filtering, tilt or opacity behavior. |
 | D3-04 Drawing | Escape, window blur, hidden page, pointer cancellation/capture loss, navigation request or mapping invalidation | Cancel current interaction before transition/remap. Remove its entire transient stroke, preserve completed ink/settings and both history stacks; reject late input. Accepted departure releases the editing attachment without clearing history. Remain D3-03 unless navigating or unavailable. No half-stroke commit. |
-| D3-04 Drawing | Undo/Redo, tool/style change, competing drawing pointer or browser touch gesture | Rust rejects conflicting commands; no queue, forced finish or settings mutation. Availability visibly disabled. Competing pointer events cannot finish/cancel the owner. Touch is not submitted as ink; browser gesture takeover can issue pointercancel and cancel the active pen stroke. |
+| D3-04 Drawing | Undo/Redo, tool/style change, app pan/zoom, competing drawing pointer or browser touch gesture | Rust rejects conflicting commands; no queue, forced finish/cancel or settings/viewport mutation. Availability visibly disabled. Competing pointer events cannot finish/cancel the owner. Touch is not submitted as ink; browser gesture takeover can issue pointercancel and cancel the active pen stroke. |
 | D3-03 Ready | Accepted Back or same-page departure | Cancel transient field adjustment; release the editing attachment only at successful semantic departure. D3-05 retains document/settings and both history stacks. Failed/cancelled destination keeps the old attachment and history. Gallery itself has no temporary-document Undo/Redo command. |
 | D3-05 Gallery with retained document | Resume or valid same-page Forward | D3-02 if surface rebuild needed, then D3-03 with retained ink/settings, Undo/Redo stacks and history position. Fresh attachment/mapping generations reject stale input. Gallery focus/scroll survive. Resume remains available after sample navigation; unavailable variants keep their guards. |
 | D3-06 Initialization failure | Asset/runtime/surface fails before usable entry | Localized error overlay within the canvas area, Retry and Back. Retry only the failed idempotent initialization stage; current request token required. Never claim drawing recovered. |
-| D3-07 Rejected stroke/capacity | Current batch violates finite/envelope/queue/sample/memory admission | Cancel only its unfinished stroke; existing ink/history preserved. Show specific localized reason once per event, no per-sample announcement. Subsequent fresh stroke allowed only if Rust reports admission available. |
+| D3-07 Rejected stroke/capacity | Invalid/inadmissible current batch or actual resource allocation failure | Cancel only its unfinished stroke; existing ink/history preserved. Show the actual reason once, not per sample. Soft CPU/graphics target excess is not this failure and cannot itself cancel/reject ink. Subsequent fresh stroke is allowed when the required resources and validated shared admission permit it. |
 | D3-08 History retention boundary | Accepted whole-operation eviction by Rust | Existing ink remains; Undo availability matches retained operations. Announce oldest Undo steps unavailable once per eviction episode. No pretend unlimited history. A failed edit cannot secretly evict history. |
 | D3-09 Surface unavailable | Context loss or backing-size admission failure with Rust owner usable | Cancel transient input, suspend canvas drawing; preserve document/history. Show Retry display for context loss; size failure asks to resize the window. Rebuild from accepted RAM scene, not host copies. Renderer errors never reset document. |
-| D3-09 Budget failure variant | Observed CanvasKit/CPU operating allowance exceeded while Rust owner remains usable | Cancel unfinished interaction; suspend drawing/display/history/settings commands for this page lifetime, preserving completed Rust ink and both history stacks across Back. Show `memory.budgetUnavailable` and Back, without Retry. Gallery keeps the budget explanation; Resume/Forward returns to the same unavailable state without restarting rendering, replacing the owner or announcing normal resume. Trap/OOM or uncertain owner uses the fatal state instead. Never suggest reload as recovery; reload loses RAM. Cover this sequence in WMP-05/09. |
+| D3-03/D3-04 Operating target exceeded | Observed owned CPU exceeds 320 MiB or graphics exceeds 96 MiB, without actual resource failure | Continue accepted editing. Evict disposable caches/reduce optional rendering work first; never drop actual samples, change artwork or silently replace the owner. No automatic page-lifetime suspension, refusal, modal or failure announcement merely at the target. Record bounded diagnostic evidence. |
+| D3-09 Actual resource failure variant | Required rendering allocation fails while Rust owner remains usable | Cancel unfinished input; suspend only operations dependent on the unavailable display/resources, preserving completed ink and both history stacks. Show `memory.resourceUnavailable`, Retry display and Back. A deliberate Retry or Resume may make one fresh display attempt with the same owner; success restores usable rendering, failure keeps the message and RAM. No retry loop, guaranteed recovery, blank replacement or reload-as-recovery suggestion. Trap/OOM with uncertain owner uses D3-10. Cover target excess versus actual failure separately in WMP-05/09. |
 | D3-10 Fatal engine failure | Wasm trap/poison or unusable authority | Fail closed; disable edits/history/settings. Keep last completed image only if safely available, visibly marked unavailable. Explain RAM cannot be recovered here. Back remains available; no Retry that silently replaces owner/content. |
 | D3-11 Temporary content unavailable | Cold temporary URL or missing owner after page restoration | Gallery, unavailable announcement, New available. Do not claim previous content intact, saved or recoverable. |
 | D3-12 Preview | Open existing raster sample | Existing non-editable sample screen; no pen intake/history command. Return preserves temporary owner if present. |
+| D3-13 Panning (proposed mapping) | Idle canvas, accepted Space + primary mouse/trackpad drag | Rust captures viewport and pointer base. Updates derive from that base; release Space or pointer ends at the accepted viewport. Escape/blur/capture loss restores pre-pan viewport. Resize/display remap cancels before installing new mapping. No ink, document revision or Undo operation; fresh input required after cancellation. |
+| D3-03 View change (proposed mapping) | Idle canvas, zoom button or focused Arrow key | Rust accepts a bounded center-anchored zoom step or directional pan step, publishes new mapping and keeps artwork/history unchanged. Invalid or stale requests reject unchanged; no delayed replay after ink ends. |
 
 If a fatal owner still exists, Resume opens D3-10, never allocates a blank replacement. Only a
 fresh page begins a new lifetime. Back from D3-10 returns gallery without a false retained-work
@@ -171,7 +187,8 @@ Resume clears that redo branch according to the shared edit contract; Back itsel
   A handled unavailable command is not queued. Separate browser shortcuts remain browser-owned.
 - **Canvas:** focusable named region with instructions and status association, not a global
   `role=application`. Primary mouse/pen contact draws; touch does not. Secondary/auxiliary buttons and
-  context menus retain browser behavior. No app wheel/pan/zoom/double-tap binding, barrel/eraser-end,
+  context menus retain browser behavior. App pan/zoom uses the proposed controls below; no
+  app wheel/pinch/double-tap binding, barrel/eraser-end,
   Pencil squeeze/double-tap or tablet-button mapping is added. Native shortcuts emitted by an
   accessory follow the same focus guard. Pointer leaves canvas while captured: preserve actual
   input subject to bounds; pointer capture loss cancels. Offscreen geometry clips, not truncates.
@@ -198,12 +215,14 @@ Resume clears that redo branch according to the shared edit contract; Back itsel
   browser-generated cancellation of its owning pointer remains valid. Mapping and session
   generations reject stale coalesced samples. A range/picker interaction cannot create ink.
 - **Escape/IME:** native dialog, field or composing text handles Escape first. On canvas Escape
-  cancels active ink; idle Escape does nothing (no selection in scope), never navigates Back.
+  cancels active ink or the proposed captured-base pan; idle Escape does nothing (no selection
+  in scope), never navigates Back.
   Native text Undo/Redo/select/copy/paste remain native. No Save/Export binding is installed.
 - **Focus/lifecycle:** entry retains current Back-first convention unless the user moved focus;
   canvas is reachable by Tab. Native control focus and native picker close restore their control.
   Pointerdown may focus canvas without scrolling. Tab order is Back, history pair, width, color,
-  canvas, skipping disabled controls; visual grouping and DOM reading order agree. A focused
+  canvas, then Zoom out/Zoom in, skipping disabled controls; visual grouping and DOM reading
+  order agree. A focused
   range scrolled out of the horizontal strip scrolls into view without moving artwork.
   Accepted Back returns to the visible New/Resume origin and restores gallery scroll. If layout
   switches desktop tile/compact action during navigation, focus its visible equivalent. Late
@@ -213,6 +232,62 @@ Resume clears that redo branch according to the shared edit contract; Back itsel
   in this slice; freehand authoring requires mouse/pen input. Keyboard
   drawing and equivalent nonvisual stroke authoring are explicit gaps, not silently approved
   feature additions. Screen-reader and physical assistive-input validation remains unrun.
+
+## G1 pan/zoom — concrete mapping proposal, approval pending
+
+Pan/zoom belongs in this first slice. These are bounded web mapping recommendations, not
+another request to approve the feature. [Decision 17](../decisions.md) selects Space-drag/
+scroll pan and gesture/menu zoom direction; the [input matrix](../input/platform-matrix.md)
+leaves exact browser bindings for feature review. Keep 4B: finger gestures remain browser-owned.
+Do not convert browser pinch into app zoom or intercept Ctrl/Meta-wheel, Ctrl/Cmd +/-/0, or
+browser Back/Forward. Initial web recommendation uses no app wheel handler, avoiding uncertain
+trackpad pinch/scroll classification; trackpad click-and-drag works like a mouse.
+
+- **Pan by drag:** when canvas owns keyboard focus, Space with no modifiers arms temporary
+  pan; primary mouse/trackpad drag starts it if Rust is idle. Pen remains the selected tool;
+  use grab/grabbing cursors without adding a Pan tool. Rust captures viewport and pointer
+  base and derives every update from it. Release mouse or Space to finish; after Space-up
+  while the pointer remains down, require pointer-up and a fresh begin before ink. Escape,
+  blur, pointercancel/capture loss or route departure cancels and restores the pre-pan view.
+  A system remap cancels first, then installs the new metrics. Clear the Space latch on blur,
+  native field/IME takeover and cancel; a key held while an ink interaction rejects pan must
+  be released and pressed again, never activate belatedly on pen-up. Key repeat cannot begin
+  extra pan interactions. No inertia or animated camera movement.
+- **Keyboard pan:** unmodified Arrow keys on the focused canvas move the view by 40 CSS px
+  per native keydown, including eligible native repeat; no custom repeat timer or Shift
+  multiplier. Right reveals content
+  to the right (viewport center moves right, artwork moves left); Down reveals content below.
+  Rust converts this view step using the accepted zoom, validates it and updates the mapping.
+  Browser/native controls, IME and assistive command layers retain priority; no document-global
+  Arrow handler. During active ink/pan, reject the app command without queueing or page-scroll
+  fallback for this handled canvas action. A key rejected during ink/pan must be released and
+  freshly pressed before any later step; held repeat cannot start moving on pen-up. Outside
+  the focused canvas or with modifiers, Arrow behavior is native.
+- **Zoom controls:** replace the static footer readout with Zoom out, localized current
+  percentage, Zoom in. Both buttons use existing styling and ≥44×44 CSS px targets. Propose
+  a named Rust step action: multiply/divide by 1.25 and explicitly select the nearest endpoint
+  if the step would cross 0.1 or 8. This button policy is not silent clamping of arbitrary
+  invalid zoom arguments. Rust anchors each step at the drawable viewport center; no view
+  math in TypeScript. Disable only the unavailable direction at 10%/800%; during ink/pan or
+  unavailable rendering, both controls are unavailable. Keep the percentage noninteractive;
+  no Fit, reset, preset menu, slider or extra keyboard chord is added.
+- **State and interruptions:** app pan/zoom during a stroke rejects in Rust without cancelling
+  ink, moving the view, altering history or queueing a later action. Navigation's own valid
+  updates remain accepted. During an active pan, do not start ink or execute conflicting
+  document/history/settings actions. Fresh input is required after end/cancel; stale old
+  mapping/interaction events cannot draw or move the view. Browser touch/zoom can still
+  produce system remaps/cancellation; that is distinct from rejected app navigation.
+- **Viewport lifetime:** recommend retaining the accepted viewport center/zoom in the same
+  temporary RAM document across gallery visits. This is a new concrete recommendation;
+  1A/2A history/settings retention alone did not approve it. New starts at world origin/100%;
+  no automatic recentering on Resume. Pan/zoom never changes original stroke geometry/color,
+  content revision or Undo/Redo position and is not restored by document Undo/Redo.
+
+Exact named calls, pan cancellation state, regional mapping and zoomed precision/admission
+belong to the Rust amendment. Prior fixed-zoom numerical experiments do not establish this
+expanded range. Obtain that evidence and review alongside these mappings before code. The
+new controls require real layout/focus/keyboard review; explicit controls provide accessible
+zoom and focused Arrow keys provide keyboard pan without claiming full nonvisual authoring.
 
 ## Visual checklist and adaptive layout
 
@@ -234,7 +309,9 @@ resetting the gallery scroll anchor or rebuilding the temporary document.
 The contextual row orders Undo/Redo, width/value/pictogram, fixed Opacity 100%, Smoothing Off.
 At constrained widths its horizontal overflow preserves all controls and focus; no icon-only
 hidden history menu. Reserve only a compact disclosure/footer band below the drawable viewport:
-two short complete statements about unsaved lifetime and history, plus the fixed zoom readout.
+two short complete statements about unsaved lifetime/history, the zoom button/readout group
+and a visible concise pan hint. The hint names Space-drag and canvas-focused Arrow keys;
+it is not available only through a tooltip. These new controls/hint need fresh sizing evidence.
 The statements wrap naturally in their locale at entry; they are visible copy, not tooltips.
 Do not permanently reserve an empty error panel or blank Retry row. Loading/errors use a
 bounded overlay inside the already-sized canvas, above ink and below the header/context.
@@ -255,8 +332,9 @@ application E2E, native evidence or visual approval. Current copy must be measur
 
 The proposed space rule remains: cap the footer at one third of viewport height and make
 overflow keyboard-scrollable, with the not-saved opening initially visible; use a smaller cap
-if needed to retain a 44×44 CSS px admitted ink area. The zoom readout follows the disclosure
-at the trailing edge; it can require another text row and belongs in actual footer measurement.
+if needed to retain a 44×44 CSS px admitted ink area. The zoom group and pan hint follow the
+disclosure, wrap independently and belong in actual footer measurement, including 44 px
+button height and focus outlines. No earlier readout-only measurement establishes their fit.
 At short landscape/200%, actual row heights/safe areas may make drawing unavailable. Preserve
 Back and scrollable controls and show the size state when the minimum admitted ink area cannot
 fit. This threshold protects a basic target, not a performance or universal minimum-window
@@ -264,8 +342,10 @@ guarantee. Revised en/uk copy, DOM wrapping, pseudo-expansion, fallback fonts, s
 and context-row height remain required runtime checks; no fit claim is carried over.
 
 Define the actual drawable rectangle between header/context, rail and footer; chrome never
-receives ink. Rust maps its center to fixed world origin at zoom 1; resize changes visible
-extent around the same center, not saved geometry. Actual coordinate mapping and admissible
+receives ink. New starts centered on world origin at zoom 1. Rust owns the current regional
+viewport center and zoom in [0.1,8]; accepted pan/zoom changes the mapping, never stored
+artwork. Resize preserves the accepted viewport center/zoom while changing visible extent
+after cancelling unfinished ink or pan. Actual coordinate mapping and admissible
 surface sizes follow the companion contract. Resize/DPR/orientation/keyboard-induced mapping
 change cancels active stroke before installing the new generation. Native browser zoom remains
 available; it is not a document zoom command. Offscreen completed ink remains in RAM.
@@ -294,7 +374,9 @@ New/Resume surface; retain the Rust document independently. Resuming reveals acc
 surface ready, without stroke replay. Review this narrow transition difference against v2.
 
 Transient ink follows accepted actual input without tweening, delay or smoothing. History,
-settings, cancellation and error states settle immediately; no new animated progress indicator.
+settings, app pan/zoom, cancellation and error states settle immediately; no camera tween,
+inertial pan or new animated progress indicator. Reduced motion keeps the same direct viewport
+updates and cancellation semantics.
 Reuse existing reduced-motion path with instant semantic state/focus and no travel. Preference
 change/resize during travel settles the newest accepted presentation. Never clear history or
 release RAM in an animation callback. Navigation destination semantics complete before its
@@ -331,16 +413,21 @@ last action to distinguish it from Cancel; retain gallery's existing labels inde
 | memory.widthRejected | Width could not be changed. The previous width is kept. | Не вдалося змінити товщину. Залишено попередню товщину. |
 | memory.opacityFixed | Opacity 100% · fixed | Непрозорість 100% · незмінна |
 | memory.smoothingOff | Smoothing Off | Згладжування вимкнено |
+| memory.zoomOut | Zoom out | Зменшити масштаб |
+| memory.zoomIn | Zoom in | Збільшити масштаб |
+| memory.zoomValue | Zoom: {percent} | Масштаб: {percent} |
+| memory.panHint | Pan: Space + drag, or Arrow keys when the canvas is focused. | Переміщення полотна: пробіл і перетягування або клавіші зі стрілками, коли полотно у фокусі. |
+| memory.viewRejected | The view could not be changed. The previous view is kept. | Не вдалося змінити вигляд полотна. Залишено попередній вигляд. |
 | memory.canvas | Temporary drawing canvas | Полотно тимчасового малюнка |
 | memory.instructions | Draw with a mouse or pen. Touch gestures stay with the browser. Escape cancels the current stroke. This drawing is not saved. | Малюйте мишею або пером. Жести дотику обробляє браузер. Escape скасовує поточний штрих. Цей малюнок не зберігається. |
 | memory.strokeCancelled | Current stroke cancelled. | Поточний штрих скасовано. |
 | memory.strokeRejected | This stroke exceeded the drawing limits and was cancelled. Earlier strokes are unchanged. | Цей штрих перевищив обмеження малювання, тому його скасовано. Попередні штрихи не змінено. |
 | memory.inputRejected | This stroke could not be accepted and was cancelled. Earlier strokes are unchanged. | Цей штрих не вдалося прийняти, тому його скасовано. Попередні штрихи не змінено. |
-| memory.capacity | Memory limit reached. The current stroke was cancelled. Earlier strokes are unchanged. | Досягнуто обмеження пам’яті. Поточний штрих скасовано. Попередні штрихи не змінено. |
-| memory.capacityBegin | Memory limit reached. A new stroke could not start. Earlier strokes are unchanged. | Досягнуто обмеження пам’яті. Не вдалося почати новий штрих. Попередні штрихи не змінено. |
+| memory.capacity | This stroke could not be completed and was cancelled. Earlier strokes are unchanged. | Цей штрих не вдалося завершити, тому його скасовано. Попередні штрихи не змінено. |
+| memory.capacityBegin | A new stroke could not start. Earlier strokes are unchanged. | Не вдалося почати новий штрих. Попередні штрихи не змінено. |
 | memory.historyLimited | Older Undo steps are no longer available. Your drawing is unchanged. | Давніші дії більше не можна скасувати. Малюнок не змінено. |
 | memory.displayLost | Drawing display is unavailable. Your drawing remains in this tab’s memory. | Відображення малюнка недоступне. Малюнок залишається в пам’яті цієї вкладки. |
-| memory.budgetUnavailable | Drawing stopped because memory use was too high. It cannot resume in this tab. Completed strokes remain in memory and are not saved. | Малювання зупинено через надмірне використання пам’яті. Його неможливо продовжити в цій вкладці. Завершені штрихи залишаються в пам’яті й не збережені. |
+| memory.resourceUnavailable | The drawing could not be displayed. Completed strokes remain in memory and are not saved. | Не вдалося відобразити малюнок. Завершені штрихи залишаються в пам’яті й не збережені. |
 | memory.retryDisplay | Retry display | Відновити відображення |
 | memory.sizeUnavailable | This window size cannot display the drawing. Resize the window; your drawing remains in memory. | За цього розміру вікна малюнок неможливо відобразити. Змініть розмір вікна; малюнок залишається в пам’яті. |
 | memory.fatal | Drawing stopped after an internal error. This temporary drawing cannot be recovered here. | Малювання зупинено через внутрішню помилку. Цей тимчасовий малюнок тут неможливо відновити. |
@@ -350,8 +437,12 @@ last action to distinguish it from Cancel; retain gallery's existing labels inde
 
 Error selection uses stable typed outcomes; never parse English Rust text. `{tool}` is a
 localized app-owned tool label and `{color}` is validated opaque sRGB text, not raw user input.
+`{percent}` is the accepted Rust zoom formatted using the independent browser region.
 Use `memory.capacity` only when `activeCancelled=true`; rejected Begin without an interaction
 uses `memory.capacityBegin`, never claiming that a stroke was cancelled.
+Neither capacity message nor `memory.resourceUnavailable` represents soft-target excess.
+Use them only for the matching actual failure/validated rejection; do not show a target-based
+lockout or assert that a still-usable drawing can never resume in this tab.
 Numbers/percentages use independent browser regional formatting; the table's 100% conveys
 meaning, not permission to hardcode formatting. Resource/layout/runtime/linguistic approval
 remain four distinct checks. No count/plural message is needed by this scope.
@@ -372,9 +463,10 @@ bridge-suite wording. Numerical experiments are analysis, not browser/physical-d
 | WMP-02B / CT-02/06, INV-04/08/11, SU-14/16 | Resize, backing-density change, orientation and virtual keyboard while active cancel once; idle resize preserves world content/settings/history. | Real resize E2E plus synthetic DPR/keyboard fixtures; hardware transition gap separately. |
 | WMP-03A / HISTORY-SESSION-001 (memory subset), FOCUS-001; INV-04/05 | Buttons and scoped shortcuts undo/redo, active stroke blocks them; field/IME keeps native commands; settings create no history. | Actual focus/key E2E; physical IME and screen-reader gap. |
 | WMP-10 / CT-03/08, INV-01/04, SU-13 | Back retains ink/settings, both Undo/Redo stacks and history position; Resume/Forward uses a fresh editing attachment without a history reset. Undo-all → Back → Resume → Redo restores the same strokes. Rapid traversal/stale loader/failed target cannot corrupt retained state; old-session input rejects. Samples and Reset samples preserve the temporary owner/history. | Browser history/Back/Forward, short/long transition and reduced-motion E2E, gallery focus/scroll assertions; resumed Undo/Redo controls and visible exact artwork. |
+| WMP-11 / NAV-001, INPUT-02/06; CT-01/02/03/06, INV-01/04/05/08/11, SU-07/08/14 | Proposed Space-drag/Arrow pan and zoom buttons preserve artwork/history, center anchor and 10%–800% bounds. Space-up while mouse held cannot become ink; pan → resize → late pointerup cannot restore old mapping. Active ink rejects view requests with no delayed movement after End; held/repeated keys require fresh eligible activation. Native field/IME and browser/touch zoom remain native. | Real control/key/mouse E2E, regional boundary and visible anchor assertions, endpoint/cancel/focus cases; real trackpad/browser gesture and assistive-input gaps labeled separately. Expanded numerical evidence must precede implementation. |
 | WMP-04 / REG-PREC-01/04/06; CT-02/04, INV-03 | Approved finite/numerical boundary fixtures exercise real app intake; current malformed/over-limit batch cancels only current stroke. | Reviewed isolated fixture path; exact coordinates stay out of normal logs; visible prior artwork and eligibility checked. |
 | WMP-05A / SEC-02/03/13; CT-04/06, INV-08/09 | Asset failure/retry/back race, capacity and oldest-history boundary preserve completed ink, no silent owner replacement. | Fault E2E and actual messages; production artifact excludes fault controls. |
-| WMP-05B / CT-03/06, INV-01/08 | Surface loss → retry display retains owner/history; fatal engine failure disables editing and discloses unrecoverability; reload temporary route returns gallery unavailable. | Separately labeled renderer/engine fault lanes, reload and cold URL E2E; no crash-recovery claim. |
+| WMP-05B / CT-03/06, INV-01/08 | Soft CPU/graphics excess with successful allocations continues editing after disposable cleanup; actual display allocation failure/context loss permits bounded explicit Retry with the same owner/history. Back/Resume cannot silently replace it. Fatal engine failure disables editing and discloses unrecoverability; reload temporary route returns gallery unavailable. | Separately labeled target/actual-resource/renderer/engine fault lanes, reload and cold URL E2E; no hard-target enforcement or crash-recovery claim. |
 | WMP-06 / I18N-LAUNCH-002, I18N-UK-002; CT-09, INV-11, SU-17/20 | en/uk, fallback, region independence, pseudo-expanded/RTL/mixed script, full focus traversal; clear lifetime/error/disabled states, unchanged artwork. | Built-app locale/layout E2E, reviewed captures and accessibility semantics; proficient Ukrainian review separately. |
 
 Required visual capture configurations: 320×700 minimum target, 390×844 compact, 600/601 and
