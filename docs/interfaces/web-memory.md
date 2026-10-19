@@ -259,13 +259,16 @@ capture loss, focus loss or an accepted mapping change, use the existing cancell
 no partial stroke/history and no invented cancellation from an unrelated touch event.
 Touch pressure/drawing semantics are future scope, not implemented by this slice.
 
-**Owner-approved P05-E02 pen release ordering exception:** a trusted primary pen
+**Owner-approved P05-E02 mouse/pen release ordering exception:** a trusted primary mouse or pen
 `lostpointercapture` on the canvas, matching the active pointer and its down timestamp,
 with `buttons=0` and `button=-1`, freezes that interaction awaiting its genuine release.
-This narrowly normalizes the observed Wacom loss-before-up ordering. It does not infer
+This narrowly normalizes the observed Wacom and mouse loss-before-up ordering. The owner
+reported the same trusted zero-button mouse loss immediately before its genuine up after
+14 accepted samples; the mouse extension keeps the existing completion/cancellation policy.
+The event device kind must equal the admitted mouse/pen contact; no touch extension. It does not infer
 End from capture loss or pressure. Keep one existing contact/prefix, no queued samples,
 polling or elapsed-time expiry. Repeated matching loss is idempotent; zero-button hover
-adds nothing. A trusted matching primary pen up (`buttons=0`, `button=0`), not older than
+adds nothing. A trusted matching primary mouse/pen up (`buttons=0`, `button=0`), not older than
 the contact down and with unchanged owner/session/mapping/interaction, calls the ordinary
 Rust End once. Other capture losses retain cancellation behavior.
 
@@ -284,7 +287,8 @@ localized nonblocking explanation. Rust keeps settings/history guarded while act
 WMP-02/CT-02/INV-04 edge-case ownership: the P05-E02 implementer owns actual-browser
 trusted loss-before-up evidence with a release delayed beyond 32 ms, preserved visible
 prefix and one Undo; hover/repeated loss/no growth; wrong-pointer/old/untrusted release;
-fresh same-pointer down then late old release; pressed movement, focus, Escape, Back and
+fresh same-pointer down then late old release (including reused mouse ID1); wrong-device
+release against pending mouse; pressed movement, focus, Escape, Back and
 remap cancellation followed by fresh ink. Independent review checks identity fencing and
 bounded state; designer reviews pending/exit states in en/uk including narrow layouts.
 Synthetic event conditions are labelled separately from browser-generated trusted input.

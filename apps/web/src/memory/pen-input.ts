@@ -101,7 +101,7 @@ export function attachPenInput(
       (!event.isTrusted ||
         event.timeStamp < previous.releaseTime ||
         !event.isPrimary ||
-        event.pointerType !== "pen" ||
+        event.pointerType !== previous.source ||
         event.button !== 0 ||
         event.buttons !== 0)
     )
@@ -118,9 +118,9 @@ export function attachPenInput(
     if (!matches(event)) return;
     if (
       event.isTrusted &&
-      owner.current?.source === "pen" &&
+      owner.current?.source === event.pointerType &&
       event.isPrimary &&
-      event.pointerType === "pen" &&
+      ["mouse", "pen"].includes(event.pointerType) &&
       event.target === canvas &&
       event.buttons === 0 &&
       event.button === -1

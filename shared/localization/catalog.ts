@@ -57,7 +57,8 @@ export const catalog = {
     },
     "memory.pendingRelease": {
       kind: "plain",
-      context: "Frozen provisional pen stroke awaiting genuine release; Escape remains available",
+      context:
+        "Frozen provisional mouse/pen stroke awaiting genuine release; Escape remains available",
       arguments: {},
     },
     "memory.color": { kind: "plain", context: "In-memory web pen color control", arguments: {} },

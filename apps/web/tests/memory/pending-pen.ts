@@ -10,15 +10,17 @@ export async function penEvent(
   buttons: number,
   x = 180,
   y = 300,
+  source: "mouse" | "pen" = "pen",
 ) {
   await cdp.send("Input.dispatchMouseEvent", {
     type,
     x,
     y,
     buttons,
-    pointerType: "pen",
+    pointerType: source,
     force: buttons ? 0.6 : 0,
-    ...(type === "mouseMoved" ? {} : { button: "left" }),
+    // CDP mouse movement needs coherent button/buttons to retain pointer capture.
+    button: type === "mouseMoved" && buttons === 0 ? "none" : "left",
   });
 }
 export async function setup(page: Page, context: BrowserContext, enlarged = false) {
@@ -39,19 +41,34 @@ export async function setup(page: Page, context: BrowserContext, enlarged = fals
     });
     canvas.addEventListener("lostpointercapture", (event) => {
       canvas.setAttribute("data-test-loss-time", String(event.timeStamp));
+      if (event instanceof PointerEvent)
+        canvas.setAttribute(
+          "data-test-loss",
+          JSON.stringify({
+            button: event.button,
+            buttons: event.buttons,
+            source: event.pointerType,
+            primary: event.isPrimary,
+            trusted: event.isTrusted,
+          }),
+        );
     });
   });
   return context.newCDPSession(page);
 }
-export async function freeze(page: Page, cdp: CDPSession) {
-  await penEvent(cdp, "mousePressed", 1, 140, 260);
-  await penEvent(cdp, "mouseMoved", 1, 180, 300);
+export async function freeze(page: Page, cdp: CDPSession, source: "mouse" | "pen" = "pen") {
+  await penEvent(cdp, "mousePressed", 1, 140, 260, source);
+  await penEvent(cdp, "mouseMoved", 1, 180, 300, source);
   await page.locator("[data-memory-canvas]").evaluate((canvas) => {
     canvas.releasePointerCapture(Number(canvas.getAttribute("data-test-pointer")));
   });
   // Real browser pending-capture processing creates trusted loss before this hover.
-  await penEvent(cdp, "mouseMoved", 0, 180, 300);
-  await expect(page.locator("[data-memory-pending-release]")).toBeVisible();
+  await penEvent(cdp, "mouseMoved", 0, 181, 301, source);
+  const observed = await page.locator("[data-memory-canvas]").getAttribute("data-test-loss");
+  await expect(
+    page.locator("[data-memory-pending-release]"),
+    observed ?? "No loss observed",
+  ).toBeVisible();
   await expect(page.locator("[data-memory-undo]")).toBeDisabled();
   await expect(page.locator("[data-memory-width]")).toBeDisabled();
 }
