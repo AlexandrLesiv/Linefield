@@ -1,6 +1,7 @@
 use super::primitives::{disc, hull, quad};
+use crate::numerics::Viewport;
 use crate::numerics::{coefficients, eligible, project};
-use crate::{Code, Engine, Sample};
+use crate::{Code, Engine, Metrics, Sample};
 #[derive(Default)]
 pub struct GeometryPage {
     pub geometry: u64,
@@ -28,6 +29,16 @@ impl Engine {
             return Err(Code::StaleScene);
         }
         let metrics = state.metrics.ok_or(Code::Unavailable)?;
+        self.geometry_page(stroke, geometry, offset, self.document.viewport, metrics)
+    }
+    pub(crate) fn geometry_page(
+        &self,
+        stroke: u64,
+        geometry: u64,
+        offset: u64,
+        view: Viewport,
+        metrics: Metrics,
+    ) -> Result<GeometryPage, Code> {
         let selected = self.stroke(stroke).ok_or(Code::StaleScene)?;
         let mut page = GeometryPage {
             geometry,
@@ -36,7 +47,6 @@ impl Engine {
             done: true,
             ..GeometryPage::default()
         };
-        let view = self.document.viewport;
         if !eligible(selected.min, selected.max, view, metrics)? {
             return Ok(page);
         }

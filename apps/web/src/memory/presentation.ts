@@ -94,20 +94,52 @@ export class Presentation {
     if (this.disposed || !this.owner.front || !this.image) throw Error("display-unavailable");
   }
   transform(m: readonly number[], outside: boolean): void {
+    this.transformImage(this.image, m, outside);
+  }
+  private transformImage(image: Image | null, m: readonly number[], outside: boolean): void {
     const { kit, front } = this.owner;
-    if (this.disposed || !front || !this.image) throw Error("display-unavailable");
+    if (this.disposed || !front || !image) throw Error("display-unavailable");
     const canvas = front.getCanvas();
     canvas.clear(kit.WHITE);
     if (!outside) {
       canvas.save();
       try {
         canvas.concat([m[0]!, m[1]!, m[4]!, m[2]!, m[3]!, m[5]!, 0, 0, 1]);
-        canvas.drawImage(this.image, 0, 0);
+        canvas.drawImageOptions(image, 0, 0, kit.FilterMode.Nearest, kit.MipmapMode.None);
       } finally {
         canvas.restore();
       }
     }
     front.flush();
+  }
+  commitTarget(
+    m: readonly number[],
+    outside: boolean,
+    old: readonly number[],
+    oldOutside: boolean,
+    adopt: () => boolean,
+  ): boolean {
+    const { staging, resources } = this.owner;
+    if (this.disposed || !staging || !this.image) throw Error("display-unavailable");
+    staging.flush();
+    const next = renderSnapshot(() => staging.makeImageSnapshot());
+    if (!next) throw Error("display-unavailable");
+    resources.add("image");
+    let adopted = false;
+    try {
+      this.transformImage(next, m, outside);
+      adopted = adopt();
+      if (adopted) {
+        resources.release("image", this.image);
+        this.image = next;
+      }
+      return adopted;
+    } finally {
+      if (!adopted) {
+        resources.release("image", next);
+        this.transformImage(this.image, old, oldOutside);
+      }
+    }
   }
   replaceStaging(): void {
     this.owner.replaceStaging();

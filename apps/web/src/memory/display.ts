@@ -1,8 +1,7 @@
-import { EngineBoundaryError } from "./bridge.ts";
+import { EngineBoundaryError, type Bridge, type ReplyValue } from "./bridge.ts";
 import { editorCommands } from "./commands.ts";
 import { observeSurface, surfaceMetrics, surfaceIsCurrent } from "./surface-events.ts";
 import type { CanvasKit } from "canvaskit-wasm";
-import type { Bridge, ReplyValue } from "./bridge.ts";
 import type { MemoryView } from "./view.ts";
 import { Presentation } from "./presentation.ts";
 import { SceneRenderer } from "./scene-renderer.ts";
@@ -121,16 +120,18 @@ export function attachDisplay(
           () => state,
           () => valid() && renderer === currentRenderer,
           (shown) => {
-            if (!valid() || renderer !== currentRenderer) return;
+            if (!valid() || renderer !== currentRenderer) return false;
             if (shown.content !== state.content || shown.mapping !== state.mapping) {
               schedule();
-              return;
+              return false;
             }
             try {
               if (!accept(api.presented(shown))) throw Error("engine-unavailable");
               view.status("ready");
+              return true;
             } catch {
               fatal();
+              return false;
             }
           },
         );

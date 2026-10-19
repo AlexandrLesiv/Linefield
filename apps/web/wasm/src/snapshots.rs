@@ -57,6 +57,7 @@ snapshot!(SceneIds);
 snapshot!(ScenePage);
 snapshot!(StrokeState);
 snapshot!(PanPreview);
+snapshot!(RenderTarget);
 #[wasm_bindgen]
 impl SceneIds {
     #[wasm_bindgen(getter)]

@@ -132,3 +132,22 @@ or per-sample logs. SEC-10 excludes fixed regional/culling fixtures from release
 worker, storage, network, CSP, file or credential authority changes; other threat rows unchanged
 for that specific reason. Boundary fixtures and actual-browser controls/alignment/cancel/retention
 checks require independent review; numerical experiments alone are not acceptance.
+
+## Live-pan target amendment
+
+P05-E02's owner-approved [live reconstruction contract](../interfaces/web-memory-live-pan.md)
+adds seven named checked Wasm methods and fixed-size Rust target metadata. SEC-02 retains
+bounded pages, one working path/staging image and at most two image handles during promotion;
+no full document snapshot, worker or fixed stroke quota. SEC-03 adds target-specific geometry,
+content/session/surface/rotation fences and synchronous validated adoption with rollback of
+the prior transformed image. Repeated pan updates alone cannot starve target queries.
+SEC-09 adds only allowlisted capture/adopt/release outcome/session records; transform/geometry
+queries and artwork are absent. SEC-13 trust/CSP/dependency boundaries are unchanged: no dynamic
+code, storage, transport or extra authority. Independent re-review covers this delta; review
+is not owner acceptance or a claim of comprehensive security coverage.
+
+WMP-11-LIVE browser fixture scenarios cover hostile argument noncoercion, stale geometry and
+publication, target concurrency, same-size surface invalidation, rotated coverage rejection,
+transformed rollback and bounded image lifetime. Actual UI E2E separately covers held-drag
+content visibility, cancellation/history guards and no-jump release. Generated evidence stays
+ignored; exact final verification and unresolved whole-path performance remain task evidence.

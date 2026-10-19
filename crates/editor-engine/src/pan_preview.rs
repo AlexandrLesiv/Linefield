@@ -23,7 +23,7 @@ fn delta(before: Axis, after: Axis) -> Option<f64> {
     }
     Some(regions as f64 * 65536.0 + before.local - after.local)
 }
-fn affine(origin: PanOrigin, view: Viewport) -> Option<[f64; 6]> {
+pub(crate) fn affine(origin: PanOrigin, view: Viewport) -> Option<[f64; 6]> {
     let metrics = origin.metrics;
     let x = delta(origin.viewport.x, view.x)?;
     let y = delta(origin.viewport.y, view.y)?;
@@ -48,7 +48,7 @@ fn affine(origin: PanOrigin, view: Viewport) -> Option<[f64; 6]> {
     ];
     result.iter().all(|v| v.is_finite()).then_some(result)
 }
-fn outside(m: [f64; 6], metrics: Metrics) -> bool {
+pub(crate) fn outside(m: [f64; 6], metrics: Metrics) -> bool {
     let width = (metrics.width * metrics.backing).ceil();
     let height = (metrics.height * metrics.backing).ceil();
     let corners = [[0.0, 0.0], [width, 0.0], [0.0, height], [width, height]];

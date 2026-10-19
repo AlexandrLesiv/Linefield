@@ -77,7 +77,7 @@ test("WMP-11 dense continuous pan publishes positions before release and exact r
       await page.screenshot({ path: info.outputPath(`held-${i}.png`) });
     }
   }
-  await expect(page.locator("[data-memory-canvas]")).toHaveAttribute("data-state", "updating");
+  await ready(page);
   await expect(page.locator("[data-memory-undo]")).toBeDisabled();
   const held = await page.screenshot({ clip });
   await page.mouse.up();

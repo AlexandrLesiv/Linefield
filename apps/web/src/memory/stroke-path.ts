@@ -24,9 +24,10 @@ export class StrokePath {
     read: () => ReplyValue,
     valid: () => boolean,
     budget: RenderBudget,
+    queries: Pick<typeof penBridge, "stroke" | "page"> = penBridge,
   ): Promise<boolean> {
     if (!valid() || this.disposed) return false;
-    const target = penBridge.stroke(read(), this.id);
+    const target = queries.stroke(read(), this.id);
     if (target.code !== "ok") return false;
     while (this.prefix < target.verbs) {
       const reserve = target.terminal
@@ -35,7 +36,7 @@ export class StrokePath {
       if (!(await budget.before(reserve, valid))) return false;
       if (!valid() || this.disposed) return false;
       const page = renderOperation(() =>
-        penBridge.page(read(), this.id, target.geometry, this.prefix),
+        queries.page(read(), this.id, target.geometry, this.prefix),
       );
       if (page.code !== "ok") return false;
       renderOperation(() => appendPathPage(this.kit, this.builder, page));

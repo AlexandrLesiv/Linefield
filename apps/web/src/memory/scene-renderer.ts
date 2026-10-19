@@ -6,7 +6,8 @@ import { drawCommitted } from "./committed-scene.ts";
 import { RenderBudget } from "./render-budget.ts";
 import { StrokePath } from "./stroke-path.ts";
 import { sceneTarget } from "./scene-target.ts";
-import { PanPresentation } from "./pan-preview.ts";
+import { PanPresentation, panPreview } from "./pan-preview.ts";
+import { renderNavigation } from "./live-navigation-renderer.ts";
 import {
   renderCount,
   renderPending,
@@ -70,10 +71,27 @@ export class SceneRenderer {
   async render(
     read: () => ReplyValue,
     alive: () => boolean,
-    publish: (state: ReplyValue) => void,
+    publish: (state: ReplyValue) => boolean,
   ): Promise<void> {
     const initial = read();
-    if (this.pan.active) return;
+    if (panPreview(initial).code === "ok") {
+      this.path?.dispose();
+      this.path = undefined;
+      this.reset = true;
+      const mapping = await renderNavigation(
+        this.kit,
+        this.display,
+        read,
+        () => !this.stopped && alive(),
+        publish,
+      );
+      if (mapping !== undefined) {
+        this.frontMapping = mapping;
+        this.frontActive = 0n;
+        this.pan.update(read(), mapping, this.display);
+      }
+      return;
+    }
     const epoch = this.epoch;
     const valid = () => !this.stopped && alive() && this.epoch === epoch;
     if (!valid()) return;
@@ -130,8 +148,7 @@ export class SceneRenderer {
         this.frontCompleted = target.terminal;
         this.frontMapping = initial.mapping;
         this.frontActive = 0n;
-        publish(initial);
-        if (read().content === initial.content) renderCaughtUp();
+        if (publish(initial)) renderCaughtUp();
       }
       const current = read();
       if (current.content !== initial.content || current.interaction === 0n || !target.active)

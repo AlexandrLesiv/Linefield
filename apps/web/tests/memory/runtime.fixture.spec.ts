@@ -3,6 +3,8 @@ import { createHash } from "node:crypto";
 import { platform, release, arch } from "node:os";
 import { test, expect } from "@playwright/test";
 for (const label of [
+  "Run render target boundary",
+  "Run render target failure",
   "Run viewport boundary",
   "Run rotation boundary",
   "Run boundary matrix",

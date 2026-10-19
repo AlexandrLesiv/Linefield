@@ -87,6 +87,8 @@ pub struct Projection {
 }
 #[derive(Default)]
 pub struct Engine {
+    pub(crate) render_target: Option<crate::render_target::Target>,
+    pub(crate) render_counter: u64,
     pub(crate) pan_origin: Option<crate::pan_preview::PanOrigin>,
     pub(crate) owner_counter: u64,
     pub(crate) session_counter: u64,

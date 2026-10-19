@@ -32,6 +32,7 @@ impl Engine {
             view.y = y;
             self.document.viewport = view;
             self.pan_origin = None;
+            self.render_target = None;
             self.advance();
             Ok(())
         })();
@@ -55,6 +56,7 @@ impl Engine {
         }
         self.document.viewport.zoom = next;
         self.pan_origin = None;
+        self.render_target = None;
         self.advance();
         Code::Ok
     }

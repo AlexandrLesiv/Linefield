@@ -8,6 +8,8 @@ mod ink;
 mod mapping;
 mod pan;
 mod pan_preview;
+mod render_queries;
+mod render_target;
 mod rotation;
 mod scene;
 mod scene_state;
@@ -20,9 +22,13 @@ pub use ink::*;
 pub use mapping::*;
 pub use pan::*;
 pub use pan_preview::*;
+pub use render_queries::*;
+pub use render_target::*;
 pub use rotation::*;
 pub use scene::*;
-pub use snapshots::{Mapping, PanPreview, Reply, SceneIds, ScenePage, State, StrokeState};
+pub use snapshots::{
+    Mapping, PanPreview, RenderTarget, Reply, SceneIds, ScenePage, State, StrokeState,
+};
 pub use view_steps::*;
 use wasm_bindgen::prelude::*;
 #[wasm_bindgen(typescript_custom_section)]

@@ -7,6 +7,9 @@ interface Event {
   time: number;
 }
 const commands = new Set([
+  "render-capture",
+  "render-adopt",
+  "render-release",
   "cancel",
   "pan-begin",
   "pan-end",

@@ -35,6 +35,7 @@ impl Engine {
             }
             self.remember_pan_origin();
             self.document.viewport.rotation = next;
+            self.render_target = None;
             self.advance();
             Ok(Code::Ok)
         })();

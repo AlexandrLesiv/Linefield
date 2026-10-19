@@ -61,6 +61,7 @@ impl Engine {
             return Code::Exhausted;
         }
         self.cancel_for_mapping();
+        self.render_target = None;
         self.advance();
         self.sequence = sequence;
         if let Some(value) = self.current.as_mut() {
@@ -78,6 +79,7 @@ impl Engine {
             return Code::Noop;
         }
         self.cancel_for_mapping();
+        self.render_target = None;
         self.advance();
         if let Some(value) = self.current.as_mut() {
             value.phase = Phase::Suspended;

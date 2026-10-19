@@ -9,6 +9,7 @@ thread_local! {
 }
 #[derive(Default)]
 pub struct Payload {
+    pub render_target: linefield_editor_engine::RenderTarget,
     pub pan_preview: linefield_editor_engine::PanPreview,
     pub page: linefield_editor_engine::GeometryPage,
     pub ids: Vec<u64>,

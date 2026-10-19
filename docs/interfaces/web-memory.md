@@ -489,7 +489,9 @@ The owner approved a temporary pan preview on2026-10-19: freeze the complete vis
 composition at the first accepted pan, translate it using a Rust-derived absolute offset,
 clear exposed pixels white, and replace it atomically with accurate current-mapping rendering.
 Do not accumulate transforms or capture a translated/cropped preview as a new source.
-During a drag, defer expensive exact reconstruction; End/Cancel schedules accurate catchup.
+The owner-approved [live-pan amendment](web-memory-live-pan.md) supersedes deferring exact
+reconstruction until End/Cancel: finish one captured target during movement and safely promote
+complete original images while retaining current-view coverage. End/Cancel also schedules catchup.
 Recent completed visible ink belongs to the frozen composition. Accepted ink not yet visible
 remains canonical and appears in accurate catchup; it is never discarded.
 
@@ -502,7 +504,8 @@ Rust retains one source viewport/content/metrics/session record, never artwork o
 Offsets use checked regional subtraction, bounded local floating arithmetic and unchanged zoom;
 when the original raster cannot overlap the current viewport, `outside` requests white while
 retaining the source for reversal. Querying changes no readiness, history or document state.
-An exact current publication retires that origin. Content/history changes, unrelated mapping
+An exact current publication retires that origin when no pan is active; during an active pan,
+retain the newly adopted original source for subsequent movement. Content/history changes, unrelated mapping
 changes, suspension, surface replacement or session departure invalidate it. A later pan may
 begin from this valid origin before exact catchup; its cancellation base is the latest accepted
 viewport while presentation still derives from the original image. Fresh ink, zoom and arrow

@@ -1,4 +1,6 @@
 import { penCheckpoint } from "./pen-checkpoint.ts";
+import { renderTargetBoundary } from "./render-target.ts";
+import { renderTargetFailure } from "./render-target-failure.ts";
 import { rotationBoundary } from "./rotation.ts";
 import { viewportBoundary } from "./viewport.ts";
 import { cleanupFailure } from "./cleanup.ts";
@@ -44,6 +46,11 @@ action("Run boundary matrix", async () => {
   await loadEngine();
   return boundaryMatrix();
 });
+action("Run render target boundary", async () => {
+  await loadEngine();
+  return renderTargetBoundary();
+});
+action("Run render target failure", async () => renderTargetFailure(await loadRenderer(), canvas));
 action("Run rotation boundary", async () => {
   await loadEngine();
   return rotationBoundary();

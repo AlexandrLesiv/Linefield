@@ -11,6 +11,13 @@ const commands = WebAssembly.Module.exports(module)
   .map((item) => item.name)
   .sort();
 const expected = [
+  "memoryRenderCapture",
+  "memoryRenderTransform",
+  "memoryRenderAdopt",
+  "memoryRenderRelease",
+  "memoryRenderIds",
+  "memoryRenderStroke",
+  "memoryRenderPage",
   "memoryPanBegin",
   "memoryPanPreview",
   "memoryPanUpdate",
@@ -52,6 +59,7 @@ for (const name of [
   "ScenePage",
   "StrokeState",
   "PanPreview",
+  "RenderTarget",
 ]) {
   if (!declarations.includes(`export class ${name}`)) throw Error("Generated snapshot absent");
 }
@@ -78,7 +86,7 @@ console.log(
     status: "passed",
     commands,
     engineSha256: createHash("sha256").update(bytes).digest("hex"),
-    generatedSnapshots: 7,
+    generatedSnapshots: 8,
     caveat:
       "Static export/glue/asset validation; browser E2E and independent glue inspection remain separate",
   }),

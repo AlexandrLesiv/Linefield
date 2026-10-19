@@ -42,6 +42,7 @@ impl Engine {
         }
         // Enter/update admission reserves this generation; cleanup cannot consume it early.
         self.cancel_for_mapping();
+        self.render_target = None;
         self.advance();
         if let Some(value) = self.current.as_mut() {
             value.session = 0;
@@ -56,6 +57,7 @@ impl Engine {
             return code;
         }
         self.document = Default::default();
+        self.render_target = None;
         self.pan_origin = None;
         self.current = None;
         self.disposed = owner;
@@ -83,12 +85,16 @@ impl Engine {
             return Code::Unavailable;
         }
         if value.presented {
-            self.pan_origin = None;
+            if self.document.pan.is_none() {
+                self.pan_origin = None;
+            }
             return Code::Noop;
         }
         value.presented = true;
         value.mapping_ready = true;
-        self.pan_origin = None;
+        if self.document.pan.is_none() {
+            self.pan_origin = None;
+        }
         Code::Ok
     }
     pub fn scene_ids(&self, owner: u64, session: u64, scene: u64, after: u64) -> Code {

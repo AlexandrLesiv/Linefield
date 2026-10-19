@@ -51,6 +51,7 @@ export async function rotationClick(page: Page, direction: "left" | "right" | "r
 
 export async function diagnostics(page: Page): Promise<{
   render: {
+    pendingMs: number;
     snapshotCount: number;
     peakImages: number;
     panPreviewPublications: number;
