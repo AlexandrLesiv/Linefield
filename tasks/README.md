@@ -8,6 +8,11 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 # Task board
 
+See the [approved product backlog](BACKLOG.md) for the owner-confirmed order of upcoming functionality.
+Those priorities do not mark the milestones below complete or waive implementation gates.
+Backlog expansion is closed at 63 outcomes. [P05-L01](P05-L01.md) prepares the first saved-drawing
+slice; production work remains gated, with [S02-P01](S02-P01.md) the next synthetic storage prerequisite.
+
 Decision238 adopts the [task/PR/fresh-chat workflow](../docs/workflow/task-pr-chat.md).
 The broad records below remain milestones/workstreams; existing completion claims describe local
 deliverables, not fabricated GitHub merges. New executable leaf tasks follow the updated template.
