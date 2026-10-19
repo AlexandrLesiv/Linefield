@@ -1,6 +1,6 @@
 # Product backlog
 
-This list records owner-approved functionality and priority. Positions 1–45 were explicitly
+This list records owner-approved functionality and priority. Positions 1–50 were explicitly
 approved in this chat. They are planned outcomes, not completed features or blanket approval
 of unresolved designs, ABI, numerical, storage or security choices. Execution begins only after
 applicable contracts and designs are approved. Split large outcomes into bounded child tasks,
@@ -58,6 +58,11 @@ by current owner policy. Preserve existing gallery/navigation, themes and Englis
 | 43 | Focus on one layer | Child task to scope before implementation | Approved backlog; presentation/input design remains |
 | 44 | Export an editable Linefield file | [S06 Files and recovery](S06.md) | Approved backlog; format/snapshot/publication contracts remain |
 | 45 | Import an editable Linefield file | [S06 Files and recovery](S06.md) | Approved backlog; validation/versioning/import contracts remain |
+| 46 | Stretch selected artwork | [S05 Navigation and editing](S05.md) | Approved backlog; transform/width/design contracts remain |
+| 47 | Lock individual objects | Child task to scope before implementation | Approved backlog; lock/selection/storage design remains |
+| 48 | Filter selection targets | Child task to scope before implementation | Approved backlog; filter/input/design contracts remain |
+| 49 | Export PDF | Child task to scope before implementation | Approved backlog; dimensions/fidelity/publication contracts remain |
+| 50 | Customize pen pressure response | Child task to scope before implementation | Approved backlog; response/input/style contracts remain |
 
 ## Visual and interaction design approval
 
@@ -402,6 +407,45 @@ versions or damaged files safely. Review captured source consistency, new identi
 asset/resource validation and atomic admission before implementation. No automatic source-file
 write-through or silent repair. Depends on the reviewed format in #44 and durable library.
 Concepts reference: CS-DOC-021; Linefield’s selected import-as-copy policy controls behavior.
+
+## 46. Stretch selected artwork
+
+Resize selected artwork horizontally and vertically independently, with reviewed stroke-width
+behavior, Undo and saving. Depends on selection/transform history; review degenerate scales,
+groups and supported content types. No implicit skew, warp or reflection support.
+Concepts reference: CS-DOC-016; its documented width behavior is input to review, not an
+already selected Linefield transform contract.
+
+## 47. Lock individual objects
+
+Lock/unlock strokes or groups without locking their entire layer; clearly indicate protected
+objects. Review selection eligibility, explicit unlocking, group/layer precedence, history and
+persistence. Locking is an editing affordance, not an access-control or security boundary.
+Concepts reference: CS-DOC-016 (documented, not exercised).
+
+## 48. Filter selection targets
+
+Limit selection to chosen content types or the active layer, with visible filter state.
+Review supported filter inventory, empty results, existing selection, hidden/locked objects,
+keyboard/accessibility feedback and transient versus retained settings before implementation.
+Do not silently broaden selection when a filter yields no eligible targets.
+Concepts reference: CS-DOC-016 (documented); exact Linefield filters require design review.
+
+## 49. Export PDF
+
+Export a drawing or artboard as a PDF with reviewed dimensions and appearance. Multi-page
+document assembly stays separate. Review font/image/mask fidelity, scale, resources and
+publication behavior; do not promise editable PDF output or silently drop unsupported artwork.
+Reuse approved export lifecycle semantics where applicable.
+Concepts reference: CS-DOC-023 (documented, not exercised).
+
+## 50. Customize pen pressure response
+
+Adjust how supported stylus pressure affects width and opacity, with preview and reset.
+Tilt and velocity dynamics remain separate. Review response representation, bounds, absent
+pressure fallback, preset interaction and per-stroke settings capture. This expands the initial
+linear-width baseline; no new curve or hardware support is selected by backlog approval.
+Concepts reference: CS-DOC-008 (documented; physical pressure response not tested).
 
 ## Further candidates
 
