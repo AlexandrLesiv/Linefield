@@ -8,6 +8,13 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 # Task board
 
+## R06 padded raster checkpoint
+
+[P05-R06](P05-R06.md) completed with all approved padding sizes rejected. Padding 8px
+fixes the original control but fails a thin diagonal, including pixels well inside tiles.
+Large-stroke performance remains unrun under the approved correctness gate. Current previews
+remain unchanged; no production migration. Dependency PR #12 and owner review remain open.
+
 ## R05 CPU raster checkpoint
 
 [P05-R05](P05-R05.md) completed with a rejected unpadded CPU tiling candidate:256 coincident
