@@ -1,9 +1,12 @@
 # In-memory web editor threat delta — WMP v1
 
-Status: owner-approved W1–W4 security direction; N1/A1/R1 concrete additions approved at51d9345; implementation evidence remains gated. No production implementation. Task: [S02-W01](../../tasks/S02-W01.md).
+Status: owner-approved W1–W4 security direction; N1/A1/R1 concrete additions approved at51d9345.
+S02-W01 is integrated. Separately confirmed [P05-E01](../../tasks/P05-E01.md) implements the
+empty runtime subset; its task records verification and independent review. Broader pen/history
+controls below remain future implementation requirements.
 Date: 2026-10-19. Lead confirms new language, rendering-resource and dependency boundaries.
-The confirmed investigation contains synthetic local arithmetic/geometry experiments only.
-No app runtime, new storage, network feature, system permission or private drawing is added.
+The original investigation contains synthetic local arithmetic/geometry experiments only.
+P05-E01 adds the local in-memory runtime without storage, a network feature or system permission.
 Owner retains CanvasKit and approved the revised web budget. WMP-C2 specifies320MiB owned CPU
 as a soft monitoring target; stock CanvasKit can grow to2GiB, so one call can overshoot
 its256MiB share before detection. This is not a hard allocation limit or protection from
@@ -43,7 +46,9 @@ Reload/close and unrecoverable process failure lose in-memory work; no recovery 
 | SEC-11 | Wasm, generated glue or CanvasKit dependency/build asset compromise | Exact version/integrity/provenance inventory; local asset serving; argument-array build steps; lifecycle scripts disabled unless separately justified | Pin/build checks and dependency review in P05-E01; this document does not certify future downloads or add scanners |
 | SEC-13 | Same-origin script accesses artwork or broad script policy enables injection | Existing safe DOM text presentation; no dynamic evaluation/generic JSON commands; narrow local asset/CSP proposal reviewed before adoption | Browser policy/asset failure E2E and dependency review; Wasm cannot protect data from already-authorized hostile page script |
 
-All controls above are **planned**, not implemented or verified mitigations. CT-01–04/06–09,
+The table covers the whole proposed slice; only the bounded P05-E01 subset has implementation
+work. Consult its task for verified controls and remaining evidence; do not infer full-slice
+mitigation from foundation checks. CT-01–04/06–09,
 INV-01–05/08/09/11 and SU-01–04/07/13–18/20 apply. Exact mechanisms and numeric bounds
 are owned by the [contract](../interfaces/web-memory.md); identified presentation and loss
 disclosure are owned by the [design](../design/web-memory-pen.md).

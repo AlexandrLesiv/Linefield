@@ -1,6 +1,7 @@
 import { defineConfig } from "@playwright/test";
 export default defineConfig({
   testDir: "./tests",
+  testIgnore: "**/*.fixture.spec.ts",
   fullyParallel: false,
   workers: 1,
   use: {
@@ -11,7 +12,7 @@ export default defineConfig({
     viewport: { width: 1280, height: 900 },
     locale: "en-US",
   },
-  webServer: { command: "pnpm dev", url: "http://127.0.0.1:65142", reuseExistingServer: true },
+  webServer: { command: "pnpm preview", url: "http://127.0.0.1:65142", reuseExistingServer: false },
   reporter: [["list"], ["json", { outputFile: "test-results/results.json" }]],
   outputDir: "test-results/artifacts",
 });

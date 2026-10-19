@@ -5,8 +5,9 @@ Status: **owner approved choices 1A/2A (RAM drawing/settings and Undo/Redo reten
 G1 pan/zoom in the first slice, and G2–G4/W1–W4/C1–C3 as recorded in the companion approval
 packet. C4 means soft operating targets without automatic suspension at target excess.
 P1 pan/zoom mappings and viewport retention, H1 indivisible history-entry retention, and
-S1–S4 screen/lifecycle recommendations are owner approved; no product implementation or
-running-interface visual acceptance**.
+S1–S4 screen/lifecycle recommendations are owner approved**. The separately confirmed
+[P05-E01](../../tasks/P05-E01.md) implements the empty runtime screen; its task records actual
+visual review and evidence. Pen and pan/zoom behavior remain unimplemented P05-E02 scope.
 Task: [S02-W01](../../tasks/S02-W01.md), confirmed first on 2026-10-19, including bounded
 synthetic numerical experiments. Base: integrated `8dbd9b1` (PR #7). Design identity:
 `WMP-D3`, states `D3-01`–`D3-13` below, together with this file's final PR revision/hash.
@@ -39,7 +40,7 @@ not stop editing. **H1** approves retaining the newest indivisible Undo entry be
 16 MiB retirement target after eligible older entries retire. **S1–S4** approve the narrow
 screen amendment: unavailable tools, Undo/Redo controls, temporary-lifetime disclosure and
 best-effort reload/close warning, and accessible adaptive layout. Do not request these again.
-P05-E01 and P05-E02 each require their own scope/position confirmation. Later touch configuration or picker replacement is
+P05-E01 has separate owner scope/position confirmation; P05-E02 still requires it. Later touch configuration or picker replacement is
 separate backlog/review scope, not an implied setting or new picker in this slice.
 
 1. **Approved 1A/2A:** retain one temporary Rust document, accepted pen settings and its bounded

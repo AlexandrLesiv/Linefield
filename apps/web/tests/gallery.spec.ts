@@ -135,7 +135,7 @@ test("WEB-G06 reduced motion and browser Back/Forward", async ({ page }) => {
 });
 test("WEB-G07 new blank drawing fills viewport", async ({ page }) => {
   await page.locator(".new-tile").click();
-  await expect(page.locator(".canvas-title")).toHaveText("Untitled");
+  await expect(page.locator(".canvas-title")).toHaveText("Temporary drawing");
   await expect(page.locator(".back")).toBeFocused();
   await expect(page.locator(".drawing-surface img")).toHaveCount(0);
   await page.getByRole("button", { name: "← Back" }).click();

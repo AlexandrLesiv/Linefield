@@ -1,3 +1,4 @@
+import { hasTemporary, temporaryFailed } from "./memory/document.ts";
 import { gallery as galleryStyle, srOnly, prototypeLabel } from "./styles.css.ts";
 import { createOverlayScrollbar } from "./overlay-scrollbar.ts";
 import { t } from "./locale.ts";
@@ -19,7 +20,7 @@ let drawings = sampleDrawings();
 let currentId: string | null = null;
 const blankPreview: Drawing = {
   id: "preview-new",
-  name: t("drawing.untitled"),
+  name: t("memory.title"),
   image: null,
   deleted: false,
 };
@@ -52,14 +53,21 @@ function creationOrigin(): HTMLElement | null {
 }
 function render(): void {
   renderGallery(gallery, drawings, actions);
+  if (hasTemporary())
+    notice.textContent = t(temporaryFailed() ? "memory.fatal" : "memory.retained");
 }
 function open(drawing: Drawing, origin: HTMLElement): void {
   if (navigation.active) return;
+  try {
+    openRoute(drawing.id);
+  } catch {
+    announce(t("memory.navigationUnavailable"));
+    return;
+  }
   closeMenu();
   toolbar.inert = true;
   currentId = drawing.id;
   drawings = drawings.filter((item) => !item.deleted);
-  openRoute(drawing.id);
   void navigation.open(drawing, origin, () => history.back());
 }
 const actions = {
@@ -117,7 +125,9 @@ async function syncRoute(): Promise<void> {
   }
 }
 window.addEventListener("popstate", () => void syncRoute());
-initializeRoute([...drawings.map((drawing) => drawing.id), blankPreview.id]);
+const unavailable = drawingRoute() === blankPreview.id;
+initializeRoute(drawings.map((drawing) => drawing.id));
+if (unavailable) notice.textContent = t("memory.unavailable");
 render();
 void syncRoute();
 

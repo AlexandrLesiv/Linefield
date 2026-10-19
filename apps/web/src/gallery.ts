@@ -1,3 +1,7 @@
+import { creationClearance } from "./memory/creation-clearance.ts";
+import { resumeIcon } from "./memory/view.css.ts";
+import { hasTemporary } from "./memory/document.ts";
+import { drawingIcon } from "./drawing-icons.ts";
 import { newCell, mobileCreate, newTile, newLabel } from "./gallery-creation.css.ts";
 import { removed, empty } from "./states.css.ts";
 import {
@@ -22,12 +26,14 @@ interface Actions {
 }
 export function renderGallery(root: HTMLElement, drawings: Drawing[], actions: Actions): void {
   root.replaceChildren();
+  const createLabel = t(hasTemporary() ? "memory.resume" : "drawing.create");
   const grid = element("div", `drawing-grid ${drawingGrid}`);
   grid.setAttribute("aria-label", t("gallery.label"));
   {
     const add = button("+", `new-tile ${newTile}`, () => actions.create(add));
-    add.append(element("span", newLabel, t("drawing.create")));
-    add.setAttribute("aria-label", t("drawing.create"));
+    if (hasTemporary()) add.replaceChildren(drawingIcon("pen"));
+    add.append(element("span", newLabel, createLabel));
+    add.setAttribute("aria-label", createLabel);
     const cell = element("article", `new-cell ${newCell}`);
     cell.append(add);
     grid.append(cell);
@@ -61,10 +67,18 @@ export function renderGallery(root: HTMLElement, drawings: Drawing[], actions: A
   }
   root.append(grid);
   installGalleryActions(root, drawings, actions.menu);
-  const add = button("+ " + t("drawing.create"), `mobile-create ${mobileCreate}`, () =>
-    actions.create(add),
+  const add = button(
+    (hasTemporary() ? "" : "+ ") + createLabel,
+    `mobile-create ${mobileCreate}`,
+    () => actions.create(add),
   );
+  if (hasTemporary()) {
+    const icon = drawingIcon("pen");
+    icon.classList.add(resumeIcon);
+    add.prepend(icon);
+  }
   root.append(add);
+  creationClearance(root, add, grid);
   root.classList.toggle("empty", drawings.length === 0);
   root.classList.toggle(empty, drawings.length === 0);
 }

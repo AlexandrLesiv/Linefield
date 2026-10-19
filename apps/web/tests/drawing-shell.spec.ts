@@ -51,10 +51,10 @@ test("WEB-D2-01/02/03 disposable tools and properties preserve artwork and histo
 test("WEB-D2-04/06 active pointer cancellation and idle Escape never navigate", async ({
   page,
 }) => {
-  await page.goto("/drawing/preview-new");
+  await page.goto("/drawing/sample-0");
   await expect(page.locator(".back")).toBeFocused();
   await page.keyboard.press("Escape");
-  await expect(page).toHaveURL(/preview-new$/);
+  await expect(page).toHaveURL(/sample-0$/);
   const width = page.getByRole("slider", { name: "Width", exact: true });
   const box = await width.boundingBox();
   if (!box) throw Error("Missing width control");
@@ -72,7 +72,7 @@ test("WEB-D2-04/06 active pointer cancellation and idle Escape never navigate", 
   await expect(width).toHaveValue("9");
   await width.press("Escape");
   await expect(width).toHaveValue("9");
-  await expect(page).toHaveURL(/preview-new$/);
+  await expect(page).toHaveURL(/sample-0$/);
 });
 
 test("WEB-D2-06 transition controls are inert and stale completion does not steal focus", async ({

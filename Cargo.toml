@@ -1,0 +1,8 @@
+[workspace]
+members = ["crates/editor-engine", "apps/web/wasm"]
+resolver = "3"
+
+[profile.release]
+lto = true
+opt-level = "s"
+panic = "abort"

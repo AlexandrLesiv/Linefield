@@ -14,12 +14,17 @@ for (const locale of ["en", "en-US", "uk", "uk-UA", "de-DE"]) {
     );
     await page.locator(".new-tile").click();
     await expect(page.locator(".back")).toBeFocused();
-    await expect(page.locator(".canvas-title")).toHaveText(uk ? "Без назви" : "Untitled");
+    await expect(page.locator(".canvas-title")).toHaveText(
+      uk ? "Тимчасовий малюнок" : "Temporary drawing",
+    );
     await expect(page.locator(".property-width input")).toHaveAccessibleName(
       uk ? "Товщина" : "Width",
     );
     await page.reload();
-    await expect(page.locator(".back")).toBeFocused();
+    await expect(page.locator(".drawing-surface")).toHaveCount(0);
+    await expect(page.locator(".prototype-label")).toContainText(
+      uk ? "недоступний" : "unavailable",
+    );
     await expect(page.locator("html")).toHaveAttribute("lang", uk ? "uk" : "en");
     await expect(page.getByRole("combobox")).toHaveCount(0);
     await context.close();
@@ -38,7 +43,7 @@ for (const languages of [
       Object.defineProperty(navigator, "languages", { get: () => values });
     }, languages);
     const page = await context.newPage();
-    await page.goto("http://127.0.0.1:65142/drawing/preview-new");
+    await page.goto("http://127.0.0.1:65142/drawing/sample-0");
     await expect(page.locator(".back")).toBeFocused();
     const expected = languages[0] === "fr-FR" ? "uk" : "en";
     await expect(page.locator("html")).toHaveAttribute("lang", expected);

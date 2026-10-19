@@ -1,5 +1,7 @@
 import { toolIcon, propertyIcon, strokeIcon } from "./drawing-controls.css.ts";
 const paths = {
+  undo: "M9 5 4 10l5 5M4 10h10a6 6 0 0 1 0 12",
+  redo: "m15 5 5 5-5 5m5-5H10a6 6 0 0 0 0 12",
   pen: "M12 3 5 16l4 3h6l4-3L12 3Zm0 0v10m-3 8h6",
   select: "M8 4H4v4m12-4h4v4M4 16v4h4m12-4v4h-4",
   eraser: "m4 15 10-11 7 7-10 11H9l-5-5Zm4-4 7 7",

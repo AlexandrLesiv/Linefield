@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test("WEB-D2-03 hidden opacity never makes the Eraser width sample disappear", async ({ page }) => {
-  await page.goto("/drawing/preview-new");
+  await page.goto("/drawing/sample-0");
   await expect(page.locator(".back")).toBeFocused();
   await page.getByRole("slider", { name: "Opacity", exact: true }).fill("0");
   await page.getByRole("button", { name: "Eraser", exact: true }).click();
@@ -14,7 +14,7 @@ for (const signal of ["blur", "resize", "pointercancel"]) {
   test(`WEB-D2-04/06 ${signal} cancels active adjustment and missing release permits fresh keyboard`, async ({
     page,
   }) => {
-    await page.goto("/drawing/preview-new");
+    await page.goto("/drawing/sample-0");
     await expect(page.locator(".back")).toBeFocused();
     const range = page.getByRole("slider", { name: "Width", exact: true });
     const box = await range.boundingBox();
@@ -40,7 +40,7 @@ for (const signal of ["blur", "resize", "pointercancel"]) {
 test("WEB-D2-04 composition Escape has priority and a completed pointer press has no pending cancel", async ({
   page,
 }) => {
-  await page.goto("/drawing/preview-new");
+  await page.goto("/drawing/sample-0");
   await expect(page.locator(".back")).toBeFocused();
   const range = page.getByRole("slider", { name: "Width", exact: true });
   await range.focus();
@@ -60,7 +60,7 @@ test("WEB-D2-04 composition Escape has priority and a completed pointer press ha
   const completed = await range.inputValue();
   await range.press("Escape");
   await expect(range).toHaveValue(completed);
-  await expect(page).toHaveURL(/preview-new$/);
+  await expect(page).toHaveURL(/sample-0$/);
 });
 
 test("WEB-D2-06 motion captures keep chrome hidden during travel and preserve source geometry", async ({

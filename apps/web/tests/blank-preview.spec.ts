@@ -12,7 +12,7 @@ for (const width of [1280, 390]) {
     for (let index = 0; index < 2; index++) {
       await create.click();
       await expect(page.locator(".back")).toBeFocused();
-      await expect(page.locator(".canvas-title")).toHaveText("Untitled");
+      await expect(page.locator(".canvas-title")).toHaveText("Temporary drawing");
       await expect(cards).toHaveCount(6);
       await page.locator(".back").click();
       await expect(page.locator(".drawing-surface")).toHaveCount(0);
@@ -47,8 +47,7 @@ test("WEB-N02 blank preview history remains transient through Forward and interr
   await page.goForward();
   await expect(page.locator(".back")).toBeFocused();
   await page.reload();
-  await expect(page.locator(".back")).toBeFocused();
-  await page.locator(".back").click();
+  await expect(page.locator(".prototype-label")).toContainText("unavailable");
   await expect(page.locator(".drawing-surface")).toHaveCount(0);
   await expect(page.locator(".drawing-card")).toHaveCount(6);
 });

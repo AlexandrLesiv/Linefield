@@ -55,8 +55,6 @@ test("WEB-ONE01 old viewer links allow transient New and preserve ordinary histo
   await page.keyboard.press("Enter");
   await expect(page.locator(".back")).toBeFocused();
   await expect(page).toHaveURL(/\/drawing\/preview-new\?platform=watchos&preview=1$/);
-  await page.reload();
-  await expect(page.locator(".back")).toBeFocused();
   await page.locator(".back").click();
   await expect(page.locator(".drawing-surface")).toHaveCount(0);
   expect(page.url()).toBe(original);
@@ -67,6 +65,12 @@ test("WEB-ONE01 old viewer links allow transient New and preserve ordinary histo
   await expect(page.locator(".drawing-surface")).toHaveCount(0);
   await expect(page.locator(".preview-controls")).toHaveCount(0);
   await expect(page.locator(".drawing-card")).toHaveCount(6);
+  await page.goForward();
+  await expect(page.locator(".back")).toBeFocused();
+  await page.reload();
+  await expect(page.locator(".drawing-surface")).toHaveCount(0);
+  await expect(page.locator(".prototype-label")).toContainText("unavailable");
+  expect(page.url()).toBe(original);
 });
 
 test("WEB-ONE02 legacy native links never intercept browser context menu or long press", async ({

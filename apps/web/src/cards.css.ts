@@ -102,7 +102,7 @@ export const drawingGrid = style({
     "(max-width: 639px)": {
       gridTemplateColumns: "minmax(0, 1fr)",
       gap: "20px",
-      padding: "16px 20px 110px",
+      padding: "16px 20px var(--creation-clearance, 110px)",
     },
   },
   display: "grid",

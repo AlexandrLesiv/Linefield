@@ -4,13 +4,17 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node ../../scripts/localization.ts && vite --host 127.0.0.1 --port 65142 --strictPort",
-    "build": "node ../../scripts/localization.ts && tsc --noEmit && vite build",
+    "dev": "node ../../scripts/web-memory/build.ts && node ../../scripts/localization.ts && vite --host 127.0.0.1 --port 65142 --strictPort",
+    "build": "node ../../scripts/web-memory/build.ts && node ../../scripts/localization.ts && tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1 --port 65142 --strictPort",
     "typecheck": "node ../../scripts/localization.ts && tsc --noEmit",
-    "test": "node ../../scripts/localization.ts && playwright test",
+    "test": "node ../../scripts/web-memory/test.ts",
     "lint": "oxlint --deny-warnings src tests",
-    "format:check": "oxfmt --check src tests *.ts *.json index.html"
+    "format:check": "oxfmt --check src tests *.ts *.json index.html",
+    "test:memory-fixtures": "node ../../scripts/web-memory/test.ts --fixtures"
+  },
+  "dependencies": {
+    "canvaskit-wasm": "0.41.1"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",

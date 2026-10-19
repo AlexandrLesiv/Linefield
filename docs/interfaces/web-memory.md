@@ -1,7 +1,9 @@
 # In-memory web editor contract WMP-C2
 
-2026-10-19. **Owner-approved contract choices; production implementation awaits separate task confirmation and prerequisite integration.**
-S02-W01 is confirmed first. Task branch includes integrated main `545f222`; approval extension starts at `797ffb1`. The isolated
+2026-10-19. **Owner-approved contract choices; S02-W01 integrated and P05-E01 separately confirmed.**
+[P05-E01](../../tasks/P05-E01.md) implements only the empty-owner foundation from verified
+PR #9 merge `c28f56b`; its task records current implementation and evidence status. Pen,
+history and pan/zoom implementation remain P05-E02 scope requiring separate confirmation. The isolated
 synthetic candidate is evidence for this proposal, not an editor or passing browser E2E.
 Owners: rust_engine semantics; designer [WMP-D3](../design/web-memory-pen.md);
 rendering_performance geometry review; lead [security](../security/web-memory.md).
@@ -53,8 +55,8 @@ This packet is an additive web profile, not replacement of approved native C con
 
 P1, H1 and S1–S4 were approved against the797ffb1 recommendation batch. On2026-10-19
 the owner explicitly stated, “I approve N1, A1 and R1.” This approves the technical packet
-at51d9345 and the choices below. It does not confirm P05-E01, authorize implementation,
-accept future runtime evidence or authorize merging PR #9.
+at51d9345 and the choices below. The owner subsequently confirmed P05-E01 separately and
+merged PR #9. Contract approval does not accept future runtime evidence or authorize agent merges.
 
 | Approved choice | Selected mechanism | Remaining evidence gate |
 | --- | --- | --- |
@@ -64,16 +66,16 @@ accept future runtime evidence or authorize merging PR #9.
 
 These choices have owner disposition after numerical and independent review.
 Measurements, generated binding audit, browser E2E and actual
-screen review are implementation acceptance work, not claims made by this packet. Confirm
-P05-E01 separately; start only after prerequisite integration. No product code starts from this document.
+screen review are implementation acceptance work, not claims made by this packet. The separately
+confirmed P05-E01 task records those checks; this document alone grants no implementation authority.
 
 ## W1: exact named boundary and generated declarations
 
 Owner-approved binding direction uses `wasm-bindgen` crate and CLI **0.2.129**, locked identically, `--target web`.
 Its release and parameter-annotation support were verified in upstream docs and local
-registry source; no generator executable is installed here and generated production
-bindings are **unrun**. P05-E01 must generate/compile declarations and inspect actual
-glue before accepting the boundary. The [upstream type override mechanism](https://wasm-bindgen.github.io/wasm-bindgen/reference/attributes/on-rust-exports/unchecked_type.html)
+registry source. P05-E01 generates production declarations and inspects actual glue for its
+ten-export subset; see that task for exact-build acceptance. The remaining methods below
+are contract specifications, not implemented exports. The [upstream type override mechanism](https://wasm-bindgen.github.io/wasm-bindgen/reference/attributes/on-rust-exports/unchecked_type.html)
 can emit exact parameter types but performs no validation. The checked Rust adapter is
 mandatory. No serde/object packet, dispatcher opcode, C pointer or second TypeScript engine.
 

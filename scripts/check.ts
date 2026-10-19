@@ -19,10 +19,13 @@ const formatTargets = [
   "shared/localization",
   "apps/web/src",
   "apps/web/tests",
+  "apps/web/fixtures",
   "apps/web/package.json",
   "apps/web/tsconfig.json",
   "apps/web/vite.config.ts",
   "apps/web/playwright.config.ts",
+  "apps/web/playwright.memory.config.ts",
+  "apps/web/memory-policy.ts",
   "apps/web/index.html",
 ];
 
@@ -31,7 +34,9 @@ async function checkSourceSize(directory: string): Promise<void> {
     const location = join(directory, entry.name);
     if (entry.isDirectory() && entry.name !== "generated") {
       await checkSourceSize(location);
-    } else if (entry.isFile() && /\.(ts|css|html)$/.test(entry.name)) {
+    } else if (entry.isFile() && /\.(ts|css|html|rs)$/.test(entry.name)) {
+      // Trusted literal catalogue data is validated above and excluded by repository policy.
+      if (relative(root, location).startsWith("shared/localization/")) continue;
       const source = await readFile(location, "utf8");
       const lines = source.split("\n").length - (source.endsWith("\n") ? 1 : 0);
       if (lines > 200) {
@@ -54,6 +59,7 @@ const checks: ReadonlyArray<readonly [string, string, readonly string[]]> = [
       "shared/localization",
       "apps/web/src",
       "apps/web/tests",
+      "apps/web/fixtures",
     ],
   ],
   ["format", "oxfmt/bin/oxfmt", ["--check", ...formatTargets]],
@@ -96,6 +102,9 @@ try {
   await checkSourceSize(join(root, "shared"));
   await checkSourceSize(join(root, "apps/web/src"));
   await checkSourceSize(join(root, "apps/web/tests"));
+  await checkSourceSize(join(root, "apps/web/fixtures"));
+  await checkSourceSize(join(root, "apps/web/wasm/src"));
+  await checkSourceSize(join(root, "crates/editor-engine/src"));
   console.log(JSON.stringify({ check: "script-source-size", status: "passed" }));
 } catch (error: unknown) {
   console.error(error instanceof Error ? error.message : "Tooling check failed");

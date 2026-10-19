@@ -25,15 +25,16 @@ This is launch provenance. PR #8 merged as `545f222` and was integrated into thi
 at `f18b44f`; preserve its backlog and verify current main again before new execution.
 Historical PR/base statements below do not override the actual integrated state.
 
-| Order | Proposed task | Gate |
+| Order | Task | Gate |
 | --- | --- | --- |
-| 1 | [S02-W01 memory editor contract/design](S02-W01.md) | [PR #9](https://github.com/AlexandrLesiv/Linefield/pull/9) owner review; investigation/reviews complete; core and P1/H1/S1–S4 approved; N1/A1/R1 approved at51d9345; integration pending |
-| 2 | [P05-E01 runtime foundation](P05-E01.md) | Separate task confirmation and approved/integrated prerequisite; no ink yet |
+| 1 | [S02-W01 memory editor contract/design](S02-W01.md) | [PR #9](https://github.com/AlexandrLesiv/Linefield/pull/9) merged; investigation/reviews complete; core and P1/H1/S1–S4 approved; N1/A1/R1 approved at51d9345; merged c28f56b, integrated tree verified |
+| 2 | [P05-E01 runtime foundation](P05-E01.md) | Owner-confirmed second task; implemented/reviewed on codex/p05-e01-memory-runtime from verified c28f56b; preparing owner-review PR; no ink yet |
 | 3 | [P05-E02 usable pen and viewport](P05-E02.md) | Separate task confirmation and verified foundation; pen, pan/zoom, settings, cancellation and Undo/Redo together |
 
-S02-W01 is assigned on `codex/s02-w01-memory-contract` from integrated main `8dbd9b1`
-(PR #7 browser-test fixes). The original checkout/drafts are preserved. P05-E01/E02 remain
-unconfirmed proposals without writers or PRs. Existing regional C01
+S02-W01 is integrated at `c28f56b`; P05-E01 is confirmed and assigned to one implementation
+writer on `codex/p05-e01-memory-runtime` in its isolated worktree; implementation is frozen
+for owner-review handoff. Original checkout drafts
+remain preserved. P05-E02 remains unconfirmed with no writer or PR. Existing regional C01
 work must be coordinated before overlapping execution. Storage admission and durable/native
 milestones are independent. No task grants approval by being listed. E2E-only tests plus
 static/build checks apply; older unit/property/developer-tool suite wording is superseded.
