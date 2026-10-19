@@ -19,7 +19,7 @@ The shared night scheme uses charcoal surfaces and softer off-white display pape
 
 Decision227: trusted data-only TypeScript is the authoring format for the shared locale and theme catalogs. Build-time generators retain their existing native/web output formats, runtime validation and deterministic output checks. Native host integration remains separate; see [shared resource plan](../../docs/design/shared-resources-plan.md).
 
-Run reports and screenshots remain in ignored local output or task PR attachments. See [browser verification guidance](quality/README.md) and [quality requirements](../../docs/quality.md). App unit checks run with pnpm web:unit; browser checks run with pnpm web:test.
+Run reports and screenshots remain in ignored local output or task PR attachments. See [browser verification guidance](quality/README.md) and [quality requirements](../../docs/quality.md). Browser E2E checks run with pnpm web:test; pnpm check retains static validation.
 
 ## Selected drawing-screen prototype
 

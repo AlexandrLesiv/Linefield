@@ -16,7 +16,7 @@ native hosts or physical-device acceptance.
 
 ## Running and recording verification
 
-From the repository root, use `pnpm check`, `pnpm web:unit`, `pnpm web:build` and
+From the repository root, use `pnpm check`, `pnpm web:build` and
 `pnpm web:test` as appropriate. [App setup](../README.md) lists prerequisites;
 [Playwright configuration](../playwright.config.ts) defines the browser/server setup.
 For a focused case, use `pnpm --filter @linefield/web exec playwright test tests/<file>.spec.ts`.
@@ -31,8 +31,7 @@ use ignored `.build-cache/`. Do not add those payloads to this documentation dir
 
 ## Open finding
 
-[Investigate rename submission — P05-T01](../../../tasks/P05-T01.md) tracks the intermittent
-WEB-D2-08 failure: the literal renamed title was expected, but “Coastal house” remained.
+The intermittent WEB-D2-08 failure remains open: the literal renamed title was expected, but “Coastal house” remained.
 The cleanup run had 120 passes and one failure; five explicit focused reruns passed without
 source changes. The cause remains unconfirmed. This documentation restoration neither reruns
 the app suite nor closes that finding.

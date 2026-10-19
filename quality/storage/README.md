@@ -64,9 +64,8 @@ browsers; use isolated synthetic profiles only. Dependencies and reports go to i
 a diagnostic completion as adoption approval.
 See [storage contract](../../docs/architecture/browser-storage.md),
 [durable-library scope](../../docs/reviews/durable-library-scope.md) and
-[storage task](../../tasks/S02-P01.md). Reference SQL checks remain in
-[scripts/probes/library-schema](../../scripts/probes/library-schema/constraints.test.ts); they
-exercise constraints, not browser schema validation, migrations or production recovery.
+[storage task](../../tasks/S02-P01.md). The proposed SQL constraints still require coverage through future authorized durable-library
+E2E flows. Removed standalone SQL checks are not current validation evidence.
 
 The library proposal also still needs genuine lost-reply, multi-tab, runtime accessibility and
 proficient Ukrainian review evidence. Static design review does not satisfy those gates.

@@ -12,19 +12,17 @@ There is no in-app language switch or persisted override.
 | I18N-UK-002 | Ukrainian actions and literal combining text, Arabic and emoji survive Rename/open/return | localization-launch.spec.ts |
 | WEB-R01 | Matching semantic IDs and named placeholders | refinements.spec.ts |
 | WEB-D2-02/03/05; CT-08/09; INV-05/11; SU-07/20 | Keyboard traversal, visible/accessible percentages and Ukrainian UI with German region | drawing-keyboard.spec.ts |
-| LOC-08/09, LOC-13–16 | Plural categories, integer-domain rejection, independent regions and literal/reordered Unicode substitutions | unit/web-format.test.ts; unit/plural-boundaries.test.ts |
+| LOC-08/09, LOC-13–16 | Plural categories, integer-domain rejection, independent regions and literal/reordered Unicode substitutions | E2E coverage gap; removed standalone formatter cases are not current evidence |
 
 Ordered navigator.languages overrides are labeled fixtures; isolated locale contexts exercise
 browser settings without changing the owner's preferences. Ukrainian/German integer percentage
-spacing can coincide, so that drawing case alone cannot discriminate formatter region. Use the
-independent mixed-region formatter cases as well. No localized numeric text parser is implemented.
+spacing can coincide, so that drawing case alone cannot discriminate formatter region. Independent mixed-region E2E coverage remains necessary. No localized numeric text parser is implemented.
 
 [Shared catalog sources](../../../../shared/localization/README.md) use trusted literal TypeScript,
 semantic IDs, argument contracts, plural categories and platform escaping. Generate resources
 locally; do not restore generated files or old generator reports to Git. `pnpm locales:check`
 validates output; `pnpm locales:native-check` reports syntax/compiler availability separately.
-Syntax validation does not prove native loading. Current primary-app formatter checks remain
-in apps/web/tests/unit; historical generator-test IDs are not a claim that deleted suites still run.
+Syntax validation does not prove native loading. Standalone formatter suites are removed; their prior results do not certify current E2E coverage.
 
 The useful locale coverage once grouped with swipe experiments remains relevant through these
 checks. Custom swipe-reveal actions are removed; their old IDs/platform expectations are not current

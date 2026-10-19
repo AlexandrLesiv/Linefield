@@ -13,7 +13,7 @@ Follow the [design workflow](workflow.md).
 - [Motion](motion.md), [accessibility](accessibility-materials.md),
   [shared resources](shared-resources-plan.md) and [color representations](color-representations.md).
 - [Diagram style](diagram-style.md) and [shared source definitions](../../shared/diagrams/README.md).
-- [Structured task documentation](../workflow/task-packages.md).
+- [Task board](../../tasks/README.md).
 
 Selected gallery/drawing specifications authorize the web UI prototype. The durable
 library and native screens retain their stated review boundaries. Style approval is

@@ -27,13 +27,19 @@ contracts freeze before consumer work. No competing task branches or recursive d
   reject malformed references and check SQL-derived data, dictionary and generated SVG drift.
 - CLEAN-01: obsolete notation references removed from tracked checkout; retired CLI/dependency gone;
   no broken local links; historical evidence explicitly points to its original commit.
-- VERIFY-01: root/new unit/schema tests, build and relevant browser evidence; designer+fresh review.
+- VERIFY-01: static root/schema validation, build and relevant E2E evidence; designer+fresh review.
 
 Security: trusted repository definitions only, strict SVG element/attribute whitelist and XML escaping;
 no network renderer or runtime platform behavior. No automatic publication to former hosted service.
 Owner PR review/merge required. Record final evidence and actual PR; stop at owner review.
 
 ## Verification handoff
+
+[Evidence](../quality/README.md):106 root tests/type/lint/format/drift/size
+pass; web build unchanged;90 app/runtime inputs match prior118-browser-pass evidence (not rerun).
+23 fresh-page SVG renders have no text clipping/overlap; original18architecture SVGs byte-identical.
+Designer approved presentation of the new parallel lanes and four schema views; database review
+verified schema fidelity; fresh reviewer findings fixed. Current link/retired-notation audit is clean.
 
 Reviewed candidate:e0ee580. Final specialist/independent review cleared; PR #2 is open against
 PR #1’s branch. This status-only follow-up records publication. Merge parent first, retarget and

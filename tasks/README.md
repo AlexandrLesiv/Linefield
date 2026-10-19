@@ -1,8 +1,16 @@
+# Current verification policy
+
+Task files retain the original plain Markdown format. Historical results in older briefs are not current pass claims. Quality links lead to maintained guidance, not archived run payloads. The owner selects E2E tests only; static type, lint, format, generation and build checks remain. Approval records cover their identified proposals, not automatically a newer document at a replacement link.
+
+Current 2026-10-17: decision 214 and [live prototype](../docs/design/live-web-prototype.md) supersede the old gallery experiments below. apps/web is the active review surface. Native/design review implementation gates remain.
+
+Current gallery work: apps/web live prototype, decision 214; see ../docs/design/live-web-prototype.md. Android P02 retains Compose as its toolkit. Decision 232 requires shared Linefield styling, supersedes mandatory native appearance and retires the wheel. Decision233/P05-G01 implements one responsive Web gallery and removes hidden platform simulation; the drawing-screen UI prototype is authorized under P05-D01/decision234; real editing and native implementation remain gated. Native application implementation remains pending.
+
 # Task board
 
-Read each task's short brief first. Structured records link PRs, requirements, app tests and current
-design sources. There is no task web application. Agent reviews and local verification do not
-mean the owner has reviewed or accepted a PR. One executable task owns one branch and PR.
+Decision238 adopts the [task/PR/fresh-chat workflow](../docs/workflow/task-pr-chat.md).
+The broad records below remain milestones/workstreams; existing completion claims describe local
+deliverables, not fabricated GitHub merges. New executable leaf tasks follow the updated template.
 
 ## Executable task lanes
 
@@ -15,9 +23,6 @@ base/contract checks. Each writer uses an isolated worktree; one owner per share
 | [DX-G01 bootstrap](DX-G01.md) | Owner review, [PR #1](https://github.com/AlexandrLesiv/Linefield/pull/1) | Initial delivered baseline; owner merge pending |
 | [DX-G02 shared documentation](DX-G02.md) | Owner review, [PR #2](https://github.com/AlexandrLesiv/Linefield/pull/2) | Stacked on DX-G01; owns tooling/docs cleanup, not runtime behavior |
 | [P05-S01 local styles](P05-S01.md) | Owner review, [PR #3](https://github.com/AlexandrLesiv/Linefield/pull/3) | Stacked on DX-G02; app style scoping and final documentation cleanup |
-| [DX-T02 task packages](DX-T02.md) | Owner review, [PR #4](https://github.com/AlexandrLesiv/Linefield/pull/4) | Stacked on P05-S01; structured task records and PR/test links |
-| [DX-C01 source cleanup](DX-C01.md) | In progress; owner-requested cleanup | Stacked on DX-T02; generated output, research and document consolidation |
-| [P05-T01 rename investigation](P05-T01.md) | Needs investigation | Intermittent WEB-D2-08 failure; keep separate from documentation cleanup |
 | [S02-P01 storage admission](S02-P01.md) | Ready for bounded synthetic investigation | DX-G01 baseline; independent of DX-G02 and S02-C01, separate probe paths |
 | [S02-C01 regional contract](S02-C01.md) | Ready for contract/probe work | DX-G01 baseline; independent of storage and documentation tooling |
 | [DX-T01 app token parity](DX-T01.md) | Contract-blocked; read-only inventory may proceed | DX-G02 token contract/review before implementation; no simultaneous shared-token edits |

@@ -5,7 +5,7 @@ Start with [objectives](objectives.md), [decisions](decisions.md) and the assign
 links current contracts rather than duplicating task status.
 
 - [Task and PR workflow](workflow/task-pr-chat.md), [parallel work](workflow/parallel-tasks.md)
-  and [task packages](workflow/task-packages.md).
+  and [plain Markdown tasks](../tasks/README.md).
 - [Design](design/README.md), [shared diagram sources](../shared/diagrams/README.md)
   and [database definitions](database/README.md).
 - [Contract review boundaries](reviews/contracts.md), [durable-library scope](reviews/durable-library-scope.md)

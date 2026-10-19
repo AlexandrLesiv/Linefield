@@ -16,7 +16,6 @@ const formatTargets = [
   "shared/theme",
   "shared/diagrams",
   "shared/schema",
-  "shared/tasks",
   "shared/localization",
   "apps/web/src",
   "apps/web/tests",
@@ -67,15 +66,11 @@ try {
     ["scripts/theme-resources.ts"],
     ["scripts/diagrams/generate.ts"],
     ["scripts/schema/generate.ts"],
-    ["scripts/tasks/check.ts"],
     ["scripts/diagrams/generate.ts", "--check"],
     ["scripts/schema/generate.ts", "--check"],
     ["scripts/theme-validation.ts"],
     ["scripts/theme-resources.ts", "--check"],
     ["scripts/localization.ts", "--check"],
-    ["--test", "apps/web/tests/unit/*.test.ts"],
-    ["--test", "scripts/probes/library-schema/constraints.test.ts"],
-    ["--test", "scripts/probes/regional/*.test.ts"],
   ]) {
     const result = spawnSync(process.execPath, args, {
       cwd: root,

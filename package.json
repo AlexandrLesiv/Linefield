@@ -6,12 +6,11 @@
   "scripts": {
     "action": "node scripts/action.ts",
     "probe:regional": "node scripts/probes/regional/run.ts",
-    "probe:regional:test": "node --test scripts/probes/regional/*.test.ts",
     "check": "node scripts/check.ts",
     "typecheck": "node scripts/localization.ts && tsc --noEmit",
     "lint": "oxlint --deny-warnings scripts shared/theme shared/localization",
-    "format": "oxfmt package.json tsconfig.json .oxlintrc.json .oxfmtrc.json pnpm-workspace.yaml scripts shared/theme shared/localization shared/diagrams shared/schema apps/web/tests/unit",
-    "format:check": "oxfmt --check package.json tsconfig.json .oxlintrc.json .oxfmtrc.json pnpm-workspace.yaml scripts shared/theme shared/localization shared/diagrams shared/schema apps/web/tests/unit",
+    "format": "oxfmt package.json tsconfig.json .oxlintrc.json .oxfmtrc.json pnpm-workspace.yaml scripts shared/theme shared/localization shared/diagrams shared/schema",
+    "format:check": "oxfmt --check package.json tsconfig.json .oxlintrc.json .oxfmtrc.json pnpm-workspace.yaml scripts shared/theme shared/localization shared/diagrams shared/schema",
     "web:dev": "pnpm --filter @linefield/web dev",
     "web:build": "pnpm --filter @linefield/web build",
     "web:test": "pnpm --filter @linefield/web test",
@@ -25,10 +24,7 @@
     "diagrams:generate": "node scripts/diagrams/generate.ts",
     "diagrams:check": "node scripts/diagrams/generate.ts --check",
     "schema:generate": "node scripts/schema/generate.ts",
-    "schema:check": "node scripts/schema/generate.ts --check",
-    "tasks:check": "node scripts/tasks/check.ts",
-    "web:unit": "node scripts/localization.ts && node --test apps/web/tests/unit/*.test.ts",
-    "probe:schema:test": "node --test scripts/probes/library-schema/constraints.test.ts"
+    "schema:check": "node scripts/schema/generate.ts --check"
   },
   "devDependencies": {
     "@types/node": "24.19.2",

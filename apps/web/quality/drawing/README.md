@@ -30,7 +30,7 @@ CT/INV/SU identifiers are acceptance context, not proof of real editing semantic
 
 Narrow keyboard coverage includes reverse traversal and a partially clipped range: pointer focus
 must not scroll the bar and move the control under the pointer. These are executable cases; an
-earlier unrun report is not their current status. [P05-T01](../../../../tasks/P05-T01.md) preserves
+earlier unrun report is not their current status. The [web verification guide](../README.md) preserves
 the open WEB-D2-08 intermittent rename finding.
 
 ## Presentation checklist and limits

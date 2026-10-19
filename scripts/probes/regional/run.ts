@@ -3,16 +3,7 @@ import { readFile } from "node:fs/promises";
 import { matrix } from "./matrix.ts";
 if (process.argv.length !== 2) throw Error("probe-accepts-no-arguments");
 const sources = [];
-for (const name of [
-  "dyadic.ts",
-  "arithmetic.ts",
-  "fixtures.ts",
-  "matrix.ts",
-  "run.ts",
-  "oracle.test.ts",
-  "arithmetic.test.ts",
-  "matrix.test.ts",
-]) {
+for (const name of ["dyadic.ts", "arithmetic.ts", "fixtures.ts", "matrix.ts", "run.ts"]) {
   const bytes = await readFile(new URL(name, import.meta.url));
   sources.push({
     path: `scripts/probes/regional/${name}`,

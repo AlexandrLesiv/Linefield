@@ -8,8 +8,8 @@ Keep only current authored sources in Git. Superseded proposals, handoffs, resea
 run logs and generated reports belong outside the repository or in PR attachments. Git history
 retains previous revisions; do not maintain history inventories or duplicate versions in source.
 Generate diagram previews locally into ignored paths. There is no task HTML service. Agents read shared diagram JSON,
-DTCG tokens, SQL/annotations and task JSON/briefs rather than parsing generated SVG or HTML.
-Keep only primary-app tests; do not add suites for developer tools. Retain source experiments
+DTCG tokens, SQL/annotations and plain tasks/*.md rather than generated SVG or HTML.
+Use E2E tests only; do not add unit or developer-tool test suites. Static types, lint, formatting and build validation remain required. Retain source experiments
 needed to resolve primary-app storage/engine risks, with results in ignored .build-cache.
 Maintained quality READMEs are source: preserve useful acceptance mappings, verification guidance and unresolved findings. Exclude generated logs/results/captures, not documentation merely because it lives in quality/.
 Current authored owner-approved visual references are source assets, not generated output.

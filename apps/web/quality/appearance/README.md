@@ -8,7 +8,7 @@ and focus behavior remain effective. Native resource consumption is separate.
 
 | Acceptance | Expected behavior | Test source under apps/web/tests |
 | --- | --- | --- |
-| THEME-01/04/06/07 | Semantic roles, readable critical pairs, authorized palettes and invalid-reference rejection | unit/theme.test.ts |
+| THEME-01/04/06/07 | Semantic roles, readable critical pairs, authorized palettes and invalid-reference rejection | Static theme validation; no equivalent E2E claim for all listed cases |
 | THEME-05 | Display paper/compositing agree in gallery, travel and drawing | theme-paper.spec.ts |
 | WEB-UP01–03 | Undo shell/artwork/title backing blend together while shell stays opaque; reduced motion/appearance changes settle | undo-paper.spec.ts |
 | WEB-TH01/02, WEB-F02, WEB-H02 | Hover does not resize; focus remains visible; touch has no sticky hover; dialog pressed/hover states remain distinct | touch-hover.spec.ts; feedback.spec.ts; header-feedback.spec.ts |

@@ -26,9 +26,9 @@ Plural fixtures must derive expectations independently of the formatter being ch
 selected plural-count contract is integer-only. Preserve empty strings, Unicode, repeated
 placeholders and literal replacement-like content without recursive substitution.
 
-Node formatter checks do not establish DOM insertion safety, native parsing/IME, OS language
+Static resource validation does not establish DOM insertion safety, native parsing/IME, OS language
 negotiation, layout, linguistic correctness or assistive-technology behavior. Use the
-[app unit tests](../../apps/web/tests/unit) and
+[browser E2E scenarios](../../apps/web/tests) and
 [internationalization matrix](../../docs/testing/internationalization.md) for applicable coverage.
 
 ## Native tools and unresolved consumer gaps

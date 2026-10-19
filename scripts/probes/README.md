@@ -7,8 +7,7 @@ production drawing/storage code and do not run as part of the app.
   fault.js deliberately injects worker/transaction failures. Results have exposed data-loss risk;
   no storage mechanism is adopted by retaining or running the experiment. Dependencies and output
   are local under .build-cache/browser-storage. Run acquisition before the browser experiments.
-- library-schema: SQL constraint checks against the proposed primary-app document format.
-- regional: arithmetic and mapping experiments for the prospective drawing engine. These tests
+- regional: arithmetic and mapping experiments for the prospective drawing engine. These diagnostics
   do not choose production numerical limits or algorithms.
 
 Keep reproducible experiment source while its product decision remains unresolved. Put run

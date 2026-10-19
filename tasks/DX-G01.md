@@ -22,10 +22,10 @@ meaning is not current authority merely because its appearance is updated.
 
 | ID | Required outcome | Evidence |
 | --- | --- | --- |
-| BOOT-01 | Full local snapshot before mutation, verify files/symlinks and unchanged status | PR verification attachments preservation record |
+| BOOT-01 | Full local snapshot before mutation, verify files/symlinks and unchanged status | quality/bootstrap-v1 preservation record |
 | BOOT-02 | Explicit curated publication paths; ignored/private data excluded and preserved | staged inventory and privacy inspection |
 | BOOT-03 | One executable task/branch/PR, template retains security and review requirements | task template, active index, PR template |
-| BOOT-04 | Existing diagram inventory accounted for; v2 SVGs, workflow views, render and semantic review | docs/diagrams/migration-v2.md and PR verification attachments |
+| BOOT-04 | Existing diagram inventory accounted for; v2 SVGs, workflow views, render and semantic review | docs/diagrams/migration-v2.md and quality/bootstrap-v1 |
 | BOOT-05 | Applicable source/tool/browser checks with exact revision/hash evidence | baseline validation reports; missing lanes explicit |
 | BOOT-06 | PR published to intended repository; owner merge remains pending | actual PR URL/head/base; no invented completion |
 
@@ -44,7 +44,7 @@ This is a local recovery copy on the same disk, not an off-device disaster backu
 git clean or delete build-cache while this is the retained recovery source. Manifest hash is in
 the bootstrap evidence. Original branch remains codex/project-foundation; task branch preserves it.
 
-Entry reading: AGENTS.md, tasks/README.md, approved task-pr-chat plan, Git strategy and style v2.
+Entry reading: AGENTS.md, docs/RESUME.md, approved task-pr-chat plan, Git strategy and style v2.
 [Historical evidence](https://github.com/AlexandrLesiv/Linefield/commit/b0cb531) records root87,
 browser118, schema6, schema source validation and the SVG render inventory. Original committed foundation
 fbcc30c was published as remote main; task changes remain separate for owner PR review. After owner

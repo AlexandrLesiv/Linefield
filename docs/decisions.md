@@ -3623,6 +3623,10 @@ Generated reports remain local; authored task documentation records test linkage
 Keep unresolved failure fixtures, current source/test evidence and approval scope. No history
 rewrite, account deletion, schema behavior change or production implementation is authorized.
 
-## Decision 241 — consolidated task documentation
+## Decision 241 — task documentation and test scope
 
-On 2026-10-19 the owner approved structured task metadata and readable task documentation linking PRs, applicable tests, architecture/design sources and relevant images. Current owner direction uses repository JSON and prose without a separate HTML tracker. One task remains one branch/PR; metadata does not authorize execution, merge, publishing or product implementation. See workflow/task-packages.md.
+The owner selects plain Markdown task files under tasks/, with PR and relevant design/test links.
+Use one task, one branch and one PR. The owner reviews and merges; verify integration before
+starting dependent work. Automated tests are E2E only. Static type checking, lint, formatting,
+builds and source validation remain development checks; do not add unit or developer-tool suites.
+Task documentation grants no new product, persistence, native or architecture approval.
