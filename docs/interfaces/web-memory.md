@@ -292,43 +292,55 @@ pools remain inside their category; do not add them again to the operating budge
 | Rust linear heap | Initial8MiB, maximum32MiB; reserve full32MiB; within it canonical/retained samples16MiB, unfinished4MiB, scratch4MiB, metadata+runtime+allocator8MiB |
 | JS acquisition, copied outputs, staging and owned headroom | 32MiB; includes acquisition1,024×40, one<=256KiB output, module loading byte arrays and simultaneous old/new bridge copies; release loading bytes before editing |
 
-Nested policy: sample record conservative64 bytes, stroke header256, history entry128,
-at most4,096 strokes (path capacity normally binds earlier). Session history retained-state
+Owner requests memory-based admission rather than the proposed128-stroke restriction.
+Withdraw the fixed64KiB-plus-multiplier per-path reservation and the4,096-stroke count ceiling.
+Replacement recommendation: charge Rust records/containers by actual allocated capacity,
+including headers, alignment, spare capacity and allocation overhead established by the build.
+The earlier64-byte sample/256-byte header/128-byte history figures are sizing estimates,
+not substitutes for actual layout/capacity accounting. Session history retained-state
 charge<=16MiB; shared visible/redo canonical samples counted once physically in Rust16MiB.
 No extra16MiB physical history allocation is implied. Geometry cache<=16MiB combines any
 Rust cached geometry with CanvasKit paths; each is charged inside its respective heap,
 never again above the heap reservation. Browser/compiler/driver overhead is measured separately;
 this is owned CPU capacity accounting, not whole-browser RSS enforcement.
 
-Sample bytes transferred from unfinished to model reserve on End, no duplicate copy; Begin
-must also reserve its eventual committed-model/history capacity. Each worst sample contributes
+Sample bytes transfer from unfinished to model accounting on End without a duplicate copy.
+Reserve terminal commit/cancel metadata before admitting an interaction, then grow sample
+capacity incrementally with checked batches, rather than reserving its maximum duration at Begin.
+Each worst sample contributes
 one circle (6 verbs,18 floats,4 weights) and<=one quad(5 verbs,8 floats):<=11 verbs,
 26×4+4×4+11=131 encoded geometry bytes/sample before allocator/path overhead. A full65,536
-sample stroke is8.1875MiB encoded; the4MiB Rust transient reserve cannot hold both
-its4MiB canonical samples and geometry. Do **not** allocate full geometry copies:
+sample stroke is8.1875MiB encoded; with the earlier64-byte sample estimate, the4MiB Rust
+transient reserve cannot hold both samples and geometry. Recheck against actual layout.
+Do **not** allocate full geometry copies:
 keep samples authoritative, stage bounded pages, charge retained CanvasKit path to cache and
-stop before the cache+headroom reservation is exhausted. Count ceilings do not guarantee
+account for actual page/path capacity and measured rendering headroom. Count ceilings do not guarantee
 every65,536-sample path is admissible. Current capacity failure cancels unfinished stroke.
 
-Rebuildability is an admission invariant: reserve all completed visible/redo stroke path
-capacity even when caches are evicted. Propose per-stroke charge `65536+4*encodedBytes`
-rounded upward to64KiB; sum<=16MiB, including active stroke worst reserved bytes. This
-conservative4× path charge is a proposed measurement-backed acceptance assumption, not
-known CanvasKit layout. Cache eviction retains reservation; no admitted document depends
-on displaying more paths than can coexist within it. At Begin choose largest positive
-sample ceiling N<=65,536 fitting remaining geometry/model/transient/history reservations
-using131 bytes/sample and64 bytes/sample; reserve that bound before accepting sample0.
-N is exposed in the state/capacity message only as technical evidence, not a user quota.
-At least one sample must fit or Begin rejects. Append>N cancels atomically. End releases
-unused reservation and charges actual capacities; changing N mid-interaction is forbidden.
-The16MiB geometry pool alone limits a single worst-case stroke to below32,000 samples,
-often fewer with other strokes. This explicitly trades maximum duration for a rebuildable
-first slice. The general65,536 ceiling remains a ceiling, never a guarantee. Owner approval
-must also consider the effective stroke count: every nonempty path reserves at least128KiB,
-so this policy admits at most128 nonempty strokes, often fewer, despite the general4,096 ceiling.
-This is an unmeasured conservative reservation, not a measured CanvasKit requirement. Approval
-is requested for this charge; E02 must establish real worst-case overhead<=charge or return a
-revised proposal. No sequential draw/flush workaround or unbounded GPU command queue implied.
+No fixed document stroke count is proposed. Many short strokes should cost less than a few
+long strokes according to their actual samples, metadata and rendering requirements. The
+65,536-sample per-interaction work ceiling remains separately proposed; it is not a document
+stroke count or a guarantee that every stroke fits. Update the emitted `activeSampleLimit`
+definition during contract finalization: it must not imply a pre-reserved memory guarantee.
+
+Exact CanvasKit live-path bytes are not exposed by the pinned public Path API. Its
+`Picture.approximateBytesUsed()` is for pictures and excludes large objects; do not substitute
+it as exact path accounting. Observe actual Wasm linear-memory capacity separately; it includes
+free/retained allocator space and cannot reveal how much a particular stroke uses. E01 must
+measure path growth/rebuild/transient peaks and establish a justified conservative estimator
+plus headroom for prospective allocation. No arbitrary fixed64KiB minimum or unmeasured4× rule.
+Keep Rust authoritative over admission; host renderer measurements cannot mutate document
+policy. The concrete measurement/reporting contract remains to be reviewed before implementation.
+
+The16MiB disposable cache allowance is not itself a document-size limit. Cache eviction may
+discard derived resources only, never canonical strokes. A bounded regeneration/presentation
+strategy must show that retained content remains renderable after eviction and at accepted
+scene limits. Do not claim that eviction alone solves live-path memory or full-scene draw cost.
+The former requirement to keep every path resident needs explicit replacement in the scene
+contract if streaming is proposed; no sequential flush workaround is silently approved here.
+E01/E02 must return measured allocation and cold/warm/evicted-render findings before finalizing
+admission. Insufficient headroom rejects/cancels only the unfinished interaction; completed
+content/history stay intact. This replacement is a recommendation, not measured runtime acceptance.
 
 Known capacities are counted; CanvasKit internal path storage/driver allocation is not
 fully observable. Validate the stock binary's actual initial/max declarations and observed
