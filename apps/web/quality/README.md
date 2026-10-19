@@ -51,10 +51,15 @@ Do not infer cancellation solely from an old canvas title. Compare ordinary play
 slow-CPU/longer-press diagnostics; report each separately. An intentionally failed diagnostic
 assertion checks evidence capture only and is not reproduction of the product failure.
 
-The fresh investigation baseline also exposed WEB-G01: the opening surface width differed from
-the recorded card width (expected 389.328125, observed 537.9375). That run had 120 passes and one
-WEB-G01 failure while WEB-D2-08 passed. This separate geometry finding remains unconfirmed and
-outside the rename repair scope; a later passing suite does not establish its cause.
+## WEB-G01 geometry sampling
+
+The investigation baseline and first final run each had 120 passes and one WEB-G01 failure.
+The cause was established: getAnimations()[0] selected shadow elevation, leaving the geometry
+animation running. Freezing all surface/artwork tracks restores the exact source-card bounds.
+WEB-G01 now checks x/y/width/height at the original tolerance and requires a geometry track;
+WEB-M04 selects that geometry track explicitly for natural playback. No product motion changed.
+Keep sampled geometry and natural playback evidence separate. The earlier failed runs remain
+historical failures; latest full-suite results are recorded in PR #7. WEB-D2-08 remains unresolved.
 
 Physical touch/stylus, system keyboards/IME, screen-reader walkthroughs, native hosts and
 proficient Ukrainian linguistic review remain separate acceptance work. Headless WebKit touch

@@ -20,7 +20,7 @@ base/contract checks. Each writer uses an isolated worktree; one owner per share
 
 | Task | State / PR | Dependencies and parallelism |
 | --- | --- | --- |
-| [WEB-D2-08 rename investigation](WEB-D2-08.md) | [Draft PR #7](https://github.com/AlexandrLesiv/Linefield/pull/7); failure remains open | Verified main 55d0cba / PR #5 tree parity; owns rename E2E diagnostics and quality guidance only |
+| [WEB-D2-08 rename investigation](WEB-D2-08.md) | [PR #7](https://github.com/AlexandrLesiv/Linefield/pull/7), owner review; 121 E2E pass, rename finding open | Verified main 55d0cba / PR #5 tree parity; owns rename diagnostics, gallery motion E2E correction and quality guidance |
 | [DX-G01 bootstrap](DX-G01.md) | Owner review, [PR #1](https://github.com/AlexandrLesiv/Linefield/pull/1) | Initial delivered baseline; owner merge pending |
 | [DX-G02 shared documentation](DX-G02.md) | Owner review, [PR #2](https://github.com/AlexandrLesiv/Linefield/pull/2) | Stacked on DX-G01; owns tooling/docs cleanup, not runtime behavior |
 | [P05-S01 local styles](P05-S01.md) | Owner review, [PR #3](https://github.com/AlexandrLesiv/Linefield/pull/3) | Stacked on DX-G02; app style scoping and final documentation cleanup |

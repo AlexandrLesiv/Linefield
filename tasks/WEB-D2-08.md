@@ -1,14 +1,22 @@
 # WEB-D2-08 — Investigate intermittent rename loss
 
-Type: executable leaf. Parent: P05-D01. Status: bounded investigation prepared; original failure remains open.
+Type: executable leaf. Parent: P05-D01. Status: ready for owner review; WEB-G01 corrected, full suite green, rename finding remains open.
 Owner/writer: replacement Codex lead (prior writer stopped and transferred ownership); isolated worktree .worktrees/web-d2-08-rename.
-Branch: codex/web-d2-08-rename. PR: [#7](https://github.com/AlexandrLesiv/Linefield/pull/7), draft for owner review; base main.
+Branch: codex/web-d2-08-rename. PR: [#7](https://github.com/AlexandrLesiv/Linefield/pull/7), awaiting owner review; base main.
 Verified base: 55d0cbad108969448ac4302a5b1f2a32ca1b6d57.
 PR #5 is merged (69b320cf4f91b7bce24bbb152cb9ca6e379a550e, into its stacked base).
 Default main and PR #5 final head a78494c have identical tree eefe8e687e4d396a31b5cbb5b30eafb33cff01dd.
 No reset or merge; existing checkouts and untracked work remain untouched.
 
 ## Scope and dependencies
+
+Owner follow-up expands PR #7 to correct WEB-G01 and obtain a green full suite before review.
+This same task/branch/PR also owns gallery.spec.ts, the related motion-playback.spec.ts
+track selector and their acceptance guidance. WEB-D2-08
+remains unresolved unless separately established and fixed. CT-06/08/09, INV-11, SU-08/20
+require the initial surface to match its source card and final surface to fill the viewport.
+The proposed correction samples all presentation tracks at the same instant; it changes no
+product motion or tolerance. Test missing geometry, full initial bounds and final artwork bounds.
 
 Investigate the existing literal-name rename failure, reproduce before fixing, and obtain
 independent review. Prior full run: 120 passes / 1 failure; five focused reruns passed without
@@ -50,15 +58,15 @@ Fresh independent reviewer: rename_review; read-only cause, scope, evidence and 
 Initial review found no established cause and rejected speculative motion changes. Final
 review found no blocking code/security issues; its scenario-to-test mapping finding was fixed
 and re-reviewed. Reviewer independently passed TypeScript, focused lint/format and diff checks.
-Full-suite failures and the original unresolved finding still prevent a clean acceptance claim. Owner review/merge and subsequent integration verification remain required.
+Original failed runs remain failures; a green rerun does not close the unresolved rename finding. Owner review/merge and subsequent integration verification remain required.
 Do not call the historical failure resolved solely because it does not reproduce.
 
 ## 5. Automated gate evidence
 
 Required: unchanged full browser baseline, bounded focused reproduction, failure-capture
 validation, pnpm check, pnpm web:build and final full suite. Product behavior is unchanged;
-no cause-specific regression or fix is claimed.
-Static checks and production build passed. The final browser suite had 120 passes and one
+no rename cause-specific regression or fix is claimed. WEB-G01 test sampling is corrected.
+Static checks and production build passed. The earlier final browser suite had 120 passes and one
 WEB-G01 failure (expected width 389.328125, observed 537.4375), with zero retries/skips;
 WEB-D2-08 passed. This is not a clean suite. Exact source hashes, platform/browser, bounded
 attempt counts and ignored artifacts are recorded in PR evidence. Generated reports stay in apps/web/test-results or .build-cache; maintained
@@ -94,5 +102,19 @@ the trace and recorder availability before diagnosing a full document reload.
 
 Next recurrence requires the event attachment and trace before further modification. Distinguish
 a missed submit/cancel from accepted rename followed by reinitialization. Do not promote a
-passing rerun into proof of a fix. WEB-G01 requires a separately bounded geometry investigation.
+passing rerun into proof of a rename fix. The owner explicitly included WEB-G01 in PR #7.
 Owner review/merge and verified integration remain pending; storage/engine approvals unchanged.
+
+## 8. WEB-G01 correction
+
+Browser diagnosis established wrong-track sampling: the first animation controls box shadow;
+the second controls geometry. With only the first paused at zero, two browser frames advanced
+surface width from 389.328125 to 685.75; freezing all tracks restored 389.328125. WEB-G01 now
+requires a surface geometry track, freezes all subtree tracks together, compares initial
+x/y/width/height at unchanged tolerance, then finishes all tracks. WEB-M04 likewise selects
+the geometry track rather than elevation to verify natural playback. No app source changed.
+
+Independent review found no blocking issues. Static checks and production build passed;
+WEB-G01/WEB-M04 passed five focused runs each. The fresh full suite passed all 121 tests
+with zero failures, skips, retries or flaky results. Exact source/evidence is recorded in PR #7.
+The historical rename failure remains open; this correction establishes no rename cause.
