@@ -4,6 +4,12 @@ Status: proposed design, not owner-approved or implemented. Task: [S02-W01](../.
 Date: 2026-10-19. Lead confirms new language, rendering-resource and dependency boundaries.
 The confirmed investigation contains synthetic local arithmetic/geometry experiments only.
 No app runtime, new storage, network feature, system permission or private drawing is added.
+Owner retains CanvasKit and permits a higher web budget. WMP-C2 proposes320MiB owned CPU
+as an observed/admission target; stock CanvasKit can grow to2GiB, so one call can overshoot
+its256MiB share before detection. This is not a hard allocation limit or protection from
+browser OOM. Require pinned heap instrumentation, bounded input/geometry, and suspension
+without clearing accepted Rust content/history on detected excess. No automatic reload or
+restart. The unchanged proposed graphics/path/history limits still need their stated evidence.
 
 ## Assets and authority
 

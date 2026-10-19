@@ -18,7 +18,7 @@ The historical PR/base statements below do not override this verified base for n
 
 | Order | Proposed task | Gate |
 | --- | --- | --- |
-| 1 | [S02-W01 memory editor contract/design](S02-W01.md) | Confirmed first; contract/design and synthetic experiment work in progress; production choices remain unapproved |
+| 1 | [S02-W01 memory editor contract/design](S02-W01.md) | [PR #9](https://github.com/AlexandrLesiv/Linefield/pull/9) owner review; CanvasKit retained and web budget increase allowed; exact WMP-C2 choices pending |
 | 2 | [P05-E01 runtime foundation](P05-E01.md) | Separate task confirmation and approved/integrated prerequisite; no ink yet |
 | 3 | [P05-E02 usable pen session](P05-E02.md) | Separate task confirmation and verified foundation; pen, settings, cancellation and Undo/Redo together |
 

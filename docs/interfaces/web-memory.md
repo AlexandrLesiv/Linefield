@@ -1,4 +1,4 @@
-# In-memory web editor contract WMP-C1
+# In-memory web editor contract WMP-C2
 
 2026-10-19. **Proposal for owner approval; no production implementation authorization.**
 S02-W01 is confirmed first. Base `8dbd9b1` includes merged PR6 and PR7. The isolated
@@ -12,6 +12,10 @@ Approve these identified amendments together with WMP-D3 before P05-E01: W1 gene
 checked Wasm calls/lifetimes; W2 single page owner and RAM/session lifecycle; W3 fixed
 mapping/envelope/normalization; W4 swept-disk scene and bounded presentation; W5 accounting
 reservations/failure policy. Confirmation of this task is not any of those approvals.
+Owner direction on2026-10-19 retains CanvasKit for cross-platform continuity and permits
+increasing the web memory budget; native Canvas may be considered later. This supersedes
+the previous128MiB aggregate constraint for this web slice. W5's exact revised allowance
+and enforcement limitations remain recommendations for review, not measured acceptance.
 The numerical investigation supports a conservative candidate; browser/CanvasKit fidelity,
 allocation high-water and release workload gates remain P05-E02 acceptance requirements.
 
@@ -19,7 +23,7 @@ Already selected: Rust editing authority, CanvasKit, solid opaque round pen, wid
 linear pressure0.10×width through full width, absent pressure full width, actual samples
 only, no smoothing/filtering/tilt, atomic batches, cancellation/no partial history, one
 stroke per Undo, active-interaction guards, RC1–RC11 regional representation, X right/Y
-down, and decision194 CPU/history ceilings. Do not reopen these. No persistence, native
+down, and decision194 history ceilings. The web CPU allowance is amended below. No persistence, native
 host, selection/transform editing, extra brushes, predictions, import/export or cloud.
 This packet is an additive web profile, not replacement of approved native C contracts.
 
@@ -271,14 +275,18 @@ measured before acceptance; this count bound is not an SU14 timing claim.
 
 ## W5: accounting and failure
 
-Decision194 aggregate128MiB owned CPU includes16MiB cache; one session history<=16MiB
-(existing32MiB cross-client ceiling irrelevant to this single client). Proposed top-level
-heap reservations below sum128MiB, count capacities/overhead and old/new/copy peaks, not
-only logical lengths. No subordinate maximum is separately allocatable beyond aggregate.
+The owner permits increasing decision194's former128MiB web aggregate. Recommend a
+provisional320MiB owned-CPU operating budget:256MiB CanvasKit allowance,32MiB Rust and32MiB
+JS. This is an admission/observed-capacity target, not an enforceable hard memory ceiling.
+Stock CanvasKit permits growth to2GiB; a single call can overshoot the target before detection.
+The extra128MiB above its initial heap is proposed headroom, not measured sufficient capacity.
+One session history<=16MiB; existing32MiB cross-client ceiling is irrelevant to one client.
+Count capacities/overhead and old/new/copy peaks, not only logical lengths. Subordinate
+pools remain inside their category; do not add them again to the operating budget.
 
 | Reserved category | Ceiling / policy |
 | --- | --- |
-| Custom CanvasKit linear heap | Initial32MiB, maximum64MiB; reserve full64MiB; includes path cache<=16MiB and all engine allocations/retained allocator space, never another additive64MiB charge |
+| Stock CanvasKit linear heap | Initial128MiB, binary maximum2GiB; proposed observed allowance256MiB, including path cache<=16MiB, engine allocations and retained allocator space. The256MiB allowance does not change the binary maximum. |
 | Rust linear heap | Initial8MiB, maximum32MiB; reserve full32MiB; within it canonical/retained samples16MiB, unfinished4MiB, scratch4MiB, metadata+runtime+allocator8MiB |
 | JS acquisition, copied outputs, staging and owned headroom | 32MiB; includes acquisition1,024×40, one<=256KiB output, module loading byte arrays and simultaneous old/new bridge copies; release loading bytes before editing |
 
@@ -321,24 +329,35 @@ is requested for this charge; E02 must establish real worst-case overhead<=charg
 revised proposal. No sequential draw/flush workaround or unbounded GPU command queue implied.
 
 Known capacities are counted; CanvasKit internal path storage/driver allocation is not
-fully observable. Both initial/max heap declarations must match the top-level candidate
-above, and runtime allocations must fit its nested categories. No custom artifact yet
-establishes that those smaller heaps support initialization and bounded scenes.
+fully observable. Validate the stock binary's actual initial/max declarations and observed
+capacity against this accounting; no custom build is a prerequisite for the next task.
 Lead inspected the exact npm `canvaskit-wasm@0.41.1` standard binary without execution:
 initial2048 pages=128MiB, maximum32768 pages=2GiB. SHA256:
 `bd669c88bd033eaf62d673103a42231a737c6d12e4cc99f8548b2784b5772430`;
 registry tarball SHA512 `gO2rNMIE0lOQ8MaarM4qNeq2zZAEknAObKP2XAKidMSAY8P5sURGdFkrx1TSdHuBFqTf5w35JqjuUzjibqkD5g==`.
 Ignored artifact/inspection: `.build-cache/web-memory/canvaskit/`.
 This agrees with [upstream build source](https://skia.googlesource.com/skia/+/f4aab0584dc844b1fa38e299ff1a9c1922c06a99/modules/canvaskit/compile.sh).
-CanvasKit alone consumes the selected owned-CPU ceiling before Rust/user content.
-**Stock0.41.1 is inadmissible; W5 custom-build footprint feasibility remains unresolved.**
-Recommendation: retain decision194 caps and investigate a reproducible smaller-initial-heap
-build of the same CanvasKit before product adoption; bring exact artifact, fixed/max growth,
-startup/render/peak findings for owner approval. Do not silently change the cap or renderer.
-If initial memory alone exceeds it, initialization is inadmissible under this proposal and
-the owner must review a measured revised partition before code adoption. Proposed reserve
-is a conservative admission policy, **not proven hard
-RSS control**. Count physical memory once: live CanvasKit paths already inside its linear
+That initial heap exceeded the former aggregate once Rust was included. The owner's increase
+removes that initial-footprint conflict; it does not establish release workload feasibility.
+Use pinned stock0.41.1 under the proposed operating budget, subject to E01 validating actual
+startup, heap instrumentation and graphics allocation. No native Canvas switch is selected.
+Observe linear-memory buffer capacity before/after allocating CanvasKit calls and at bounded
+frame/rebuild boundaries. No per-sample production logging. If CanvasKit exceeds256MiB or
+owned CPU exceeds320MiB, stop input/presentation, cancel unfinished interaction through Rust,
+preserve completed Rust RAM/history and retire disposable rendering resources. Display the
+unavailable state; stale pixels must not imply that new accepted work was presented.
+An individual allocation can overshoot before observation; do not promise pre-allocation
+enforcement inside CanvasKit. Deleting paths cannot shrink linear memory. Do not automatically
+resume, restart the engine or reload/discard the drawing after this budget failure.
+Keep this budget-failure state suspended for the page lifetime: Back remains available,
+but Retry and Resume cannot restart rendering or replace the retained Rust owner. Re-entering
+the temporary route shows the same unavailable state. Accepted Back still follows W2's
+history-departure rule. This is distinct from recoverable context loss. WMP-05/09 must cover
+budget excess → Back → Resume/Forward and prove no restart, blank replacement or false recovery.
+E01 must verify access to pinned heap capacity and safe handling; unavailable instrumentation or an
+insufficient allowance returns measured options for review. A hard256MiB CanvasKit ceiling
+would require a separately reviewed mechanism/build; it is not claimed here.
+This operating policy is **not hard RSS control**. Count physical memory once: paths inside its linear
 heap consume that heap's live category share, and remaining retained heap capacity is
 headroom, not an additional full heap charge. Include JS copied arrays separately. E01/E02
 must measure pinned release heap high-water/retained path peaks and
@@ -349,7 +368,7 @@ admission; do not clear protected content to render. Rendering page/query overhe
 bounded even while semantic admission stopped.
 
 Surface budget separately proposed96MiB graphics/backing reservation (one nominal RGBA8
-surface<=32MiB, same-size presentation allowance,32MiB attachment/cache headroom), not decision194 CPU cap or
+surface<=32MiB, same-size presentation allowance,32MiB attachment/cache headroom), outside the320MiB CPU target and not a
 browser RSS guarantee. Retire surface before replacement; no doubled live surfaces. Browser/
 driver overhead and real framebuffer format require measured headroom. Explicit context
 attributes depth:false, antialias:false, stencil:true; pinned default depth allocation must

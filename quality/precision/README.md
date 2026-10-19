@@ -34,7 +34,7 @@ No historical count or developer-tool test suite is reinstated by this documenta
 
 ## S02-W01 memory-web candidate
 
-The [WMP-C1 proposal](../../docs/interfaces/web-memory.md) and
+The [WMP-C2 proposal](../../docs/interfaces/web-memory.md) and
 [numerical definition](../../docs/interfaces/web-memory-numerics.md) narrow the investigation
 to fixed zoom/scale 1, bounded canvas input and a solid round pen. This does not adopt
 general transforms, the old global-f64 ABI, browser storage or product code.

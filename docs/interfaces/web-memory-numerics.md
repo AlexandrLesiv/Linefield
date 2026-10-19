@@ -1,6 +1,6 @@
-# WMP-C1 numerical candidate and evidence
+# WMP-C2 numerical candidate and evidence
 
-Part of [WMP-C1](web-memory.md), proposed, not approved. This source defines the current
+Part of [WMP-C2](web-memory.md), proposed, not approved. This source defines the current
 candidate and reproducible experiment; generated observations stay in ignored `.build-cache`.
 Owner-confirmed S02-W01 permits this bounded synthetic investigation only. It is not an
 E2E suite, Rust editor, production arithmetic adoption, renderer or benchmark.
