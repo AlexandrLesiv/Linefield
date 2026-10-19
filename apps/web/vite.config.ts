@@ -31,6 +31,9 @@ export default defineConfig(({ mode }) => {
                 repaint: fileURLToPath(
                   new URL("tests/fixtures/memory/repaint/index.html", import.meta.url),
                 ),
+                cpuRaster: fileURLToPath(
+                  new URL("tests/fixtures/memory/cpu-raster/index.html", import.meta.url),
+                ),
               },
             },
           }

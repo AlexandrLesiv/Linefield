@@ -9,6 +9,11 @@ finding. R02–R04 remain conditional and must not execute this failed mechanism
 outline below identifies the investigated candidate and still-unimplemented responsibilities;
 no production rendering contract has been replaced.
 
+The owner subsequently approved [P05-R05](../../tasks/P05-R05.md) as the next isolated
+checkpoint: compare existing CanvasKit CPU/GPU rasterizers with unchanged shared geometry,
+returning results before production implementation. It does not revive the failed union
+mechanism or authorize the conditional capture/cache work below.
+
 ## Recommendation and evidence boundary
 
 Keep shared Rust geometry/editing and one CanvasKit worker. First test whether Skia PathOps

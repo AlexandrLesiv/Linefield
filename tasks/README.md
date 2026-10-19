@@ -8,6 +8,12 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 # Task board
 
+## R05 CPU raster checkpoint
+
+[P05-R05](P05-R05.md) is owner-approved as the next isolated experiment. It compares the
+existing CanvasKit CPU/GPU rasterizers with unchanged Rust geometry. Current previews remain
+unchanged; results precede any production migration. PR #11 remains an unmerged dependency.
+
 ## R01 rendering checkpoint
 
 [P05-R01](P05-R01.md) is owner-approved and stopped with a rejected PathOps grouping candidate.
