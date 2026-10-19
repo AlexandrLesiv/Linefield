@@ -9,6 +9,10 @@ production drawing/storage code and do not run as part of the app.
   are local under .build-cache/browser-storage. Run acquisition before the browser experiments.
 - regional: arithmetic and mapping experiments for the prospective drawing engine. These diagnostics
   do not choose production numerical limits or algorithms.
+- web-memory: confirmed S02-W01 synthetic exact-reference comparisons against the isolated Rust
+  candidate in experiments/web-memory. Run `node scripts/probes/web-memory/run.ts`; results and
+  build products stay in .build-cache/web-memory. This is contract evidence, not a test suite,
+  browser E2E, production engine or owner adoption of the numerical proposal.
 
 Keep reproducible experiment source while its product decision remains unresolved. Put run
 reports/captures in ignored .build-cache and attach relevant results to the task PR. Remove the

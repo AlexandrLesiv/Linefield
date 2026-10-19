@@ -19,6 +19,7 @@ relevant contracts. Generated SVG files are local review outputs and are not ver
 | Gallery departure | [definition](../../shared/diagrams/definitions/gallery-departure.json) |
 | Localization | [definition](../../shared/diagrams/definitions/localization-boundaries.json) |
 | Shared E2E | [definition](../../shared/diagrams/definitions/shared-e2e.json) |
+| Proposed memory web editor | [definition](../../shared/diagrams/definitions/web-memory-boundary.json) |
 
 Generate when visual inspection is needed using the commands in the
 [shared source guide](../../shared/diagrams/README.md). Read generation failures and

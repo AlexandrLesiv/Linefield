@@ -1,0 +1,27 @@
+mod exact;
+mod paint;
+
+use std::io::{self, BufRead};
+
+fn main() {
+    // Synthetic line protocol belongs only to this isolated diagnostic executable.
+    for (index, line) in io::stdin().lock().lines().enumerate() {
+        assert!(index < 4096, "bounded-corpus");
+        let line = line.expect("stdin");
+        assert!(line.len() <= 512, "bounded-line");
+        let fields: Vec<&str> = line.split_whitespace().collect();
+        match fields.first().copied() {
+            Some("N") => {
+                let region = fields[1].parse().expect("synthetic-region");
+                let a = fields[2].parse().expect("synthetic-a");
+                let b = fields[3].parse().expect("synthetic-b");
+                match exact::normalize(region, a, b) {
+                    Ok((q, local)) => println!("N {q} {}", local.to_bits()),
+                    Err(reason) => println!("E {reason}"),
+                }
+            }
+            Some("P") => paint::observe(&fields[1..]),
+            _ => panic!("synthetic-operation"),
+        }
+    }
+}
