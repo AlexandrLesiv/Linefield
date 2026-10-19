@@ -8,6 +8,12 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 # Task board
 
+## R06 padded raster checkpoint
+
+[P05-R06](P05-R06.md) is owner-approved: verify padding against the unchanged whole CPU
+image, then run large-stroke performance only if the finite correctness corpus passes.
+Current previews remain unchanged; no production migration. Dependency PR #12 remains open.
+
 ## R05 CPU raster checkpoint
 
 [P05-R05](P05-R05.md) completed with a rejected unpadded CPU tiling candidate:256 coincident
