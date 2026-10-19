@@ -31,6 +31,10 @@ Historical PR/base statements below do not override the actual integrated state.
 | 2 | [P05-E01 runtime foundation](P05-E01.md) | [PR #10](https://github.com/AlexandrLesiv/Linefield/pull/10) merged at3eaaff8; full integrated tree verified; complete |
 | 3 | [P05-E02 usable pen and viewport](P05-E02.md) | In progress on codex/p05-e02-memory-pen; rapid stroke admission and temporary pan preview approved; performance v1 remains required and long-path checkpoint still fails50 ms gate |
 
+Owner-authorized isolated follow-up: [P05-E02-WP01 interactive worker preview](P05-E02-WP01.md)
+on `codex/worker-manual-preview`, stacked on P05-E02 at `dae539e`. It provides manual input
+on a separate preview port while preserving65142; production worker migration remains gated.
+
 S02-W01 is integrated at `c28f56b`; P05-E01 is complete at verified merge `3eaaff8`.
 Its implementation writer stopped; its worktree and original checkout drafts remain preserved.
 P05-E02 is assigned to rust_engine in `.worktrees/p05-e02-memory-pen`;
