@@ -1,6 +1,6 @@
 # Product backlog
 
-This list records owner-approved functionality and priority. Positions 1–6 were explicitly
+This list records owner-approved functionality and priority. Positions 1–11 were explicitly
 approved in this chat. They are planned outcomes, not completed features or blanket approval
 of unresolved designs, ABI, numerical, storage or security choices. Execution begins only after
 applicable contracts and designs are approved. Split large outcomes into bounded child tasks,
@@ -19,6 +19,11 @@ by current owner policy. Preserve existing gallery/navigation, themes and Englis
 | 4 | Save and reopen artwork | [S02L Library](S02L.md), [S06 Persistence](S06.md) | Approved backlog; depends on 1–3 and storage adoption |
 | 5 | Pan and zoom the canvas | [S05 Navigation and editing](S05.md) | Approved backlog; mapping/input contracts remain |
 | 6 | Select and edit one stroke | [S05 Navigation and editing](S05.md) | Approved backlog; integrates history and saving |
+| 7 | Rename a drawing | [S02L Library](S02L.md) | Approved backlog; durable metadata and failure handling |
+| 8 | Remove a drawing with Undo | [S02L Library](S02L.md) | Approved backlog; deletion/recovery contracts remain |
+| 9 | Export a PNG | [S07E PNG export](S07E.md) | Approved backlog; export/destination contracts remain |
+| 10 | Change a selected stroke’s appearance | [S05 Navigation and editing](S05.md) | Approved backlog; new restyling scope, design/contracts remain |
+| 11 | Organize artwork into layers | Child milestone to scope before implementation | Approved backlog; new layer scope, design/schema contracts remain |
 
 ## 1. Create a saved drawing
 
@@ -58,7 +63,43 @@ interaction guards, cancellation on mapping changes, focus and viewport/render a
 
 Select, move, uniformly scale and delete one stroke. Integrate completed operations with
 session history and saving; cancelled operations preserve previous artwork. Exclude multi-select,
-rotation and selected-stroke restyling until separately approved.
+rotation. Selected-stroke restyling belongs to #10.
+
+## 7. Rename a drawing
+
+Rename from the gallery and persist the name, with clear pending/success/failure feedback.
+Follow approved naming and editor-ownership rules; do not report success before durable acceptance.
+Depends on the durable library in #1. Concepts reference: CS-OBS-001.
+
+## 8. Remove a drawing with Undo
+
+Provide recoverable removal and in-place Undo under Linefield’s selected deletion policy.
+No separate Trash screen. Define departure/finalization, restart recovery, busy-owner and
+pending-save failures through the reviewed contracts before implementation. Depends on the
+library and its recovery/ownership mechanisms. Concepts gallery research informs this task;
+Linefield’s own removal policy controls its behavior.
+
+## 9. Export a PNG
+
+Export completed artwork with reviewed resolution/background options and reliable destination
+handling. Preserve the selected snapshot, cancellation, recovery and publication contracts;
+a rendered preview is not proof of successful publication. Depends on saved artwork and rendering.
+Exclude other output formats and cloud sharing. Concepts reference: CS-OBS-018.
+
+## 10. Change a selected stroke’s appearance
+
+Change the selected stroke’s width or color as an undoable, saveable edit. Keep this separate
+from settings for future strokes. Define preview/commit/cancel semantics before implementation.
+Depends on #3, #4 and #6. Exclude opacity, brush replacement and multi-stroke restyling from this
+outcome. Concepts reference: CS-OBS-011.
+
+## 11. Organize artwork into layers
+
+Create, rename, reorder, hide and lock layers. Defer automatic layering and layer effects.
+This adds product scope; review layer identity, stroke membership, ordering, hidden/locked
+behavior, history and storage changes before implementation. Define how selection and export
+interact with layers. Do not infer layer deletion, opacity, grouping or blending from this approval.
+Concepts reference: CS-OBS-015 (panel observed; layer operations were not exercised).
 
 ## Further candidates
 
