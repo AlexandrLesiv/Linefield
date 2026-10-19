@@ -68,6 +68,44 @@ by current owner policy. Preserve existing gallery/navigation, themes and Englis
 | 53 | Search and favorite reusable objects | Child task to scope before implementation | Approved backlog; search/favorite/storage design remains |
 | 54 | Assign layers automatically by tool | Child task to scope before implementation | Approved backlog; routing/layer/history design remains |
 
+## Stylus hover preview — requested top-ten addition
+
+Owner requests this functionality within the first ten outcomes. Proposed insertion: position 3,
+immediately after real shared-editor drawing. Exact position and the scope below await owner
+confirmation; existing numbered outcomes retain their current references until then.
+
+Show the active brush footprint at the hovering stylus position before contact, reflecting
+accepted width/color and, as supported brushes arrive, opacity and brush shape. This is a
+transient preview, not a predicted future stroke or a saved trail. Hover must not create artwork,
+Undo entries, dirty state or autosave work. Clear stale preview on exit, proximity loss, focus
+loss, modal interruption, tool changes, invalid mapping and transition to contact; do not replay old hover data after reconnection.
+
+Plan capability-aware acquisition of position, tilt/altitude/azimuth, barrel roll/twist and hover
+distance where actually delivered. Preserve unavailable/unknown channels distinctly where the
+host can determine that distinction; default numeric values are not proof of device support.
+Normalize documented coordinate/angle conventions at adapters. Concrete shared input/ABI and
+preview ownership contracts require review. Do not promise identical channels across browsers,
+drivers and native hosts, or enumerate API properties as automatic product features.
+
+The preview must match the real brush’s accepted response. A circular, tilt-independent pen
+must not gain a fictitious ellipse or roll response. Future directional brushes reuse the same
+shape evaluation for contact and hover. Pressure during hover cannot predict future contact
+pressure: review a clearly defined nominal-width preview instead of interpreting zero pressure
+as an invisible tip. Pose support does not silently approve new tilt/roll drawing dynamics.
+
+Designer prepares the footprint presentation, contrast on artwork/backgrounds, edge clipping,
+contact transition and unsupported-device behavior for owner approval. Rust remains authoritative
+for brush semantics; preview presentation is disposable. Web first, later host adapters under their
+own implementation approvals. E2E must cover cancellation/no mutation, zoom/mapping, settings,
+missing axes and pointer transitions. Physical-device verification must separately identify actual
+hover/tilt/roll delivery; synthetic events do not prove stylus support.
+
+Sources checked for this planning item: [Concepts settings](https://concepts.app/en/manual/settings)
+documents hover stamp preview and Pencil Pro roll; [Pointer Events](https://www.w3.org/TR/pointerevents3/)
+defines web orientation/twist channels; [Apple hover roll](https://developer.apple.com/documentation/swiftui/pencilhoverpose/roll)
+documents roll with unsupported-device defaults. These are API/vendor documentation, not Linefield
+hardware verification. No implementation or visual design is approved by this planning entry.
+
 ## Visual and interaction design approval
 
 Backlog approval confirms functionality and order, not visual design approval. Before implementing
