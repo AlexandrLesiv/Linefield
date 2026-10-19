@@ -18,6 +18,10 @@ the previous128MiB aggregate constraint for this web slice. The owner subsequent
 the revised320MiB owned-CPU operating budget (CanvasKit256,Rust32,JS32) and separate96MiB
 graphics allowance, with the stated distinction from a hard ceiling. Other concrete contract,
 failure-policy and design choices remain pending; budget approval is not runtime acceptance.
+Owner also approved memory-based admission without a fixed document stroke quota: actual
+Rust allocation accounting, observed CanvasKit heap, measured renderer estimates and disposable
+cache eviction. Exact accounting/reporting and coherent redraw mechanisms still need review
+and runtime evidence. Remaining decisions are being reviewed in owner-facing batches.
 The numerical investigation supports a conservative candidate; browser/CanvasKit fidelity,
 allocation high-water and release workload gates remain P05-E02 acceptance requirements.
 
@@ -292,9 +296,9 @@ pools remain inside their category; do not add them again to the operating budge
 | Rust linear heap | Initial8MiB, maximum32MiB; reserve full32MiB; within it canonical/retained samples16MiB, unfinished4MiB, scratch4MiB, metadata+runtime+allocator8MiB |
 | JS acquisition, copied outputs, staging and owned headroom | 32MiB; includes acquisition1,024×40, one<=256KiB output, module loading byte arrays and simultaneous old/new bridge copies; release loading bytes before editing |
 
-Owner requests memory-based admission rather than the proposed128-stroke restriction.
+Owner approved memory-based admission rather than the proposed128-stroke restriction.
 Withdraw the fixed64KiB-plus-multiplier per-path reservation and the4,096-stroke count ceiling.
-Replacement recommendation: charge Rust records/containers by actual allocated capacity,
+Approved policy direction: charge Rust records/containers by actual allocated capacity,
 including headers, alignment, spare capacity and allocation overhead established by the build.
 The earlier64-byte sample/256-byte header/128-byte history figures are sizing estimates,
 not substitutes for actual layout/capacity accounting. Session history retained-state
@@ -340,7 +344,8 @@ The former requirement to keep every path resident needs explicit replacement in
 contract if streaming is proposed; no sequential flush workaround is silently approved here.
 E01/E02 must return measured allocation and cold/warm/evicted-render findings before finalizing
 admission. Insufficient headroom rejects/cancels only the unfinished interaction; completed
-content/history stay intact. This replacement is a recommendation, not measured runtime acceptance.
+content/history stay intact. This policy direction is approved; its concrete mechanisms and
+runtime acceptance remain pending.
 
 Known capacities are counted; CanvasKit internal path storage/driver allocation is not
 fully observable. Validate the stock binary's actual initial/max declarations and observed
