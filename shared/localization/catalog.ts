@@ -3,6 +3,72 @@ export const catalog = {
   version: 1,
   sourceLanguage: "en",
   messages: {
+    "memory.navigationUnavailable": {
+      kind: "plain",
+      context: "In-memory navigation failure",
+      arguments: {},
+    },
+    "memory.title": { kind: "plain", context: "In-memory web canvas foundation", arguments: {} },
+    "memory.resume": { kind: "plain", context: "In-memory web canvas foundation", arguments: {} },
+    "memory.lifetime": { kind: "plain", context: "In-memory web canvas foundation", arguments: {} },
+    "memory.retained": { kind: "plain", context: "In-memory web canvas foundation", arguments: {} },
+    "memory.loading": { kind: "plain", context: "In-memory web canvas foundation", arguments: {} },
+    "memory.loadFailed": {
+      kind: "plain",
+      context: "In-memory web canvas foundation",
+      arguments: {},
+    },
+    "memory.retry": { kind: "plain", context: "In-memory web canvas foundation", arguments: {} },
+    "memory.tools": { kind: "plain", context: "In-memory web canvas foundation", arguments: {} },
+    "memory.toolUnavailable": {
+      kind: "plain",
+      context: "In-memory web canvas foundation",
+      arguments: { tool: "string" },
+    },
+    "memory.undo": { kind: "plain", context: "In-memory web canvas foundation", arguments: {} },
+    "memory.redo": { kind: "plain", context: "In-memory web canvas foundation", arguments: {} },
+    "memory.opacityFixed": {
+      kind: "plain",
+      context: "In-memory web canvas foundation",
+      arguments: {},
+    },
+    "memory.smoothingOff": {
+      kind: "plain",
+      context: "In-memory web canvas foundation",
+      arguments: {},
+    },
+    "memory.canvas": { kind: "plain", context: "In-memory web canvas foundation", arguments: {} },
+    "memory.foundation": {
+      kind: "plain",
+      context: "In-memory web canvas foundation",
+      arguments: {},
+    },
+    "memory.displayLost": {
+      kind: "plain",
+      context: "In-memory web canvas foundation",
+      arguments: {},
+    },
+    "memory.resourceUnavailable": {
+      kind: "plain",
+      context: "In-memory web canvas foundation",
+      arguments: {},
+    },
+    "memory.retryDisplay": {
+      kind: "plain",
+      context: "In-memory web canvas foundation",
+      arguments: {},
+    },
+    "memory.sizeUnavailable": {
+      kind: "plain",
+      context: "In-memory web canvas foundation",
+      arguments: {},
+    },
+    "memory.fatal": { kind: "plain", context: "In-memory web canvas foundation", arguments: {} },
+    "memory.unavailable": {
+      kind: "plain",
+      context: "In-memory web canvas foundation",
+      arguments: {},
+    },
     "canvas.tools": {
       kind: "plain",
       context: "Drawing UI prototype: Preview tools",

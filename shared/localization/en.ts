@@ -1,5 +1,33 @@
 import type { Translation } from "./catalog.ts";
 export const en = {
+  "memory.navigationUnavailable":
+    "Navigation could not finish. Your drawing remains in this tab’s memory.",
+  "memory.title": "Temporary drawing",
+  "memory.resume": "Resume temporary drawing",
+  "memory.lifetime": "Not saved. Lost on reload or tab close.",
+  "memory.retained":
+    "Temporary drawing is only in this tab’s memory. Reloading or closing the tab loses it.",
+  "memory.loading": "Preparing drawing…",
+  "memory.loadFailed": "Drawing could not start. Try again.",
+  "memory.retry": "Retry",
+  "memory.tools": "Drawing tools",
+  "memory.toolUnavailable": "{tool} · unavailable in this version",
+  "memory.undo": "Undo last action",
+  "memory.redo": "Redo last action",
+  "memory.opacityFixed": "Opacity 100% · fixed",
+  "memory.smoothingOff": "Smoothing Off",
+  "memory.canvas": "Temporary drawing canvas",
+  "memory.foundation": "Drawing and view controls are not available yet.",
+  "memory.displayLost":
+    "Drawing display is unavailable. Your drawing remains in this tab’s memory.",
+  "memory.resourceUnavailable":
+    "The drawing could not be displayed. Completed strokes remain in memory and are not saved.",
+  "memory.retryDisplay": "Retry display",
+  "memory.sizeUnavailable":
+    "This window size cannot display the drawing. Resize the window; your drawing remains in memory.",
+  "memory.fatal":
+    "Drawing stopped after an internal error. This temporary drawing cannot be recovered here.",
+  "memory.unavailable": "The temporary drawing is unavailable. It was not saved.",
   "app.name": "Linefield",
   "preview.simulation": "Browser simulation",
   "preview.platform": "Preview platform",

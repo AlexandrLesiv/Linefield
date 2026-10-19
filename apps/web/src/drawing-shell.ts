@@ -20,10 +20,11 @@ import {
 import { button, element } from "./dom.ts";
 import { t } from "./locale.ts";
 import { drawingIcon } from "./drawing-icons.ts";
+import { applyFoundationControls } from "./memory/controls.ts";
 import { drawingRange } from "./drawing-range.ts";
 import { record } from "./diagnostics.ts";
 const tools = ["pen", "select", "eraser", "line", "shapes"] as const;
-export function createDrawingShell(name: string, requestBack: () => void) {
+export function createDrawingShell(name: string, requestBack: () => void, foundation = false) {
   const root = element("div", `drawing-chrome ${drawingChrome}`);
   const header = element("header", `canvas-toolbar ${canvasToolbar}`);
   const back = button(t("navigation.back"), `back ${backStyle}`, requestBack);
@@ -103,6 +104,7 @@ export function createDrawingShell(name: string, requestBack: () => void) {
   const footer = element("div", `canvas-footer ${canvasFooter}`);
   footer.append(notice, zoom);
   root.append(header, rail, context, footer);
+  if (foundation) applyFoundationControls(root, rail, context, notice, ranges);
   ranges.forEach((range) => range.render());
   const cancel = () => ranges.forEach((range) => range.cancel());
   window.addEventListener("blur", cancel);

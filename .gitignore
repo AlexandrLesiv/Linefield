@@ -75,3 +75,7 @@ node_modules/
 !/quality/tooling/
 /quality/tooling/*
 !/quality/tooling/README.md
+
+!/apps/web/quality/memory/
+/apps/web/quality/memory/*
+!/apps/web/quality/memory/README.md

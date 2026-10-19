@@ -84,7 +84,7 @@ test("WEB-D2-02/06 WebKit touch and blur/resize cancellation", async () => {
     hasTouch: true,
     locale: "uk-UA",
   });
-  await page.goto("http://127.0.0.1:65142/drawing/preview-new");
+  await page.goto("http://127.0.0.1:65142/drawing/sample-0");
   await expect(page.locator(".back")).toBeFocused();
   await page.getByRole("button", { name: "Лінія", exact: true }).tap();
   await expect(page.getByRole("slider")).toHaveCount(2);
