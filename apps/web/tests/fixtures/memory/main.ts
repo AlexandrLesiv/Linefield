@@ -1,4 +1,5 @@
 import { penCheckpoint } from "./pen-checkpoint.ts";
+import { undoCheckpoint } from "./undo-checkpoint.ts";
 import { renderTargetBoundary } from "./render-target.ts";
 import { renderTargetFailure } from "./render-target-failure.ts";
 import { rotationBoundary } from "./rotation.ts";
@@ -70,4 +71,8 @@ action("Run cleanup failure", async () => cleanupFailure(await loadRenderer(), c
 action("Run real pen checkpoint", async () => {
   await loadEngine();
   return penCheckpoint(await loadRenderer(), canvas);
+});
+action("Run Undo rendering checkpoint", async () => {
+  await loadEngine();
+  return undoCheckpoint(await loadRenderer(), canvas);
 });
