@@ -3,7 +3,14 @@ import type { Locator } from "@playwright/test";
 
 async function playing(surface: Locator) {
   return surface.evaluate(async (node) => {
-    const shell = node.getAnimations()[0];
+    const shell = node
+      .getAnimations()
+      .find(
+        (motion) =>
+          motion.effect instanceof KeyframeEffect &&
+          motion.effect.target === node &&
+          motion.effect.getKeyframes().some((frame) => "width" in frame),
+      );
     const art = node.querySelector("img")?.getAnimations()[0];
     if (!shell || !art) throw Error("Missing shell/artwork animation");
     await Promise.all([shell.ready, art.ready]);

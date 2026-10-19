@@ -9,15 +9,26 @@ test("WEB-G01 whole tile becomes a single edge-to-edge surface and returns", asy
   if (!start) throw Error("Visible source card has no geometry");
   await card.getByRole("button", { name: "Open Coastal house" }).click();
   await page.locator(".drawing-surface").evaluate((node) => {
-    const motion = node.getAnimations()[0];
-    if (!motion) throw Error("Missing motion");
-    motion.pause();
-    motion.currentTime = 0;
+    const motions = node.getAnimations({ subtree: true });
+    const geometry = motions.some(
+      (motion) =>
+        motion.effect instanceof KeyframeEffect &&
+        motion.effect.target === node &&
+        motion.effect.getKeyframes().some((frame) => "width" in frame),
+    );
+    if (!geometry) throw Error("Missing surface geometry animation");
+    // Shadow is created first; sample every presentation track at the same instant.
+    motions.forEach((motion) => {
+      motion.pause();
+      motion.currentTime = 0;
+    });
   });
   const first = await page.locator(".drawing-surface").boundingBox();
-  expect(first?.width).toBeCloseTo(start.width, 0);
+  if (!first) throw Error("Missing initial surface geometry");
+  for (const key of ["x", "y", "width", "height"] as const)
+    expect(first[key]).toBeCloseTo(start[key], 0);
   await page.locator(".drawing-surface").evaluate((node) => {
-    node.getAnimations().forEach((a) => a.finish());
+    node.getAnimations({ subtree: true }).forEach((a) => a.finish());
   });
   await expect(page.locator(".back")).toBeFocused();
   const geometry = await page.locator(".drawing-surface").evaluate((node) => {

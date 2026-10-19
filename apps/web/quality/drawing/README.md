@@ -26,12 +26,12 @@ CT/INV/SU identifiers are acceptance context, not proof of real editing semantic
 | WEB-D2-04/06 | CT-02/08; INV-04/05; SU-07/08 — cancellation, IME priority, stale input and transition focus | drawing-shell.spec.ts; drawing-lifecycle.spec.ts; drawing-keyboard.spec.ts |
 | WEB-D2-05 | CT-09; INV-11; SU-20 — narrow/short, themes, enlarged LTR and pseudo-RTL/forced colors | drawing-layout.spec.ts |
 | WEB-D2-07 | CT-03/08; SU-08 — gallery history, repeated New, artwork endpoints and origin focus | navigation.spec.ts; blank-preview.spec.ts; artwork-motion.spec.ts |
-| WEB-D2-08 | CT-07/09; SEC-09/12/13 — literal Unicode/HTML-like names, browser-owned context events and bounded controls | drawing-shell.spec.ts |
+| WEB-D2-08 | CT-07/09; SEC-09/12/13 — literal Unicode/HTML-like names, browser-owned context events and bounded controls | rename-literal.spec.ts |
 
 Narrow keyboard coverage includes reverse traversal and a partially clipped range: pointer focus
 must not scroll the bar and move the control under the pointer. These are executable cases; an
-earlier unrun report is not their current status. The [web verification guide](../README.md) preserves
-the open WEB-D2-08 intermittent rename finding.
+earlier unrun report is not their current status. The [web verification guide](../README.md) describes
+WEB-D2-08 recurrence diagnostics; create a new defect if the rename failure recurs.
 
 ## Presentation checklist and limits
 
