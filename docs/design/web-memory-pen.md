@@ -1,10 +1,12 @@
 # In-memory web pen — drawing screen amendment v3
 
-Status: **owner approved choices 1A/2A (RAM drawing/settings and Undo/Redo retention);
+Status: **owner approved choices 1A/2A (RAM drawing/settings and Undo/Redo retention),
+3A/4B (mouse/pen input with browser-owned touch gestures), and 5A (width/native color controls);
 remaining design/contract choices pending; no product implementation or visual acceptance**.
 Task: [S02-W01](../../tasks/S02-W01.md), confirmed first on 2026-10-19, including bounded
 synthetic numerical experiments. Base: integrated `8dbd9b1` (PR #7). Design identity:
 `WMP-D3`, states `D3-01`–`D3-12` below, together with this file's final PR revision/hash.
+The 3A/4B/5A documentation amendment starts from revision `f18b44f`.
 The lead records that exact snapshot when requesting approval. A mutable link is insufficient.
 
 This narrow amendment extends the [selected drawing screen](drawing-screen.md), whose reference
@@ -17,10 +19,14 @@ resource accounting and fault dispositions. Neither document approves the other 
 ## Approval items and recommendation
 
 On 2026-10-19 the owner selected **1A and 2A**: retain the temporary drawing and accepted
-settings, and retain both Undo/Redo stacks across gallery Back/Resume. These two choices are
-approved for this in-memory web slice; do not request them again. The remaining screen,
-wording, interaction, numerical, ABI and budget proposals still require their applicable
-approval. P05-E01 and P05-E02 each require their own scope/position confirmation.
+settings, and retain both Undo/Redo stacks across gallery Back/Resume. The owner also selected
+**3A** browser-reported effective pen pressure with constant-width mouse input, **4B** touch
+does not draw and remains browser-owned, and **5A** width slider 1–512/default 8, initial black
+and browser-native color picker for now. These choices are approved for this in-memory web
+slice; do not request them again. Remaining screen, wording, interaction details, numerical,
+ABI and budget proposals require their applicable approval. P05-E01 and P05-E02 each require
+their own scope/position confirmation. Later touch configuration or picker replacement is
+separate backlog/review scope, not an implied setting or new picker in this slice.
 
 1. **Approved 1A/2A:** retain one temporary Rust document, accepted pen settings and its bounded
    Undo/Redo history in this page's memory across accepted gallery returns. Resume preserves
@@ -33,8 +39,10 @@ approval. P05-E01 and P05-E02 each require their own scope/position confirmation
    retained. Explain reload/tab-close loss and retention of drawing/history across gallery return.
 4. Enable only Pen, width, color and in-memory Undo/Redo. Other tools remain visible but unavailable;
    opacity is fixed at 100%, smoothing is Off, zoom is a noninteractive 100% readout.
-5. Use the browser-owned opaque sRGB color input, the existing width range expanded to 1–512
-   with default 8, and explicit Undo/Redo controls and scoped keyboard shortcuts below.
+5. **Approved 3A/4B/5A:** mouse and pen draw; browser-reported pen pressure drives width, while
+   mouse uses constant width and touch retains browser gestures without drawing. Use the
+   browser-owned opaque sRGB color input for now, width slider 1–512/default 8 and initial
+   black. Detailed control presentation and Undo/Redo buttons/shortcuts below remain proposals.
 
 Ordinary in-app Back retains work/history and needs no discard prompt. New-always-blank or
 clearing history on departure conflicts with the selected 1A/2A lifecycle and is not a current
@@ -107,10 +115,10 @@ late loaders, renderer work and focus restoration. Repeated requests are coalesc
 | --- | --- | --- |
 | D3-01 Gallery, no temporary owner | Explicit New | Reserve/create through Rust and show D3-02; accepted route matches destination. No sample mutation or new card. |
 | D3-02 Initializing | Wasm and CanvasKit/surface become ready for current request | Fresh creation enters D3-03 blank editor; selected Pen, width 8, opaque black, empty history. Resume preserves ink/settings and both history stacks as D3-05 specifies. Loading has no fake percentage or decorative minimum delay. Back can cancel entry. Late completion after Back is released, never reopened. |
-| D3-03 Ready, empty or completed ink | Admitted primary contact on canvas, idle, surface ready | D3-04 active stroke with captured Rust settings/mapping/identity. An empty ready canvas needs no instructional modal. |
-| D3-04 Drawing | Ordered actual samples, then matching end | One complete round stroke, one history operation; D3-03. Tap gives a dot. Duplicate-position/pressure behavior follows exact Rust geometry contract. No prediction, filtering, tilt or opacity behavior. |
+| D3-03 Ready, empty or completed ink | Admitted primary mouse/pen contact on canvas, idle, surface ready | D3-04 active stroke with captured Rust settings/mapping/identity. Touch never begins ink and retains browser gesture handling. An empty ready canvas needs no instructional modal. |
+| D3-04 Drawing | Ordered actual mouse/pen samples, then matching end | One complete round stroke, one history operation; D3-03. Brief mouse/pen contact gives a dot. Duplicate-position/pressure behavior follows exact Rust geometry contract. No prediction, filtering, tilt or opacity behavior. |
 | D3-04 Drawing | Escape, window blur, hidden page, pointer cancellation/capture loss, navigation request or mapping invalidation | Cancel current interaction before transition/remap. Remove its entire transient stroke, preserve completed ink/settings and both history stacks; reject late input. Accepted departure releases the editing attachment without clearing history. Remain D3-03 unless navigating or unavailable. No half-stroke commit. |
-| D3-04 Drawing | Undo/Redo, tool/style change, competing pointer | Rust rejects conflicting command; no queue, forced finish or settings mutation. Availability visibly disabled. Foreign pointer cannot finish/cancel the owner. |
+| D3-04 Drawing | Undo/Redo, tool/style change, competing drawing pointer or browser touch gesture | Rust rejects conflicting commands; no queue, forced finish or settings mutation. Availability visibly disabled. Competing pointer events cannot finish/cancel the owner. Touch is not submitted as ink; browser gesture takeover can issue pointercancel and cancel the active pen stroke. |
 | D3-03 Ready | Accepted Back or same-page departure | Cancel transient field adjustment; release the editing attachment only at successful semantic departure. D3-05 retains document/settings and both history stacks. Failed/cancelled destination keeps the old attachment and history. Gallery itself has no temporary-document Undo/Redo command. |
 | D3-05 Gallery with retained document | Resume or valid same-page Forward | D3-02 if surface rebuild needed, then D3-03 with retained ink/settings, Undo/Redo stacks and history position. Fresh attachment/mapping generations reject stale input. Gallery focus/scroll survive. Resume remains available after sample navigation; unavailable variants keep their guards. |
 | D3-06 Initialization failure | Asset/runtime/surface fails before usable entry | Localized error overlay within the canvas area, Retry and Back. Retry only the failed idempotent initialization stage; current request token required. Never claim drawing recovered. |
@@ -135,14 +143,15 @@ Resume clears that redo branch according to the shared edit contract; Back itsel
 
 ## Controls, inputs and focus
 
-- **Width:** native HTML range, integer step 1, 1–512, initial 8, localized visible numeric value
+- **Width (5A):** native HTML range, integer step 1, approved 1–512/initial 8, localized numeric value
   and accessible value. Arrow/Home/End/Page keys use native range behavior. Host-local drag is
   an uncommitted field adjustment; on change/end submit one validated settings replacement.
   Escape, pointer cancel, blur or navigation abandons uncommitted adjustment and restores the
   last accepted value. A rejected command also restores accepted value; no delayed replay.
   Do not add a numeric text field or new curve/preset control. The icon sample is an illustrative
   pictogram, not a second stroke renderer. Accepted setting affects only subsequent strokes.
-- **Color:** existing round rail position hosts a labeled native `input type=color`; opaque
+- **Color (5A):** browser-native picker for now; existing round rail position hosts a labeled
+  native `input type=color`, initially opaque black. Opaque
   sRGB hex channel values convert to normalized floats at the host boundary, validated by Rust.
   For accepted `#RRGGBB`, divide each byte by 255 and use alpha 1; these are encoded sRGB
   channels, not linear-light values. Do not quantize prior stroke colors or reinterpret them
@@ -161,26 +170,32 @@ Resume clears that redo branch according to the shared edit contract; Back itsel
   or non-text chrome, not native fields, native panels, composition, gallery or sample previews.
   A handled unavailable command is not queued. Separate browser shortcuts remain browser-owned.
 - **Canvas:** focusable named region with instructions and status association, not a global
-  `role=application`. Primary mouse/pen/touch contact draws; secondary/auxiliary buttons and
-  context menus retain browser behavior. No wheel, pan, zoom, double-tap, barrel/eraser-end,
+  `role=application`. Primary mouse/pen contact draws; touch does not. Secondary/auxiliary buttons and
+  context menus retain browser behavior. No app wheel/pan/zoom/double-tap binding, barrel/eraser-end,
   Pencil squeeze/double-tap or tablet-button mapping is added. Native shortcuts emitted by an
   accessory follow the same focus guard. Pointer leaves canvas while captured: preserve actual
   input subject to bounds; pointer capture loss cancels. Offscreen geometry clips, not truncates.
-  Apply `touch-action: none` to the actual drawing canvas only: direct manipulation there is
-  drawing, so a later contact cannot become browser pan/pinch. Do not apply it to document,
-  gallery, chrome or native controls; browser-owned zoom controls remain available. Do not
-  suppress contextmenu globally. A browser/system takeover still cancels via pointercancel.
-- **Contact ownership:** first admitted primary contact owns interaction; later contacts cannot
-  preempt it, navigate or cause a commit. No automatic palm-rejection claim. Proposed web
-  adapter rule: mouse and touch pressure are absent, giving full constant width; pen uses its
+  Keep browser touch handling on the canvas (`touch-action: auto`); do not cancel touch events
+  or capture touch pointers for drawing. Do not reintroduce touch ink through compatibility
+  mouse events; use the admitted pointer-event origin. Browser pan/pinch/navigation remains available where
+  the browser supports it. These gestures are browser-owned, not Linefield canvas pan/zoom.
+  Touch on native controls retains their normal behavior. Do not suppress contextmenu globally.
+  Browser gesture takeover may cancel an active pen via pointercancel; mapping changes follow
+  the existing remap cancellation contract. Do not promise uninterrupted ink during takeover.
+- **Contact ownership (3A/4B):** first admitted primary mouse/pen contact owns the interaction;
+  competing drawing pointers cannot preempt it or commit its stroke. Touch is never submitted
+  as ink, but browser gestures remain able to interrupt the pen. No palm-rejection claim.
+  Approved adapter rule: mouse pressure is absent, giving full constant width; pen uses its
   finite browser-reported effective pressure, including zero. Browser pressure is not proof
   of physical sensor capability: unsupported pen hardware may report 0.5 and consequently
-  produce 55% width. This limitation needs owner approval as part of the adapter contract;
-  there is no reliable sensor-detection claim. Rust's selected 10%-to-100% pressure mapping
+  produce 55% width. The owner accepted this adapter limitation in 3A; there is no reliable
+  sensor-detection claim or physical-device validation. Rust's 10%-to-100% pressure mapping
   remains unchanged. Unsupported axes are ignored, not fabricated. Matching pointerup
   ends, without an invented zero-pressure endpoint. Implementer verifies browser acquisition.
-- **Ordering:** pointer A begins, B touches/releases, A loses capture, C begins, A releases late:
-  A cancels once; B has no authority; C remains active until C ends/cancels. Mapping and session
+- **Ordering:** mouse/pen A begins, finger B touches/releases, A loses capture, mouse/pen C
+  begins, A releases late: A cancels once; B never draws; C remains active until C ends/cancels
+  or the browser interrupts it. B cannot directly end/cancel a different ink interaction;
+  browser-generated cancellation of its owning pointer remains valid. Mapping and session
   generations reject stale coalesced samples. A range/picker interaction cannot create ink.
 - **Escape/IME:** native dialog, field or composing text handles Escape first. On canvas Escape
   cancels active ink; idle Escape does nothing (no selection in scope), never navigates Back.
@@ -194,7 +209,8 @@ Resume clears that redo branch according to the shared edit contract; Back itsel
   switches desktop tile/compact action during navigation, focus its visible equivalent. Late
   animation/loader cannot steal deliberate focus; no hidden or inert control accepts input.
 - **Accessible alternatives:** native ranges/buttons permit keyboard and assistive operation of
-  settings/history/navigation. Freehand authoring still requires a pointer-capable input; keyboard
+  settings/history/navigation. Touch can operate browser/native controls but cannot author ink
+  in this slice; freehand authoring requires mouse/pen input. Keyboard
   drawing and equivalent nonvisual stroke authoring are explicit gaps, not silently approved
   feature additions. Screen-reader and physical assistive-input validation remains unrun.
 
@@ -316,7 +332,7 @@ last action to distinguish it from Cancel; retain gallery's existing labels inde
 | memory.opacityFixed | Opacity 100% · fixed | Непрозорість 100% · незмінна |
 | memory.smoothingOff | Smoothing Off | Згладжування вимкнено |
 | memory.canvas | Temporary drawing canvas | Полотно тимчасового малюнка |
-| memory.instructions | Draw with a mouse, pen or touch. Escape cancels the current stroke. This drawing is not saved. | Малюйте мишею, пером або дотиком. Escape скасовує поточний штрих. Цей малюнок не зберігається. |
+| memory.instructions | Draw with a mouse or pen. Touch gestures stay with the browser. Escape cancels the current stroke. This drawing is not saved. | Малюйте мишею або пером. Жести дотику обробляє браузер. Escape скасовує поточний штрих. Цей малюнок не зберігається. |
 | memory.strokeCancelled | Current stroke cancelled. | Поточний штрих скасовано. |
 | memory.strokeRejected | This stroke exceeded the drawing limits and was cancelled. Earlier strokes are unchanged. | Цей штрих перевищив обмеження малювання, тому його скасовано. Попередні штрихи не змінено. |
 | memory.inputRejected | This stroke could not be accepted and was cancelled. Earlier strokes are unchanged. | Цей штрих не вдалося прийняти, тому його скасовано. Попередні штрихи не змінено. |
@@ -350,9 +366,9 @@ bridge-suite wording. Numerical experiments are analysis, not browser/physical-d
 
 | Proposed test ID / scenario mapping | Trigger, visible outcome and invariant | Required evidence |
 | --- | --- | --- |
-| WMP-01A / DRAW-001; CT-01/02/06, INV-01/02/04, SU-02/03/04 | New, tap, pressure/constant-width stroke, duplicate point and sharp turn; complete round ink then one-step Undo/Redo. Earlier settings remain attached to earlier strokes. | Real app/Rust/Wasm/CanvasKit mouse E2E plus visible captures; explicitly labeled injected pressure lane, physical pen gap. |
+| WMP-01A / DRAW-001; CT-01/02/06, INV-01/02/04, SU-02/03/04 | New, brief mouse/pen contact, pressure/constant-width stroke, duplicate point and sharp turn; complete round ink then one-step Undo/Redo. Earlier settings remain attached to earlier strokes. | Real app/Rust/Wasm/CanvasKit mouse E2E plus visible captures; explicitly labeled injected pressure lane, physical pen gap. |
 | WMP-01B / CT-01/09, INV-05/11, SU-07/20 | Width 1/8/512, keyboard and pointer change/cancel; native color change/cancel, invalid return, active-stroke rejection. Correct accepted value and next-stroke appearance. | Native range actions; browser color-panel controllability limitation and separate actual panel evidence. Directly setting DOM value is not picker interaction proof. |
-| WMP-02A / DRAW-CANCEL-001, FOCUS-001; CT-02/03, INV-03/04 | Escape/blur/hidden/capture loss/remap cancel whole transient ink; A/B/C/late-A sequence leaves C valid. Repeated cancel is harmless. | Browser lifecycle/input E2E with labeled injected conditions; before/after completed pixels and history eligibility. |
+| WMP-02A / DRAW-CANCEL-001, FOCUS-001; CT-02/03, INV-03/04 | Escape/blur/hidden/capture loss/remap cancel whole transient ink; mouse/pen A, finger B, mouse/pen C, late A sequence rejects stale input. Touch produces no stroke/history and keeps browser gesture handling. Browser takeover can cancel the owning pen; foreign pointer events cannot. Repeated cancel is harmless. | Browser lifecycle/input and touch-emulated E2E with labeled injected conditions; before/after artwork/history and native control interaction. Physical touch/pen coexistence and browser gesture takeover remain separate device gaps. |
 | WMP-02B / CT-02/06, INV-04/08/11, SU-14/16 | Resize, backing-density change, orientation and virtual keyboard while active cancel once; idle resize preserves world content/settings/history. | Real resize E2E plus synthetic DPR/keyboard fixtures; hardware transition gap separately. |
 | WMP-03A / HISTORY-SESSION-001 (memory subset), FOCUS-001; INV-04/05 | Buttons and scoped shortcuts undo/redo, active stroke blocks them; field/IME keeps native commands; settings create no history. | Actual focus/key E2E; physical IME and screen-reader gap. |
 | WMP-10 / CT-03/08, INV-01/04, SU-13 | Back retains ink/settings, both Undo/Redo stacks and history position; Resume/Forward uses a fresh editing attachment without a history reset. Undo-all → Back → Resume → Redo restores the same strokes. Rapid traversal/stale loader/failed target cannot corrupt retained state; old-session input rejects. Samples and Reset samples preserve the temporary owner/history. | Browser history/Back/Forward, short/long transition and reduced-motion E2E, gallery focus/scroll assertions; resumed Undo/Redo controls and visible exact artwork. |

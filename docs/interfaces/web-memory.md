@@ -1,7 +1,7 @@
 # In-memory web editor contract WMP-C2
 
 2026-10-19. **Proposal for owner approval; no production implementation authorization.**
-S02-W01 is confirmed first. Base `8dbd9b1` includes merged PR6 and PR7. The isolated
+S02-W01 is confirmed first. Current integrated base `f18b44f` includes merged PR8. The isolated
 synthetic candidate is evidence for this proposal, not an editor or passing browser E2E.
 Owners: rust_engine semantics; designer [WMP-D3](../design/web-memory-pen.md);
 rendering_performance geometry review; lead [security](../security/web-memory.md).
@@ -26,6 +26,10 @@ Owner choices1A/2A retain the temporary drawing, accepted settings and both Undo
 stacks across gallery Back/Resume. History belongs to the page-lived document; editing
 session attachment generations do not define or reset its lifetime. This approved
 lifecycle does not authorize production implementation or imply survival after page loss.
+Owner choices3A/4B/5A approve browser-reported pen pressure, constant-width mouse ink,
+no finger drawing with browser touch gestures allowed, and native width/color controls
+for now (width8, opaque black defaults). These exact choices are settled; other contract,
+numerical, ownership, failure and design categories remain pending where identified below.
 The numerical investigation supports a conservative candidate; browser/CanvasKit fidelity,
 allocation high-water and release workload gates remain P05-E02 acceptance requirements.
 
@@ -191,21 +195,28 @@ capability. Known temporary route cold-load behavior and navigation are defined 
 This is not a save/reconciliation/receipt contract. There are no pending worker writes.
 
 Begin idle+ready captures width/color/mapping and first sample index0, returns interaction.
-The host captures only the first primary canvas pointer while idle; further pointers cannot
+The host admits only mouse and pen input for ink and captures only the first primary
+eligible canvas pointer while idle; further pointers cannot
 replace it. Rust stores the integer pointer ID (Number safe integer,0…2^53−1). Append/end
 identify the returned interaction rather than trusting a reused browser pointer ID. Every
 host event closure also carries owner/session/mapping/interaction. Pointer A, B contact/release,
 A capture loss, C begin, late A release: B ignored by acquisition; A cancel affects only A;
 late A rejects and C remains active. Matching pointercancel/lostcapture/blur cancel; stale
 cancel never affects C. Browser capture failure cancels the just-begun interaction.
+Finger/touch input creates no Rust begin/append/end command and is not captured for ink.
+Preserve browser touch gestures: no canvas-wide `touch-action:none` or touch-event default
+prevention merely to protect drawing. A touch contact/release itself must not cancel an
+active matching pen interaction. If browser gesture takeover produces matching pointercancel,
+capture loss, focus loss or an accepted mapping change, use the existing cancellation path;
+no partial stroke/history and no invented cancellation from an unrelated touch event.
+Touch pressure/drawing semantics are future scope, not implemented by this slice.
 
-**Proposed browser pressure adapter:** mouse and touch pressure absent (`pressure=+0`);
+**Owner-approved browser pressure adapter (3A):** mouse pressure absent (`pressure=+0`);
 pen reported finite pressure treated as effective present pressure including0.
 Browser `pressure=.5` may be a synthetic default on unsupported pen hardware; this adapter
-cannot detect physical sensor presence and maps that value to55% width. Touch uses constant
-full width to avoid that ambiguity. This adapter compromise requires approval and physical
-pen evidence later; it does not change shared pressure semantics or claim sensor detection.
-absent payload other than+0 rejects. Pressure range[0,1]; no fake0.5 mouse pressure. For
+cannot detect physical sensor presence and maps that value to55% width. Physical pen
+evidence remains required; approval does not change shared pressure semantics or claim
+sensor detection. Absent payload other than+0 rejects. Pressure range[0,1]; no fake0.5 mouse pressure. For
 each move use coalesced actual events in reported order; use the enclosing event only if
 coalesced list is empty. Never add both without deduplication. Split>256 events into ordered
 batches; bounded acquisition queue total1,024 samples, overflow uses Cancel(queue-overflow)
@@ -222,7 +233,9 @@ End nextIndex must equal count and current mapping; commits exactly one immutabl
 and history entry. End after cancellation rejects. Cancel does not change content revision;
 scene revision changes whenever accepted visible state changes, including preview cancellation.
 
-Width defaults8, color defaults opaque sRGB(0,0,0); finite channels[0,1]. Settings are atomic,
+Owner-approved controls (5A) use native width controls and the browser-owned opaque sRGB
+color picker for now; width defaults8 and color defaults black sRGB(0,0,0).
+Width domain1–512 and finite color channels[0,1] remain Rust-validated. Settings are atomic,
 idle-only replacements; no history entry and no effect on prior strokes. Browser localized
 field staging/IME remains presentation; Rust revalidates typed values. Undo/Redo active
 rejects without queuing. Idle Undo removes the latest eligible stroke from the page-lived
@@ -422,12 +435,12 @@ reviewer evidence labels. No new unit/property/bridge-only/developer-tool suites
 
 | Case | Trigger/state → outcome/invariant |
 | --- | --- |
-| WMP-01 | Dot, sharp turn, duplicate center/changed pressure, alternating pressure → same-winding swept disk; full-width absent pressure; no seams, immutable old color/width |
-| WMP-02 | A/B/lostcapture/C/lateA; Escape, blur, resize, Back → only matching unfinished work disappears, no history; fields/IME keep priority |
+| WMP-01 | Mouse/pen dot, sharp turn, duplicate center/changed pen pressure, alternating pressure → same-winding swept disk; constant full-width mouse ink and effective reported pen pressure; no finger ink, seams or mutation of old color/width |
+| WMP-02 | A/B/lostcapture/C/lateA; touch contact during pen; browser gesture takeover; Escape, blur, resize, Back → unrelated touch alone does not cancel pen; actual matching cancellation removes only unfinished work with no history; browser gestures and fields/IME keep priority |
 | WMP-03 | Undo during input rejects; completed stroke Undo/Redo as one; Back/Resume retains ink/settings and both history stacks; Undo-all→Back→Resume preserves Redo; no save claim |
 | WMP-04 | Bound±adjacent value, batch256/257, sample65,536/65,537, invalid pressure/sequence → current batch atomic cancel; stale unrelated event does not cancel current work |
 | WMP-05 | Capacity including Begin→cancel/invalid batch with full history, context loss/recovery, asset failure, stale scene page, disposed owner, trapped engine, generation exhaustion → declared state/failure, no accepted artwork/history silently replaced; terminal cancellation/leave still works |
-| WMP-06 | en/uk, field staging, theme changes, reduced motion, gallery/history → unchanged navigation/AX, honest RAM lifecycle, artwork colors unchanged |
+| WMP-06 | en/uk, native width/color controls with8/black defaults, field staging, theme changes, reduced motion, gallery/history → unchanged navigation/AX, honest RAM lifecycle, artwork colors unchanged |
 | WMP-07 | Huge bigint/u32-like Number, fake/detached/shared array, mismatched lengths, reentrancy → reject before coercion/copy/mutation; reviewed browser-only fault facility, no production fault endpoint |
 | WMP-08 | Offscreen crossing segment, thick offscreen centerline, near containment, subpixel/min pressure, projected extreme → visible clipping/round geometry; semantic and screenshot expectations both |
 | WMP-09 | Cold/warm bounded maximum scene, cancellation during rebuild, cache eviction, repeated resize/context recovery → bounded queues/live resources; report actual release timings/heap, no fabricated physical latency |

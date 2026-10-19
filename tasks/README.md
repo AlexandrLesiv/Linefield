@@ -12,6 +12,8 @@ See the [approved product backlog](BACKLOG.md) for the owner-confirmed order of 
 Those priorities do not mark the milestones below complete or waive implementation gates.
 [P05-L01](P05-L01.md) prepares the first saved-drawing slice; production work remains gated,
 with [S02-P01](S02-P01.md) the next synthetic storage prerequisite.
+Owner-requested later follow-ups: [configurable finger drawing](P05-I01.md) under backlog #43
+and [color-picker review](P05-D02.md) at #64. Neither changes the approved first-slice defaults.
 
 ## Proposed priority — in-memory shared web editor (2026-10-19)
 
@@ -19,7 +21,9 @@ Owner requested the smallest usable Rust/Wasm/CanvasKit pen slice, with confirma
 task's scope and position before it starts. PR #6 is verified merged at
 `55d0cbad108969448ac4302a5b1f2a32ca1b6d57`. Execution refreshed to integrated
 `8dbd9b1` after PR #7; the original main checkout is preserved.
-The historical PR/base statements below do not override this verified base for new work.
+This is launch provenance. PR #8 merged as `545f222` and was integrated into this task branch
+at `f18b44f`; preserve its backlog and verify current main again before new execution.
+Historical PR/base statements below do not override the actual integrated state.
 
 | Order | Proposed task | Gate |
 | --- | --- | --- |
