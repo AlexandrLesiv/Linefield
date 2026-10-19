@@ -15,6 +15,7 @@ for each sensitive task and add an index row below. Preserve stable SEC IDs and 
 | Task/change | SEC risks/boundary | Threat delta | Independent review | Current mitigation/evidence status |
 | --- | --- | --- | --- | --- |
 | None implemented | Initial SEC-01–16 | Initial proposal above | Initial review above | Planned; no runtime verification |
+| S02-W01 memory web editor proposal | SEC-02/03/09/10/11/13 | [WMP v1 delta](web-memory.md) | Task/PR assessment pending | Design and synthetic experiments only; production mitigations planned |
 
 Lead maintains this index; feature owner updates the delta and reviewer checks coverage against the
 actual change. A new dependency advisory/platform behavior may invalidate evidence without a code

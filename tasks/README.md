@@ -10,8 +10,33 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 See the [approved product backlog](BACKLOG.md) for the owner-confirmed order of upcoming functionality.
 Those priorities do not mark the milestones below complete or waive implementation gates.
-Backlog expansion is closed at 63 outcomes. [P05-L01](P05-L01.md) prepares the first saved-drawing
-slice; production work remains gated, with [S02-P01](S02-P01.md) the next synthetic storage prerequisite.
+[P05-L01](P05-L01.md) prepares the first saved-drawing slice; production work remains gated,
+with [S02-P01](S02-P01.md) the next synthetic storage prerequisite.
+Owner-requested later follow-ups: [configurable finger drawing](P05-I01.md) under backlog #43
+and [color-picker review](P05-D02.md) at #64. Neither changes the approved first-slice defaults.
+
+## Proposed priority — in-memory shared web editor (2026-10-19)
+
+Owner requested the smallest usable Rust/Wasm/CanvasKit pen slice, with confirmation of each
+task's scope and position before it starts. PR #6 is verified merged at
+`55d0cbad108969448ac4302a5b1f2a32ca1b6d57`. Execution refreshed to integrated
+`8dbd9b1` after PR #7; the original main checkout is preserved.
+This is launch provenance. PR #8 merged as `545f222` and was integrated into this task branch
+at `f18b44f`; preserve its backlog and verify current main again before new execution.
+Historical PR/base statements below do not override the actual integrated state.
+
+| Order | Proposed task | Gate |
+| --- | --- | --- |
+| 1 | [S02-W01 memory editor contract/design](S02-W01.md) | [PR #9](https://github.com/AlexandrLesiv/Linefield/pull/9) owner review; investigation/reviews complete; core and P1/H1/S1–S4 approved; N1/A1/R1 approved at51d9345; integration pending |
+| 2 | [P05-E01 runtime foundation](P05-E01.md) | Separate task confirmation and approved/integrated prerequisite; no ink yet |
+| 3 | [P05-E02 usable pen and viewport](P05-E02.md) | Separate task confirmation and verified foundation; pen, pan/zoom, settings, cancellation and Undo/Redo together |
+
+S02-W01 is assigned on `codex/s02-w01-memory-contract` from integrated main `8dbd9b1`
+(PR #7 browser-test fixes). The original checkout/drafts are preserved. P05-E01/E02 remain
+unconfirmed proposals without writers or PRs. Existing regional C01
+work must be coordinated before overlapping execution. Storage admission and durable/native
+milestones are independent. No task grants approval by being listed. E2E-only tests plus
+static/build checks apply; older unit/property/developer-tool suite wording is superseded.
 
 Decision238 adopts the [task/PR/fresh-chat workflow](../docs/workflow/task-pr-chat.md).
 The broad records below remain milestones/workstreams; existing completion claims describe local
@@ -29,7 +54,7 @@ base/contract checks. Each writer uses an isolated worktree; one owner per share
 | [DX-G02 shared documentation](DX-G02.md) | Owner review, [PR #2](https://github.com/AlexandrLesiv/Linefield/pull/2) | Stacked on DX-G01; owns tooling/docs cleanup, not runtime behavior |
 | [P05-S01 local styles](P05-S01.md) | Owner review, [PR #3](https://github.com/AlexandrLesiv/Linefield/pull/3) | Stacked on DX-G02; app style scoping and final documentation cleanup |
 | [S02-P01 storage admission](S02-P01.md) | Ready for bounded synthetic investigation | DX-G01 baseline; independent of DX-G02 and S02-C01, separate probe paths |
-| [S02-C01 regional contract](S02-C01.md) | Ready for contract/probe work | DX-G01 baseline; independent of storage and documentation tooling |
+| [S02-C01 regional contract](S02-C01.md) | Broader regional follow-up; coordinate before claim | S02-W01 currently owns the narrow web contract; do not run overlapping contract writers |
 | [DX-T01 app token parity](DX-T01.md) | Contract-blocked; read-only inventory may proceed | DX-G02 token contract/review before implementation; no simultaneous shared-token edits |
 
 After PR #1 integrates, S02-P01 and S02-C01 can use the same verified main base in separate worktrees

@@ -1,7 +1,9 @@
 # Product backlog
 
 This list records owner-approved functionality and priority. Positions 1–63 were explicitly
-approved in this chat. They are planned outcomes, not completed features or blanket approval
+approved in the backlog review. The owner subsequently requested the #43 finger-drawing child
+and a later color-picker review, appended as #64 without reordering existing work. These are
+planned outcomes, not completed features or blanket approval
 of unresolved designs, ABI, numerical, storage or security choices. Execution begins only after
 applicable contracts and designs are approved. Split large outcomes into bounded child tasks,
 each with one branch and PR; use existing milestones instead of duplicating their ownership.
@@ -76,6 +78,7 @@ by current owner policy. Preserve existing gallery/navigation, themes and Englis
 | 61 | Mix palette colors | Child task to scope before implementation | Approved backlog; mixing model/color/design contracts remain |
 | 62 | Capture an image reference | Child task to scope before implementation | Approved backlog; camera/permission/import design remains |
 | 63 | Present artwork on another display | Child task to scope before implementation | Approved backlog; host/display/privacy design remains |
+| 64 | Review the drawing color picker | [P05-D02](P05-D02.md) | Owner-requested later design review; initial browser picker remains approved |
 
 ## Visual and interaction design approval
 
@@ -159,6 +162,11 @@ reopening, with honest pending/saved/failure states. Respect revision-safe backg
 recovery, navigation and ownership contracts. No cloud sync or external-file write-through.
 
 ## 6. Pan and zoom the canvas
+
+Owner now requires a bounded web pan/zoom subset in the first in-memory editor slice;
+[S02-W01](S02-W01.md) owns its reviewed contract and [P05-E02](P05-E02.md) proposes the
+implementation. This does not complete the outcome or approve its exact input/screen design.
+Keep the existing backlog order; other hosts and broader navigation remain separately scoped.
 
 Navigate artwork through supported pointer, touch and keyboard input without changing drawing
 geometry or losing coordinate accuracy. Define platform-supported input explicitly; verify
@@ -432,6 +440,10 @@ Concepts references: CS-DOC-005/008; exact Linefield preset combinations are an 
 
 ## 43. Configure touch and stylus actions
 
+Bounded child: [P05-I01 — Configure finger drawing](P05-I01.md), requested during the shared
+editor review. The first slice uses mouse/pen only; later review whether and how users enable
+finger drawing. Child execution order within this outcome remains to be confirmed.
+
 Choose supported finger/stylus actions and shortcut-button mappings. Preserve visible controls
 and respect platform capabilities, system preferences, native text/IME priority and shared
 interaction guards. Review conflicts with keyboard bindings (#34), device absence and settings
@@ -589,9 +601,16 @@ Platform support requires verification; no networking service or additional edit
 Concepts reference: [external-display presentation](https://concepts.app/en/manual/settings)
 (documented iOS feature; Linefield host support is not established).
 
+## 64. Review the drawing color picker
+
+[P05-D02](P05-D02.md) reviews the current browser-owned picker and presents a concrete
+keep-or-replace design recommendation. The owner approved that picker for the first web pen;
+this later review does not block it or authorize a replacement. No new palette/mixing/sampling
+scope is implied; coordinate with the separately listed outcomes.
+
 ## Scope boundary
 
-The owner closed backlog expansion after these 63 outcomes. The final three proposals were
-accepted in order and assigned consecutive positions. Do not add further research-derived
+The owner closed the original expansion at63 outcomes, then explicitly requested the #43 child
+and #64 review during the in-memory editor discussion. Do not add further research-derived
 features without a new owner request. Research remains outside Git. Backlog approval does not
 replace the implementation, design, architecture and verification gates above.

@@ -1,0 +1,392 @@
+{
+  "width": 1440,
+  "height": 900,
+  "title": "Proposed in-memory web editor boundary",
+  "description": "One page-owned Rust editor supplies immutable geometry to CanvasKit; product lifetime and controls are approved; numerical, ABI and rendering mechanisms are approved; implementation awaits task confirmation.",
+  "elements": [
+    {
+      "tag": "rect",
+      "attrs": {
+        "width": "1440",
+        "height": "900",
+        "fill": "{diagram.color.canvas}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "64",
+        "y": "58",
+        "class": "meta"
+      },
+      "text": "LINEFIELD / S02-W01 / WMP-C2"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "900",
+        "y": "58",
+        "class": "meta"
+      },
+      "text": "CONTRACT APPROVED · NOT IMPLEMENTED"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "64",
+        "y": "118",
+        "class": "title"
+      },
+      "text": "One shared editor, temporary page memory"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "64",
+        "y": "158",
+        "class": "body"
+      },
+      "text": "Browser acquisition and presentation surround one authoritative Rust mutation owner."
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "64",
+        "y": "240",
+        "width": "360",
+        "height": "190",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.presentation}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "88",
+        "y": "275",
+        "class": "meta"
+      },
+      "text": "BROWSER INPUT / CONTROLS"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "88",
+        "y": "320",
+        "class": "node"
+      },
+      "text": "Canvas-local actual samples"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "88",
+        "y": "351",
+        "class": "node"
+      },
+      "text": "Pen, settings, history, pan / zoom"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "88",
+        "y": "394",
+        "class": "body"
+      },
+      "text": "Native focus and IME take priority"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "540",
+        "y": "240",
+        "width": "360",
+        "height": "190",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "564",
+        "y": "275",
+        "class": "meta"
+      },
+      "text": "RUST / WASM"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "564",
+        "y": "320",
+        "class": "node"
+      },
+      "text": "Validate → admit → mutate"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "564",
+        "y": "351",
+        "class": "node"
+      },
+      "text": "Mapping, pen geometry, history"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "564",
+        "y": "394",
+        "class": "body"
+      },
+      "text": "Typed calls; copied bounded results"
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1016",
+        "y": "240",
+        "width": "360",
+        "height": "190",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.presentation}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1040",
+        "y": "275",
+        "class": "meta"
+      },
+      "text": "CANVASKIT PRESENTATION"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1040",
+        "y": "320",
+        "class": "node"
+      },
+      "text": "Draw Rust-derived geometry"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1040",
+        "y": "351",
+        "class": "node"
+      },
+      "text": "Own surface / cache resources"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1040",
+        "y": "394",
+        "class": "body"
+      },
+      "text": "No document mutation authority"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M424 335H540",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M900 335H1016",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "540",
+        "y": "530",
+        "width": "360",
+        "height": "174",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.command}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "564",
+        "y": "565",
+        "class": "meta"
+      },
+      "text": "RUST-OWNED PAGE MEMORY"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "564",
+        "y": "606",
+        "class": "node"
+      },
+      "text": "One temporary drawing"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "564",
+        "y": "639",
+        "class": "body"
+      },
+      "text": "Retain content and viewport on Back"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "564",
+        "y": "674",
+        "class": "body"
+      },
+      "text": "Back / Resume keeps Undo and Redo"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M720 430V530",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "64",
+        "y": "530",
+        "width": "360",
+        "height": "174",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.presentation}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "88",
+        "y": "565",
+        "class": "meta"
+      },
+      "text": "NARROW UI AMENDMENT"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "88",
+        "y": "606",
+        "class": "node"
+      },
+      "text": "New / Resume temporary drawing"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "88",
+        "y": "639",
+        "class": "body"
+      },
+      "text": "English + Ukrainian; honest status"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "88",
+        "y": "674",
+        "class": "body"
+      },
+      "text": "Existing sample previews unchanged"
+    },
+    {
+      "tag": "path",
+      "attrs": {
+        "d": "M424 616H540",
+        "class": "edge"
+      }
+    },
+    {
+      "tag": "rect",
+      "attrs": {
+        "x": "1016",
+        "y": "530",
+        "width": "360",
+        "height": "174",
+        "rx": "{diagram.size.cardRadius}",
+        "fill": "{diagram.color.storage}",
+        "stroke": "{diagram.color.edge}",
+        "stroke-width": "{diagram.size.border}"
+      }
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1040",
+        "y": "565",
+        "class": "meta"
+      },
+      "text": "NO DURABLE STORAGE"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1040",
+        "y": "606",
+        "class": "node"
+      },
+      "text": "Reload / close loses artwork"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1040",
+        "y": "639",
+        "class": "body"
+      },
+      "text": "No Saved or recovery promise"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "1040",
+        "y": "674",
+        "class": "body"
+      },
+      "text": "No IPC, imports, export or cloud"
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "64",
+        "y": "800",
+        "class": "body"
+      },
+      "text": "Contract and design choices approved; implementation needs a separately confirmed task."
+    },
+    {
+      "tag": "text",
+      "attrs": {
+        "x": "64",
+        "y": "844",
+        "class": "meta"
+      },
+      "text": "CT-01–04 / 06–09 · Synthetic experiments are not browser E2E or runtime approval"
+    }
+  ]
+}
