@@ -1,6 +1,6 @@
 # Product backlog
 
-This list records owner-approved functionality and priority. Positions 1–26 were explicitly
+This list records owner-approved functionality and priority. Positions 1–31 were explicitly
 approved in this chat. They are planned outcomes, not completed features or blanket approval
 of unresolved designs, ABI, numerical, storage or security choices. Execution begins only after
 applicable contracts and designs are approved. Split large outcomes into bounded child tasks,
@@ -39,6 +39,11 @@ by current owner policy. Preserve existing gallery/navigation, themes and Englis
 | 24 | Import an image reference | [S06 Files and recovery](S06.md) | Approved backlog; image/security/storage contracts remain |
 | 25 | Define artboard dimensions and export region | [S07E PNG export](S07E.md) | Approved backlog; bounds and outside-artwork behavior remain to review |
 | 26 | Save reusable drawing objects | Child task to scope before implementation | Approved backlog; local object storage/design contracts remain |
+| 27 | Sample colors from artwork | Child task to scope before implementation | Approved backlog; sampling/color/design contracts remain |
+| 28 | Group selected strokes | [S05 Navigation and editing](S05.md) | Approved backlog; grouping/transform/storage design remains |
+| 29 | Erase portions of strokes | [S03 Pure editor](S03.md), [P05 Web](P05.md) | Approved backlog; segment geometry/history/design remains |
+| 30 | Add curved and shaped guides | Child task to scope before implementation | Approved backlog; guide geometry/design contracts remain |
+| 31 | Add text labels | Child task to scope before implementation | Approved backlog; text/input/font/storage contracts remain |
 
 ## Visual and interaction design approval
 
@@ -241,6 +246,42 @@ Local library only; no marketplace or sharing service. Depends on selection and 
 Review object identity, storage, naming and insertion/Undo behavior; no linked instances,
 automatic propagation, asset packs or proprietary Concepts assets are implied.
 Concepts reference: CS-DOC-024; CS-OBS-017 inspected the library without inserting objects.
+
+## 27. Sample colors from artwork
+
+Pick a color from visible artwork for subsequent strokes. Review transparency/background
+sampling explicitly, including canonical color conversion and preview/accept/cancel behavior.
+Do not infer retrieval of other stroke properties or application to existing artwork.
+Concepts reference: CS-DOC-015 (documented; sampling was not exercised in the device study).
+
+## 28. Group selected strokes
+
+Group and ungroup strokes so they can be selected and transformed together, with Undo and
+saving. Depends on #12 and #13; review group identity, membership, transform behavior and
+interaction with layers. Nested groups and cross-layer grouping are not implicitly selected.
+Concepts reference: CS-DOC-016 (documented, not exercised).
+
+## 29. Erase portions of strokes
+
+Remove intersected vector segments with a Slice-style tool. Support Undo; nondestructive
+masking stays separate. Review hit geometry, resulting stroke identities/styles, atomic
+commit/cancel and saving. Respect locked layers and shared active-interaction guards.
+Concepts reference: CS-DOC-013 (documented, not exercised).
+
+## 30. Add curved and shaped guides
+
+Extend #20’s straight-line guide with arc, ellipse and rectangle guides. Automatic shape
+recognition remains separate. Review placement, constraints, precision and interaction with
+snapping; preserve shared stroke/history/cancellation semantics. No additional guide inventory
+is approved by this outcome. Concepts reference: CS-DOC-019 (documented, not exercised).
+
+## 31. Add text labels
+
+Create and edit text, position it on the canvas, and preserve it through saving and PNG export.
+Include native text input and English/Ukrainian support. Review text/font representation,
+layout fidelity, IME/focus, native text Undo priority and export portability before implementation.
+No rich-text editor, arbitrary font embedding or text-to-path conversion is implied.
+Concepts reference: CS-DOC-013 (documented, not exercised).
 
 ## Further candidates
 
