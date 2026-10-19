@@ -556,6 +556,30 @@
       "type": "string",
       "minLength": 1,
       "maxLength": 16000
+    },
+    "attachments": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "kind", "url"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "kind": {
+            "enum": ["screenshot", "video", "report"]
+          },
+          "url": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        }
+      }
     }
   }
 }

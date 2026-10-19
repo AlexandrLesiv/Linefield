@@ -1,58 +1,33 @@
-# DX-T02 — task packages and read-only review pilot
+# Structured task records
 
-Type: executable leaf. Status: owner review. Owner: lead/current chat.
-Branch: codex/dx-t02-task-packages. Base: afb82c5deb4cfa3d3e9a641659a20887b9689b8a.
-Stacked on P05-S01 / PR #3 because the pilot references its exact retained evidence.
-Owner merges parents first; retarget and verify integration afterward. PR: [#4](https://github.com/AlexandrLesiv/Linefield/pull/4).
+**Task:** DX-T02 · **Review:** [PR #4](https://github.com/AlexandrLesiv/Linefield/pull/4)
+**Depends on:** [P05-S01](P05-S01.md). Owner acceptance is pending.
 
-## Scope and authority
+## What changes
 
-Owner approved structured task documentation, schema/pilot conversion and visual preview,
-including PR and applicable automated-test links. Deliver JSON schema, two supplemental packages,
-validation, compact generated Markdown and static HTML review pages. The preview is proposed UI
-for owner review, not a complete execution workbench. No drawing app, storage or engine changes.
-Preserve original task documents and evidence bytes. No automatic GitHub mutation or test execution
-from task data. Repository publication remains authorized; only the owner merges.
+A task links its goal, scope, PR, app tests and design sources in one structured record.
+A short authored brief makes it readable in GitHub. Shared requirements stay in their original
+source documents rather than being copied into every task.
 
-Lead owns pilots, rendering/generation, root integration and handoff. build_reliability owns
-schema/model/validator/tests. Designer specifies and reviews the preview; fresh reviewer audits.
-No competing writers; isolated worktree. Shared contract frozen before consumer implementation.
+## Current boundary
 
-## Acceptance and edge cases
+Task records are documentation. They do not run tests, start a task UI, grant approval, merge PRs
+or synchronize status from GitHub. Local validation checks records and references. The owner
+requested the source-only presentation during PR review; DX-C01 applies that cleanup.
 
-- TASK-01: versioned JSON and strict bounded validation reject unsupported/unknown fields, bad
-  types, duplicate IDs and unresolved references. Required authority/security/scope retained.
-- TASK-02: preserve historical bytes; hash-check regular in-repository sources; reject path escapes,
-  symlinks, missing files and digest mismatches. Recorded outcomes never imply current freshness.
-- TASK-03: PR URL/repository/number agree; observations have dates and revisions. Planned tests
-  differ from executable tests. Criteria link test/evidence IDs; completion is not PR closure.
-- TASK-04: deterministic HTML/Markdown generation and drift checks. Safe text-only rendering of
-  imported prose/logs, no executable HTML/commands/network loading. Failed evidence stays visible.
-- TASK-05: desktop/narrow, keyboard/disclosure/navigation and malicious-text headless browser tests;
-  designer plus independent review. Shared approved tokens provide the visual proposal.
+## Acceptance
 
-Security: existing sensitive boundary, repository data becomes browser-visible output. Treat
-source content as untrusted display text; validated repository paths and pinned hashes, escaping, CSP and no JS or
-command endpoints. Existing local action contract is reused as context, not extended execution.
-Reject malformed evidence before generation; do not replace originals or infer missing approval.
-No native or production implementation authorization follows from a pilot task record.
+- TASK-01: versioned JSON validates explicit fields and rejects unsupported or malformed data.
+- TASK-02: linked authored sources use safe paths and honest byte/revision identities.
+- TASK-03: PR identity and dated status agree; test links distinguish planned and implemented cases.
+- TASK-04: one readable authored brief and structured metadata, without duplicate generated views.
+- TASK-05: independent review checks readability, approval boundaries and preserved app coverage.
 
-Stop with verified pilot, visual review and one PR ready for owner review. Wider migration and
-execution/edit controls are separate slices. Root check, focused unit and preview browser checks
-are required; drawing-app browser rerun is unnecessary when its inputs are unchanged.
+## Examples and contract
 
-## Owner-requested minimal layout revision
+- [Local styles](P05-S01.md) · [JSON](P05-S01/task.json)
+- [Durable library](S02L.md) · [JSON](S02L/task.json)
+- [Task format](../docs/workflow/task-packages.md) · [Schema](../shared/tasks/task.schema.json)
 
-Owner selected minimal mockup v3 and requested the HTML update. Four initially closed native
-disclosures and a name/status task list replace the expanded dashboard layout. Original records
-remain intact. Current checks/reviews: quality/task-packages-v3. Same task branch and PR #4.
-
-## Owner-requested complete inventory and stable layout
-
-All 44 task documents now appear once, with structured packages taking precedence over matching
-Markdown sources. Other documents remain explicitly labelled Source task; their historical status
-is not inferred or normalized. README/template are navigation/scaffold rather than tasks.
-Short Review/Blocked labels, secondary IDs, reduced repeated labels and stable root scrollbar
-space preserve the minimal reading layout. TASK-04 covers completeness, escaping and bounded
-source reads (256 KiB/file, 4 MiB aggregate); TASK-05 covers source navigation and column stability.
-Current evidence and specialist reviews: quality/task-packages-v4. Same branch and PR #4.
+No drawing app, storage or engine changes are included. Broader record conversion must preserve
+real statuses and requirements; incomplete evidence must not become an inferred pass.

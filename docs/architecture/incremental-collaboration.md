@@ -31,9 +31,8 @@ On ordinary quit, stop admission and settle saves or obtain the reviewed failure
 
 ## Responsibility model
 
-![Incremental coordination](../diagrams/v2/incremental-coordination.svg)
+[Incremental coordination source](../../shared/diagrams/definitions/incremental-coordination.json)
 
-Native SVG, diagram style v2. The [migration index](../diagrams/migration-v2.md) records source, status and text equivalent.
 
 Clients own their viewport, selection, tool settings and active interaction/previews. The coordinator owns shared document mutation, capabilities, validation, revision/order and persistence policy. A global active-stroke slot is insufficient. Focus loss cancels only the affected client's unfinished work; other clients retain accepted work.
 

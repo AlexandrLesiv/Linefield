@@ -10,7 +10,7 @@ Locale schema validation accepts ordinary and null-prototype data records, rejec
 prototype inheritance at each existing record boundary. A literal `__proto__` construct can
 otherwise supply translations absent from the record's own serialized entries. This is trusted
 catalog correctness, not an accessor/proxy or hostile-JavaScript sandbox. Generated formats and
-current resource bytes remain unchanged. See quality/localization-record-boundaries/.
+current resource bytes remain unchanged. Validation source and focused checks establish the resource boundary.
 
 ## What exists
 
@@ -35,7 +35,7 @@ TypeScript improves editor completion, refactoring, comments and compile-time co
 
 Tradeoffs: translation tools generally handle data/resource files more readily than TypeScript. Retain an import/export path for translators if needed, with validation on reimport. Importing a TypeScript module executes it: accept only trusted repository authoring modules, require data-only exports, no filesystem/network/environment/time-dependent catalog behavior and no remote/untrusted module imports. Type annotations alone cannot enforce purity. The root check validates a literal-only source grammar after stripping types, allowing comments and rejecting executable values/imports. The separately reviewed `shared/theme/resolve.ts` implements one-hop reference validation/resolution and is excluded explicitly from the literal-data grammar; all other authored theme/locale modules remain covered. Keep deterministic output tests and code review. Direct generator imports are still trusted repository execution; this check is an authoring restriction, not a security sandbox. Do not add native TypeScript runtimes or a universal UI library.
 
-Resource output preflight now requires relative paths without traversal or file/directory collisions, real configured directory ancestors and regular existing targets. Unexpected files are never silently removed or concealed by inherited object names. See [writer contract](../reviews/resource-output-validation.md) and [evidence](../../quality/resource-output-validation/README.md). These stable-filesystem checks do not promise concurrent-race containment, hard-link isolation or transactional multi-file replacement.
+Resource output preflight now requires relative paths without traversal or file/directory collisions, real configured directory ancestors and regular existing targets. Unexpected files are never silently removed or concealed by inherited object names. See [writer contract](../reviews/resource-output-validation.md) and evidence. These stable-filesystem checks do not promise concurrent-race containment, hard-link isolation or transactional multi-file replacement.
 
 ## Migration acceptance and remaining work
 
@@ -57,7 +57,7 @@ Resource output preflight now requires relative paths without traversal or file/
 
 Shared visual identity does not require one concrete view tree or runtime. Keep adaptive composition, keyboard/gesture integration, native text editing, locale/number formatting and accessibility adapters with hosts. OS-owned panels retain OS behavior/appearance. No new screens, runtime boundary, storage behavior or automatic implementation scope is approved by this proposal.
 
-Migration evidence: [apps/web/quality/web-typed-catalogs](../../apps/web/quality/web-typed-catalogs/README.md). Source files remain separate per language; metadata fits the source-size limit without arbitrary splits. Existing plural/escaping/platform-override runtime checks remain authoritative in addition to TypeScript key completeness.
+Source files remain separate per language; metadata fits the source-size limit without arbitrary splits. Existing plural/escaping/platform-override runtime checks remain authoritative in addition to TypeScript key completeness.
 
 ## Three-layer theme adoption
 

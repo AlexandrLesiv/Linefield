@@ -44,7 +44,7 @@ S00–S02 include cross-platform design/contract review now. P05 is the first im
 
 Every port requires approved platform-specific design review, command/schema conformance, actual-host builds, native/browser E2E, input/focus/accessibility checks, storage/recovery failures, lifecycle/memory-pressure checks, logs and measured renderer behavior. Report planned, implemented, tested and accepted separately. No placeholders count as working support.
 
-ChromeOS delivery reuses Android desktop and/or web implementations. Review keyboard, mouse/pen/touch, resizing, density, file access, offline operation and lifecycle on real supported devices. Googlebook uses adaptive Android applications; see the official Googlebook guide linked in design/native-gallery-v4-plan.md. Verify actual supported devices and distribution at port implementation.
+ChromeOS delivery reuses Android desktop and/or web implementations. Review keyboard, mouse/pen/touch, resizing, density, file access, offline operation and lifecycle on real supported devices. Android desktop integration uses adaptive Android applications. Verify actual supported devices and distribution at port implementation.
 
 Apple TV and Watch are view-only. Watch planning preserves iPhone-first document acquisition with local cache and later authenticated network fallback when the phone is unavailable. Standalone operation must not rely on a paired phone being reachable. Define source precedence, freshness/offline errors and credential/privacy handling before implementing networking; no server/account feature is authorized by this scaffold. visionOS starts with an approved 2D interface; no implicit immersive authoring scope.
 

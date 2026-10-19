@@ -5,7 +5,7 @@ description: Coordinate an on-demand Linefield milestone architecture review wit
 
 # Linefield milestone review
 
-Use the Linefield repository containing this skill. Read its AGENTS.md, docs/RESUME.md and the
+Use the Linefield repository containing this skill. Read its AGENTS.md, tasks/README.md and the
 requested milestone/task, then follow docs/workflow/milestone-review.md and
  docs/owner-responsibilities.md (paths relative to repository root).
 
@@ -24,7 +24,7 @@ performance evidence and applicable store requirements. Prioritize affected doma
 request still accounts for planned/unverified hosts. Preserve view-only TV/watch scope and feature-
 level input design. Specialist recommendations do not approve material architecture changes.
 
-Lead alone writes a unique report under quality/milestones/ with exact snapshots, reviewer coverage,
+Lead alone writes a unique report under ignored .build-cache/milestones/ with exact snapshots, reviewer coverage,
 findings, evidence gaps, recommended follow-up task briefs and owner decisions. Preserve older reports.
 Return the report link and concise verdict for the requested next stage. Missing runtime evidence
 cannot pass native acceptance, even when the architecture review finds no issues.

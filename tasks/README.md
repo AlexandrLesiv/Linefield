@@ -1,12 +1,8 @@
-Current 2026-10-17: decision 214 and [live prototype](../docs/design/live-web-prototype.md) supersede the old gallery experiments below. apps/web is the active review surface. Native/design review implementation gates remain.
-
-Current gallery work: apps/web live prototype, decision 214; see ../docs/design/live-web-prototype.md. Android P02 retains Compose as its toolkit. Decision 232 requires shared Linefield styling, supersedes mandatory native appearance and retires the wheel. Decision233/P05-G01 implements one responsive Web gallery and removes hidden platform simulation; the drawing-screen UI prototype is authorized under P05-D01/decision234; real editing and native implementation remain gated. Native application implementation remains pending.
-
 # Task board
 
-Decision238 adopts the [task/PR/fresh-chat workflow](../docs/workflow/task-pr-chat-plan.md).
-The broad records below remain milestones/workstreams; existing completion claims describe local
-deliverables, not fabricated GitHub merges. New executable leaf tasks follow the updated template.
+Read each task's short brief first. Structured records link PRs, requirements, app tests and current
+design sources. There is no task web application. Agent reviews and local verification do not
+mean the owner has reviewed or accepted a PR. One executable task owns one branch and PR.
 
 ## Executable task lanes
 
@@ -19,7 +15,9 @@ base/contract checks. Each writer uses an isolated worktree; one owner per share
 | [DX-G01 bootstrap](DX-G01.md) | Owner review, [PR #1](https://github.com/AlexandrLesiv/Linefield/pull/1) | Initial delivered baseline; owner merge pending |
 | [DX-G02 shared documentation](DX-G02.md) | Owner review, [PR #2](https://github.com/AlexandrLesiv/Linefield/pull/2) | Stacked on DX-G01; owns tooling/docs cleanup, not runtime behavior |
 | [P05-S01 local styles](P05-S01.md) | Owner review, [PR #3](https://github.com/AlexandrLesiv/Linefield/pull/3) | Stacked on DX-G02; app style scoping and final documentation cleanup |
-| [DX-T02 task packages](DX-T02.md) | Owner review, [PR #4](https://github.com/AlexandrLesiv/Linefield/pull/4) | Stacked on P05-S01; schema, PR/test links and read-only preview |
+| [DX-T02 task packages](DX-T02.md) | Owner review, [PR #4](https://github.com/AlexandrLesiv/Linefield/pull/4) | Stacked on P05-S01; structured task records and PR/test links |
+| [DX-C01 source cleanup](DX-C01.md) | In progress; owner-requested cleanup | Stacked on DX-T02; generated output, research and document consolidation |
+| [P05-T01 rename investigation](P05-T01.md) | Needs investigation | Intermittent WEB-D2-08 failure; keep separate from documentation cleanup |
 | [S02-P01 storage admission](S02-P01.md) | Ready for bounded synthetic investigation | DX-G01 baseline; independent of DX-G02 and S02-C01, separate probe paths |
 | [S02-C01 regional contract](S02-C01.md) | Ready for contract/probe work | DX-G01 baseline; independent of storage and documentation tooling |
 | [DX-T01 app token parity](DX-T01.md) | Contract-blocked; read-only inventory may proceed | DX-G02 token contract/review before implementation; no simultaneous shared-token edits |
@@ -55,11 +53,11 @@ Root Node/TypeScript/pnpm tooling and the authorized web gallery prototype are i
 | [S08 Developer preview acceptance](S08.md) | Planned; not started |
 | [S09 Distribution](S09.md) | Planned; not started |
 
-S00A's [web foundation review packet v1](../docs/design/web-foundation-review-v1.md) consolidates
+S00A's [web foundation review packet v1](../docs/design/web-foundations.md) consolidates
 the implemented component inventory and separate behavior/visual checklists. Existing screen
 authorization remains valid; owner foundation disposition and native/linguistic evidence remain pending.
 
-See ../docs/successor/delivery.md for detailed acceptance and dependencies. Old Native Sketch task statuses do not apply.
+See ../docs/testing/acceptance.md for detailed acceptance and dependencies. Old Native Sketch task statuses do not apply.
 
 ## Platform backlog
 
@@ -75,7 +73,7 @@ Portability planning is required now. P05 leads implementation; the macOS milest
 - [P08 watchos](P08.md): planned; no implementation.
 - [P09 chromeos](P09.md): planned; no implementation.
 
-Contract and scenario work is part of each feature task, not a final testing phase. See [contracts](../docs/contracts.md), [shared E2E](../docs/testing/shared-e2e.md) and [decision audit](../docs/architecture-decisions-audit.md).
+Contract and scenario work is part of each feature task, not a final testing phase. See [contracts](../docs/contracts.md), [shared E2E](../docs/testing/shared-e2e.md) and [decision audit](../docs/reviews/contracts.md).
 
 ## Developer experience backlog
 
@@ -118,7 +116,7 @@ owner approval before code; implementers supply negative cases and exact evidenc
 implementation review and finding disposition precede complete status. Existing authorized routine
 fixes reference their approved design without unnecessary repeated owner permission.
 
-Use [security-review-template](../quality/security-review-template.md) for separate design and
+Use [security-review-template](../docs/security/review-template.md) for separate design and
 implementation records. These are mandatory agent workflow gates; executable enforcement is not
 installed. S01 owns installing a validator/report integration when implementation is authorized.
 

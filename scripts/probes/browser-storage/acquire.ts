@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 
-const root = new URL("../../../quality/browser-storage-v1/", import.meta.url);
+const root = new URL("../../../.build-cache/browser-storage/", import.meta.url);
 const url = "https://sqlite.org/2026/sqlite-wasm-3540100.zip";
 const expected = "87e24f6a4588692310b7942dc2fa7c7275bb9ba2e01d553e4115aa4a904a0050";
 await mkdir(root, { recursive: true });

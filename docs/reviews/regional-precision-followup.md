@@ -1,10 +1,10 @@
 # S02 regional precision follow-up v1 — 2026-10-18
 
-Status: **proposal for a later consolidated review; not owner-approved or implemented**. This packet converts the arithmetic evidence into concrete engineering work. It does not reopen selected RC1–RC11, modify approved schema source, select a stroke span, or replace the historical v2 ABI with an unreviewed declaration. Lead owns integration; rust_engine reviews numerical semantics; independent reviewer checks scope and evidence.
+Status: **proposal for a later consolidated review; not owner-approved or implemented**. This packet converts the arithmetic evidence into concrete engineering work. It does not reopen selected RC1–RC11, modify approved schema source, select a stroke span, or replace the approved native ABI with an unreviewed declaration. Lead owns integration; rust_engine reviews numerical semantics; independent reviewer checks scope and evidence.
 
 ## Evidence and its practical consequence
 
-The [exact-reference diagnostic](../../quality/regional-arithmetic/README.md) covers162 one-axis synthetic observations. Independent rational calculation agreed with all exact error classifications. Node arithmetic is not Rust/Wasm/Skia parity, and point arithmetic is not painted geometry.
+The exact-reference diagnostic covers162 one-axis synthetic observations. Independent rational calculation agreed with all exact error classifications. Node arithmetic is not Rust/Wasm/Skia parity, and point arithmetic is not painted geometry.
 
 | Observation | Consequence for the next contract |
 | --- | --- |
@@ -41,20 +41,20 @@ Next experiment should compare a precisely specified candidate evaluation order 
 
 Forward point expressions with supplied binary64 multipliers fit the current dyadic oracle. Inverse canvas mapping divides by zoom; division by the binary64 value0.1 generally produces a non-dyadic rational. A mapping/scale-derivation extension therefore needs an exact rational reference, or an explicitly identified prior binary64 rounding boundary. Do not reuse the current oracle as proof of inverse-mapping accuracy.
 
-## Historical ABI amendment checklist
+## Native ABI amendment checklist
 
 The following describes affected locations for a **new versioned proposal**, not permission to edit or implement the approved v2 ABI verbatim:
 
 | Existing v2 surface | Required reconciliation with selected regional direction |
 | --- | --- |
-| native-v2.md LfActualSample.x/y reused for input and sample queries | Separate canvas-local input samples from canonical stored regional sample queries; preserve ordered actual metadata and pressure semantics |
+| native.md LfActualSample.x/y reused for input and sample queries | Separate canvas-local input samples from canonical stored regional sample queries; preserve ordered actual metadata and pressure semantics |
 | LfCanvasMapping.center_x/center_y and host-provided mapping | Keep host canvas metrics/input orientation distinct from Rust-owned canonical viewport center and accepted mapping generation |
 | lf_selection_select_at and stroke begin/append | Make canvas/world type distinction explicit, preserve client/session/mapping identity and atomic batch validation |
 | LfTranslation/LfScale passed to move/scale updates | Selected intents carry start/current canvas points plus interaction/sequence/mapping identity; Rust captures base and computes authoritative transform; corner remains identified at scale begin |
-| native-v2-queries.md LfStrokeSummary.translation_x/y | Represent canonical placement anchor plus scale and original sample0 anchor derivation; preserve query revision/target tokens and caller-owned bounds |
+| native-queries.md LfStrokeSummary.translation_x/y | Represent canonical placement anchor plus scale and original sample0 anchor derivation; preserve query revision/target tokens and caller-owned bounds |
 | Web/native marshaling and sizes | Preserve i64 exactly; document generated layouts, alignment, ownership and per-record budget impact. No raw pointers across IPC or generic serialized command protocol |
 
-The replacement proposal must preserve authority, stale-generation/target rejection, client-scoped interaction/history and bounded copying. This checklist does not choose exact field layouts/signatures, thread topology, new numeric reason codes or adapter protocols. [Historical commands](../interfaces/native-v2.md) and [queries](../interfaces/native-v2-queries.md) remain historical approval evidence.
+The replacement proposal must preserve authority, stale-generation/target rejection, client-scoped interaction/history and bounded copying. This checklist does not choose exact field layouts/signatures, thread topology, new numeric reason codes or adapter protocols. [Command contract](../interfaces/native.md) and [queries](../interfaces/native-queries.md) remain approved contract sources.
 
 ## Required next evidence and stop condition
 

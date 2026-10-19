@@ -85,6 +85,11 @@ export function validateTask(value: unknown): Task {
     if ((pr.observedState === "merged") !== (pr.mergeRevision !== null))
       throw new Error("PR merge identity mismatch");
   }
+  for (const attachment of task.attachments ?? []) {
+    const url = new URL(attachment.url);
+    if (url.protocol !== "https:" || url.username || url.password)
+      throw new Error("Attachment requires an HTTPS URL without credentials");
+  }
   if (task.integration !== null)
     references([task.integration.evidenceId], evidenceIds, "integration evidence");
   if (task.stage === "done") {

@@ -25,9 +25,8 @@ inventory/glossary maps to each host's native resources. Platform wording may di
 do not duplicate editing policy or force every platform into one runtime localization library.
 Decision 222 approves a constrained shared catalog and build-time resource generators. Shared authoring avoids translation drift while each host retains its native runtime. See shared/localization/README.md for the exact supported message subset, resource mappings and validation commands; no external localization service is introduced.
 
-![Localization boundaries](diagrams/v2/localization-boundaries.svg)
+[Localization boundaries source](../shared/diagrams/definitions/localization-boundaries.json)
 
-Native SVG, diagram style v2. The [migration index](diagrams/migration-v2.md) records source, status and text equivalent.
 
 ## Platform resource direction
 

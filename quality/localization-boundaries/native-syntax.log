@@ -1,6 +1,0 @@
-
-> linefield@0.0.0 locales:native-check /Users/oleksandr/projects/linefield
-> node scripts/localization/native-check.ts
-
-{"check":"xmllint","status":"passed","files":8,"scope":"resource syntax; not native app runtime"}
-{"check":"msgfmt","status":"passed","files":4,"scope":"resource syntax; not native app runtime"}

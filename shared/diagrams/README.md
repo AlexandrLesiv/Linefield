@@ -43,8 +43,6 @@ values, including JSON Pointer references and other color spaces. Group and toke
 have an explicit allowlist: `$type`, `$value`, `$description` and `$extensions`; unknown semantic
 directives such as `$extends` and `$ref` are rejected rather than silently ignored. Metadata
 extensions never alter rendering or resolution. It is not advertised as a
-complete DTCG processor; expanding support requires tests and explicit adapter behavior.
+complete DTCG processor; expanding support requires explicit adapter behavior and review.
 
-The 18 converted diagrams retain their original geometry/content. The parallel-task diagram
-adds the adopted concurrency workflow. Historical labels remain historical. Current schema
-views use this same renderer and style source, with separate schema definitions as authority.
+Agents read definitions/*.json and style.tokens.json directly; these are the canonical structure and style sources. Generate SVG locally for visual review. Generated exports are ignored, and previous designs live in Git history. Do not parse SVG when the structured definition answers the question.

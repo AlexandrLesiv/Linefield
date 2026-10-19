@@ -19,10 +19,10 @@ The shared night scheme uses charcoal surfaces and softer off-white display pape
 
 Decision227: trusted data-only TypeScript is the authoring format for the shared locale and theme catalogs. Build-time generators retain their existing native/web output formats, runtime validation and deterministic output checks. Native host integration remains separate; see [shared resource plan](../../docs/design/shared-resources-plan.md).
 
-Browser verification reports and artifact-retention policy live in [quality](quality/README.md). Shared reviews remain in the repository root quality directory.
+Run reports and screenshots remain in ignored local output or task PR attachments. See [quality requirements](../../docs/quality.md). App unit checks run with pnpm web:unit; browser checks run with pnpm web:test.
 
 ## Selected drawing-screen prototype
 
 P05-D01 implements the owner-selected slim left rail and contextual top settings. Five modes and ranges are disposable UI state; only the isolated stroke sample changes. Sample/blank artwork remains static. Color/settings are visibly unavailable, zoom is a fixed readout, and the screen explicitly says artwork is not editable. Back/history return to the unchanged gallery; idle Escape stays on the drawing. Browser/OS theme and English/Ukrainian locale selection remain automatic.
 
-See [drawing-screen evidence](quality/web-drawing-v2/README.md) and [localization follow-up](quality/web-localization-launch/README.md). These browser checks do not establish a drawing engine, persistence, native support or linguistic approval.
+Drawing and localization cases live in tests/. These browser checks do not establish a drawing engine, persistence, native support or linguistic approval.

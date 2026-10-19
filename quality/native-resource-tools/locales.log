@@ -1,2 +1,0 @@
-{"check":"xmllint","status":"passed","files":8,"scope":"resource syntax; not native app runtime"}
-{"check":"msgfmt","status":"passed","files":4,"scope":"resource syntax; not native app runtime"}

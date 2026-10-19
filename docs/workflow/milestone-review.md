@@ -57,8 +57,7 @@ when applicable; responsibility does not permit signing/accounts/submissions or 
 
 ## Review report and handoff
 
-Lead writes a new report under quality/milestones/ with a unique milestone/date/run name; preserve
-previous reports. Include scope/snapshot, actual reviewers and exclusions, assessment by domain/host,
+Lead produces a local untracked assessment with a unique milestone/date/run identity and summarizes actionable findings in the task. Include scope/snapshot, actual reviewers and exclusions, assessment by domain/host,
 findings with evidence, approval drift, missing/stale tests, prioritized follow-up tasks and a small
 owner decision list linked to [owner responsibilities](../owner-responsibilities.md). Verdict is ready
 for the next stated stage, needs changes, or incomplete evidence; never a generic production-safe seal.

@@ -1,8 +1,10 @@
 # Quality requirements
 
-The root pnpm check runner verifies owned tooling and apps/web strict types, Oxlint, Oxfmt and source size, plus shared locale/theme validation, generated resource drift and generator tests. `pnpm theme:native-check` separately parses XML and compiles Android resources when the corresponding tools are installed, reporting unavailable checks explicitly; it does not certify native app integration. pnpm web:build and pnpm web:test verify the live browser prototype (WEB-G01–G11); see apps/web/quality/web-prototype. Native, Rust editor, durability and security-record gates remain planned. See tooling.md and quality/historical-records.json (Git b0cb531) for exact scope and evidence.
+The root pnpm check runner verifies owned tooling and web strict types, lint, formatting, source size and shared-resource validation. pnpm web:build and pnpm web:test verify the browser prototype. Native, Rust editing and production durability gates remain planned until implemented and exercised. See [tooling](tooling.md) for actual commands.
 
-Use the SU-01 through SU-20 cases in [delivery](successor/delivery.md). SU-19 applies only if exports are approved. Each task maps requirements to discovered tests and records exact revision/build/device/results. Core tests, bridge tests, replay, native E2E, manual design/accessibility checks and physical measurements are distinct evidence categories.
+Authored test cases, contract requirements and reusable review templates are source. Generated reports, logs, screenshots and exports stay local and untracked. Tasks link applicable tests and summarize verified results/limitations without requiring old report directories as inputs. Agents read current task definitions, SQL/JSON contracts and authored specifications. Generate visuals or run checks when needed; missing or stale evidence never becomes a pass. Preserve unresolved failure inputs outside disposable output cleanup. [Review template](security/review-template.md).
+
+Use the SU-01 through SU-20 cases in [delivery](testing/acceptance.md). SU-19 applies only if exports are approved. Each task maps requirements to discovered tests and records exact revision/build/device/results. Core tests, bridge tests, replay, native E2E, manual design/accessibility checks and physical measurements are distinct evidence categories.
 
 Required future gates:
 - Rust formatting, Clippy, unit/property/integration tests, targeted fuzzing, applicable sanitizers and dependency/license audit.

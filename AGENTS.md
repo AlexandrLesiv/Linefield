@@ -1,9 +1,24 @@
 # Linefield agent instructions
 
+## Repository source policy
+
+The owner reviews PRs; agent design/independent review never implies owner review or acceptance.
+Read the assigned task, tasks/README.md, docs/objectives.md and current contracts first.
+Keep only current authored sources in Git. Superseded proposals, handoffs, research, screenshots,
+run logs and generated reports belong outside the repository or in PR attachments. Git history
+retains previous revisions; do not maintain history inventories or duplicate versions in source.
+Generate diagram previews locally into ignored paths. There is no task HTML service. Agents read shared diagram JSON,
+DTCG tokens, SQL/annotations and task JSON/briefs rather than parsing generated SVG or HTML.
+Keep only primary-app tests; do not add suites for developer tools. Retain source experiments
+needed to resolve primary-app storage/engine risks, with results in ignored .build-cache.
+Current authored owner-approved visual references are source assets, not generated output.
+This owner policy supersedes earlier evidence-retention and tooling-test requirements below.
+
+
 ## Current workflow adoption — 2026-10-19
 
 Decision238 adopts native SVG diagram style v2 and one executable task / one branch / one PR.
-Follow docs/workflow/task-pr-chat-plan.md and docs/reviews/workflow-style-approval-2026-10-19.md.
+Follow docs/workflow/task-pr-chat.md and docs/reviews/workflow-style-approval-2026-10-19.md.
 Milestones contain bounded child tasks. Harness owns scoped implementation/tests/specialist and
 independent review; owner reviews/merges. Verify integration after completion notification, then
 provide a concise next-task prompt for a fresh chat. Replacement chats first stop/transfer the
@@ -21,7 +36,7 @@ Design work uses versioned repository specifications, shared resources, referenc
 
 ## Scope and authority
 
-Read docs/RESUME.md, docs/objectives.md, docs/decisions.md and the assigned task first. This project's instructions govern Linefield; old repository tasks and ancestry rules are historical reference, not successor requirements. Human instructions take precedence.
+Read tasks/README.md, docs/objectives.md, docs/decisions.md and the assigned task first. This project's instructions govern Linefield; old repository tasks and ancestry rules are historical reference, not successor requirements. Human instructions take precedence.
 
 Current authorization covers documentation/folder scaffold, root Node.js/TypeScript/pnpm development tooling, shared diagram generation, and the explicitly owner-requested apps/web Vite/TypeScript live gallery prototype (decision 214). Prototype UI, manifests and browser tests are authorized within docs/design/live-web-prototype.md. Real drawing engine, persistence, native applications and additional product behavior still require explicit authorization. Never interpret a task file as broader implementation approval.
 
@@ -51,11 +66,10 @@ Input adapters translate system input/shortcuts/control actions into shared Rust
 ## Selected drawing-screen handoff
 
 Decision234 authorizes the next web UI prototype slice P05-D01: implement the owner-selected
-slim left rail/top settings screen from docs/design/drawing-screen-v2/reference.png. Read the
+slim left rail/top settings screen from docs/design/drawing-screen/reference.png. Read the
 v2 screen contract and task; do not revive the archived circular v1 proposal or ask again for
 its approval. Tool/property affordances here are UI-only, not real editing/persistence/native
-implementation approval. Archived explorations and old RESUME are indexed in
-docs/design/archived-explorations.md; current handoff is docs/RESUME.md.
+implementation approval. Current work is indexed in tasks/README.md.
 
 ## Live web prototype conventions
 
@@ -70,7 +84,7 @@ Handwritten source/tests/scripts: at most 200 physical lines after formatting, i
 
 Use Node native TypeScript .ts ES-module automation, strict type checking and Oxlint/Oxfmt when tooling is installed. Use strict erasable types, explicit .ts imports and import type. No runtime enums, parameter properties, decorators, any casts or type-check suppressions; no transpiler for owned automation. No owned shell/PowerShell/Python orchestration. Rust/Swift native build tools and upstream Skia C++ remain legitimate dependencies. Pin actual verified tools; do not call planned gates installed or passing.
 
-Every behavioral change names acceptance/invariant IDs and adds appropriate core, boundary and real native E2E tests. Record exact revision/build, platform/device, discovered test IDs, result and artifacts. Missing/skipped/flaky/stale evidence is not pass; replay is not native E2E. See docs/quality.md and quality/README.md.
+Every behavioral change names acceptance/invariant IDs and adds appropriate core, boundary and real native E2E tests. Record exact revision/build, platform/device, discovered test IDs, result and artifacts. Missing/skipped/flaky/stale evidence is not pass; replay is not native E2E. See docs/quality.md.
 
 Instrument native intent origins, central command outcomes/state transitions and worker operation boundaries with structured correlated diagnostics. Allowlist metadata; no content, raw coordinates, paths, credentials or serialized documents. No per-sample production logging. Bound queues/logs/caches; drain logs off input callbacks, count drops/sink failures without failing successful edits. Test redaction, correlation, overload and failure behavior.
 
@@ -159,7 +173,7 @@ Require I18N-LAUNCH-002/I18N-UK-002. No new permanent localization agent is intr
 ## Competitor research
 
 Use competitor_researcher for bounded workflow research before substantial new design choices.
-Follow docs/research/README.md and S00C. It provides sourced observations and ranked options to
+Follow the task-scoped research process (research stays outside the repository) and S00C. It provides sourced observations and ranked options to
 the owner and ui_ux_designer through the lead; it cannot add features or approve designs.
 Designer records adaptation/rejection reasoning; platform engineers assess native feasibility.
 Research is not a benchmark, user validation or implementation review. Keep existing agent
@@ -408,7 +422,7 @@ if workload warrants, especially before cloud, and obtain approval before config
 Automated gates remain planned, not installed. Use editable vector sketching app as product wording.
 
 Use tasks/_template.md security sections for every new or activated implementation task, and
-quality/security-review-template.md for independent design/change assessments. Lead confirms impact
+docs/security/review-template.md for independent design/change assessments. Lead confirms impact
 classification before code. Sensitive work references actual applicable approvals; implementation
 includes negative acceptance/evidence; complete status requires independent change assessment and
 resolved findings. Do not fill placeholders with guessed consent or call the not-yet-installed
@@ -487,15 +501,15 @@ Decision 166 (2026-10-16): prioritize preventing data loss over automatically re
 
 ## Completed database policy batch (through decision 180)
 
-Decisions 177–180 close the current policy batch: DB17-B uses SQLite FULL with fullfsync=OFF and checkpoint_fullfsync=OFF on macOS, without claiming identical cross-platform durability. DB20-A validates whole-stroke mutation state; DB21-A starts a fresh Undo/Redo session after coordinator recovery only after reconciling/preserving pending work; DB22-A permits proven-independent commands and pauses dependent/uncertain ones. Exact schema/ABI/budgets and UI remain review items. Read the current status at the top of docs/RESUME.md; older appended open-question notes are historical. Do not re-request settled DB1–DB22 choices. Concrete schema/interface review and implementation authorization are still separate gates.
+Decisions 177–180 close the current policy batch: DB17-B uses SQLite FULL with fullfsync=OFF and checkpoint_fullfsync=OFF on macOS, without claiming identical cross-platform durability. DB20-A validates whole-stroke mutation state; DB21-A starts a fresh Undo/Redo session after coordinator recovery only after reconciling/preserving pending work; DB22-A permits proven-independent commands and pauses dependent/uncertain ones. Exact schema/ABI/budgets and UI remain review items. Read the current status at the top of tasks/README.md; older appended open-question notes are historical. Do not re-request settled DB1–DB22 choices. Concrete schema/interface review and implementation authorization are still separate gates.
 
 ## S02 v2 approval (decision 181)
 
-The owner approved the consolidated schema, typed interfaces, recovery transitions, provisional resource limits and test plan on 2026-10-16. Follow docs/reviews/S02-v2-approval-2026-10-16.md and its exact snapshot evidence. Do not reopen approved choices. Signed/sandboxed IPC discovery, persistent native file grants, future browser/platform feasibility, design review and actual runtime evidence remain gates. Design approval does not start application implementation or authorize material deviations.
+The owner approved the consolidated schema, typed interfaces, recovery transitions, provisional resource limits and test plan on 2026-10-16. Follow docs/reviews/contracts.md and its exact snapshot evidence. Do not reopen approved choices. Signed/sandboxed IPC discovery, persistent native file grants, future browser/platform feasibility, design review and actual runtime evidence remain gates. Design approval does not start application implementation or authorize material deviations.
 
 ## Authorized feasibility checks (2026-10-16)
 
-The owner authorized native IPC/file-access feasibility checks after decision 181. Keep disposable probes isolated from product code, use synthetic fixtures and background/headless execution, and preserve limitations. This is not application implementation, production entitlement/transport approval or a desktop reservation. Engineering budget recommendations beyond decision 181 remain proposals in docs/reviews/engineering-budgets-v1.md.
+The owner authorized native IPC/file-access feasibility checks after decision 181. Keep disposable probes isolated from product code, use synthetic fixtures and background/headless execution, and preserve limitations. This is not application implementation, production entitlement/transport approval or a desktop reservation. Engineering budget recommendations beyond decision 181 remain proposals in docs/reviews/engineering-budgets.md.
 
 ## Selected platform IPC defaults (decision 182)
 The owner delegated transport selection. Follow docs/architecture/platform-ipc-defaults.md and docs/distribution/ipc-compatibility.md; do not re-open transport choice without evidence. Direct typed Rust calls remain the in-process default. macOS has a narrow discovery-only sandboxed helper exception to no-extra-service; no helper registration/installation is authorized by documenting it. Keep private mobile services conditional, viewers read-only, browser writer authority tied to the actual worker lock, and OS IPC distinct from cross-device sync. Store compatibility has packaging/consent/security conditions, not blanket approval. Engineers own negative/lifecycle/packaging tests and redacted diagnostics; new implementation/UI still follows existing gates.
@@ -558,7 +572,7 @@ validator introduced. Active handoffs must carry this requirement; TOML edits do
 RC9-A and RC10-A are selected directions for the consolidated review packet:
 flat region/local sample and placement columns; separate canvas-local and canonical-world
 types; Rust-owned viewport mapping and captured-base pointer transform calculations.
-Read docs/reviews/engineering-budgets-v1.md for the exact selected proposal. Keep native
+Read docs/reviews/engineering-budgets.md for the exact selected proposal. Keep native
 event-to-view conversion and metrics reporting in hosts; do not duplicate world geometry.
 Do not re-ask RC9/RC10. Exact generated ABI/ownership, visualized shared schema definitions/constraints,
 transform UX and precision evidence remain required; no application implementation authorized.
@@ -585,7 +599,7 @@ Unmeasured numerical stroke-span support remains evidence-gated; no runtime or A
 ## S02 v3 owner approval (decision 209)
 
 Owner approved hosted Version8 and exact regional schema/defaults snapshot; follow
-docs/reviews/S02-v3-approval-2026-10-17.md and quality/historical-records.json (Git b0cb531). Preserve reviewed
+docs/reviews/S02-v3-approval-2026-10-17.md and the corresponding owner decision. Preserve reviewed
 source bytes; pending wording inside the snapshot is historical, not an unanswered choice.
 Do not re-ask RC1–RC11. Exact revised ABI, numerical evidence and feature design review are separate.
 Proceed with delegated engineering defaults and coordinated UX/UI review proposals;

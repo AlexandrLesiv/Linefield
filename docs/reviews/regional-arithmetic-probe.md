@@ -19,7 +19,7 @@ Freeze diagnostic orders explicitly: relative delta(a,b)=Number(a.region-b.regio
 - REG-PROBE-003 / REG-04: anchored point-relative-to-viewport expression ((placement-view)+scale*(sample-source))*zoom, evaluated with exact binary64 input values and compared to diagnostic orders at selected scale/zoom endpoints. Include cancellation cases where large terms nearly cancel. No assertion that every candidate meets tolerance.
 - REG-PROBE-004 / CT-08: deterministic bounded result rows with fixture/method/scale/zoom, exact error relation and approximate error; input/source hashes and host versions recorded separately. Assert an obvious lossy absolute-number counterexample is detected and ordinary local example agrees.
 
-CT-02/03/06 and INV-02/08 are motivating contracts only; this probe does not discharge runtime invariants or SU acceptance. At most16 fixtures ×3 scales ×3 zooms ×2 methods (288rows); bounded BigInts from binary64 and i64 inputs only, no user-supplied workload. No timer/performance claims. stdout JSON, caller-owned evidence under quality/regional-arithmetic/. No production logging/correlation machinery is needed for deterministic synthetic test data.
+CT-02/03/06 and INV-02/08 are motivating contracts only; this probe does not discharge runtime invariants or SU acceptance. At most16 fixtures ×3 scales ×3 zooms ×2 methods (288rows); bounded BigInts from binary64 and i64 inputs only, no user-supplied workload. No timer/performance claims. stdout JSON, caller-owned local untracked evidence. No production logging/correlation machinery is needed for deterministic synthetic test data.
 
 ## Limits and required next work
 

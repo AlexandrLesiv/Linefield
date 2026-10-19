@@ -1,15 +1,20 @@
-# Design records
+# Design
 
-Diagram documentation uses owner-approved [native SVG style v2](diagram-style-v2.md), with the
-semantic conventions it retains from v1. [Decision238 approval](../reviews/workflow-style-approval-2026-10-19.md)
-identifies the exact snapshots. Original proposal status text remains historical; v2 is adopted.
-Decision239 shares DTCG diagram styles across architecture and generated schema views. Application
-theme parity migration remains a separate task. [Converted diagram index](../diagrams/migration-v2.md).
+Use versioned repository specifications, shared resources, selected references and
+running prototypes. One [combined designer](roles.md) owns behavior, presentation,
+adaptation and motion; the lead coordinates engineering feasibility and independent review.
+Follow the [design workflow](workflow.md).
 
-Follow [workflow](workflow.md). Selected gallery/drawing references and the live web prototype have owner authorization (decisions214,233,234); broader foundation and new native-screen approvals remain separate. Add feature briefs and approval records with task/scenario IDs, exact design version/frame references, platform, owner decision/conditions and implementation evidence. Do not invent approval links or completed designs.
+## Current specifications
 
-Start with [foundations and adaptive mockups](foundations.md), tracked in [S00A](../../tasks/S00A.md), before approving detailed app screens.
+- [Foundations](foundations.md) and [web foundation review](web-foundations.md).
+- [Live gallery prototype](live-web-prototype.md) and [drawing screen](drawing-screen.md).
+- [Durable library proposal](durable-library.md) and [removal states](removal-states.md).
+- [Motion](motion.md), [accessibility](accessibility-materials.md),
+  [shared resources](shared-resources-plan.md) and [color representations](color-representations.md).
+- [Diagram style](diagram-style.md) and [shared source definitions](../../shared/diagrams/README.md).
+- [Structured task documentation](../workflow/task-packages.md).
 
-One [combined UI/UX designer](roles.md) owns behavior, visual design and motion, with lead coordination and one coherent owner approval packet.
-
-Current direction (decision 232): consistent Linefield app styling across platforms, with native input/accessibility/OS integration. Mandatory platform visual themes and the tool/preset wheel are retired. Decision234 selected the left rail plus top settings reference, now implemented and verified as a web UI prototype: [screen v2](drawing-screen-proposal.md), [P05-D01](../../tasks/P05-D01.md). The obsolete wheel/settings alternatives are recoverable through the [external archive index](archived-explorations.md). Native/engine implementation remains separate.
+Selected gallery/drawing specifications authorize the web UI prototype. The durable
+library and native screens retain their stated review boundaries. Style approval is
+not approval of an unseen screen, persistence mechanism or editing behavior.

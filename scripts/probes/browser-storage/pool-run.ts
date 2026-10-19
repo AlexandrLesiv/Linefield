@@ -5,7 +5,7 @@ import { createHash } from "node:crypto";
 import { platform, release, arch } from "node:os";
 import { startServer } from "./server.ts";
 
-const output = new URL("../../../quality/browser-storage-v1/", import.meta.url);
+const output = new URL("../../../.build-cache/browser-storage/", import.meta.url);
 const startedAt = new Date().toISOString();
 const profile = await mkdtemp("/private/tmp/linefield-synthetic-pool-");
 const server = await startServer();

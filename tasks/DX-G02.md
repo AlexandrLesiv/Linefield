@@ -35,12 +35,6 @@ Owner PR review/merge required. Record final evidence and actual PR; stop at own
 
 ## Verification handoff
 
-[Evidence](../quality/shared-documentation-v1/README.md):106 root tests/type/lint/format/drift/size
-pass; web build unchanged;90 app/runtime inputs match prior118-browser-pass evidence (not rerun).
-23 fresh-page SVG renders have no text clipping/overlap; original18architecture SVGs byte-identical.
-Designer approved presentation of the new parallel lanes and four schema views; database review
-verified schema fidelity; fresh reviewer findings fixed. Current link/retired-notation audit is clean.
-
 Reviewed candidate:e0ee580. Final specialist/independent review cleared; PR #2 is open against
 PR #1’s branch. This status-only follow-up records publication. Merge parent first, retarget and
 revalidate integration; no owner merge or next production implementation is implied.

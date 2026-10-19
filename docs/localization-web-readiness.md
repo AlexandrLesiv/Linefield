@@ -23,7 +23,7 @@ Gallery names remain literal Unicode text. Sample names are fixture/user content
 | I18N-AX-001 | Localized semantic button/range names and selected/disabled states asserted | Screen-reader walkthrough and native AX acceptance |
 | I18N-DOCUMENT/FILE-001 | Static sample geometry and literal user-name tests only | Real document/file/persistence/recovery/Unicode path tests are unimplemented |
 
-New tests are in apps/web/tests/localization-launch.spec.ts. Five launch cases use actual isolated browser-context locale settings. Three ordered-list cases override navigator.languages in an explicitly labeled test fixture while retaining a real de-DE context for region; they do not prove system/browser preference-panel behavior. A ninth Ukrainian case preserves combining characters, Arabic and emoji literally through rename/open/return. No global language/input preference was changed. Exact results/hashes are in [web-localization-launch evidence](../apps/web/quality/web-localization-launch/README.md).
+New tests are in apps/web/tests/localization-launch.spec.ts. Five launch cases use actual isolated browser-context locale settings. Three ordered-list cases override navigator.languages in an explicitly labeled test fixture while retaining a real de-DE context for region; they do not prove system/browser preference-panel behavior. A ninth Ukrainian case preserves combining characters, Arabic and emoji literally through rename/open/return. No global language/input preference was changed. Exact results/hashes are in web-localization-launch evidence.
 
 ## Terminology review queue
 
@@ -51,6 +51,6 @@ No Ukrainian strings were silently changed to resolve these review questions. ui
 
 ## Next concrete handoff
 
-Local follow-up evidence: [bounded plural/formatting tests](../quality/localization-boundaries/README.md) exercises727 integer counts per language with an independent category oracle and exact mixed-region examples. Existing XML/gettext resource syntax checks also passed. This is Node/resource-syntax evidence, not additional browser/native or linguistic acceptance.
+Local follow-up evidence: bounded plural/formatting tests exercises727 integer counts per language with an independent category oracle and exact mixed-region examples. Existing XML/gettext resource syntax checks also passed. This is Node/resource-syntax evidence, not additional browser/native or linguistic acceptance.
 
 Keep this web evidence while native presenters are implemented under their reviewed contracts. Prepare host language/bootstrap DTO and typed error/value presentation in S02; do not reuse navigator's web parsing in native hosts. Add regional numeric-text tests only when such a control exists. Preserve native field/IME priority, literal Unicode and content-free logs. Repeat native resource/locale/layout/AX lanes on each implemented host; generated files alone do not pass them.

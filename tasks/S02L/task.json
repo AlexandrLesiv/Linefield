@@ -14,7 +14,10 @@
   "ownership": {
     "branch": null,
     "baseRevision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a",
-    "paths": ["tasks/S02L.md", "docs/reviews/durable-library-implementation-scope-v1.md"],
+    "paths": [
+      "tasks/S02L.md",
+      "docs/reviews/durable-library-scope.md"
+    ],
     "role": "Lead coordinates library milestone; executable children own branches"
   },
   "pr": null,
@@ -36,7 +39,10 @@
   "authority": {
     "implementation": "not-authorized",
     "basis": "Preparation and synthetic experiments are authorized; durable/native implementation remains gated.",
-    "refs": ["original-task", "scope"]
+    "refs": [
+      "original-task",
+      "scope"
+    ]
   },
   "security": {
     "classification": "existing-sensitive-boundary",
@@ -44,36 +50,36 @@
   },
   "documents": [
     {
-      "id": "brief",
-      "title": "Why this milestone is blocked",
-      "kind": "brief",
-      "path": "tasks/S02L/brief.md",
-      "sha256": "2408ed99ceb3f18bd32fd118e7868a67a44aaaf84f90f5496394c720bb24b801",
-      "artifactRevision": null
-    },
-    {
       "id": "original-task",
       "title": "Full milestone requirements and policy extensions",
       "kind": "contract",
       "path": "tasks/S02L.md",
-      "sha256": "4423082b753ed838ab3ce93a359f22d67203f4a7561a2ac42b5dffd994d4b4d8",
-      "artifactRevision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a"
+      "sha256": "09b620e2c53271886ad943b663014bb570a4e6f792d6190ca556113ad207c436",
+      "artifactRevision": null
     },
     {
       "id": "scope",
       "title": "Proposed empty-library implementation scope",
       "kind": "design",
-      "path": "docs/reviews/durable-library-implementation-scope-v1.md",
-      "sha256": "c65250be7ce42afcfa251c348755beb40e8bec0a9b166ae439de9a82c8d8ec2c",
-      "artifactRevision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a"
+      "path": "docs/reviews/durable-library-scope.md",
+      "sha256": "933f35530bbf7cdebd1a299ec2f36f51176667976449c0cd6736f3790b62d74a",
+      "artifactRevision": null
     },
     {
-      "id": "storage",
-      "title": "Storage experiment: findings and limitations",
-      "kind": "review",
-      "path": "quality/browser-storage-v1/README.md",
-      "sha256": "5fd83ae7a90a1681a99ede0275946abd8b174e828ba39626074b1312e43d6997",
-      "artifactRevision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a"
+      "id": "design",
+      "title": "Library design",
+      "kind": "design",
+      "path": "docs/design/durable-library.md",
+      "sha256": "bdc341f640e252de75bcce78611817473cf5b75e108a7b8790caf28c5cdb9dd0",
+      "artifactRevision": null
+    },
+    {
+      "id": "flow",
+      "title": "Library departure flow",
+      "kind": "design",
+      "path": "shared/diagrams/definitions/gallery-departure.json",
+      "sha256": "13b261c05ce6f9d4727b10cb37eaf5f3049b67b50ce9c9194f266572713bc1c0",
+      "artifactRevision": null
     }
   ],
   "acceptance": [
@@ -81,48 +87,72 @@
       "id": "LIBRARY-CREATE-001",
       "statement": "Create without naming, restart and reopen the same identity.",
       "required": true,
-      "scenarioIds": ["LIBRARY-CREATE-001"],
-      "testIds": ["PLANNED-CREATE"],
+      "scenarioIds": [
+        "LIBRARY-CREATE-001"
+      ],
+      "testIds": [
+        "PLANNED-CREATE"
+      ],
       "evidenceIds": []
     },
     {
       "id": "LIBRARY-RENAME-001",
       "statement": "Native rename preserves identity, Unicode and metadata authority.",
       "required": true,
-      "scenarioIds": ["LIBRARY-RENAME-001"],
-      "testIds": ["PLANNED-RENAME"],
+      "scenarioIds": [
+        "LIBRARY-RENAME-001"
+      ],
+      "testIds": [
+        "PLANNED-RENAME"
+      ],
       "evidenceIds": []
     },
     {
       "id": "LIBRARY-OPEN-001",
       "statement": "Open failure/cancel preserves the prior valid route and content.",
       "required": true,
-      "scenarioIds": ["LIBRARY-OPEN-001"],
-      "testIds": ["PLANNED-OPEN"],
+      "scenarioIds": [
+        "LIBRARY-OPEN-001"
+      ],
+      "testIds": [
+        "PLANNED-OPEN"
+      ],
       "evidenceIds": []
     },
     {
       "id": "LIBRARY-DELETE-001",
       "statement": "Recoverable removal and same-slot Undo survive reviewed races and recovery.",
       "required": true,
-      "scenarioIds": ["LIBRARY-DELETE-001"],
-      "testIds": ["PLANNED-DELETE"],
+      "scenarioIds": [
+        "LIBRARY-DELETE-001"
+      ],
+      "testIds": [
+        "PLANNED-DELETE"
+      ],
       "evidenceIds": []
     },
     {
       "id": "LIBRARY-FAILURE-001",
       "statement": "Storage failures are visible; no phantom durable items or lost user content.",
       "required": true,
-      "scenarioIds": ["LIBRARY-FAILURE-001"],
-      "testIds": ["PLANNED-FAILURE"],
-      "evidenceIds": ["storage-finding"]
+      "scenarioIds": [
+        "LIBRARY-FAILURE-001"
+      ],
+      "testIds": [
+        "PLANNED-FAILURE"
+      ],
+      "evidenceIds": []
     },
     {
       "id": "LIBRARY-NAV-001",
       "statement": "Keyboard, accessibility, history and reduced-motion navigation preserve focus.",
       "required": true,
-      "scenarioIds": ["LIBRARY-NAV-001"],
-      "testIds": ["PLANNED-NAV"],
+      "scenarioIds": [
+        "LIBRARY-NAV-001"
+      ],
+      "testIds": [
+        "PLANNED-NAV"
+      ],
       "evidenceIds": []
     }
   ],
@@ -176,55 +206,7 @@
       "description": "LIBRARY-NAV-001 requires core/boundary and actual host tests after reviewed implementation; no durable acceptance run exists."
     }
   ],
-  "evidence": [
-    {
-      "id": "storage-finding",
-      "title": "Synthetic corruption caused data loss",
-      "path": "quality/browser-storage-v1/pool-results.json",
-      "sha256": "20218cc3508f090acacec7f91c34682d6958db02fb9f5670c2526518bc16308c",
-      "kind": "report",
-      "outcome": "mixed",
-      "runId": "storage-finding",
-      "sourceRevision": null,
-      "sourceManifest": null,
-      "recordedAt": null,
-      "limitations": [
-        "Recorded historical evidence; artifact integrity is checked, current code equivalence is not inferred."
-      ],
-      "artifactRevision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a"
-    },
-    {
-      "id": "canary-before",
-      "title": "Synthetic payload before corruption",
-      "path": "quality/browser-storage-v1/synthetic-canary-before.bin",
-      "sha256": "24cac60e7ba65467e015ac4e01e82b2ea49e316f55a664253f7dd25689fc3039",
-      "kind": "fixture",
-      "outcome": "informational",
-      "runId": "canary-before",
-      "sourceRevision": null,
-      "sourceManifest": null,
-      "recordedAt": null,
-      "limitations": [
-        "Recorded historical evidence; artifact integrity is checked, current code equivalence is not inferred."
-      ],
-      "artifactRevision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a"
-    },
-    {
-      "id": "canary-after",
-      "title": "Synthetic payload after truncation",
-      "path": "quality/browser-storage-v1/synthetic-canary-after.bin",
-      "sha256": "ad7facb2586fc6e966c004d7d1d16b024f5805ff7cb47c7a85dabd8b48892ca7",
-      "kind": "fixture",
-      "outcome": "failed",
-      "runId": "canary-after",
-      "sourceRevision": null,
-      "sourceManifest": null,
-      "recordedAt": null,
-      "limitations": [
-        "Recorded historical evidence; artifact integrity is checked, current code equivalence is not inferred."
-      ],
-      "artifactRevision": "afb82c5deb4cfa3d3e9a641659a20887b9689b8a"
-    }
-  ],
-  "handoff": "Continue the authorized S02-P01 synthetic investigation. Resolve storage safety and concrete contracts, then obtain scoped durable-library implementation approval. Healthy storage cases do not clear the preservation failure."
+  "evidence": [],
+  "handoff": "Continue the authorized S02-P01 synthetic investigation. Resolve storage safety and concrete contracts, then obtain scoped durable-library implementation approval. Healthy storage cases do not clear the preservation failure. Verification attachments belong to the pull request; no archived run is presented as current evidence here.",
+  "attachments": []
 }

@@ -4,7 +4,7 @@ Type: executable leaf. Parent: S00A / DX00. Status: contract-blocked until DX-G0
 Branch: codex/dx-t01 (not created). PR: not opened. Writer/worktree: unassigned.
 Authority: owner-requested autonomous contract/probe work and decision239; production gates retained.
 Dependencies: Hard integration dependency DX-G02; can inventory current palette/resources read-only meanwhile.
-Owned paths: shared/theme/**; scripts/theme-resources/**; scripts/theme-validation*; apps/web/src/theme.css.ts; quality/theme-dtcg/**. Global index/decision-log edits are coordinated by the lead.
+Owned paths: shared/theme/**; scripts/theme-resources/**; scripts/theme-validation*; apps/web/src/theme.css.ts; PR verification attachments Global index/decision-log edits are coordinated by the lead.
 Base: record actual verified revision before claiming Ready for implementation. If DX-G01 is
 unmerged, explicitly stack on PR #1 and integrate parent first; do not claim this is main.
 

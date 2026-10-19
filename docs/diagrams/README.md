@@ -1,22 +1,27 @@
-# Linefield diagrams
+# Shared diagram sources
 
-Decision239 selects generated native SVG with owner-approved [style v2](../design/diagram-style-v2.md).
-Shared definitions live in shared/diagrams; DTCG2025.10 tokens define diagram colors, typography,
-spacing and shape. Generate/check with the repository diagram commands. Generated SVGs are review
-artifacts: edit inputs, regenerate and review the diff. They remain self-contained/selectable text.
+Diagram content lives in [shared/diagrams/definitions](../../shared/diagrams/definitions);
+[shared DTCG tokens](../../shared/diagrams/style.tokens.json) apply the
+[current style](../design/diagram-style.md). Agents read these data-only sources and
+relevant contracts. Generated SVG files are local review outputs and are not versioned.
 
-Start with [parallel task lanes](../workflow/parallel-tasks.md),
-[task/PR workflow](../workflow/task-pr-chat.md), [Git integration](v2/git-integration-loop.svg),
-[developer evidence](v2/developer-evidence-flow.svg), [localization](v2/localization-boundaries.svg)
-or [shared test scenarios](v2/shared-e2e.svg). The [migration map](migration-v2.md) identifies the
-original architecture/status of each view. Historical views are labeled; they are not new approvals.
+| View | Source |
+| --- | --- |
+| Developer evidence | [definition](../../shared/diagrams/definitions/developer-evidence-flow.json) |
+| Git integration | [definition](../../shared/diagrams/definitions/git-integration-loop.json) |
+| Task lifecycle | [definition](../../shared/diagrams/definitions/task-pr-lifecycle.json) |
+| Fresh-chat handoff | [definition](../../shared/diagrams/definitions/next-chat-handoff.json) |
+| Parallel tasks | [definition](../../shared/diagrams/definitions/parallel-task-lanes.json) |
+| Local coordination | [definition](../../shared/diagrams/definitions/incremental-coordination.json) |
+| Recovery authority | [definition](../../shared/diagrams/definitions/recovery-authority.json) |
+| Durable acknowledgement | [definition](../../shared/diagrams/definitions/recovery-durable-ack.json) |
+| Reconnection | [definition](../../shared/diagrams/definitions/recovery-reconnect.json) |
+| Gallery departure | [definition](../../shared/diagrams/definitions/gallery-departure.json) |
+| Localization | [definition](../../shared/diagrams/definitions/localization-boundaries.json) |
+| Shared E2E | [definition](../../shared/diagrams/definitions/shared-e2e.json) |
 
-[Schema views and dictionary](../database/README.md) are generated from SQL/shared annotations and
-proposal definitions using the same style pipeline. Schema content is separate from design tokens.
-Future platform adapters can consume shared token/schema data; generation does not implement native
-consumers or authorize production schema changes. UI mockups and approval boards remain design
-snapshots, not hand-maintained duplicates of current architecture diagrams.
-
-Retired source notation/tool comparisons are removed from the active checkout. Original approval
-bytes and older render evidence remain retrievable from Git commit e08f304. Current migrated prose
-must not be compared with historical approval hashes as if the bytes were unchanged.
+Generate when visual inspection is needed using the commands in the
+[shared source guide](../../shared/diagrams/README.md). Read generation failures and
+inspect the actual result; a generated diagram does not prove implementation or approval.
+[Database views](../database/README.md) use the same tokens with SQL and shared annotations
+as their content authority. Authored UI design boards remain source artifacts.

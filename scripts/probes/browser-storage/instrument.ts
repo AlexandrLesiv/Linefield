@@ -3,7 +3,7 @@ import { readFile, writeFile } from "node:fs/promises";
 
 export async function instrumentProxy() {
   const channel = `linefield-synthetic-${randomUUID()}`;
-  const root = new URL("../../../quality/browser-storage-v1/", import.meta.url);
+  const root = new URL("../../../.build-cache/browser-storage/", import.meta.url);
   const original = await readFile(
     new URL("sqlite-wasm-3540100/jswasm/sqlite3-opfs-async-proxy.js", root),
     "utf8",

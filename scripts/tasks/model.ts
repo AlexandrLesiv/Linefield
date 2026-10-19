@@ -88,5 +88,6 @@ export interface Task {
     description: string;
   }[];
   evidence: Evidence[];
+  attachments?: { title: string; kind: "screenshot" | "video" | "report"; url: string }[];
   handoff: string;
 }

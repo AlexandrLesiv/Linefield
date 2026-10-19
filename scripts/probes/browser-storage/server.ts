@@ -6,7 +6,7 @@ export async function startServer() {
   const instrumented = await instrumentProxy();
   const sources = new URL("./", import.meta.url);
   const vendor = new URL(
-    "../../../quality/browser-storage-v1/sqlite-wasm-3540100/jswasm/",
+    "../../../.build-cache/browser-storage/sqlite-wasm-3540100/jswasm/",
     import.meta.url,
   );
   const server = createServer(async (request, response) => {

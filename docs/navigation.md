@@ -1,7 +1,7 @@
 # Navigation, routes and document lifecycle
 
 Status: authorized web prototype navigation is implemented, including gallery/drawing URLs,
-browser history and focus restoration; see [P05-D01 evidence](../apps/web/quality/web-drawing-v2/README.md).
+browser history and focus restoration; see P05-D01 evidence.
 Concrete durable/native route adapters and lifecycle guards still await S00D/S02 review.
 No native URL scheme, link association or deployment configuration is established by that evidence.
 The product contracts below describe future durable/native behavior; disposable web state does

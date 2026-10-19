@@ -1,4 +1,4 @@
-import { readFile, readdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { renderDiagram } from "./render.ts";
 import { loadTokens } from "./tokens.ts";
@@ -12,6 +12,7 @@ export async function generateDiagrams(
   );
   const names = (await readdir(directory)).filter((name) => name.endsWith(".json")).sort();
   const expected = new Set(names.map((name) => name.replace(/\.json$/, ".svg")));
+  if (!check) await mkdir(new URL("docs/diagrams/v2/", root), { recursive: true });
   const existing = await readdir(new URL("docs/diagrams/v2/", root));
   if (existing.some((name) => name.endsWith(".svg") && !expected.has(name)))
     throw new Error("Unexpected generated SVG without a shared definition");

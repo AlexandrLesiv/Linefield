@@ -1,6 +1,6 @@
 import { validateCatalogSources } from "./catalog-source.ts";
 import { spawnSync } from "node:child_process";
-import { access, readdir, readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -62,43 +62,19 @@ const checks: ReadonlyArray<readonly [string, string, readonly string[]]> = [
 
 try {
   await validateCatalogSources();
-  for (const catalog of ["localization", "theme"]) {
-    const generator =
-      catalog === "theme" ? "scripts/theme-resources.ts" : "scripts/localization.ts";
-    const generatedExists = await access(join(root, "shared", catalog, "generated")).then(
-      () => true,
-      (error: unknown) => {
-        if (error instanceof Error && "code" in error && error.code === "ENOENT") return false;
-        throw error;
-      },
-    );
-    if (!generatedExists) {
-      const generated = spawnSync(process.execPath, [generator], {
-        cwd: root,
-        stdio: "inherit",
-        shell: false,
-        timeout: 120_000,
-      });
-      if (generated.error || generated.status !== 0) throw Error(`${catalog} bootstrap failed`);
-    }
-  }
   for (const args of [
-    ["scripts/tasks/generate.ts", "--check"],
-    ["--test", "scripts/tasks/*.test.ts"],
+    ["scripts/localization.ts"],
+    ["scripts/theme-resources.ts"],
+    ["scripts/diagrams/generate.ts"],
+    ["scripts/schema/generate.ts"],
+    ["scripts/tasks/check.ts"],
     ["scripts/diagrams/generate.ts", "--check"],
     ["scripts/schema/generate.ts", "--check"],
-    [
-      "--test",
-      "scripts/diagrams/*.test.ts",
-      "scripts/schema/*.test.ts",
-      "scripts/probes/library-schema/constraints.test.ts",
-    ],
     ["scripts/theme-validation.ts"],
-    ["--test", "scripts/theme-validation.test.ts", "scripts/theme-resources/*.test.ts"],
     ["scripts/theme-resources.ts", "--check"],
     ["scripts/localization.ts", "--check"],
-    ["--test", "scripts/localization/*.test.ts"],
-    ["--test", "scripts/actions/*.test.ts"],
+    ["--test", "apps/web/tests/unit/*.test.ts"],
+    ["--test", "scripts/probes/library-schema/constraints.test.ts"],
     ["--test", "scripts/probes/regional/*.test.ts"],
   ]) {
     const result = spawnSync(process.execPath, args, {

@@ -26,18 +26,18 @@ node_modules/
 # Reproducible locale output; authored catalogues remain versioned.
 /shared/localization/generated/
 
-# Local visual verification captures; retain small reports and source manifests.
-/apps/web/quality/web-*/**/*.png
-/apps/web/quality/web-*/**/*.jpg
-/apps/web/quality/web-*/**/*.jpeg
-/apps/web/quality/web-*/**/*.webp
-/apps/web/quality/web-*/**/*.gif
-/apps/web/quality/web-*/**/*.webm
-/apps/web/quality/web-*/**/*.mp4
-
 # Reproducible native theme resources.
 /shared/theme/generated/
 
-# Downloaded synthetic-probe dependency; preserve locally and reproduce from artifact.json.
-/quality/browser-storage-v1/sqlite-wasm-3540100.zip
-/quality/browser-storage-v1/sqlite-wasm-3540100/
+# Local verification output and research; publish selected evidence with PRs, not source.
+/quality/
+/apps/web/quality/
+/docs/research/
+/docs/RESUME*.md
+
+# Reproducible documentation; edit shared definitions and authored task packages.
+/docs/diagrams/v2/
+/docs/database/generated/
+/docs/workflow/task-preview/
+/shared/schema/schema.json
+/tasks/*/TASK.generated.md

@@ -19,5 +19,5 @@ only the relevant proposals in feature design. Preserve already approved shared 
 field/IME priority, actual-only initial samples, cancellation, active-interaction and save rules.
 Concrete ABI/state/security changes still require their separate review; no runtime implementation.
 
-[Historical review](../../quality/input-distribution-review.md) applies to its recorded snapshots;
+Historical review applies to its recorded snapshots;
 the latest workflow direction is documented here and in S00F, not certified by that older review.

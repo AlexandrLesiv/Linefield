@@ -7,7 +7,7 @@ import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { startServer } from "./server.ts";
 
-const output = new URL("../../../quality/browser-storage-v1/", import.meta.url);
+const output = new URL("../../../.build-cache/browser-storage/", import.meta.url);
 const filter = process.argv[2];
 if (filter !== undefined && filter !== "firefox")
   throw new Error("Only optional firefox filter is supported");
