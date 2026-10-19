@@ -14,8 +14,10 @@ mapping/envelope/normalization; W4 swept-disk scene and bounded presentation; W5
 reservations/failure policy. Confirmation of this task is not any of those approvals.
 Owner direction on2026-10-19 retains CanvasKit for cross-platform continuity and permits
 increasing the web memory budget; native Canvas may be considered later. This supersedes
-the previous128MiB aggregate constraint for this web slice. W5's exact revised allowance
-and enforcement limitations remain recommendations for review, not measured acceptance.
+the previous128MiB aggregate constraint for this web slice. The owner subsequently approved
+the revised320MiB owned-CPU operating budget (CanvasKit256,Rust32,JS32) and separate96MiB
+graphics allowance, with the stated distinction from a hard ceiling. Other concrete contract,
+failure-policy and design choices remain pending; budget approval is not runtime acceptance.
 The numerical investigation supports a conservative candidate; browser/CanvasKit fidelity,
 allocation high-water and release workload gates remain P05-E02 acceptance requirements.
 
@@ -275,8 +277,8 @@ measured before acceptance; this count bound is not an SU14 timing claim.
 
 ## W5: accounting and failure
 
-The owner permits increasing decision194's former128MiB web aggregate. Recommend a
-provisional320MiB owned-CPU operating budget:256MiB CanvasKit allowance,32MiB Rust and32MiB
+The owner approved replacing decision194's former128MiB web aggregate with a
+320MiB owned-CPU operating budget:256MiB CanvasKit allowance,32MiB Rust and32MiB
 JS. This is an admission/observed-capacity target, not an enforceable hard memory ceiling.
 Stock CanvasKit permits growth to2GiB; a single call can overshoot the target before detection.
 The extra128MiB above its initial heap is proposed headroom, not measured sufficient capacity.
@@ -367,7 +369,7 @@ of accepted drawing state. When history eviction cannot free enough eligible byt
 admission; do not clear protected content to render. Rendering page/query overhead stays
 bounded even while semantic admission stopped.
 
-Surface budget separately proposed96MiB graphics/backing reservation (one nominal RGBA8
+Surface budget separately approved96MiB graphics/backing reservation (one nominal RGBA8
 surface<=32MiB, same-size presentation allowance,32MiB attachment/cache headroom), outside the320MiB CPU target and not a
 browser RSS guarantee. Retire surface before replacement; no doubled live surfaces. Browser/
 driver overhead and real framebuffer format require measured headroom. Explicit context
