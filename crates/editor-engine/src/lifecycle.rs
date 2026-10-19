@@ -41,6 +41,7 @@ impl Engine {
             return code;
         }
         // Enter/update admission reserves this generation; cleanup cannot consume it early.
+        self.cancel_for_mapping();
         self.advance();
         if let Some(value) = self.current.as_mut() {
             value.session = 0;
@@ -54,6 +55,7 @@ impl Engine {
         if let Err(code) = self.owner(owner) {
             return code;
         }
+        self.document = Default::default();
         self.current = None;
         self.disposed = owner;
         self.sequence = 0;

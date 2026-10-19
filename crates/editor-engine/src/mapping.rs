@@ -51,6 +51,7 @@ impl Engine {
         if !self.room(3) {
             // Consume only the reserved suspension generation, preserving departure.
             if self.current.is_some_and(|v| v.phase != Phase::Suspended) {
+                self.cancel_for_mapping();
                 self.advance();
                 if let Some(value) = self.current.as_mut() {
                     value.phase = Phase::Suspended;
@@ -59,6 +60,7 @@ impl Engine {
             }
             return Code::Exhausted;
         }
+        self.cancel_for_mapping();
         self.advance();
         self.sequence = sequence;
         if let Some(value) = self.current.as_mut() {
@@ -75,6 +77,7 @@ impl Engine {
         if self.current.is_some_and(|v| v.phase == Phase::Suspended) {
             return Code::Noop;
         }
+        self.cancel_for_mapping();
         self.advance();
         if let Some(value) = self.current.as_mut() {
             value.phase = Phase::Suspended;

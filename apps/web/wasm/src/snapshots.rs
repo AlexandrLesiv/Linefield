@@ -25,7 +25,7 @@ macro_rules! snapshot {
             }
             #[wasm_bindgen(getter)]
             pub fn interaction(&self) -> u64 {
-                0
+                self.0.0.value.get().interaction
             }
             #[wasm_bindgen(getter)]
             pub fn content(&self) -> u64 {
@@ -45,7 +45,7 @@ macro_rules! snapshot {
             }
             #[wasm_bindgen(getter, js_name = activeCancelled)]
             pub fn active_cancelled(&self) -> bool {
-                false
+                self.0.0.value.get().active_cancelled
             }
         }
     };
@@ -54,6 +54,8 @@ snapshot!(Reply);
 snapshot!(State);
 snapshot!(Mapping);
 snapshot!(SceneIds);
+snapshot!(ScenePage);
+snapshot!(StrokeState);
 #[wasm_bindgen]
 impl SceneIds {
     #[wasm_bindgen(getter)]
@@ -61,11 +63,11 @@ impl SceneIds {
         if self.0.0.consumed.replace(true) {
             return Err(JsValue::from_str("snapshot-consumed"));
         }
-        Ok(Vec::new().into_boxed_slice())
+        Ok(std::mem::take(&mut self.0.0.payload.borrow_mut().ids).into_boxed_slice())
     }
     #[wasm_bindgen(getter)]
     pub fn done(&self) -> bool {
-        true
+        self.0.0.payload.borrow().done
     }
 }
 #[wasm_bindgen]
@@ -88,7 +90,7 @@ impl Mapping {
     }
     #[wasm_bindgen(getter, js_name = regionX)]
     pub fn region_x(&self) -> i64 {
-        0
+        self.0.0.value.get().viewport.x.region
     }
     #[wasm_bindgen(getter, js_name = regionY)]
     pub fn region_y(&self) -> i64 {
@@ -96,7 +98,7 @@ impl Mapping {
     }
     #[wasm_bindgen(getter, js_name = localX)]
     pub fn local_x(&self) -> f64 {
-        0.0
+        self.0.0.value.get().viewport.x.local
     }
     #[wasm_bindgen(getter, js_name = localY)]
     pub fn local_y(&self) -> f64 {
@@ -104,6 +106,6 @@ impl Mapping {
     }
     #[wasm_bindgen(getter)]
     pub fn zoom(&self) -> f64 {
-        1.0
+        self.0.0.value.get().viewport.zoom
     }
 }

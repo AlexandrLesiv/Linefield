@@ -1,18 +1,26 @@
 //! Checked Wasm adapter. Every caller-controlled argument remains a JsValue until validated.
 #![forbid(unsafe_code)]
+mod arrays;
 mod boundary;
 mod exports;
+mod history;
+mod ink;
 mod mapping;
+mod scene;
+mod scene_state;
 mod snapshots;
 mod state;
 pub use exports::*;
+pub use history::*;
+pub use ink::*;
 pub use mapping::*;
-pub use snapshots::{Mapping, Reply, SceneIds, State};
+pub use scene::*;
+pub use snapshots::{Mapping, Reply, SceneIds, ScenePage, State, StrokeState};
 use wasm_bindgen::prelude::*;
 #[wasm_bindgen(typescript_custom_section)]
 const TYPES: &str = r#"
 export type Code = "ok" | "noop" | "invalid" | "stale-owner" | "stale-session"
   | "stale-mapping" | "stale-scene" | "sequence" | "active" | "unavailable"
-  | "disposed" | "exhausted";
+  | "disposed" | "exhausted" | "capacity" | "stale-interaction" | "coordinate-overflow" | "numerical-capacity";
 export type Phase = "gallery" | "ready" | "suspended";
 "#;

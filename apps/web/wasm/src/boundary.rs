@@ -7,7 +7,18 @@ thread_local! {
     static LIVE: Cell<bool> = const { Cell::new(false) };
     static BUSY: Cell<bool> = const { Cell::new(false) };
 }
+#[derive(Default)]
+pub struct Payload {
+    pub page: linefield_editor_engine::GeometryPage,
+    pub ids: Vec<u64>,
+    pub done: bool,
+    pub geometry: u64,
+    pub verbs: u64,
+    pub terminal: bool,
+}
 pub struct Data {
+    pub payload: RefCell<Payload>,
+    pub arrays: Cell<u8>,
     pub value: Cell<Projection>,
     pub consumed: Cell<bool>,
     _reserved: Vec<u8>,
@@ -40,6 +51,14 @@ pub fn execute<S>(operation: impl FnOnce(&mut Engine) -> Code) -> Result<JsValue
 where
     S: From<Slot> + Into<JsValue>,
 {
+    execute_data::<S>(|engine, _| operation(engine))
+}
+pub fn execute_data<S>(
+    operation: impl FnOnce(&mut Engine, &Data) -> Code,
+) -> Result<JsValue, JsValue>
+where
+    S: From<Slot> + Into<JsValue>,
+{
     if BUSY.replace(true) {
         return Err(JsValue::from_str("boundary-unavailable"));
     }
@@ -55,6 +74,8 @@ where
         .map_err(|_| JsValue::from_str("boundary-capacity"))?;
     let value = ENGINE.with(|engine| engine.borrow().projection(Code::Unavailable));
     let data = Rc::new(Data {
+        payload: RefCell::new(Payload::default()),
+        arrays: Cell::new(0),
         value: Cell::new(value),
         consumed: Cell::new(false),
         _reserved: reserved,
@@ -63,7 +84,8 @@ where
     let result = S::from(Slot(Rc::clone(&data))).into();
     ENGINE.with(|engine| {
         if let Ok(mut engine) = engine.try_borrow_mut() {
-            let code = operation(&mut engine);
+            engine.reset_outcome();
+            let code = operation(&mut engine, &data);
             data.value.set(engine.projection(code));
         }
     });

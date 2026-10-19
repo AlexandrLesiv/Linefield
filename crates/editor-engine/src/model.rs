@@ -1,7 +1,13 @@
+use crate::ink::Document;
+use crate::numerics::Viewport;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Code {
     Ok,
     Noop,
+    StaleInteraction,
+    CoordinateOverflow,
+    NumericalCapacity,
+    Capacity,
     Invalid,
     StaleOwner,
     StaleSession,
@@ -18,6 +24,10 @@ impl Code {
         match self {
             Self::Ok => "ok",
             Self::Noop => "noop",
+            Self::StaleInteraction => "stale-interaction",
+            Self::CoordinateOverflow => "coordinate-overflow",
+            Self::NumericalCapacity => "numerical-capacity",
+            Self::Capacity => "capacity",
             Self::Invalid => "invalid",
             Self::StaleOwner => "stale-owner",
             Self::StaleSession => "stale-session",
@@ -65,6 +75,14 @@ pub struct Projection {
     pub metrics: Option<Metrics>,
     pub presented: bool,
     pub cpu_charge: usize,
+    pub interaction: u64,
+    pub active_cancelled: bool,
+    pub width: f64,
+    pub color: [f64; 3],
+    pub stroke_count: u64,
+    pub can_undo: bool,
+    pub can_redo: bool,
+    pub viewport: Viewport,
 }
 #[derive(Default)]
 pub struct Engine {
@@ -77,6 +95,10 @@ pub struct Engine {
     pub(crate) disposed: u64,
     pub(crate) current: Option<Projection>,
     pub(crate) sequence: u64,
+    pub(crate) document: Document,
+    pub(crate) interaction_counter: u64,
+    pub(crate) stroke_counter: u64,
+    pub(crate) active_cancelled: bool,
 }
 impl Engine {
     pub fn projection(&self, code: Code) -> Projection {
@@ -92,9 +114,26 @@ impl Engine {
             metrics: None,
             presented: false,
             cpu_charge: 0,
+            interaction: 0,
+            active_cancelled: false,
+            width: 8.0,
+            color: [0.0; 3],
+            stroke_count: 0,
+            can_undo: false,
+            can_redo: false,
+            viewport: Viewport::default(),
         });
         value.code = code;
-        value.cpu_charge = size_of::<Self>();
+        value.cpu_charge = size_of::<Self>() + self.document.charge();
+        value.interaction = self.document.active.as_ref().map_or(0, |v| v.interaction);
+        value.active_cancelled = self.active_cancelled;
+        value.width = self.document.width;
+        value.color = self.document.color;
+        value.stroke_count = self.document.visible as u64;
+        value.can_undo = value.interaction == 0 && self.document.visible > self.document.retired;
+        value.can_redo =
+            value.interaction == 0 && self.document.visible < self.document.strokes.len();
+        value.viewport = self.document.viewport;
         value
     }
     pub fn owner(&self, owner: u64) -> Result<(), Code> {

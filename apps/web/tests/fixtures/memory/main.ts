@@ -1,3 +1,4 @@
+import { penCheckpoint } from "./pen-checkpoint.ts";
 import { cleanupFailure } from "./cleanup.ts";
 import { loadEngine, loadRenderer } from "../../../src/memory/loader.ts";
 import { boundaryMatrix } from "./boundary.ts";
@@ -19,11 +20,14 @@ function action(name: string, run: () => Promise<unknown>): void {
     output!.textContent = "running";
     void run()
       .then((value) => {
-        output!.textContent = JSON.stringify({
-          status: "passed",
-          result: value,
-          diagnostics: diagnosticSnapshot(),
-        });
+        output!.textContent = JSON.stringify(
+          {
+            status: "passed",
+            result: value,
+            diagnostics: diagnosticSnapshot(),
+          },
+          (_key, entry: unknown) => (typeof entry === "bigint" ? String(entry) : entry),
+        );
       })
       .catch((error: unknown) => {
         output!.textContent = JSON.stringify({
@@ -45,3 +49,8 @@ action("Run resource lifetimes", async () => {
 action("Run bounded calibration", async () => calibration(await loadRenderer(), canvas));
 
 action("Run cleanup failure", async () => cleanupFailure(await loadRenderer(), canvas));
+
+action("Run real pen checkpoint", async () => {
+  await loadEngine();
+  return penCheckpoint(await loadRenderer(), canvas);
+});

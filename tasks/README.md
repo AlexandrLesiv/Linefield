@@ -29,7 +29,7 @@ Historical PR/base statements below do not override the actual integrated state.
 | --- | --- | --- |
 | 1 | [S02-W01 memory editor contract/design](S02-W01.md) | [PR #9](https://github.com/AlexandrLesiv/Linefield/pull/9) merged; investigation/reviews complete; core and P1/H1/S1–S4 approved; N1/A1/R1 approved at51d9345; merged c28f56b, integrated tree verified |
 | 2 | [P05-E01 runtime foundation](P05-E01.md) | [PR #10](https://github.com/AlexandrLesiv/Linefield/pull/10) merged at3eaaff8; full integrated tree verified; complete |
-| 3 | [P05-E02 usable pen and viewport](P05-E02.md) | Scope/third position and performance v1 approved; one writer on codex/p05-e02-memory-pen from3eaaff8; early performance checkpoint first |
+| 3 | [P05-E02 usable pen and viewport](P05-E02.md) | Scope/performance v1 approved; partial implementation on codex/p05-e02-memory-pen; early real-path checkpoint fails50 ms gate; rendering decision needed |
 
 S02-W01 is integrated at `c28f56b`; P05-E01 is complete at verified merge `3eaaff8`.
 Its implementation writer stopped; its worktree and original checkout drafts remain preserved.

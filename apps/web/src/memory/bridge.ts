@@ -46,7 +46,7 @@ export type MappingValue = ReplyValue &
       | "zoom"
     >
   >;
-function reply(value: Reply): ReplyValue {
+export function reply(value: Reply): ReplyValue {
   return {
     code: value.code,
     owner: value.owner,
@@ -59,7 +59,11 @@ function reply(value: Reply): ReplyValue {
     activeCancelled: value.activeCancelled,
   };
 }
-function consume<T extends Reply, R>(command: string, action: () => T, copy: (value: T) => R): R {
+export function consume<T extends Reply, R>(
+  command: string,
+  action: () => T,
+  copy: (value: T) => R,
+): R {
   const snapshot = action();
   try {
     const value = copy(snapshot);
