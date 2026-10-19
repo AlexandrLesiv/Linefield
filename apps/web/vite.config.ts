@@ -28,6 +28,9 @@ export default defineConfig(({ mode }) => {
                   new URL("tests/fixtures/memory/index.html", import.meta.url),
                 ),
                 app: fileURLToPath(new URL("tests/fixtures/memory/app.html", import.meta.url)),
+                repaint: fileURLToPath(
+                  new URL("tests/fixtures/memory/repaint/index.html", import.meta.url),
+                ),
               },
             },
           }
