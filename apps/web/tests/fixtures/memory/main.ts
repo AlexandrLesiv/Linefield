@@ -1,4 +1,5 @@
 import { penCheckpoint } from "./pen-checkpoint.ts";
+import { rotationBoundary } from "./rotation.ts";
 import { viewportBoundary } from "./viewport.ts";
 import { cleanupFailure } from "./cleanup.ts";
 import { loadEngine, loadRenderer } from "../../../src/memory/loader.ts";
@@ -42,6 +43,10 @@ function action(name: string, run: () => Promise<unknown>): void {
 action("Run boundary matrix", async () => {
   await loadEngine();
   return boundaryMatrix();
+});
+action("Run rotation boundary", async () => {
+  await loadEngine();
+  return rotationBoundary();
 });
 action("Run viewport boundary", async () => {
   await loadEngine();

@@ -4,6 +4,7 @@ import { platform, release, arch } from "node:os";
 import { test, expect } from "@playwright/test";
 for (const label of [
   "Run viewport boundary",
+  "Run rotation boundary",
   "Run boundary matrix",
   "Run resource lifetimes",
   "Run bounded calibration",

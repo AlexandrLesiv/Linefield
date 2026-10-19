@@ -17,12 +17,19 @@ arm.addEventListener("click", () => {
 // Observation-only fixture event. Never included in production application entry.
 document.addEventListener("fixture-observe", () => {
   document.body.dataset.fixtureDiagnostics = JSON.stringify(diagnosticSnapshot());
+  const state = api.memoryRead(1n);
+  try {
+    document.body.dataset.fixtureOwner = String(state.owner);
+    document.body.dataset.fixtureOwnerCode = state.code;
+  } finally {
+    state.free();
+  }
 });
 // One-shot renderer fault confined to this isolated fixture entry, after Rust accepts input.
 document.addEventListener("fixture-fail-pan-translation", () => {
-  const original = Presentation.prototype.translate;
-  Presentation.prototype.translate = function () {
-    Presentation.prototype.translate = original;
+  const original = Presentation.prototype.transform;
+  Presentation.prototype.transform = function () {
+    Presentation.prototype.transform = original;
     throw Error("fixture-pan-translation");
   };
 });

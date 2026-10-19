@@ -20,10 +20,6 @@ pub fn pan_preview(
 }
 #[wasm_bindgen]
 impl PanPreview {
-    #[wasm_bindgen(getter, js_name = sourceInteraction)]
-    pub fn source_interaction(&self) -> u64 {
-        self.0.0.payload.borrow().pan_preview.source
-    }
     #[wasm_bindgen(getter, js_name = sourceMapping)]
     pub fn source_mapping(&self) -> u64 {
         self.0.0.payload.borrow().pan_preview.mapping
@@ -38,10 +34,26 @@ impl PanPreview {
     }
     #[wasm_bindgen(getter, js_name = offsetX)]
     pub fn offset_x(&self) -> f64 {
-        self.0.0.payload.borrow().pan_preview.offset[0]
+        self.0.0.payload.borrow().pan_preview.affine[4]
     }
     #[wasm_bindgen(getter, js_name = offsetY)]
     pub fn offset_y(&self) -> f64 {
-        self.0.0.payload.borrow().pan_preview.offset[1]
+        self.0.0.payload.borrow().pan_preview.affine[5]
+    }
+    #[wasm_bindgen(getter)]
+    pub fn m11(&self) -> f64 {
+        self.0.0.payload.borrow().pan_preview.affine[0]
+    }
+    #[wasm_bindgen(getter)]
+    pub fn m12(&self) -> f64 {
+        self.0.0.payload.borrow().pan_preview.affine[1]
+    }
+    #[wasm_bindgen(getter)]
+    pub fn m21(&self) -> f64 {
+        self.0.0.payload.borrow().pan_preview.affine[2]
+    }
+    #[wasm_bindgen(getter)]
+    pub fn m22(&self) -> f64 {
+        self.0.0.payload.borrow().pan_preview.affine[3]
     }
 }

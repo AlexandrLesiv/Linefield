@@ -44,6 +44,8 @@ export type MappingValue = ReplyValue &
       | "localX"
       | "localY"
       | "zoom"
+      | "rotationStep"
+      | "rotationDegrees"
     >
   >;
 export function reply(value: Reply): ReplyValue {
@@ -115,6 +117,8 @@ export const bridge = {
         localX: value.localX,
         localY: value.localY,
         zoom: value.zoom,
+        rotationStep: value.rotationStep,
+        rotationDegrees: value.rotationDegrees,
       }),
     ),
   metrics: (state: ReplyValue, sequence: bigint, width: number, height: number, backing: number) =>

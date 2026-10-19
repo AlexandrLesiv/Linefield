@@ -24,3 +24,23 @@ export const zoomValue = style({
   textAlign: "center",
   fontVariantNumeric: "tabular-nums",
 });
+export const rotationButton = style({
+  selectors: {
+    "&:is(button)": {
+      minWidth: "44px",
+      width: "auto",
+      height: "44px",
+      minHeight: "44px",
+      paddingInline: "6px",
+      whiteSpace: "nowrap",
+    },
+  },
+});
+export const rotationGroup = style({
+  flexWrap: "wrap",
+  display: "flex",
+  alignItems: "center",
+  gap: "4px",
+  pointerEvents: "auto",
+  flexShrink: 0,
+});

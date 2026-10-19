@@ -105,6 +105,15 @@ impl Mapping {
     pub fn local_y(&self) -> f64 {
         self.0.0.value.get().viewport.y.local
     }
+    #[wasm_bindgen(getter, js_name = rotationStep)]
+    pub fn rotation_step(&self) -> u8 {
+        self.0.0.value.get().viewport.rotation
+    }
+    #[wasm_bindgen(getter, js_name = rotationDegrees)]
+    pub fn rotation_degrees(&self) -> i32 {
+        let step = i32::from(self.0.0.value.get().viewport.rotation);
+        (if step >= 12 { step - 24 } else { step }) * 15
+    }
     #[wasm_bindgen(getter)]
     pub fn zoom(&self) -> f64 {
         self.0.0.value.get().viewport.zoom

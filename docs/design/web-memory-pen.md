@@ -583,3 +583,22 @@ Technical controls and negative tests belong to engineers/reviewer; this documen
 truthful visible outcomes only. P1/H1/S1–S4 design choices are approved. Stop at this review
 packet until remaining technical decisions are resolved and the next product task is confirmed;
 design approval is not permission to start an unconfirmed implementation task.
+
+## Approved buttons-only rotation —2026-10-19
+
+Owner selected −15° / signed current-angle reset / +15° beside zoom, with no rotation gesture.
+Each control retains at least44×44px target, paper-role contrast in both themes, native button
+focus/key activation and en/uk accessible full labels. Angle/reset label comes from Rust signed
+degrees; pressing0° is no-op. Narrow/enlarged footer stacks or wraps controls within its existing
+33dvh maximum and keeps the unsaved disclosure reachable by scrolling. Keep activation focus;
+accurate rendering never moves focus. Temporary ink/pan locks retain appearance and use the
+not-allowed cursor. No buffered or delayed control activation.
+
+Rotation is view-only, retained through Back/Resume/resize and has no Undo entry. The owner
+selected immediate preview: every visible stroke transforms together from the original complete
+image, with white exposed corners; accepted repeated clicks take effect before exact catchup.
+Accurate geometry replaces that preview at identical coordinates without animation or loader.
+Ink remains unavailable until accurate mapping is ready. Existing active ink/pan guards and
+Escape pan restoration remain; no shift/space rotation binding or screen rewrite is added.
+WMP-11/04/06 and INV-03/04/08/11 cover rotated input, all24 steps/reset, stale receipts, pan/zoom,
+Back/resize/history, active locks, DPR2 fractional preview/exact parity and compact en/uk.

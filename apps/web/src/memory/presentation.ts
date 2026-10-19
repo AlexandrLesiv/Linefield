@@ -93,12 +93,20 @@ export class Presentation {
   freezeFront(): void {
     if (this.disposed || !this.owner.front || !this.image) throw Error("display-unavailable");
   }
-  translate(x: number, y: number, outside: boolean): void {
+  transform(m: readonly number[], outside: boolean): void {
     const { kit, front } = this.owner;
     if (this.disposed || !front || !this.image) throw Error("display-unavailable");
     const canvas = front.getCanvas();
     canvas.clear(kit.WHITE);
-    if (!outside) canvas.drawImage(this.image, x, y);
+    if (!outside) {
+      canvas.save();
+      try {
+        canvas.concat([m[0]!, m[1]!, m[4]!, m[2]!, m[3]!, m[5]!, 0, 0, 1]);
+        canvas.drawImage(this.image, 0, 0);
+      } finally {
+        canvas.restore();
+      }
+    }
     front.flush();
   }
   replaceStaging(): void {

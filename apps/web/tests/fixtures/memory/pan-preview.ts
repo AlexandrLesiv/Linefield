@@ -30,7 +30,7 @@ export function panPreviewBoundary() {
   const second = view.begin(state, 2, 0, 0);
   check(second.code === "ok", "re-pan before exact frame");
   state = view.update(second, 1n, -50.25, -80.5);
-  check(panPreview(state).sourceInteraction === source.sourceInteraction, "same frozen origin");
+  check(panPreview(state).sourceMapping === source.sourceMapping, "same frozen origin");
   check(panPreview(state).offsetX === 0 && panPreview(state).offsetY === 0, "absolute reversal");
   state = penBridge.cancel(second, "escape");
   check(panPreview(state).offsetX === 100.5, "second cancellation restores second base");

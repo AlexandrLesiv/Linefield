@@ -3,6 +3,7 @@ import type { EditorCommands } from "./pen-input.ts";
 import { attachPenInput } from "./pen-input.ts";
 import { attachViewportInput } from "./viewport-input.ts";
 import { attachEditorControls } from "./editor-controls.ts";
+import { attachRotationControls } from "./rotation-controls.ts";
 import { attachZoomControls } from "./zoom-controls.ts";
 import { observePointerLifecycle } from "./pointer-diagnostics.ts";
 export function attachEditorAdapters(view: MemoryView, commands: EditorCommands) {
@@ -11,6 +12,8 @@ export function attachEditorAdapters(view: MemoryView, commands: EditorCommands)
   const input = attachPenInput(view.canvas, commands, view.pendingRelease);
   const controls = attachEditorControls(view.surface, commands);
   const zoom = attachZoomControls(view.surface, commands);
+  const rotation = attachRotationControls(view.surface, commands);
+  rotation.refresh();
   zoom.refresh();
   return {
     refresh() {
@@ -18,12 +21,14 @@ export function attachEditorAdapters(view: MemoryView, commands: EditorCommands)
       input.sync();
       controls.refresh();
       zoom.refresh();
+      rotation.refresh();
     },
     dispose() {
       viewport.dispose();
       input.dispose();
       controls.dispose();
       zoom.dispose();
+      rotation.dispose();
       stopTrace();
     },
   };

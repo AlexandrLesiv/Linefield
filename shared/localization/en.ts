@@ -1,5 +1,8 @@
 import type { Translation } from "./catalog.ts";
 export const en = {
+  "memory.rotateLeft": "Rotate counterclockwise 15°",
+  "memory.rotateRight": "Rotate clockwise 15°",
+  "memory.rotationReset": "Rotation: {angle}°. Reset to 0°",
   "memory.zoomOut": "Zoom out",
   "memory.zoomIn": "Zoom in",
   "memory.zoomValue": "Zoom: {percent}",

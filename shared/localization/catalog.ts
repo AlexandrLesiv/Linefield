@@ -3,6 +3,13 @@ export const catalog = {
   version: 1,
   sourceLanguage: "en",
   messages: {
+    "memory.rotateLeft": { kind: "plain", context: "Canvas rotation", arguments: {} },
+    "memory.rotateRight": { kind: "plain", context: "Canvas rotation", arguments: {} },
+    "memory.rotationReset": {
+      kind: "plain",
+      context: "Reset canvas rotation",
+      arguments: { angle: "string" },
+    },
     "memory.zoomOut": { kind: "plain", context: "Canvas zoom", arguments: {} },
     "memory.zoomIn": { kind: "plain", context: "Canvas zoom", arguments: {} },
     "memory.zoomValue": { kind: "plain", context: "Canvas zoom", arguments: { percent: "string" } },

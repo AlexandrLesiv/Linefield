@@ -1,4 +1,4 @@
-use crate::numerics::{Axis, Viewport, normalize};
+use crate::numerics::{Axis, Viewport, unproject};
 use crate::{Code, Metrics};
 #[derive(Clone, Copy, Debug)]
 pub struct Input {
@@ -80,21 +80,15 @@ impl Document {
         } else {
             self.width / 2.0
         };
+        let [x, y] = unproject(
+            self.viewport,
+            [input.x, input.y],
+            [metrics.width / 2.0, metrics.height / 2.0],
+            8192,
+        )?;
         Ok(Sample {
-            x: normalize(
-                self.viewport.x,
-                input.x,
-                metrics.width / 2.0,
-                self.viewport.zoom,
-                8192,
-            )?,
-            y: normalize(
-                self.viewport.y,
-                input.y,
-                metrics.height / 2.0,
-                self.viewport.zoom,
-                8192,
-            )?,
+            x,
+            y,
             radius,
             offset: 0,
             hull: false,

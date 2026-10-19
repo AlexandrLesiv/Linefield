@@ -1,8 +1,12 @@
+mod inverse;
 mod magnitude;
 mod normalize;
 mod projection;
-pub use normalize::normalize;
+mod rotation;
+mod round;
+pub use inverse::unproject;
 pub use projection::{eligible, project};
+pub use rotation::coefficients;
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub struct Axis {
     pub region: i64,
@@ -25,6 +29,7 @@ pub struct Viewport {
     pub x: Axis,
     pub y: Axis,
     pub zoom: f64,
+    pub rotation: u8,
 }
 impl Default for Viewport {
     fn default() -> Self {
@@ -32,6 +37,7 @@ impl Default for Viewport {
             x: Axis::default(),
             y: Axis::default(),
             zoom: 1.0,
+            rotation: 0,
         }
     }
 }

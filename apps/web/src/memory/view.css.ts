@@ -49,7 +49,10 @@ export const lifetime = style({
   overflowY: "auto",
   pointerEvents: "auto",
   selectors: { "&:focus-visible": { outline: `2px solid ${theme.focus}` } },
-  "@media": { "(max-height: 480px)": { maxHeight: "20dvh" } },
+  "@media": {
+    "(max-height: 480px)": { maxHeight: "20dvh" },
+    "(max-width: 600px)": { selectors: { "&:is(p)": { flex: "0 0 auto" } } },
+  },
 });
 export const resumeIcon = style({ width: "24px", height: "24px", flexShrink: 0 });
 export const foundationChrome = style({
@@ -64,7 +67,16 @@ export const foundationFooter = style({
   maxHeight: "33dvh",
   "@media": {
     "(max-width: 600px)": {
-      selectors: { "&:is(div)": { flexDirection: "column", alignItems: "stretch", gap: "4px" } },
+      selectors: {
+        "&:is(div)": {
+          flexDirection: "column",
+          alignItems: "stretch",
+          gap: "4px",
+          overflowY: "auto",
+          pointerEvents: "auto",
+          padding: "2px",
+        },
+      },
     },
   },
 });

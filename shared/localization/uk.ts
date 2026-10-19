@@ -1,5 +1,8 @@
 import type { Translation } from "./catalog.ts";
 export const uk = {
+  "memory.rotateLeft": "Повернути проти годинникової стрілки на 15°",
+  "memory.rotateRight": "Повернути за годинниковою стрілкою на 15°",
+  "memory.rotationReset": "Поворот: {angle}°. Скинути до 0°",
   "memory.zoomOut": "Зменшити масштаб",
   "memory.zoomIn": "Збільшити масштаб",
   "memory.zoomValue": "Масштаб: {percent}",

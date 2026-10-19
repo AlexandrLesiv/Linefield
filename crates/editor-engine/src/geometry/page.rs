@@ -1,5 +1,5 @@
 use super::primitives::{disc, hull, quad};
-use crate::numerics::{eligible, project};
+use crate::numerics::{coefficients, eligible, project};
 use crate::{Code, Engine, Sample};
 #[derive(Default)]
 pub struct GeometryPage {
@@ -37,19 +37,7 @@ impl Engine {
             ..GeometryPage::default()
         };
         let view = self.document.viewport;
-        if !eligible(
-            selected.min[0],
-            selected.max[0],
-            view.x,
-            view.zoom,
-            metrics.width,
-        )? || !eligible(
-            selected.min[1],
-            selected.max[1],
-            view.y,
-            view.zoom,
-            metrics.height,
-        )? {
+        if !eligible(selected.min, selected.max, view, metrics)? {
             return Ok(page);
         }
         let index = selected
@@ -70,11 +58,8 @@ impl Engine {
             .try_reserve_exact(4096)
             .map_err(|_| Code::Capacity)?;
         let projected = |sample: Sample| -> Result<[f64; 3], Code> {
-            Ok([
-                project(sample.x, view.x, view.zoom, metrics.width)?,
-                project(sample.y, view.y, view.zoom, metrics.height)?,
-                sample.radius * view.zoom,
-            ])
+            let [x, y] = project([sample.x, sample.y], view, metrics)?;
+            Ok([x, y, sample.radius * view.zoom])
         };
         for (i, sample) in selected.samples.iter().enumerate().skip(index) {
             let skip_disc = i == index && offset == sample.offset + 6;
@@ -103,7 +88,13 @@ impl Engine {
             }
             if sample.hull {
                 let previous = *selected.samples.get(i - 1).ok_or(Code::Invalid)?;
-                let normals = hull(previous, *sample).ok_or(Code::NumericalCapacity)?;
+                let mut normals = hull(previous, *sample).ok_or(Code::NumericalCapacity)?;
+                let [c, s] = coefficients(view.rotation);
+                for pair in normals.as_chunks_mut::<2>().0 {
+                    let [x, y] = [pair[0], pair[1]];
+                    pair[0] = c * x - s * y;
+                    pair[1] = s * x + c * y;
+                }
                 quad(
                     projected(previous)?,
                     current,

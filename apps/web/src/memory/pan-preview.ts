@@ -9,10 +9,13 @@ export function panPreview(state: ReplyValue) {
     () => api.memoryPanPreview(state.owner, state.session, state.mapping),
     (value) => ({
       ...reply(value),
-      sourceInteraction: value.sourceInteraction,
       sourceMapping: value.sourceMapping,
       active: value.active,
       outside: value.outside,
+      m11: value.m11,
+      m12: value.m12,
+      m21: value.m21,
+      m22: value.m22,
       offsetX: value.offsetX,
       offsetY: value.offsetY,
     }),
@@ -31,14 +34,19 @@ export class PanPresentation {
       this.mapping = 0n;
       return false;
     }
-    const started = this.source !== value.sourceInteraction;
+    const started = this.source !== value.sourceMapping;
     if (started) {
       if (frontMapping !== value.sourceMapping) throw Error("display-provenance");
       display.freezeFront();
-      this.source = value.sourceInteraction;
+      this.source = value.sourceMapping;
     }
     if (started || this.mapping !== state.mapping) {
-      renderPanTranslation(() => display.translate(value.offsetX, value.offsetY, value.outside));
+      renderPanTranslation(() =>
+        display.transform(
+          [value.m11, value.m12, value.m21, value.m22, value.offsetX, value.offsetY],
+          value.outside,
+        ),
+      );
       renderCount("panPreviewPublications");
       this.mapping = state.mapping;
     }

@@ -4,7 +4,7 @@ import type { Page } from "@playwright/test";
 async function appearance(page: Page) {
   return page
     .locator(
-      "[data-memory-pen], [data-memory-color], [data-memory-width], [data-memory-undo], [data-memory-redo], .drawing-rail .drawing-tool",
+      "[data-memory-pen], [data-memory-color], [data-memory-width], [data-memory-undo], [data-memory-redo], [data-memory-rotation], .drawing-rail .drawing-tool",
     )
     .evaluateAll((nodes) =>
       nodes.map((node) => {
@@ -21,7 +21,7 @@ async function appearance(page: Page) {
 }
 async function noActivation(page: Page) {
   const controls = page.locator(
-    "[data-memory-pen], [data-memory-color], [data-memory-width], [data-memory-undo], [data-memory-redo]",
+    "[data-memory-pen], [data-memory-color], [data-memory-width], [data-memory-undo], [data-memory-redo], [data-memory-rotation]",
   );
   for (const control of await controls.all()) await expect(control).toBeDisabled();
   expect(

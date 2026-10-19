@@ -1,6 +1,6 @@
 //! Checked fixed workspace; adapted from the owner-reviewed S02-W01 experiment.
 use crate::Code;
-const WORDS: usize = 20;
+const WORDS: usize = 22;
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct Magnitude([u64; WORDS]);
 pub type Signed = (bool, Magnitude);
@@ -81,6 +81,10 @@ impl Magnitude {
         } else {
             Err(Code::NumericalCapacity)
         }
+    }
+    pub fn multiply_wide(self, factor: u128) -> Result<Self, Code> {
+        self.multiply(factor as u64)?
+            .add(self.multiply((factor >> 64) as u64)?.shift(64)?)
     }
     pub fn divide(self, denominator: Self) -> Result<(u64, Self), Code> {
         let shift = self.width().saturating_sub(denominator.width());

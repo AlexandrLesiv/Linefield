@@ -12,6 +12,7 @@ const commands = new Set([
   "pan-end",
   "pan-step",
   "zoom-step",
+  "rotate-step",
   "create",
   "enter",
   "read",

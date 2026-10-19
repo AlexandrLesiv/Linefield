@@ -1,10 +1,9 @@
-use crate::numerics::{Axis, Viewport};
+use crate::numerics::{Axis, Viewport, coefficients};
 use crate::{Code, Engine, Metrics, Phase};
 #[derive(Clone, Copy)]
 pub(crate) struct PanOrigin {
     pub owner: u64,
     pub session: u64,
-    pub source: u64,
     pub mapping: u64,
     pub content: u64,
     pub metrics: Metrics,
@@ -12,20 +11,53 @@ pub(crate) struct PanOrigin {
 }
 #[derive(Clone, Copy, Default)]
 pub struct PanPreview {
-    pub source: u64,
     pub mapping: u64,
     pub active: bool,
     pub outside: bool,
-    pub offset: [f64; 2],
+    pub affine: [f64; 6],
 }
-fn offset(before: Axis, after: Axis, scale: f64, extent: f64) -> Option<f64> {
-    // Never flatten a regional coordinate. A remote source cannot overlap this raster.
+fn delta(before: Axis, after: Axis) -> Option<f64> {
     let regions = i128::from(before.region) - i128::from(after.region);
     if regions.abs() > 5 {
         return None;
     }
-    let delta = (regions as f64 * 65536.0 + before.local - after.local) * scale;
-    (delta.is_finite() && delta.abs() < extent).then_some(delta)
+    Some(regions as f64 * 65536.0 + before.local - after.local)
+}
+fn affine(origin: PanOrigin, view: Viewport) -> Option<[f64; 6]> {
+    let metrics = origin.metrics;
+    let x = delta(origin.viewport.x, view.x)?;
+    let y = delta(origin.viewport.y, view.y)?;
+    let [c, s] = coefficients(view.rotation);
+    let [oc, os] = coefficients(origin.viewport.rotation);
+    let d = oc * oc + os * os;
+    let (a, b) = if view.rotation == origin.viewport.rotation {
+        (1.0, 0.0)
+    } else {
+        ((c * oc + s * os) / d, (s * oc - c * os) / d)
+    };
+    let scale = view.zoom * metrics.backing;
+    let hx = metrics.width * metrics.backing / 2.0;
+    let hy = metrics.height * metrics.backing / 2.0;
+    let result = [
+        a,
+        -b,
+        b,
+        a,
+        hx - a * hx + b * hy + (c * x - s * y) * scale,
+        hy - b * hx - a * hy + (s * x + c * y) * scale,
+    ];
+    result.iter().all(|v| v.is_finite()).then_some(result)
+}
+fn outside(m: [f64; 6], metrics: Metrics) -> bool {
+    let width = (metrics.width * metrics.backing).ceil();
+    let height = (metrics.height * metrics.backing).ceil();
+    let corners = [[0.0, 0.0], [width, 0.0], [0.0, height], [width, height]];
+    let x = corners.map(|[x, y]| m[0] * x + m[1] * y + m[4]);
+    let y = corners.map(|[x, y]| m[2] * x + m[3] * y + m[5]);
+    x.iter().all(|v| *v < 0.0)
+        || x.iter().all(|v| *v > width)
+        || y.iter().all(|v| *v < 0.0)
+        || y.iter().all(|v| *v > height)
 }
 impl Engine {
     pub fn pan_preview(&self, owner: u64, session: u64, mapping: u64) -> Result<PanPreview, Code> {
@@ -42,26 +74,12 @@ impl Engine {
         {
             return Err(Code::Unavailable);
         }
-        let metrics = origin.metrics;
-        let scale = origin.viewport.zoom * metrics.backing;
-        let x = offset(
-            origin.viewport.x,
-            state.viewport.x,
-            scale,
-            (metrics.width * metrics.backing).ceil(),
-        );
-        let y = offset(
-            origin.viewport.y,
-            state.viewport.y,
-            scale,
-            (metrics.height * metrics.backing).ceil(),
-        );
+        let transform = affine(origin, state.viewport);
         Ok(PanPreview {
-            source: origin.source,
             mapping: origin.mapping,
             active: self.document.pan.is_some(),
-            outside: x.is_none() || y.is_none(),
-            offset: [x.unwrap_or(0.0), y.unwrap_or(0.0)],
+            outside: transform.is_none_or(|m| outside(m, origin.metrics)),
+            affine: transform.unwrap_or([1.0, 0.0, 0.0, 1.0, 0.0, 0.0]),
         })
     }
     pub(crate) fn remember_pan_origin(&mut self) {
@@ -73,7 +91,6 @@ impl Engine {
             self.pan_origin = Some(PanOrigin {
                 owner: state.owner,
                 session: state.session,
-                source: self.interaction_counter,
                 mapping: state.mapping,
                 content: state.content,
                 metrics,

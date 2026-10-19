@@ -17,6 +17,7 @@ const expected = [
   "memoryPanEnd",
   "memoryPanStep",
   "memoryZoomStep",
+  "memoryRotateStep",
   "memoryBegin",
   "memoryAppend",
   "memoryEnd",

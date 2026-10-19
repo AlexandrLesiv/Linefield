@@ -3,6 +3,12 @@ import { consume, reply } from "./bridge.ts";
 import type { ReplyValue } from "./bridge.ts";
 export type PanDirection = "left" | "right" | "up" | "down";
 export const viewportBridge = {
+  rotate: (v: ReplyValue, direction: "left" | "right" | "reset") =>
+    consume(
+      "rotate-step",
+      () => api.memoryRotateStep(v.owner, v.session, v.mapping, direction),
+      reply,
+    ),
   begin: (v: ReplyValue, pointer: number, x: number, y: number) =>
     consume(
       "pan-begin",

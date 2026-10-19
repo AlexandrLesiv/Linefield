@@ -130,3 +130,18 @@ pub fn fail_metrics_if_armed() {
         panic!("isolated fixture trap");
     }
 }
+
+#[cfg(feature = "e2e-fixtures")]
+#[wasm_bindgen(js_name = fixtureRotatedBoundary)]
+pub fn fixture_rotated_boundary() -> Result<(), JsValue> {
+    seed_fixture(Engine::fixture_rotated_boundary())
+}
+#[cfg(feature = "e2e-fixtures")]
+#[wasm_bindgen(js_name = fixtureFarView)]
+pub fn fixture_far_view() -> Result<(), JsValue> {
+    if LIVE.get() || BUSY.get() {
+        return Err(JsValue::from_str("boundary-capacity"));
+    }
+    ENGINE.with(|engine| engine.borrow_mut().fixture_far_view());
+    Ok(())
+}

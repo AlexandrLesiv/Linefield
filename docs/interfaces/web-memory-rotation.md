@@ -1,6 +1,6 @@
-# Buttons-only rotation numerical proposal
+# Buttons-only rotation contract
 
-Current proposal for P05-E02; production implementation and concrete ABI are not approved.
+Owner approved the numerical/ABI profile and immediate preview on2026-10-19 for P05-E02.
 Owner selected −15° / reset0° / +15° buttons only. No rotation drag gesture. Existing
 world coordinate range, zoom0.1…8 and0.25-logical-point geometry tolerance remain unchanged.
 
@@ -33,7 +33,7 @@ rows. Total candidate/reference observations16,680. A further1,296 projection-on
 cover24 orientations×3 zooms×2 extents×9 conservative envelope corners/axes. This projection
 calculation is JavaScript binary64 against exact rational arithmetic, not Rust geometry E2E.
 
-## Candidate arithmetic and remaining choices
+## Approved arithmetic
 
 Use24 fixed binary64 coefficient pairs with exact cardinals and quadrant symmetry, indexed
 by integer step0…23. No runtime trigonometry or libm dependency. Non-cardinal coefficients
@@ -49,7 +49,7 @@ Input/pan weighted differences are below2^1144; numerator below2^1309; denominat
 2^1290; regional denominator below2^1306. Round/remainder alignment stays within this
 bound.22×u64=1408bits leaves at least99bits headroom. No absolute i64 region flattens to
 Number; region addition/domain rejection/carry follows N1 and canonical+0. The diagnostic
-widens its shared magnitude workspace; production remains unchanged at20words.
+widens its shared magnitude workspace; production uses22words under this approval.
 
 ## Results and recommended numerical profile
 
@@ -104,7 +104,7 @@ radius and projection remain below2^22. The observed painted-axis corpus instead
 checks coefficient-weighted rotated AABB axes, including opposite i64 region extremes;
 it verifies exact arithmetic/classification without certifying a complete production culler.
 
-## Proposed typed boundary and behavior
+## Approved typed boundary and behavior
 
 Add only `memoryRotateStep(owner:Id, session:Id, mapping:Id,
 direction:"left"|"right"|"reset") -> Reply`, `Mapping.rotationStep:number` and
@@ -119,27 +119,34 @@ rotation policy or deriving the signed convention.
 Successful rotation preserves regional center and zoom; updates mapping/scene/presentation
 identities atomically; invalidates exact mapping readiness; changes no artwork/history.
 Reject during ink or active pan; reject stale owner/session/mapping unchanged. Reserve all
-required generation increments before mutation. Buttons follow existing idle mapping
-readiness (no queued click/repeat); field/IME handling remains untouched. Old page/frame
+required generation increments before mutation. Buttons accept an idle exact mapping or compatible original preview source (no queued click/repeat); field/IME handling remains untouched. Old page/frame
 receipts cannot acknowledge the new mapping. Center-anchored zoom stays center anchored.
 Pan at a rotated view uses the same true inverse on captured screen deltas, retaining
 captured angle. Pan-preview translation must rotate the world-center delta into screen
 coordinates before zoom/backing scaling; otherwise ink moves diagonally out of alignment.
 
-For the initial buttons-only slice recommend **exact-frame-only rotation publication**:
-retain last coherent frame while rebuilding, angle label reflects accepted Rust state,
-ink remains gated until accurate current mapping; use existing accessible busy semantics
-without loading cursor or overlay. This adds no preview affine ABI, cache/source lifetime
-or raster-fidelity policy. Known large-path work can delay this feedback; existing viewport
-performance limits still apply and are not waived merely because rotation is discrete.
+Immediate button feedback extends the approved pan preview to the full Rust-issued affine transform.
+`memoryPanPreview` retains its named query and ordinary Reply identities. Its copied payload is
+`sourceMapping:u64, active:bool, outside:bool, m11:f64, m12:f64, m21:f64, m22:f64,
+offsetX:f64, offsetY:f64`. Source mapping is the unique immutable raster-origin identity within
+owner/session; the former misleading sourceInteraction field is removed. Matrix order is
+`[m11 m12 offsetX; m21 m22 offsetY]` in backing pixels. Rust computes source/current coefficient
+matrix composition with the source determinant inverse; translation uses the current rotated
+regional center difference plus the same fractional viewport center in backing pixels.
+Same-angle composition is exact identity. No browser trigonometry, accumulated transform,
+new mutable owner, geometry copy, or image queue is introduced.
 
-If immediate button feedback is desired now, owner must separately approve extending the
-pan-only preview to full Rust-issued affine transforms. That option needs source session,
-content, mapping and metrics fencing; six affine coefficients in backing pixels computed
-from source/current mappings; white exposed corners; bounded original snapshot retention;
-no transform accumulation; exact publication replacement and stale completion rejection.
-It cannot use CSS/browser-calculated independent rotation semantics or unlock ink early.
-Do not reuse the two-offset pan query as if it already represented rotation.
+The source is fenced by owner/session/content/metrics/zoom, remains the original published
+composition across accepted repeated rotation, pan and reversals, and is retired only on exact
+current publication or incompatible mutation/lifecycle. Active ink/pan blocks rotation. Rotation
+before exact catchup is admitted from a valid source; ink remains exact-mapping gated. Zoom and
+arrow steps retain exact-mapping admission. Transformed source-corner AABB nonoverlap requests
+white while retaining the source for reversal. Exposed areas are white, later refined by accurate
+geometry; all visible strokes share the same transform. Accepted ink not yet visible remains
+canonical for accurate catchup. Publication rejects superseded mappings and switches atomically,
+without animation, loader or coordinate jump. The existing maximum two simultaneous image
+handles and no-readback rule remain. Temporary raster filtering can change antialiasing, never
+canonical geometry. No performance acceptance limit is waived.
 
 ## Required implementation cases and ownership
 
@@ -151,5 +158,4 @@ rapid clicks never publish mismatched geometry; invalid direction rejects withou
 near regional limits and subnormal inputs normalize under the reviewed rule; history and
 cancel remain unchanged. Isolated binding fixtures retain their boundary label, not native
 input evidence. Designer reviews compact en/uk controls/angle states. Independent review
-checks arithmetic/culling/security and actual exact-build E2E. No production tests were
-added by this experiment; no application code or ABI has been changed.
+checks arithmetic/culling/security and actual exact-build E2E. The experiment remains separate from production browser E2E; current implementation evidence is recorded in the web quality guidance.

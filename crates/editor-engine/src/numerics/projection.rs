@@ -1,7 +1,8 @@
-//! Exact regional painted-AABB classification precedes bounded floating projection.
-use super::Axis;
+//! Exact inverse-view AABB classification precedes bounded floating projection.
 use super::magnitude::{Magnitude, Signed, decode, larger, signed_add};
-use crate::Code;
+use super::rotation::{determinant, weighted};
+use super::{Axis, Viewport, coefficients};
+use crate::{Code, Metrics};
 fn relative(point: Axis, center: Axis) -> Result<Signed, Code> {
     let delta = i128::from(point.region) - i128::from(center.region);
     let regional = (
@@ -14,36 +15,71 @@ fn relative(point: Axis, center: Axis) -> Result<Signed, Code> {
         decode(-center.local)?,
     )
 }
-pub fn eligible(
+fn eligible_axis(
     minimum: Axis,
     maximum: Axis,
     center: Axis,
-    zoom: f64,
-    extent: f64,
+    view: Viewport,
+    extent: [f64; 2],
+    pair: [f64; 2],
 ) -> Result<bool, Code> {
-    let bits = zoom.to_bits();
+    let bits = view.zoom.to_bits();
     let mantissa = (bits & ((1_u64 << 52) - 1)) | (1_u64 << 52);
     let exponent = ((bits >> 52) & 2047) as i32 - 1023 - 52;
-    // Maximum admitted radius plus the approved rounding allowance; 2 logical AA guard.
     let radius = 256.0 + 2_f64.powi(-38);
     let lower = signed_add(relative(minimum, center)?, decode(-radius)?)?;
     let upper = signed_add(relative(maximum, center)?, decode(radius)?)?;
-    let half = signed_add(decode(extent / 2.0)?, decode(2.0)?)?
-        .1
-        .shift((-exponent) as usize)?;
+    let half = signed_add(
+        weighted(
+            signed_add(decode(extent[0] / 2.0)?, decode(2.0)?)?,
+            pair[0].abs(),
+        )?,
+        weighted(
+            signed_add(decode(extent[1] / 2.0)?, decode(2.0)?)?,
+            pair[1].abs(),
+        )?,
+    )?
+    .1
+    .shift((54 - exponent) as usize)?;
+    let determinant = determinant(pair);
+    let scaled = |v: Signed| -> Result<Signed, Code> {
+        Ok((v.0, v.1.multiply(mantissa)?.multiply_wide(determinant)?))
+    };
+    Ok(!larger(scaled(lower)?, (false, half)) && !larger((true, half), scaled(upper)?))
+}
+pub fn eligible(
+    minimum: [Axis; 2],
+    maximum: [Axis; 2],
+    view: Viewport,
+    metrics: Metrics,
+) -> Result<bool, Code> {
+    let [c, s] = coefficients(view.rotation);
+    let extent = [metrics.width, metrics.height];
     Ok(
-        !larger((lower.0, lower.1.multiply(mantissa)?), (false, half))
-            && !larger((true, half), (upper.0, upper.1.multiply(mantissa)?)),
+        eligible_axis(minimum[0], maximum[0], view.x, view, extent, [c, s])?
+            && eligible_axis(minimum[1], maximum[1], view.y, view, extent, [s, c])?,
     )
 }
-pub fn project(point: Axis, center: Axis, zoom: f64, extent: f64) -> Result<f64, Code> {
-    let delta = i128::from(point.region) - i128::from(center.region);
-    if delta.abs() > 5 {
+pub fn project(point: [Axis; 2], view: Viewport, metrics: Metrics) -> Result<[f64; 2], Code> {
+    let delta = |point: Axis, center: Axis| -> Result<f64, Code> {
+        let regions = i128::from(point.region) - i128::from(center.region);
+        if regions.abs() > 5 {
+            return Err(Code::NumericalCapacity);
+        }
+        Ok(regions as f64 * 65536.0 + point.local - center.local)
+    };
+    let x = delta(point[0], view.x)?;
+    let y = delta(point[1], view.y)?;
+    let [c, s] = coefficients(view.rotation);
+    let result = [
+        (c * x - s * y) * view.zoom + metrics.width / 2.0,
+        (s * x + c * y) * view.zoom + metrics.height / 2.0,
+    ];
+    if result
+        .iter()
+        .any(|v| !v.is_finite() || v.abs() >= 2_f64.powi(22))
+    {
         return Err(Code::NumericalCapacity);
     }
-    let projected = (delta as f64 * 65536.0 + point.local - center.local) * zoom + extent / 2.0;
-    if !projected.is_finite() || projected.abs() >= 2_f64.powi(21) {
-        return Err(Code::NumericalCapacity);
-    }
-    Ok(projected)
+    Ok(result)
 }

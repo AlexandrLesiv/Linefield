@@ -1,4 +1,4 @@
-use crate::numerics::{Viewport, normalize};
+use crate::numerics::{Viewport, unproject};
 use crate::{Code, Engine, Phase};
 #[derive(Clone, Copy)]
 pub(crate) struct Pan {
@@ -99,11 +99,8 @@ impl Engine {
             if !self.room(4) || sequence == u64::MAX {
                 return Err(Code::Exhausted);
             }
-            let next = Viewport {
-                x: normalize(pan.before.x, pan.start[0], point[0], pan.before.zoom, 16384)?,
-                y: normalize(pan.before.y, pan.start[1], point[1], pan.before.zoom, 16384)?,
-                zoom: pan.before.zoom,
-            };
+            let [x, y] = unproject(pan.before, pan.start, point, 16384)?;
+            let next = Viewport { x, y, ..pan.before };
             self.document.viewport = next;
             if let Some(value) = self.document.pan.as_mut() {
                 value.next += 1;

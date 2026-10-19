@@ -3,6 +3,7 @@ import { t } from "../locale.ts";
 import { button, element } from "../dom.ts";
 import { drawingTool } from "../drawing-controls.css.ts";
 import { copyDiagnosticsControl } from "./copy-diagnostics.ts";
+import { createRotationControls } from "./rotation-controls.ts";
 import { createZoomControls } from "./zoom-controls.ts";
 import {
   fixed,
@@ -84,4 +85,5 @@ export function applyFoundationControls(
   notice.textContent = t("memory.lifetime") + " " + t("memory.foundation");
   notice.parentElement?.append(copyDiagnosticsControl());
   createZoomControls(root);
+  createRotationControls(root);
 }

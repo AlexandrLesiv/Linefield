@@ -1,4 +1,4 @@
-use crate::numerics::normalize;
+use crate::numerics::unproject;
 use crate::{Code, Engine};
 #[derive(Clone, Copy)]
 pub enum PanDirection {
@@ -21,12 +21,15 @@ impl Engine {
                 return Err(Code::Exhausted);
             }
             let mut view = self.document.viewport;
-            match direction {
-                PanDirection::Left => view.x = normalize(view.x, -40.0, 0.0, view.zoom, 40)?,
-                PanDirection::Right => view.x = normalize(view.x, 40.0, 0.0, view.zoom, 40)?,
-                PanDirection::Up => view.y = normalize(view.y, -40.0, 0.0, view.zoom, 40)?,
-                PanDirection::Down => view.y = normalize(view.y, 40.0, 0.0, view.zoom, 40)?,
-            }
+            let delta = match direction {
+                PanDirection::Left => [-40.0, 0.0],
+                PanDirection::Right => [40.0, 0.0],
+                PanDirection::Up => [0.0, -40.0],
+                PanDirection::Down => [0.0, 40.0],
+            };
+            let [x, y] = unproject(view, delta, [0.0; 2], 40)?;
+            view.x = x;
+            view.y = y;
             self.document.viewport = view;
             self.pan_origin = None;
             self.advance();

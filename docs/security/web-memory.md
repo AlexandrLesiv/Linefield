@@ -112,3 +112,23 @@ diagnostic results for Rust/Wasm/CanvasKit browser E2E.
 Fresh reviewer independently assesses this delta with the actual packet/source diff. Findings,
 reviewed snapshot identity and disposition are recorded in the task/PR; review never grants
 owner architecture approval. Required implementation security checks remain P05-E01/E02 gates.
+
+## Buttons-only rotation amendment — owner approved2026-10-19
+
+SEC-02/03: fixed24-angle table,22-word checked arithmetic, determinant-corrected inverse and
+conservative exact inverse-view AABB classification preserve the stored domain and0.25 tolerance.
+Rotated hull normals and bounded2^22 projection precede the single f32 narrowing. Structured
+numerical errors preserve existing completed work. Atomic rotation reserves mapping/scene/
+presentation increments; malformed direction, stale owner/session/mapping or active interaction
+reject unchanged. Reset0 is a no-op. No history/document mutation follows accepted rotation.
+
+The read-only pan preview now returns six Rust-derived affine scalars and sourceMapping identity.
+It retains the same source/content/session/metrics/zoom fences and original image; accepted
+reversals cannot accumulate cropping or transform error. All source corners inform nonoverlap.
+Exact stale frames cannot unlock input or replace a newer preview; preview never acknowledges
+accurate mapping. Existing two-image bound, failure/retry and no-readback rules remain.
+SEC-09 allows rotate-step outcome and existing aggregate affine counters only; no angle/position
+or per-sample logs. SEC-10 excludes fixed regional/culling fixtures from release. No dependency,
+worker, storage, network, CSP, file or credential authority changes; other threat rows unchanged
+for that specific reason. Boundary fixtures and actual-browser controls/alignment/cancel/retention
+checks require independent review; numerical experiments alone are not acceptance.

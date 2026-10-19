@@ -495,8 +495,9 @@ remains canonical and appears in accurate catchup; it is never discarded.
 
 `memoryPanPreview(owner:u64, session:u64, mapping:u64) -> PanPreview` is a read-only named
 query with ordinary checked bigint inputs and explicit snapshot disposal. The snapshot includes
-the ordinary Reply identities and `sourceInteraction:u64`, `sourceMapping:u64`, `active:bool`,
-`outside:bool`, `offsetX:f64`, `offsetY:f64` (backing pixels). `unavailable` has zero payload.
+the ordinary Reply identities and `sourceMapping:u64`, `active:bool`,
+`outside:bool`, `m11:f64`, `m12:f64`, `m21:f64`, `m22:f64`,
+`offsetX:f64`, `offsetY:f64` (backing pixels). `unavailable` has zero payload.
 Rust retains one source viewport/content/metrics/session record, never artwork or a frame queue.
 Offsets use checked regional subtraction, bounded local floating arithmetic and unchanged zoom;
 when the original raster cannot overlap the current viewport, `outside` requests white while
@@ -505,7 +506,8 @@ An exact current publication retires that origin. Content/history changes, unrel
 changes, suspension, surface replacement or session departure invalidate it. A later pan may
 begin from this valid origin before exact catchup; its cancellation base is the latest accepted
 viewport while presentation still derives from the original image. Fresh ink, zoom and arrow
-steps retain exact-mapping acknowledgement rules. No preview scaling is added.
+steps retain exact-mapping acknowledgement rules. The owner-approved [rotation amendment](web-memory-rotation.md) adds buttons-only rotation and
+source/current affine composition, including repeated idle rotation before exact catchup. No zoom preview scaling is added.
 
 WMP-11 edge cases (writer owns browser E2E and isolated boundary-fixture evidence): dense held
 drag must show two positions before release; recent visible uncached ink moves with old ink;
@@ -543,7 +545,7 @@ mapping is current; pending content publication alone cannot reject the next str
 Viewport requests may supersede a
 rebuild; Back/cancel remain available. System remap or actual renderer failure cancels
 unfinished ink through Rust before invalidating mapping. Preserve completed Rust state and
-history. Transform an older raster only under the owner-approved temporary pan protocol above. If release
+history. Transform an older raster only under the owner-approved temporary pan/rotation protocol above. If release
 measurements cannot meet interactive expectations, return findings before adopting tiles,
 workers or per-segment drawing. This proposal adds no such mechanism. P1 approval alone does not approve arbitrary freezes;
 measure accepted-view publication delay and time to fresh ink under repeated pan supersession.

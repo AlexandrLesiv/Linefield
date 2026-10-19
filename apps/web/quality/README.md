@@ -113,3 +113,29 @@ historical failures; latest full-suite results are recorded in PR #7.
 Physical touch/stylus, system keyboards/IME, screen-reader walkthroughs, native hosts and
 proficient Ukrainian linguistic review remain separate acceptance work. Headless WebKit touch
 emulation is browser coverage, not physical Safari/iPhone certification.
+
+## Buttons-only rotation
+
+Owner-approved fixed15° steps/reset use Rust geometry and view-only state. The renderer applies
+one Rust-derived affine transform to the original published image; accurate mapping remains
+required for fresh ink. Rotation never creates history and is retained through Back/Resume.
+
+- `rotation.spec.ts`: actual buttons,24-step/reset original-pixel parity under held RAF,
+  unchanged snapshot count and≤2 image handles, bounded redacted rotation diagnostics,
+  rotated input, pan cancellation, zoom, Back and one-stroke history.
+- `rotation-affine.spec.ts`: three independent stroke locations at125%/DPR2 through rotation,
+  fractional pan and another rotation before catchup. Independent expected positions plus
+  each stroke's preview/exact bounds distinguish alignment from antialiasing refinement.
+- `rotation-layout.spec.ts` and pending-release layout:320px enlarged en/uk night controls,
+  visible unsaved opening and keyboard-visible≥44px controls inside the33dvh scrolling footer.
+  Text presence alone does not prove visibility; assert range/viewport intersections.
+- Isolated `Run rotation boundary`: malformed/stale/active/exhausted commands, source mapping,
+  exact cardinal/subnormal normalization, diagonal regional extrema and conservative culling.
+  `pan-failure.fixture.spec.ts` covers both pan and rotation affine failure, explicit display
+  Retry, preserved owner/history and no automatic recovery. Fixture dispatch is not native input.
+
+Current evidence is retained under ignored `.build-cache/web-memory/rotation-review/`; record
+exact production and fixture build hashes separately. Preserve failed setup/visibility runs
+alongside targeted reruns; do not describe their aggregate as a single clean full-suite run.
+Held-RAF resource and synchronous timing observations are bounded diagnostics, not profile-v1
+acceptance. Existing whole-path rendering and large-stroke Undo/Redo performance remain unresolved.
