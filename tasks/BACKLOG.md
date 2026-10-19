@@ -1,6 +1,6 @@
 # Product backlog
 
-This list records owner-approved functionality and priority. Positions 1–40 were explicitly
+This list records owner-approved functionality and priority. Positions 1–45 were explicitly
 approved in this chat. They are planned outcomes, not completed features or blanket approval
 of unresolved designs, ABI, numerical, storage or security choices. Execution begins only after
 applicable contracts and designs are approved. Split large outcomes into bounded child tasks,
@@ -53,6 +53,11 @@ by current owner policy. Preserve existing gallery/navigation, themes and Englis
 | 38 | Recognize drawn shapes | Child task to scope before implementation | Approved backlog; shape inventory/recognition design remains |
 | 39 | Import PDF references | [S06 Files and recovery](S06.md) | Approved backlog; decoding/scale/asset contracts remain |
 | 40 | Export SVG | Child task to scope before implementation | Approved backlog; format/fidelity/publication contracts remain |
+| 41 | Save pen presets | Child task to scope before implementation | Approved backlog; preset ownership/storage/design remains |
+| 42 | Configure touch and stylus actions | [S00F Input contracts](S00F.md) | Approved backlog; capability/binding/design contracts remain |
+| 43 | Focus on one layer | Child task to scope before implementation | Approved backlog; presentation/input design remains |
+| 44 | Export an editable Linefield file | [S06 Files and recovery](S06.md) | Approved backlog; format/snapshot/publication contracts remain |
+| 45 | Import an editable Linefield file | [S06 Files and recovery](S06.md) | Approved backlog; validation/versioning/import contracts remain |
 
 ## Visual and interaction design approval
 
@@ -359,6 +364,44 @@ appearance or editability. Review the supported feature matrix, text/images/mask
 resource bounds and destination publication. Do not silently promise lossless export or
 round-trip editing. Reuse approved export lifecycle semantics where applicable.
 Concepts reference: CS-DOC-022 (documented; SVG export was not exercised).
+
+## 41. Save pen presets
+
+Save and recall named combinations of width, color, opacity and smoothing. No new brush types.
+Depends on #15 and #16; review preset ownership/storage, naming and application during eligible
+interaction states. Applying a preset must not implicitly restyle existing artwork.
+Concepts references: CS-DOC-005/008; exact Linefield preset combinations are an adaptation.
+
+## 42. Configure touch and stylus actions
+
+Choose supported finger/stylus actions and shortcut-button mappings. Preserve visible controls
+and respect platform capabilities, system preferences, native text/IME priority and shared
+interaction guards. Review conflicts with keyboard bindings (#33), device absence and settings
+persistence. No unsupported hardware parity or new native host implementation is implied.
+Concepts references: CS-DOC-009/025 (documented; hardware behavior not physically verified).
+
+## 43. Focus on one layer
+
+Temporarily emphasize the active layer and dim other artwork without changing saved artwork
+or export appearance. Depends on #11; review selection/hit testing, hidden/locked states,
+entry/exit and accessible contrast. Focus is presentation state, not layer opacity (#34).
+Concepts reference: CS-DOC-020 (documented, not exercised).
+
+## 44. Export an editable Linefield file
+
+Export a coherent drawing snapshot in Linefield’s own format, preserving supported editable
+content. Review versioning, asset inclusion, resource bounds, destination publication and
+failure/cancellation. Follow selected immutable snapshot and export lifecycle policies where
+applicable; no Concepts-file or legacy-project compatibility is implied.
+Concepts reference: CS-DOC-022 (native-format exchange workflow, not Linefield format authority).
+
+## 45. Import an editable Linefield file
+
+Validate and import as an independent library copy. Preserve source bytes and handle unsupported
+versions or damaged files safely. Review captured source consistency, new identity assignment,
+asset/resource validation and atomic admission before implementation. No automatic source-file
+write-through or silent repair. Depends on the reviewed format in #44 and durable library.
+Concepts reference: CS-DOC-021; Linefield’s selected import-as-copy policy controls behavior.
 
 ## Further candidates
 
