@@ -17,7 +17,38 @@ split. The lead coordinates assignments and native feasibility; concurrency limi
 | Independent correctness/security/performance assessment | Fresh reviewer and relevant specialists | Lead scopes review; designer does not replace independence |
 | Scope, identified design approval and final acceptance | Owner | Lead presents the integrated packet |
 
-## One feature packet, no designer-to-designer handoff
+## Technical design before implementation
+
+The lead is the technical design coordinator; ui_ux_designer owns user experience and visual
+design, not the engine architecture. Before implementation, rust_engine and the relevant
+rendering/platform specialist prepare one bounded technical plan in the executable task.
+The lead integrates it, an independent reviewer checks consequential boundaries, and the
+owner approves unresolved material choices. No additional permanent agent role is required.
+
+The plan must assign each responsibility explicitly:
+
+| Layer | Required ownership declaration |
+| --- | --- |
+| Shared Rust | Document/editing/history and interaction rules; canonical geometry and coordinates; viewport mathematics and admission; authoritative visibility queries and typed immutable projections |
+| Host adapter | Actual pointer/keyboard acquisition, focus/IME/lifecycle translation, platform event ordering and forwarding to shared commands; no second editing engine |
+| Host presentation/renderer | UI/localization/accessibility, GPU/surface resources, rendering scheduling and disposable caches; consume shared geometry/transforms, never redefine coordinate or editing policy |
+| Shared boundary | Exact named calls/results, generation and identity checks, allocation/copy/disposal ownership, invalidation, failure/recovery and limits |
+| Verification | User-visible E2E scenarios, browser-hosted boundary fixtures explicitly distinguished from real user-action E2E, static checks and measured performance obligations, with owners and evidence gaps |
+
+Separate a shared rule from its platform mechanism: Rust decides whether a gesture is
+admitted and what it means; the host acquires events and owns device resources. Cache
+eviction cannot alter artwork/history. An immutable render request must have an identified
+owner and lifetime; it cannot become another mutable editor. Resource failure must preserve
+accepted work where possible and must not be hidden by presentation.
+
+Design the whole operation before optimizing one part. For viewport navigation, include
+already-visible and newly revealed strokes, min/max zoom, rotation, clipping/paint extent,
+continuous motion, cancellation and accurate-frame replacement. "The old image moves" is
+not sufficient acceptance for live canvas panning. Record known compromises as limitations
+and return material alternatives for owner review before coding them. The same checklist
+applies to remaining work in an active task; small fixes may use a short plan.
+
+## One integrated feature packet
 
 Research -> combined interaction/visual design -> native feasibility check -> owner approval
 of identified design -> engineer implementation -> combined running-interface design review

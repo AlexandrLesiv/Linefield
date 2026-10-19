@@ -49,6 +49,32 @@ Lead may mark ready only when applicable reviews/approvals are real and outstand
 Independent authorized work may continue while a sensitive slice waits. Material design changes reset
 the affected gate; do not ask again for ordinary fixes within already approved design scope.
 
+## 2a. Technical responsibility plan — before behavioral implementation
+
+Technical coordinator: lead. Shared contract author: rust_engine. Rendering/platform partners:
+pending. Independent technical reviewer and reviewed snapshot: pending.
+For routine fixes, keep this proportional; link unchanged approved mechanisms instead of
+reopening them. Apply the plan to remaining work when resuming an active task.
+
+| Responsibility | Shared Rust rule/state | Host/native mechanism | Typed boundary and owner/lifetime | Failure/invalidation | Acceptance/evidence |
+| --- | --- | --- | --- | --- | --- |
+| Commands, interaction and history | Pending | Pending | Pending | Pending | Pending |
+| Geometry, viewport and visibility | Pending | Pending | Pending | Pending | Pending |
+| Input, focus and lifecycle | Pending | Pending | Pending | Pending | Pending |
+| Rendering, caches and resources | Pending | Pending | Pending | Pending | Pending |
+| Presentation, accessibility and localization | Pending | Pending | Pending | Pending | Pending |
+
+- Complete user operation and transitions, including newly revealed content: pending.
+- Single mutable owner; immutable snapshots and disposal: pending.
+- Work/memory bounds, scheduling, failure/recovery and performance evidence: pending.
+- Alternatives, rejected options, material owner decisions and approval references: pending.
+- Implementation order/dependencies, owned files and stopping conditions: pending.
+- Technical review disposition and observable E2E acceptance: pending.
+
+Do not let browser/native code duplicate shared editing or coordinate policy. An optimization
+must satisfy the whole operation, not only a cached happy path. Known compromises must be
+explicit; presentation movement alone does not prove newly visible artwork is rendered.
+
 ## 3. Negative acceptance and implementation evidence
 
 | Scenario/SEC ID | Trigger/hostile condition | Required outcome and state that must stay unchanged | Layer/platform | Executable test ID | Result/revision/artifact |

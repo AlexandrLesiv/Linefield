@@ -18,7 +18,9 @@ Selected native document container: SQLite; no legacy document compatibility. Au
 
 Proposed details still under review: concrete scheduling/queue budgets, ABI, SQLite schema/save/recovery lifecycle and concrete native/PNG export behavior. Native snapshot + PNG export is selected for the preview (decision 18); SVG/PDF are deferred. Review docs/decisions.md before implementing.
 
-Defer rotation, multi-selection, layers, eraser, imported images, text, document clipboard, accounts/sync, agent transport, plugins, workbench, later platform applications and distribution. Web now leads implementation through P05; concrete Rust/Wasm, storage and execution contracts still require review. A clean architecture is not permission to add those features.
+P05-E02 separately approves buttons-only viewport rotation for the in-memory web editor;
+this does not approve artwork rotation editing or rotation on unimplemented native hosts.
+Defer multi-selection, layers, eraser, imported images, text, document clipboard, accounts/sync, agent transport, plugins, workbench, later platform applications and distribution. Web now leads implementation through P05; concrete Rust/Wasm, storage and execution contracts still require review. A clean architecture is not permission to add those features.
 
 Preview success means an actual running app, complete required acceptance matrix, native E2E, designer assessment, independent review, reproducible build instructions and explicit limitations. Software timing is not a physical pen-to-screen measurement.
 

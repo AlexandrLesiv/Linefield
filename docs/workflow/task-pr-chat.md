@@ -9,7 +9,11 @@ This is the current visual entry point. Bootstrap: [DX-G01](../../tasks/DX-G01.m
 Assign one ready executable task in a fresh chat. The harness checks authority/dependencies,
 creates or reuses its branch, coordinates scoped design/implementation/tests and independent
 review, and opens one PR in the approved repository. The owner reviews or requests changes;
-fixes remain in the same branch/PR. The owner merges. Missing approvals or required evidence
+fixes remain in the same branch/PR. Before behavioral work, the lead coordinates the explicit
+shared-Rust/host responsibility plan in the task template with rust_engine and relevant
+rendering/platform specialists; see [technical design responsibilities](../design/roles.md).
+Review the complete operation and its edge cases before implementing an optimization.
+The owner merges. Missing approvals or required evidence
 block dependent work rather than silently expanding the task.
 
 [Verified completion and next-chat handoff source](../../shared/diagrams/definitions/next-chat-handoff.json)

@@ -93,6 +93,17 @@ Require ordered actual samples, transient predictions, atomic batch validation, 
 
 ## Agent workflow
 
+Before behavioral implementation, the lead acts as technical design coordinator and requires
+a task-scoped layer-responsibility plan authored with rust_engine and the relevant rendering/
+platform specialists. Record shared Rust semantics versus host input/presentation/resources,
+single-writer and snapshot ownership, typed boundary, lifetime/invalidation/failure rules,
+performance implications, acceptance cases and unresolved owner decisions. Native targets
+must not duplicate editing/geometry policy. Review the complete user-visible operation,
+including newly revealed content during navigation, not only an already-visible preview.
+Use docs/design/roles.md and the technical-plan section of tasks/_template.md. Keep the plan
+proportional for routine fixes; do not invent a new permanent coordinator or reopen approved
+choices. Apply this requirement to remaining work in active tasks as well as new tasks.
+
 Lead owns scope, architecture coordination and integration. Use configured specialists for scoped work. ui_ux_designer specifies and reviews interactions, native visual design, adaptive design and motion; rust_engine owns shared semantics and typed boundary; macos_ui owns AppKit; rendering_performance owns measurements; build_reliability owns runners/evidence; fresh reviewer independently reviews substantive changes. Platform roles may review portability/design now; web leads implementation, while other native hosts follow macOS and their approved task/design. Keep shared semantics native/Wasm compatible, isolate OS storage/executor/render backends, and never make AppKit/Metal assumptions part of universal contracts.
 
 At most three concurrent subagents and two implementation writers; independent ready tasks may be in flight. Assign outcome, base commit, owned paths, dependencies/contracts, acceptance IDs, required evidence and stopping condition. Freeze contracts before parallel writers; one contract owner. Use isolated worktrees within this repository, not the reference repository. Do not delegate recursively without a specific approved independent task and capacity.
