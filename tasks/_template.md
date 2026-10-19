@@ -71,7 +71,7 @@ Native replay does not replace real native E2E. No relevant case is silently dro
 - Threat model/invariant/task documentation updated with the change: pending.
 - Lead acceptance decision with evidence: pending.
 
-Use quality/security-review-template.md for the review record. Author self-review is not independent.
+Use docs/security/review-template.md for the review record. Author self-review is not independent.
 Required unresolved review/test evidence prevents complete status. Merging/release still needs owner
 approval. Process requirements are mandatory; no automated template checker exists yet.
 

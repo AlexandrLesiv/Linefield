@@ -17,9 +17,8 @@ execution records, artifacts and metric summaries. Source task/design decisions 
 reviewed repository records; results come from actual runners, never manually invented dashboard
 statuses. Do not create duplicate mutable status databases in the editor and dashboard.
 
-![Developer evidence flow](diagrams/v2/developer-evidence-flow.svg)
+[Developer evidence flow source](../shared/diagrams/definitions/developer-evidence-flow.json)
 
-Native SVG, diagram style v2. The [migration index](diagrams/migration-v2.md) records source, status and text equivalent.
 
 App runtime logging is specified in logging.md. Tool-job events use a compatible correlation
 model but a distinct payload. Keep data schemas/pure selectors separate from process execution
@@ -57,7 +56,7 @@ or publishing now. Plain HTML reports remain useful without a running action ser
 
 Possible future layout, not source scaffolding required now:
 - scripts/: Node action entry points and process adapters.
-- quality/: reviewed metadata/evidence schemas and registry.
+- Local verification output: untracked runner records, logs and captures; task records link source checks.
 - .zed/tasks.json: thin task launchers, created only when real commands exist.
 - apps/workbench/: later approved developer GUI, separate from apps/web drawing product.
 - packages/dev-model/ and packages/dev-ui/: extract when shared model/views actually need them.

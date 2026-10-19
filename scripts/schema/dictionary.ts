@@ -17,7 +17,7 @@ export function dictionary(schema: Schema): string {
     "",
     "All source column/table notes survive below. Physical details absent from the original diagram notation are retained by exact reference CREATE SQL and indexes. Rust still owns transitions, contiguous sample order, identity validation, same-scope exact-set membership and cross-file recovery.",
     "",
-    "Failure preserves uncertain drawing bytes and recovery authority. Catalog publication cannot make separate drawing writes atomic; missing catalog authority does not authorize deletion. See [bootstrap contract](../empty-library-v1.md) and [removal contract](../deletion-v4/proposal.md) for trigger/state/outcome/invariant cases and test ownership.",
+    "Failure preserves uncertain drawing bytes and recovery authority. Catalog publication cannot make separate drawing writes atomic; missing catalog authority does not authorize deletion. See [bootstrap contract](../empty-library.md) and [removal contract](../removal.md) for trigger/state/outcome/invariant cases and test ownership.",
     "",
     "## Inputs",
     "",

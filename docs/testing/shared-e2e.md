@@ -7,9 +7,8 @@ Share behavioral scenarios, fixture semantics, acceptance IDs and evidence schem
 platform execute them through its actual UI. Share meaning and expected outcomes rather than
 coordinates, screenshots or a universal custom widget system.
 
-![Shared E2E scenarios and host drivers](../diagrams/v2/shared-e2e.svg)
+[Shared E2E scenarios and host drivers source](../../shared/diagrams/definitions/shared-e2e.json)
 
-Native SVG, diagram style v2. The [migration index](../diagrams/migration-v2.md) records source, status and text equivalent.
 
 ## Scenario contract
 

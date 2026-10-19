@@ -3,7 +3,7 @@
 Adopted by decision239. One executable task still owns one branch and one PR. Owner review is
 not a global development lock: other ready, independent tasks can proceed while a PR is open.
 
-![Independent task lanes](../diagrams/v2/parallel-task-lanes.svg)
+[Independent task lanes source](../../shared/diagrams/definitions/parallel-task-lanes.json)
 
 ## Ready means independently reviewable
 

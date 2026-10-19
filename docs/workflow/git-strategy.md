@@ -1,10 +1,8 @@
 # Linefield Git strategy
 
-Adopted under decisions238–239. Follow [parallel task rules](parallel-tasks.md); the historical
-bootstrap observations below describe the original checkout, not current GitHub state. Main merges
-and publication retain owner approval. Local commits for already-authorized work remain permitted.
+Adopted under decisions 238–239. Follow [parallel task rules](parallel-tasks.md). The owner merges main; authorized task work may be committed and proposed through its PR.
 
-## Recommended model
+## Selected model
 
 The owner adopted the [task → PR → fresh-chat lifecycle](task-pr-chat.md).
 Under that plan, each executable leaf task owns exactly one branch and one PR; parent milestones
@@ -20,40 +18,8 @@ Examples: `codex/p05-library-admission`, `codex/s02-create-contract`,
 `codex/dx-documentation-checks`. Platform work can have separate task branches once independently
 authorized, but shared contract changes need one owner and an agreed base before parallel work.
 
-![Git integration workflow](../diagrams/v2/git-integration-loop.svg)
+[Git integration workflow source](../../shared/diagrams/definitions/git-integration-loop.json)
 
-Native SVG, diagram style v2. The [migration index](../diagrams/migration-v2.md) records source, status and text equivalent.
-
-## Historical bootstrap procedure (completed in PR #1)
-
-Observed2026-10-19: only local branch `codex/project-foundation`, HEAD
-`fbcc30ca115d630d6c9e688b1525d3ee1dcc89d7`, two commits. No local main or remote-tracking refs
-were present; no Git remote is configured. There were255 status entries before this documentation
-addition; an untracked directory entry can contain many files. No remote protection is configured
-by this plan.
-Do not treat this checkout as a clean main or silently rename it.
-
-1. Inventory tracked changes, untracked files and relevant ignored evidence; map each to task,
-   owner and approval/evidence. Keep the current checkout intact. Git diff alone omits untracked
-   files, and a new branch alone does not save any uncommitted bytes.
-2. Preserve an explicit local recovery snapshot of eligible work before reorganizing it: reviewed
-   checkpoint commits on the current task branch, or a verified separate local copy if staging
-   cannot safely isolate intertwined changes. Include needed untracked files deliberately.
-   Never use blanket `git add .`, reset/clean, stash-as-backup or checkout replacement here.
-3. Review contents before staging: no credentials, personal drawings, private research captures,
-   browser profiles, package caches or downloaded vendor bundles. Preserve necessary local-only
-   data separately; exclusion from a commit is not authorization to delete it. Do not force-add
-   ignored artifacts wholesale. Record exclusions and recovery location without secret contents.
-4. Group the delivered work into coherent, verified commits where dependencies permit: web UI and
-   regression tests; shared resources/tooling; storage experiments and selected evidence; architecture
-   proposals. An explicitly labeled preservation checkpoint is acceptable when artificial splitting
-   would risk loss or misleading independent-pass claims. Do not rewrite earlier accepted history.
-5. Present the proposed initial main snapshot and validation to the owner. Only after approved
-   integration establish main at that identified commit. If a remote is later selected, agree its
-   destination/access and publication separately. This document does not authorize an upload.
-
-The bootstrap preservation/publication is recorded in DX-G01 and PR #1. The observations above
-are historical. Owner merge and integration verification remain distinct from publication.
 
 ## Daily change and agent workflow
 
@@ -103,7 +69,7 @@ does not undo an on-disk schema migration or recover overwritten data: those nee
 compatibility/recovery plan. Keep task branches/worktrees until integration and evidence are verified;
 archive only when needed untracked/ignored data is separately preserved.
 
-Commit small curated manifests, summaries, fixtures and review-pinned images where appropriate.
+Commit authored specifications, tests and necessary source fixtures. Generated reports, logs, captures and diagram exports remain local and untracked.
 Keep regenerable downloads, bulk captures and profiles out of ordinary history. Record hashes,
 tool versions and retrieval/retention instructions for external artifacts; do not claim a hash
 alone preserves the artifact. Propose artifact hosting/LFS only if actual size needs justify it.

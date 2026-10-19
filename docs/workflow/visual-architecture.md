@@ -8,7 +8,7 @@ This plan introduces no new agent configuration, service, installed renderer or 
 ## Current direction: generated native SVG
 
 Decision239 selects shared data definitions and DTCG2025.10 style tokens. New diagrams use the
-approved [v2 appearance](../design/diagram-style-v2.md). Edit the shared definition and regenerate;
+approved [v2 appearance](../design/diagram-style.md). Edit the shared definition and regenerate;
 do not hand-edit generated SVG output. Schema views use the same renderer and style tokens.
 See [diagram sources](../diagrams/README.md) and [schema authority](../database/README.md).
 
@@ -20,7 +20,7 @@ claim a general-purpose token processor. Style tokens are not database columns o
 SVG is the review/distribution artifact: selectable text, precise layout, scalable, offline and
 GitHub-viewable. Shared data keeps diagrams consistent; hand-tuned layout coordinates remain in
 versioned definitions. PNG is a secondary capture, never source authority. No external diagram
-service, renderer package or duplicate diagram notation is required. Historical review snapshots
+service, renderer package or duplicate diagram notation is required. Review snapshots
 are available in Git at e08f304; changing presentation does not renew architecture approval.
 
 ## Planner responsibility and review
@@ -68,7 +68,7 @@ is explanatory; typed contracts, executable migrations and test results remain t
 Keep `docs/decisions.md` as the canonical owner-decision log; do not create a competing approval
 registry or renumber historical decisions. Detailed topic packets live under
 `docs/architecture/<topic>-vN/`, linked from an architecture index. Existing packets can remain
-at their current paths; add diagrams alongside them rather than mass-moving historical records.
+at their current paths; link shared source definitions for diagrams.
 Suggested new packet layout: `README.md`, `context.svg`, `ownership.svg`, `create-sequence.svg`.
 For an explicitly chosen generated-format exception retain its source too.
 Use meaningful filenames, not numbered diagram fragments.

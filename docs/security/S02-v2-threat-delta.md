@@ -13,4 +13,4 @@ Status: proposed mitigations, not implemented controls. Sensitive design require
 
 Trust limitations: peer principal/authentication adapter must be proven; UUIDs and directory descriptors presented by arbitrary untrusted code are not automatically valid grants. Local FFI caller remains trusted to supply valid addresses. External writers with raw filesystem access can violate cooperative ownership. No encryption/server/cloud security selected here.
 No network uploads of diagnostics or drawing contents. Existing approved private historical schema review publication contains schema/notes only. CLI credential policy unchanged.
-Review status and final hashes: quality/historical-records.json (Git b0cb531). Planned tests are not executed evidence.
+Review status and final hashes: the recorded approval in decisions.md. Planned tests are not executed evidence.

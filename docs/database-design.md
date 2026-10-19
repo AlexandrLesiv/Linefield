@@ -29,10 +29,7 @@ open questions and proposed CT/INV/SU/scenario coverage. Use synthetic examples 
 
 ## Diagram format and maintenance
 
-Decision239 replaces the former hosted diagram workflow. Use [shared schema inputs and generated
-native SVG](database/README.md), a dictionary, persistence sequences and explicit approval scope.
-No external diagram account, CLI, layout file or publication is required. Historical schema source
-and publication evidence remain in Git; changing format does not change approved schema semantics.
+Use [shared schema inputs](database/README.md), generated local SVG, a dictionary, persistence sequences and explicit approval scope. Generated exports are untracked; agents read SQL and shared definitions.
 
 Reference SQL is executable constraint authority for the fourteen catalog/drawing tables. Shared
 annotations preserve reviewed descriptions and conceptual relationships; three jobs tables remain
@@ -60,14 +57,9 @@ and any conditions in the decision record. Before approval, do not implement the
 migrations. Schema changes affecting meaning, integrity, format compatibility or migration risk
 require renewed review. No agent can self-approve. Existing concurrency limits are unchanged.
 
-See [S02](../tasks/S02.md), [format plan](successor/formats.md), [autosave](autosave.md) and
+See [S02](../tasks/S02.md), [format plan](database/document-format.md), [autosave](autosave.md) and
 [contracts](contracts.md). App-managed draft retention and naming/publication policy remain open;
 the specialist must surface those questions rather than resolve them by choosing tables.
-
-## Historical tooling evaluation
-
-Earlier tool evaluations remain in Git e08f304 for provenance. Decision239 supersedes their
-selection and publishing requirements. Current inputs, commands and authority are linked above.
 
 ## Selected library storage layout
 
@@ -290,7 +282,7 @@ requires these local tables to render. Exact schema/STRICT mode/types are still 
 
 Keep tools with stable 16-byte UUID and locale-independent readable key, referenced by explicit
 per-tool relational preference tables where needed. No tool_versions table, tool-version FK or
-per-tool settings version. Decisions 69-70 are superseded. Use the top-level drawing format version
+per-tool settings version. Use the top-level drawing format version
 for artwork interpretation, and the catalog's own top-level schema version for local migrations.
 Neither native exports nor rendering may depend on catalog preferences.
 
@@ -444,5 +436,5 @@ must cover concurrent edits, deletions, retries, remote versions, authentication
 recovery. No cloud SDK/provider/CRDT/trust model or implementation is selected. Q60 stays pending.
 
 Decision 146: no application-level encryption for initial preview; retain standard SQLite/rusqlite.
-Previously discussed SQLCipher/key hierarchy is an unselected option, not an implementation task.
+No application encryption/key-management feature is approved.
 Review privacy/access/copy handling under this actual scope. Future cloud security stays separate.

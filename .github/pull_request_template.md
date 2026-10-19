@@ -1,7 +1,7 @@
 ## Outcome
 
 Task-ID: <stable task ID>
-Task-Package: <link to tasks/ID/task.json, or legacy brief during migration>
+Task: <link to tasks/ID.md>
 Concrete problem and resulting behavior:
 
 ## Scope and authority

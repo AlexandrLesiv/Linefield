@@ -86,7 +86,7 @@ which pending edits were lost. Native status/focus/exit flows need actual E2E af
 
 ui_ux_designer owns lifecycle wording, flows and status presentation; Rust owns revision/command policy;
 services delegate database mechanisms to SQLite; host engineers own dialogs/access. Follow
-[format review](successor/formats.md). No runtime tests or app behavior exist yet.
+[format review](database/document-format.md). No runtime tests or app behavior exist yet.
 
 Library lifecycle takes precedence over earlier references to choosing a permanent location for
 a draft. Library documents already have durable app-managed storage. Exported copies are proposed

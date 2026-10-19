@@ -1,6 +1,6 @@
 # Node TypeScript and browser tooling
 
-Status: the owner authorized root Node/TypeScript/pnpm tooling on 2026-10-16. Root package.json, pnpm-lock.yaml, strict tsconfig and Oxlint/Oxfmt are installed with a native .ts check runner. Node 24.12.0/pnpm 10.26.0 are the verified baseline; dependencies are pinned. Vite/browser and native application tooling remain pending. zx is optional, not installed.
+Status: the owner authorized root Node/TypeScript/pnpm tooling on 2026-10-16. Root package.json, pnpm-lock.yaml, strict tsconfig and Oxlint/Oxfmt are installed with a native .ts check runner. Node 24.12.0/pnpm 10.26.0 are the verified baseline; dependencies are pinned. Vite and browser verification support the implemented web prototype. Native application tooling remains pending. zx is optional, not installed.
 
 | Tool | Responsibility | Does not replace |
 | --- | --- | --- |
@@ -84,7 +84,7 @@ or silently refresh latest versions. Planned runner requirements are not executa
 ## Shared documentation tooling
 
 Native Node TypeScript generates SVG review artifacts from shared definitions and DTCG2025.10
-style tokens. The external schema CLI/dependency is retired under decision239. No hosted publication,
+style tokens. No external publication,
 credentials or renderer package is required. See [diagram inputs](diagrams/README.md) and
 [schema inputs](database/README.md). Root checks include generation drift and unit/schema parity.
 

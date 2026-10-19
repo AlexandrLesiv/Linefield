@@ -1,8 +1,0 @@
-{
-  "url": "https://sqlite.org/2026/sqlite-wasm-3540100.zip",
-  "expectedSha3_256": "87e24f6a4588692310b7942dc2fa7c7275bb9ba2e01d553e4115aa4a904a0050",
-  "actualSha3_256": "87e24f6a4588692310b7942dc2fa7c7275bb9ba2e01d553e4115aa4a904a0050",
-  "bytes": 728897,
-  "verifiedAt": "2026-10-18T22:08:15.478Z",
-  "installedAsProductDependency": false
-}

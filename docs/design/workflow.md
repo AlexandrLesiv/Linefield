@@ -77,7 +77,7 @@ artwork and user names through locale/direction changes; pseudo-locales are test
 
 ## Research and navigation
 
-Use [S00C](../../tasks/S00C.md) and the [research handoff](../research/README.md) for bounded evidence
+Use [S00C](../../tasks/S00C.md) and the research handoff for bounded evidence
 before substantial new design choices. Record accept/adapt/defer/reject reasoning. Research does
 not expand scope or require restarting the already-selected rail/top-settings direction.
 

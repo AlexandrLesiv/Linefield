@@ -1,7 +1,7 @@
 # Motion and transition design
 
 Status: partial. Authorized web gallery/drawing transitions, interruption, focus and reduced-motion
-behavior are implemented; see [P05-D01 browser evidence](../../apps/web/quality/web-drawing-v2/README.md).
+behavior are implemented; see P05-D01 browser evidence.
 Native mappings, actual host gesture evidence and complete foundation approval remain pending.
 Motion is part of interaction design and design review approval, not decoration added after coding.
 Follow [navigation](../navigation.md), [handoff](workflow.md) and [test cases](../testing/navigation-motion.md).
