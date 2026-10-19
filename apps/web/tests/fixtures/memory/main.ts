@@ -1,9 +1,9 @@
 import { cleanupFailure } from "./cleanup.ts";
-import { loadEngine, loadRenderer } from "../../src/memory/loader.ts";
+import { loadEngine, loadRenderer } from "../../../src/memory/loader.ts";
 import { boundaryMatrix } from "./boundary.ts";
 import { calibration } from "./calibration.ts";
 import { resourceLifetimes } from "./lifetimes.ts";
-import { diagnosticSnapshot } from "../../src/memory/diagnostics.ts";
+import { diagnosticSnapshot } from "../../../src/memory/diagnostics.ts";
 const output = document.querySelector("#result");
 const actions = document.querySelector("#actions");
 const canvas = document.querySelector("canvas");

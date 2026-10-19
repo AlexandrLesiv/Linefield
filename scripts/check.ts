@@ -19,7 +19,6 @@ const formatTargets = [
   "shared/localization",
   "apps/web/src",
   "apps/web/tests",
-  "apps/web/fixtures",
   "apps/web/package.json",
   "apps/web/tsconfig.json",
   "apps/web/vite.config.ts",
@@ -59,7 +58,6 @@ const checks: ReadonlyArray<readonly [string, string, readonly string[]]> = [
       "shared/localization",
       "apps/web/src",
       "apps/web/tests",
-      "apps/web/fixtures",
     ],
   ],
   ["format", "oxfmt/bin/oxfmt", ["--check", ...formatTargets]],
@@ -102,7 +100,6 @@ try {
   await checkSourceSize(join(root, "shared"));
   await checkSourceSize(join(root, "apps/web/src"));
   await checkSourceSize(join(root, "apps/web/tests"));
-  await checkSourceSize(join(root, "apps/web/fixtures"));
   await checkSourceSize(join(root, "apps/web/wasm/src"));
   await checkSourceSize(join(root, "crates/editor-engine/src"));
   console.log(JSON.stringify({ check: "script-source-size", status: "passed" }));

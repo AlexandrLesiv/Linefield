@@ -1,7 +1,7 @@
-import "../../src/main.ts";
+import "../../../src/main.ts";
 import * as api from "#memory-bindings";
-import { loadEngine } from "../../src/memory/loader.ts";
-import { diagnosticSnapshot } from "../../src/memory/diagnostics.ts";
+import { loadEngine } from "../../../src/memory/loader.ts";
+import { diagnosticSnapshot } from "../../../src/memory/diagnostics.ts";
 const arm = document.querySelector("#arm");
 if (!(arm instanceof HTMLButtonElement)) throw Error("isolated control absent");
 arm.addEventListener("click", () => {

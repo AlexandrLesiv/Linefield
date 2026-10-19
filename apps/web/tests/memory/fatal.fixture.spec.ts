@@ -3,7 +3,7 @@ import { settleSurface } from "./layout-assertions.ts";
 test("WMR-04 isolated actual engine trap stays fatal across Back Resume without further Rust calls", async ({
   page,
 }, info) => {
-  await page.goto("/fixtures/memory/app.html");
+  await page.goto("/tests/fixtures/memory/app.html");
   await page.getByRole("button", { name: "Arm isolated engine trap" }).click();
   await expect(page.locator("#arm")).toBeHidden();
   await page.locator(".new-tile").click();

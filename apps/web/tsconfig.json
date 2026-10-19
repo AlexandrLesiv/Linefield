@@ -11,6 +11,6 @@
       "#memory-bindings": ["../../.build-cache/web-memory/production/linefield_web_memory.d.ts"]
     }
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts", "*.ts", "fixtures/**/*.ts"],
+  "include": ["src/**/*.ts", "tests/**/*.ts", "*.ts"],
   "exclude": ["node_modules", "dist"]
 }

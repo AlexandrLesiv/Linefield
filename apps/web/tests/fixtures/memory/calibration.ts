@@ -1,6 +1,6 @@
 import { environment } from "./environment.ts";
 import type { CanvasKit, Path } from "canvaskit-wasm";
-import { Presentation } from "../../src/memory/presentation.ts";
+import { Presentation } from "../../../src/memory/presentation.ts";
 import { fixturePath, pixelDigest, scenes, fixtureSeed } from "./geometry.ts";
 export async function calibration(kit: CanvasKit, canvas: HTMLCanvasElement) {
   const results = [];

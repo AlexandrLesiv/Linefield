@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 test("WMR-04 production has narrow Wasm CSP and no isolated fixture entry", async ({ page }) => {
-  await page.goto("/fixtures/memory/index.html");
+  await page.goto("/tests/fixtures/memory/index.html");
   await expect(page.getByRole("button", { name: "Run boundary matrix" })).toHaveCount(0);
   await page.goto("/");
   const policy = await page

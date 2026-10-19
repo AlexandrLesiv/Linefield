@@ -20,7 +20,8 @@ pnpm --filter @linefield/web build
 node scripts/web-memory/audit.ts
 ```
 
-The production and isolated fixture builds use distinct Cargo targets, generated bindings,
+Test-only browser pages and helpers live in `apps/web/tests/fixtures/memory`; application
+code lives in `apps/web/src`. The production and isolated fixture builds use distinct Cargo targets, generated bindings,
 assets and HTML entry points. Always rebuild production after fixtures and run the release
 audit. The audit inspects actual Wasm exports, generated declarations/glue, the built manifest,
 release chunks and script policy. Ordinary app E2E additionally checks that the fixture URL

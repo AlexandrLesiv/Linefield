@@ -1,7 +1,7 @@
-import { diagnosticSnapshot } from "../../src/memory/diagnostics.ts";
+import { diagnosticSnapshot } from "../../../src/memory/diagnostics.ts";
 import * as api from "#memory-bindings";
-import { bridge } from "../../src/memory/bridge.ts";
-import type { ReplyValue } from "../../src/memory/bridge.ts";
+import { bridge } from "../../../src/memory/bridge.ts";
+import type { ReplyValue } from "../../../src/memory/bridge.ts";
 function check(condition: boolean, label: string): void {
   if (!condition) throw Error(label);
 }

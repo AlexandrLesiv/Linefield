@@ -11,7 +11,7 @@ for (const label of [
   test(`WMR-03/04/06 isolated browser evidence: ${label}`, async ({ page, browser }, info) => {
     const errors: string[] = [];
     page.on("pageerror", (error) => errors.push(error.message));
-    await page.goto("/fixtures/memory/index.html");
+    await page.goto("/tests/fixtures/memory/index.html");
     await page.getByRole("button", { name: label, exact: true }).click();
     await expect(page.locator("#result")).toContainText('"status":"passed"', { timeout: 150_000 });
     const result = await page.locator("#result").textContent();

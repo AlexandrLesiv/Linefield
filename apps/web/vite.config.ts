@@ -24,8 +24,10 @@ export default defineConfig(({ mode }) => {
             emptyOutDir: true,
             rollupOptions: {
               input: {
-                calibration: fileURLToPath(new URL("fixtures/memory/index.html", import.meta.url)),
-                app: fileURLToPath(new URL("fixtures/memory/app.html", import.meta.url)),
+                calibration: fileURLToPath(
+                  new URL("tests/fixtures/memory/index.html", import.meta.url),
+                ),
+                app: fileURLToPath(new URL("tests/fixtures/memory/app.html", import.meta.url)),
               },
             },
           }
