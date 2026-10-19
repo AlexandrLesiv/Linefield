@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>Wear OS · Linefield tasks</title><style>
+html { scrollbar-gutter: stable; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #FFFFFF; color: #233148; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; font-size: 16px; line-height: 1.6; overflow-wrap: anywhere; }
+.page { max-width: 720px; padding: 80px 24px; margin: auto; }
+a { color: inherit; text-underline-offset: 4px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible, summary:focus-visible { outline: 3px solid #233148; outline-offset: 5px; border-radius: 3px; }
+.skip { position: absolute; top: -100px; padding: 12px; background: #FFFFFF; }
+.skip:focus { top: 8px; }
+.back { display: inline-block; margin-bottom: 44px; color: #59677C; text-decoration: none; }
+h1 { font-size: calc(40px * .8); line-height: 1.25; letter-spacing: -.02em; margin: 0 0 12px; }
+h2 { font-size: 20px; line-height: 1.4; margin: 28px 0 16px; }
+h3 { font-size: 16px; line-height: 1.5; margin: 24px 0 10px; }
+p { margin: 0 0 16px; }
+.status, .meta, .back { color: #59677C; }
+.status { margin: 0; }
+.meta { font-size: 14px; }
+.lead { white-space: pre-line; font-size: 18px; margin: 36px 0 28px; max-width: 540px; }
+.primary { display: inline-block; border-radius: 8px; padding: 10px 20px; background: #233148; color: #FFFFFF; font-weight: 600; text-decoration: none; }
+.primary:hover { text-decoration: underline; }
+.blocker { border-left: 2px solid #E1E6ED; padding-left: 16px; margin-bottom: 28px; }
+.groups { margin-top: 48px; }
+.group { border-top: 1px solid #E1E6ED; }
+.group:last-child { border-bottom: 1px solid #E1E6ED; }
+.group > summary { padding: 22px 0; font-weight: 500; }
+summary { cursor: pointer; padding: 12px 0; }
+summary::marker { color: #59677C; }
+.group-content { padding: 0 0 28px 20px; }
+.group-content > section:first-child h2 { margin-top: 8px; }
+.group-content details { margin-top: 12px; }
+.panel { margin: 0 0 28px; }
+.item { padding: 18px 0; border-bottom: 1px solid #E1E6ED; }
+.item:last-child { border-bottom: 0; }
+.row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.tag { color: #59677C; font-size: 14px; }
+.warning { color: #59677C; }
+code, .digest { font-family: ui-monospace, monospace; font-size: 14px; overflow-wrap: anywhere; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; line-height: 1.6; background: #F7F8FA; padding: 16px; max-height: 440px; overflow-y: auto; }
+ul { padding-left: 22px; margin: 8px 0 18px; }
+.task-list { padding: 0; margin: 36px 0 0; list-style: none; }
+.task-list li { border-bottom: 1px solid #E1E6ED; }
+.task-list a { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 18px 0; text-decoration: none; }
+.task-list a:hover > span:first-child { text-decoration: underline; }
+.task-id { display: block; color: #59677C; font-size: 14px; }
+.source-link { margin-top: 24px; }
+.task-list .status { flex-shrink: 0; font-size: 14px; }
+@media (max-width: 600px) {
+  .page { padding: 32px 24px; }
+  .task-list a { flex-direction: column; gap: 4px; }
+  .back { margin-bottom: 36px; }
+  .lead { margin-top: 28px; }
+  .group-content { padding-left: 8px; }
+}
+@media print { .page { padding: 0; } .back, .skip { display: none; } }
+</style></head>
+<body><a class="skip" href="#main">Skip to task content</a><div class="page"><a class="back" href="index.html">← Tasks</a>
+<main id="main"><h1>Wear OS</h1><p class="status">P12 · Source task</p>
+<p class="lead">Original task document. Status and evidence have not yet been reconciled into a structured package.</p>
+<details class="group"><summary>Task details</summary><div class="group-content"><h3>P12 Wear OS</h3><p>Status: target and documentation scaffold authorized 2026-10-16; no implementation.</p><p>Host: apps/wearos. Engineering owner: android_ui. UX/UI design follow docs/design/roles.md.<br>Owner selected view-only access (decision 152); obtain identified feature/design review and implementation approval.</p><p>Dependencies: macOS S08 acceptance, reviewed Android/Rust typed adapter, explicit implementation<br>direction and declared supported Wear OS devices/SDK/toolchain. Early design/feasibility allowed.</p><p>Before implementation decide:<br>- Watch-native toolkit. Google recommends [Compose for Wear OS](https://developer.android.com/training/wearables/compose).<br>  Review its benefits and the Wear-specific component and lifecycle differences from phone/tablet Compose Material 3; no framework is adopted now.<br>- Standalone/companion dependency and document acquisition, freshness/offline behavior, bounded<br>  local cache. Follow [standalone guidance](https://developer.android.com/training/wearables/apps/standalone-apps);<br>  phone presence, network/auth or transfer transport is not assumed from watchOS&#39;s plan.<br>- Shared viewer capability/schema conformance and surface/Skia feasibility, size/memory/battery<br>  limits. No new renderer or custom command transport may be introduced silently.<br>- Round/small layout, touch/rotary input, native Back/swipe dismissal, text scaling/TalkBack,<br>  reduced motion, app suspension/resume and stopped drawing work when not visible.<br>- Retained-view safety after revoked/missing sources; privacy-safe logs and real-device evidence.</p><p>Evidence: actual build/device or explicitly labeled emulator checks; shared VIEWER-001 for approved viewer<br>scope, ROUTE/MOTION and applicable I18N scenarios, read-only rejection in Rust,<br>loading/error/offline/recreation, native focus and resource measurements. Missing hardware is<br>not a pass. Tiles, complications, watch faces and network features are separate scopes.</p><p>English and Ukrainian are required launch languages; English is source/fallback. OS-selected language with no in-app switch, locale-format and pseudo-RTL<br>readiness still apply. Use [i18n](../docs/internationalization.md), [navigation](../docs/navigation.md),<br>[motion](../docs/design/motion.md), [shared E2E](../docs/testing/shared-e2e.md) and [quality](../docs/quality.md).<br>Ask before foreground checks; no installs/security changes or runtime implementation now.</p><p>Launch acceptance includes I18N-LAUNCH-002/I18N-UK-002 on this host, including viewer UI where applicable. See docs/testing/internationalization.md; no resources or execution evidence exist yet.<br></p></div></details>
+<p class="meta source-link"><a href="https://github.com/AlexandrLesiv/Linefield/blob/codex/dx-t02-task-packages/tasks/P12.md" rel="noreferrer">View source ↗</a></p></main>
+</div></body></html>

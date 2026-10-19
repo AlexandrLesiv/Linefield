@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>task packages and read-only review pilot · Linefield tasks</title><style>
+html { scrollbar-gutter: stable; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #FFFFFF; color: #233148; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; font-size: 16px; line-height: 1.6; overflow-wrap: anywhere; }
+.page { max-width: 720px; padding: 80px 24px; margin: auto; }
+a { color: inherit; text-underline-offset: 4px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible, summary:focus-visible { outline: 3px solid #233148; outline-offset: 5px; border-radius: 3px; }
+.skip { position: absolute; top: -100px; padding: 12px; background: #FFFFFF; }
+.skip:focus { top: 8px; }
+.back { display: inline-block; margin-bottom: 44px; color: #59677C; text-decoration: none; }
+h1 { font-size: calc(40px * .8); line-height: 1.25; letter-spacing: -.02em; margin: 0 0 12px; }
+h2 { font-size: 20px; line-height: 1.4; margin: 28px 0 16px; }
+h3 { font-size: 16px; line-height: 1.5; margin: 24px 0 10px; }
+p { margin: 0 0 16px; }
+.status, .meta, .back { color: #59677C; }
+.status { margin: 0; }
+.meta { font-size: 14px; }
+.lead { white-space: pre-line; font-size: 18px; margin: 36px 0 28px; max-width: 540px; }
+.primary { display: inline-block; border-radius: 8px; padding: 10px 20px; background: #233148; color: #FFFFFF; font-weight: 600; text-decoration: none; }
+.primary:hover { text-decoration: underline; }
+.blocker { border-left: 2px solid #E1E6ED; padding-left: 16px; margin-bottom: 28px; }
+.groups { margin-top: 48px; }
+.group { border-top: 1px solid #E1E6ED; }
+.group:last-child { border-bottom: 1px solid #E1E6ED; }
+.group > summary { padding: 22px 0; font-weight: 500; }
+summary { cursor: pointer; padding: 12px 0; }
+summary::marker { color: #59677C; }
+.group-content { padding: 0 0 28px 20px; }
+.group-content > section:first-child h2 { margin-top: 8px; }
+.group-content details { margin-top: 12px; }
+.panel { margin: 0 0 28px; }
+.item { padding: 18px 0; border-bottom: 1px solid #E1E6ED; }
+.item:last-child { border-bottom: 0; }
+.row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.tag { color: #59677C; font-size: 14px; }
+.warning { color: #59677C; }
+code, .digest { font-family: ui-monospace, monospace; font-size: 14px; overflow-wrap: anywhere; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; line-height: 1.6; background: #F7F8FA; padding: 16px; max-height: 440px; overflow-y: auto; }
+ul { padding-left: 22px; margin: 8px 0 18px; }
+.task-list { padding: 0; margin: 36px 0 0; list-style: none; }
+.task-list li { border-bottom: 1px solid #E1E6ED; }
+.task-list a { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 18px 0; text-decoration: none; }
+.task-list a:hover > span:first-child { text-decoration: underline; }
+.task-id { display: block; color: #59677C; font-size: 14px; }
+.source-link { margin-top: 24px; }
+.task-list .status { flex-shrink: 0; font-size: 14px; }
+@media (max-width: 600px) {
+  .page { padding: 32px 24px; }
+  .task-list a { flex-direction: column; gap: 4px; }
+  .back { margin-bottom: 36px; }
+  .lead { margin-top: 28px; }
+  .group-content { padding-left: 8px; }
+}
+@media print { .page { padding: 0; } .back, .skip { display: none; } }
+</style></head>
+<body><a class="skip" href="#main">Skip to task content</a><div class="page"><a class="back" href="index.html">← Tasks</a>
+<main id="main"><h1>task packages and read-only review pilot</h1><p class="status">DX-T02 · Source task</p>
+<p class="lead">Original task document. Status and evidence have not yet been reconciled into a structured package.</p>
+<details class="group"><summary>Task details</summary><div class="group-content"><h3>DX-T02 — task packages and read-only review pilot</h3><p>Type: executable leaf. Status: owner review. Owner: lead/current chat.<br>Branch: codex/dx-t02-task-packages. Base: afb82c5deb4cfa3d3e9a641659a20887b9689b8a.<br>Stacked on P05-S01 / PR #3 because the pilot references its exact retained evidence.<br>Owner merges parents first; retarget and verify integration afterward. PR: [#4](https://github.com/AlexandrLesiv/Linefield/pull/4).</p><h3>Scope and authority</h3><p>Owner approved structured task documentation, schema/pilot conversion and visual preview,<br>including PR and applicable automated-test links. Deliver JSON schema, two supplemental packages,<br>validation, compact generated Markdown and static HTML review pages. The preview is proposed UI<br>for owner review, not a complete execution workbench. No drawing app, storage or engine changes.<br>Preserve original task documents and evidence bytes. No automatic GitHub mutation or test execution<br>from task data. Repository publication remains authorized; only the owner merges.</p><p>Lead owns pilots, rendering/generation, root integration and handoff. build_reliability owns<br>schema/model/validator/tests. Designer specifies and reviews the preview; fresh reviewer audits.<br>No competing writers; isolated worktree. Shared contract frozen before consumer implementation.</p><h3>Acceptance and edge cases</h3><p>- TASK-01: versioned JSON and strict bounded validation reject unsupported/unknown fields, bad<br>  types, duplicate IDs and unresolved references. Required authority/security/scope retained.<br>- TASK-02: preserve historical bytes; hash-check regular in-repository sources; reject path escapes,<br>  symlinks, missing files and digest mismatches. Recorded outcomes never imply current freshness.<br>- TASK-03: PR URL/repository/number agree; observations have dates and revisions. Planned tests<br>  differ from executable tests. Criteria link test/evidence IDs; completion is not PR closure.<br>- TASK-04: deterministic HTML/Markdown generation and drift checks. Safe text-only rendering of<br>  imported prose/logs, no executable HTML/commands/network loading. Failed evidence stays visible.<br>- TASK-05: desktop/narrow, keyboard/disclosure/navigation and malicious-text headless browser tests;<br>  designer plus independent review. Shared approved tokens provide the visual proposal.</p><p>Security: existing sensitive boundary, repository data becomes browser-visible output. Treat<br>source content as untrusted display text; validated repository paths and pinned hashes, escaping, CSP and no JS or<br>command endpoints. Existing local action contract is reused as context, not extended execution.<br>Reject malformed evidence before generation; do not replace originals or infer missing approval.<br>No native or production implementation authorization follows from a pilot task record.</p><p>Stop with verified pilot, visual review and one PR ready for owner review. Wider migration and<br>execution/edit controls are separate slices. Root check, focused unit and preview browser checks<br>are required; drawing-app browser rerun is unnecessary when its inputs are unchanged.</p><h3>Owner-requested minimal layout revision</h3><p>Owner selected minimal mockup v3 and requested the HTML update. Four initially closed native<br>disclosures and a name/status task list replace the expanded dashboard layout. Original records<br>remain intact. Current checks/reviews: quality/task-packages-v3. Same task branch and PR #4.</p><h3>Owner-requested complete inventory and stable layout</h3><p>All 44 task documents now appear once, with structured packages taking precedence over matching<br>Markdown sources. Other documents remain explicitly labelled Source task; their historical status<br>is not inferred or normalized. README/template are navigation/scaffold rather than tasks.<br>Short Review/Blocked labels, secondary IDs, reduced repeated labels and stable root scrollbar<br>space preserve the minimal reading layout. TASK-04 covers completeness, escaping and bounded<br>source reads (256 KiB/file, 4 MiB aggregate); TASK-05 covers source navigation and column stability.<br>Current evidence and specialist reviews: quality/task-packages-v4. Same branch and PR #4.<br></p></div></details>
+<p class="meta source-link"><a href="https://github.com/AlexandrLesiv/Linefield/blob/codex/dx-t02-task-packages/tasks/DX-T02.md" rel="noreferrer">View source ↗</a></p></main>
+</div></body></html>

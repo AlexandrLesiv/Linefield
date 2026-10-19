@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>Internationalization decisions and native resource contract · Linefield tasks</title><style>
+html { scrollbar-gutter: stable; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #FFFFFF; color: #233148; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; font-size: 16px; line-height: 1.6; overflow-wrap: anywhere; }
+.page { max-width: 720px; padding: 80px 24px; margin: auto; }
+a { color: inherit; text-underline-offset: 4px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible, summary:focus-visible { outline: 3px solid #233148; outline-offset: 5px; border-radius: 3px; }
+.skip { position: absolute; top: -100px; padding: 12px; background: #FFFFFF; }
+.skip:focus { top: 8px; }
+.back { display: inline-block; margin-bottom: 44px; color: #59677C; text-decoration: none; }
+h1 { font-size: calc(40px * .8); line-height: 1.25; letter-spacing: -.02em; margin: 0 0 12px; }
+h2 { font-size: 20px; line-height: 1.4; margin: 28px 0 16px; }
+h3 { font-size: 16px; line-height: 1.5; margin: 24px 0 10px; }
+p { margin: 0 0 16px; }
+.status, .meta, .back { color: #59677C; }
+.status { margin: 0; }
+.meta { font-size: 14px; }
+.lead { white-space: pre-line; font-size: 18px; margin: 36px 0 28px; max-width: 540px; }
+.primary { display: inline-block; border-radius: 8px; padding: 10px 20px; background: #233148; color: #FFFFFF; font-weight: 600; text-decoration: none; }
+.primary:hover { text-decoration: underline; }
+.blocker { border-left: 2px solid #E1E6ED; padding-left: 16px; margin-bottom: 28px; }
+.groups { margin-top: 48px; }
+.group { border-top: 1px solid #E1E6ED; }
+.group:last-child { border-bottom: 1px solid #E1E6ED; }
+.group > summary { padding: 22px 0; font-weight: 500; }
+summary { cursor: pointer; padding: 12px 0; }
+summary::marker { color: #59677C; }
+.group-content { padding: 0 0 28px 20px; }
+.group-content > section:first-child h2 { margin-top: 8px; }
+.group-content details { margin-top: 12px; }
+.panel { margin: 0 0 28px; }
+.item { padding: 18px 0; border-bottom: 1px solid #E1E6ED; }
+.item:last-child { border-bottom: 0; }
+.row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.tag { color: #59677C; font-size: 14px; }
+.warning { color: #59677C; }
+code, .digest { font-family: ui-monospace, monospace; font-size: 14px; overflow-wrap: anywhere; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; line-height: 1.6; background: #F7F8FA; padding: 16px; max-height: 440px; overflow-y: auto; }
+ul { padding-left: 22px; margin: 8px 0 18px; }
+.task-list { padding: 0; margin: 36px 0 0; list-style: none; }
+.task-list li { border-bottom: 1px solid #E1E6ED; }
+.task-list a { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 18px 0; text-decoration: none; }
+.task-list a:hover > span:first-child { text-decoration: underline; }
+.task-id { display: block; color: #59677C; font-size: 14px; }
+.source-link { margin-top: 24px; }
+.task-list .status { flex-shrink: 0; font-size: 14px; }
+@media (max-width: 600px) {
+  .page { padding: 32px 24px; }
+  .task-list a { flex-direction: column; gap: 4px; }
+  .back { margin-bottom: 36px; }
+  .lead { margin-top: 28px; }
+  .group-content { padding-left: 8px; }
+}
+@media print { .page { padding: 0; } .back, .skip { display: none; } }
+</style></head>
+<body><a class="skip" href="#main">Skip to task content</a><div class="page"><a class="back" href="index.html">← Tasks</a>
+<main id="main"><h1>Internationalization decisions and native resource contract</h1><p class="status">S00B · Source task</p>
+<p class="lead">Original task document. Status and evidence have not yet been reconciled into a structured package.</p>
+<details class="group"><summary>Task details</summary><div class="group-content"><h3>S00B Internationalization decisions and native resource contract</h3><p>Status: partially implemented for the web prototype: shared en/uk data catalogs, deterministic generated resources, web runtime and browser launch/Unicode evidence exist. Native runtime contracts/design review and proficient Ukrainian linguistic review remain pending. See [current readiness](../docs/localization-web-readiness.md).</p><p>Outcome: establish day-one i18n across all hosts while keeping Rust behavior/documents locale-independent. Run alongside S00A/S02, not as a late porting cleanup.</p><p>Owners: lead and rust_engine for contract; native implementers for resources/parsing; ui_ux_designer for wording, locale interaction semantics and RTL/adaptive presentation; build_reliability for catalog/test evidence.</p><p>Selected: English (en) and Ukrainian (uk) for launch on every host; English source/fallback. OS/per-app preferences select at launch (browser preferences on web), with no in-app switch. Remaining work: native catalogs, glossary/context, typed arguments, locale negotiation/region separation, parsing, translation review and evidence. Shared resources and web consumption are implemented; native host consumption is pending.</p><p>Read [i18n architecture](../docs/internationalization.md) and [test matrix](../docs/testing/internationalization.md). Map CT-09, INV-11 and SU-20 to affected contracts and shared scenario IDs. A new language-picker screen, translation service, text drawing tool or cross-platform catalog runtime requires separate scope/review.</p><p>Deliverables: concrete reviewable native resource/presentation contract, examples/negative cases, semantic glossary, English source/fallback and Ukrainian resource mapping, pseudo-LTR/RTL design review requirements and acceptance mapping. Preserve user artwork/path/Unicode semantics and logging privacy.</p><p>Completion: required decisions and identified design artifacts reviewed by the owner; native resource code starts only under implementation authorization. S04–S06 implement applicable readiness checks as features arrive. Runtime coverage and real translation quality remain unverified until executed/reviewed.</p><p>Decision 147 approves OS-selected language at launch with supported-locale negotiation and English<br>fallback; retain independent regional formats/keyboard. No custom selector/live switching. Include<br>launch/relaunch and required native lifecycle tests without touching the user&#39;s global settings.</p><p>Require I18N-LAUNCH-002 and I18N-UK-002 plus existing CT-09/INV-11/SU-20 scenarios. Existing roles own localization; lead assigns proficient Ukrainian review, not a new permanent implementation role.</p><p>2026-10-18 local conformance follow-up: five additional Node tests cover727 integer plural cases per language, visibly distinct region formatting, domain/type rejection and nonrecursive literal substitutions. Root checks and existing XML/gettext syntax lanes pass; independent review passed. See [boundary evidence](../quality/localization-boundaries/README.md). This does not replace browser/native runtime, layout or linguistic acceptance.</p><p>DB4-B / decision 159 adds Rust-owned en/uk default-name messages and shared naming fixtures. Coordinate typed launch-language handoff in S02; native UI resources remain host-owned. See docs/internationalization.md. The reviewed shared UI resource generator is implemented; this does not implement Rust-owned durable default-name allocation.<br></p></div></details>
+<p class="meta source-link"><a href="https://github.com/AlexandrLesiv/Linefield/blob/codex/dx-t02-task-packages/tasks/S00B.md" rel="noreferrer">View source ↗</a></p></main>
+</div></body></html>

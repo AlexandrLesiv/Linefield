@@ -93,3 +93,14 @@ details and history. All previously accessible data stays within these sections.
 visible without expansion. The index shows task names/statuses only. The earlier v1 hierarchy
 above records the pilot's original design; quality/task-packages-v3 holds the superseding checks.
 The JSON schema remains version1; a visual revision does not change the data contract version.
+
+## Complete inventory — v4
+
+Owner requested all task documents in the tracker, concise labels and stable scrolling. The
+index includes every task-ID Markdown file, excluding README/template, with structured packages
+replacing matching source rows. Source tasks display their original text and explicit unreconciled
+status notice; this is not a fabricated package conversion or new completion claim. All source
+content is escaped and retained, with bounded sequential reads (256 KiB/file, 4 MiB total).
+The original documents and earlier evidence remain unchanged. Root scrollbar-gutter is stable;
+short Review/Blocked labels and secondary IDs retain the minimal layout. Current checks/reviews:
+quality/task-packages-v4. No task editing, live status synchronization or execution is introduced.

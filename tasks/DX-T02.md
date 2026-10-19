@@ -46,3 +46,13 @@ are required; drawing-app browser rerun is unnecessary when its inputs are uncha
 Owner selected minimal mockup v3 and requested the HTML update. Four initially closed native
 disclosures and a name/status task list replace the expanded dashboard layout. Original records
 remain intact. Current checks/reviews: quality/task-packages-v3. Same task branch and PR #4.
+
+## Owner-requested complete inventory and stable layout
+
+All 44 task documents now appear once, with structured packages taking precedence over matching
+Markdown sources. Other documents remain explicitly labelled Source task; their historical status
+is not inferred or normalized. README/template are navigation/scaffold rather than tasks.
+Short Review/Blocked labels, secondary IDs, reduced repeated labels and stable root scrollbar
+space preserve the minimal reading layout. TASK-04 covers completeness, escaping and bounded
+source reads (256 KiB/file, 4 MiB aggregate); TASK-05 covers source navigation and column stability.
+Current evidence and specialist reviews: quality/task-packages-v4. Same branch and PR #4.

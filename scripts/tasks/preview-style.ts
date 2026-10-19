@@ -5,6 +5,7 @@ export function previewStyle(tokens: TokenLookup): string {
   const size = (name: string) => tokens(`diagram.size.${name}`, "dimension") + "px";
   const font = tokens("diagram.font.family", "fontFamily");
   return `
+html { scrollbar-gutter: stable; }
 * { box-sizing: border-box; }
 body { margin: 0; background: ${c("panel")}; color: ${c("ink")}; font-family: ${font}; font-size: ${size("body")}; line-height: 1.6; overflow-wrap: anywhere; }
 .page { max-width: 720px; padding: 80px 24px; margin: auto; }
@@ -45,11 +46,14 @@ pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: ${size("meta")}
 ul { padding-left: 22px; margin: 8px 0 18px; }
 .task-list { padding: 0; margin: 36px 0 0; list-style: none; }
 .task-list li { border-bottom: 1px solid ${c("divider")}; }
-.task-list a { display: flex; flex-direction: column; gap: 4px; padding: 22px 0; text-decoration: none; }
+.task-list a { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 18px 0; text-decoration: none; }
 .task-list a:hover > span:first-child { text-decoration: underline; }
-.task-list .status { font-size: ${size("meta")}; }
+.task-id { display: block; color: ${c("muted")}; font-size: ${size("meta")}; }
+.source-link { margin-top: 24px; }
+.task-list .status { flex-shrink: 0; font-size: ${size("meta")}; }
 @media (max-width: 600px) {
   .page { padding: 32px 24px; }
+  .task-list a { flex-direction: column; gap: 4px; }
   .back { margin-bottom: 36px; }
   .lead { margin-top: 28px; }
   .group-content { padding-left: 8px; }

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>Android XR · Linefield tasks</title><style>
+html { scrollbar-gutter: stable; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #FFFFFF; color: #233148; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; font-size: 16px; line-height: 1.6; overflow-wrap: anywhere; }
+.page { max-width: 720px; padding: 80px 24px; margin: auto; }
+a { color: inherit; text-underline-offset: 4px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible, summary:focus-visible { outline: 3px solid #233148; outline-offset: 5px; border-radius: 3px; }
+.skip { position: absolute; top: -100px; padding: 12px; background: #FFFFFF; }
+.skip:focus { top: 8px; }
+.back { display: inline-block; margin-bottom: 44px; color: #59677C; text-decoration: none; }
+h1 { font-size: calc(40px * .8); line-height: 1.25; letter-spacing: -.02em; margin: 0 0 12px; }
+h2 { font-size: 20px; line-height: 1.4; margin: 28px 0 16px; }
+h3 { font-size: 16px; line-height: 1.5; margin: 24px 0 10px; }
+p { margin: 0 0 16px; }
+.status, .meta, .back { color: #59677C; }
+.status { margin: 0; }
+.meta { font-size: 14px; }
+.lead { white-space: pre-line; font-size: 18px; margin: 36px 0 28px; max-width: 540px; }
+.primary { display: inline-block; border-radius: 8px; padding: 10px 20px; background: #233148; color: #FFFFFF; font-weight: 600; text-decoration: none; }
+.primary:hover { text-decoration: underline; }
+.blocker { border-left: 2px solid #E1E6ED; padding-left: 16px; margin-bottom: 28px; }
+.groups { margin-top: 48px; }
+.group { border-top: 1px solid #E1E6ED; }
+.group:last-child { border-bottom: 1px solid #E1E6ED; }
+.group > summary { padding: 22px 0; font-weight: 500; }
+summary { cursor: pointer; padding: 12px 0; }
+summary::marker { color: #59677C; }
+.group-content { padding: 0 0 28px 20px; }
+.group-content > section:first-child h2 { margin-top: 8px; }
+.group-content details { margin-top: 12px; }
+.panel { margin: 0 0 28px; }
+.item { padding: 18px 0; border-bottom: 1px solid #E1E6ED; }
+.item:last-child { border-bottom: 0; }
+.row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.tag { color: #59677C; font-size: 14px; }
+.warning { color: #59677C; }
+code, .digest { font-family: ui-monospace, monospace; font-size: 14px; overflow-wrap: anywhere; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; line-height: 1.6; background: #F7F8FA; padding: 16px; max-height: 440px; overflow-y: auto; }
+ul { padding-left: 22px; margin: 8px 0 18px; }
+.task-list { padding: 0; margin: 36px 0 0; list-style: none; }
+.task-list li { border-bottom: 1px solid #E1E6ED; }
+.task-list a { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 18px 0; text-decoration: none; }
+.task-list a:hover > span:first-child { text-decoration: underline; }
+.task-id { display: block; color: #59677C; font-size: 14px; }
+.source-link { margin-top: 24px; }
+.task-list .status { flex-shrink: 0; font-size: 14px; }
+@media (max-width: 600px) {
+  .page { padding: 32px 24px; }
+  .task-list a { flex-direction: column; gap: 4px; }
+  .back { margin-bottom: 36px; }
+  .lead { margin-top: 28px; }
+  .group-content { padding-left: 8px; }
+}
+@media print { .page { padding: 0; } .back, .skip { display: none; } }
+</style></head>
+<body><a class="skip" href="#main">Skip to task content</a><div class="page"><a class="back" href="index.html">← Tasks</a>
+<main id="main"><h1>Android XR</h1><p class="status">P11 · Source task</p>
+<p class="lead">Original task document. Status and evidence have not yet been reconciled into a structured package.</p>
+<details class="group"><summary>Task details</summary><div class="group-content"><h3>P11 Android XR</h3><p>Status: planned; documentation/folder authorized, implementation not started.</p><p>Host: apps/android-xr. Owner: android_ui; ui_ux_designer owns interactions and native visual design per docs/design/roles.md.</p><p>Outcome: Initially a 2D drawing/viewing surface adapted from the Android host. Review editor/viewer capabilities and headset input before implementation. Immersive authoring, spatial tools and new gestures are not authorized by adding this folder.</p><p>Dependencies: macOS S08 acceptance, relevant reviewed Android adapter foundation, explicit implementation direction, approved platform scope and identified design states. Early feasibility/design planning is allowed now.</p><p>Before implementation: specify native toolkit compatibility, capabilities, typed boundary, thread/surface/resource ownership, lifecycle/storage, device/input support and acceptance IDs. Reuse Android/Rust semantics without duplicating state owners or adding command packets.</p><p>Evidence: actual target build/device or supported emulator checks, shared conformance/scenarios, native focus/input/navigation/accessibility, offline/loading failures, bounded rendering/logging/memory and accurate support limitations. For TV, include VIEWER-001; for XR, include approved editor or viewer scenarios and controller/hand/focus/resize checks applicable to the declared device.</p><p>Read [platform plan](../docs/platforms.md), [design foundations](../docs/design/foundations.md), [shared E2E](../docs/testing/shared-e2e.md) and [quality](../docs/quality.md). Select/verify exact supported SDK and test tools before coding. Missing hardware is not a pass. No system permission changes, desktop use, publishing or new features implied.</p><p>Internationalization: map CT-09/INV-11/SU-20 to native resource/formatting/input APIs and applicable locale scenarios; preserve shared semantics and read-only capabilities. Require English (en) and Ukrainian (uk), selected from OS/per-app preferences at launch (browser preferences on web), with no in-app switch. Require both locale E2E lanes and reviewed translations; no automatic support claim. See ../docs/internationalization.md.</p><p>Before host implementation, review [navigation](../docs/navigation.md) and [motion](../docs/design/motion.md).<br>Specify native Back/focus/restoration, URL/link entry if approved, interruption/reduced motion<br>and capability-specific cases. Map [shared route/motion tests](../docs/testing/navigation-motion.md)<br>to actual host execution; a generic replay or static mockup does not certify this host.</p><p>Launch acceptance includes I18N-LAUNCH-002/I18N-UK-002 on this host, including viewer UI where applicable. See docs/testing/internationalization.md; no resources or execution evidence exist yet.<br></p></div></details>
+<p class="meta source-link"><a href="https://github.com/AlexandrLesiv/Linefield/blob/codex/dx-t02-task-packages/tasks/P11.md" rel="noreferrer">View source ↗</a></p></main>
+</div></body></html>

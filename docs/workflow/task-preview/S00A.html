@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>Design foundations and adaptive component system · Linefield tasks</title><style>
+html { scrollbar-gutter: stable; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #FFFFFF; color: #233148; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; font-size: 16px; line-height: 1.6; overflow-wrap: anywhere; }
+.page { max-width: 720px; padding: 80px 24px; margin: auto; }
+a { color: inherit; text-underline-offset: 4px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible, summary:focus-visible { outline: 3px solid #233148; outline-offset: 5px; border-radius: 3px; }
+.skip { position: absolute; top: -100px; padding: 12px; background: #FFFFFF; }
+.skip:focus { top: 8px; }
+.back { display: inline-block; margin-bottom: 44px; color: #59677C; text-decoration: none; }
+h1 { font-size: calc(40px * .8); line-height: 1.25; letter-spacing: -.02em; margin: 0 0 12px; }
+h2 { font-size: 20px; line-height: 1.4; margin: 28px 0 16px; }
+h3 { font-size: 16px; line-height: 1.5; margin: 24px 0 10px; }
+p { margin: 0 0 16px; }
+.status, .meta, .back { color: #59677C; }
+.status { margin: 0; }
+.meta { font-size: 14px; }
+.lead { white-space: pre-line; font-size: 18px; margin: 36px 0 28px; max-width: 540px; }
+.primary { display: inline-block; border-radius: 8px; padding: 10px 20px; background: #233148; color: #FFFFFF; font-weight: 600; text-decoration: none; }
+.primary:hover { text-decoration: underline; }
+.blocker { border-left: 2px solid #E1E6ED; padding-left: 16px; margin-bottom: 28px; }
+.groups { margin-top: 48px; }
+.group { border-top: 1px solid #E1E6ED; }
+.group:last-child { border-bottom: 1px solid #E1E6ED; }
+.group > summary { padding: 22px 0; font-weight: 500; }
+summary { cursor: pointer; padding: 12px 0; }
+summary::marker { color: #59677C; }
+.group-content { padding: 0 0 28px 20px; }
+.group-content > section:first-child h2 { margin-top: 8px; }
+.group-content details { margin-top: 12px; }
+.panel { margin: 0 0 28px; }
+.item { padding: 18px 0; border-bottom: 1px solid #E1E6ED; }
+.item:last-child { border-bottom: 0; }
+.row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.tag { color: #59677C; font-size: 14px; }
+.warning { color: #59677C; }
+code, .digest { font-family: ui-monospace, monospace; font-size: 14px; overflow-wrap: anywhere; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; line-height: 1.6; background: #F7F8FA; padding: 16px; max-height: 440px; overflow-y: auto; }
+ul { padding-left: 22px; margin: 8px 0 18px; }
+.task-list { padding: 0; margin: 36px 0 0; list-style: none; }
+.task-list li { border-bottom: 1px solid #E1E6ED; }
+.task-list a { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 18px 0; text-decoration: none; }
+.task-list a:hover > span:first-child { text-decoration: underline; }
+.task-id { display: block; color: #59677C; font-size: 14px; }
+.source-link { margin-top: 24px; }
+.task-list .status { flex-shrink: 0; font-size: 14px; }
+@media (max-width: 600px) {
+  .page { padding: 32px 24px; }
+  .task-list a { flex-direction: column; gap: 4px; }
+  .back { margin-bottom: 36px; }
+  .lead { margin-top: 28px; }
+  .group-content { padding-left: 8px; }
+}
+@media print { .page { padding: 0; } .back, .skip { display: none; } }
+</style></head>
+<body><a class="skip" href="#main">Skip to task content</a><div class="page"><a class="back" href="index.html">← Tasks</a>
+<main id="main"><h1>Design foundations and adaptive component system</h1><p class="status">S00A · Source task</p>
+<p class="lead">Original task document. Status and evidence have not yet been reconciled into a structured package.</p>
+<details class="group"><summary>Task details</summary><div class="group-content"><h3>S00A Design foundations and adaptive component system</h3><p>Status: partial repository specification and bounded existing-component inventory, 2026-10-18.<br>The live web gallery and selected drawing-shell prototype provide implementation evidence.<br>An owner-approved complete foundation version and native component integration remain pending.<br>This task does not reopen the selected visual direction or imply approval of unseen screens.</p><p>Outcome: establish consistent Linefield semantic color/type/spacing/shape/icon roles, component<br>states and host behavior mappings (decision232). Use repository-owned specifications, trusted<br>semantic resources and authorized live web prototypes. External design-tool access is not a<br>dependency. Detail web first, then macOS; later hosts receive directional mappings until their<br>approved slice begins.</p><p>Owner: ui_ux_designer owns behavior and presentation together; lead coordinates scope, platform<br>feasibility and owner review. Engineers own code/tests; fresh review remains independent.<br>No recursive delegation or new implementation authorization is introduced here.</p><p>Dependencies: approved preview scope and selected visual direction; [foundations](../docs/design/foundations.md),<br>[workflow](../docs/design/workflow.md), [shared resources](../docs/design/shared-resources-plan.md),<br>[P05-G01](P05-G01.md) and [P05-D01](P05-D01.md). Preserve existing intentional uncommitted work.</p><h3>Bounded deliverable and existing components</h3><p>The current foundation inventory is limited to controls already present in the authorized web<br>prototype. It describes reusable intent; it does not require an unsolicited component-library<br>refactor or copying web implementations into native hosts.</p><p>| Component family | Existing source/evidence | Foundation readiness / next review |<br>| --- | --- | --- |<br>| Semantic color and locale resources | shared/theme, shared/localization; generated web/native resources | Authoring/generation implemented; native integration and Ukrainian linguistic review remain separate |<br>| Gallery card and New entry | apps/web/src/gallery.ts, cards styles; P05-G01 evidence | Responsive Web pattern selected; retain stable identity, focus and artwork framing |<br>| Ellipsis menu and anchored Rename | menu/rename modules and styles; existing gallery browser tests | Reuse action, field, validation, focus and motion semantics; native mappings still need host review |<br>| Recoverable removal/Undo slot | gallery/drawing action and Undo modules; gallery evidence | Prototype behavior only; production durable staging/recovery/finalization remain separately gated |<br>| Drawing header, tool rail, context row and footer | drawing-shell.ts, canvas.css.ts, drawing-controls.css.ts; P05-D01 evidence | Selected composition implemented for review; local settings and modes never edit artwork |<br>| Tool buttons and range/sample controls | drawing-icons.ts, drawing-range.ts | Selected/disabled/focus states and bounded local settings; no new picker, brush library or engine |<br>| Surface/menu/Undo transitions | motion modules; exact browser captures/tests | Preserve cancellation, accepted route state and focus; screenshots alone are not full motion evidence |</p><p>The inventory is not a declaration that every component or state has passed every host&#39;s checks.<br>Use the linked task/evidence revision for actual outcomes. Loading/error/recovery and native<br>controls absent from this prototype remain design/implementation gaps for their owning slices.</p><h3>Acceptance and review packet</h3><p>| ID | Required outcome | Current bounded status |<br>| --- | --- | --- |<br>| DS-01 | Common Linefield visual/semantic roles with host behavior mappings | Roles/direction documented; detailed native mappings pending per host |<br>| DS-02 | Reusable component/state specification for approved features | Existing web inventory above; complete reviewed foundation packet pending |<br>| DS-03 | Actual resize evidence at extremes and intermediate dimensions | Per-feature web tests/captures exist; do not infer universal/native coverage |<br>| DS-04 | Theme/artwork separation, focus and accessibility/locale variants | Web evidence scoped to named runs; native AX/input and linguistic gaps remain |<br>| DS-05 | Owner approval of an identified foundation version and scope | Pending; existing screen authorizations remain valid independently |</p><p>Each packet contains separate behavior and visual checklists, task/CT/INV/SU/scenario IDs,<br>artifact paths/version or source hashes, normal/edge states, exact runtime configuration,<br>passed/failed/unrun evidence, limitations and owner conditions. Related implementation checks<br>map to SU-17 and platform E2E. No mutable URL, screenshot collection or designer opinion alone<br>establishes owner approval. Material deviations return for review.</p><p>Completion: identified foundation scope/version reviewed by the owner, with required mappings<br>and evidence or explicitly scoped exclusions. Separate screen/flow and implementation approval<br>still applies in the web-first, then macOS sequence. Native applications, real engine/persistence<br>and additional product behavior remain outside this documentation task.</p><h3>Locale, motion and input requirements</h3><p>Follow [i18n](../docs/internationalization.md) and [locale scenarios](../docs/testing/internationalization.md).<br>Include real en/uk, expanded LTR/RTL, mixed-script/CJK, numeric-locale and enlarged-text cases.<br>Preserve artwork geometry, native field/IME priority and locale-independent IDs. A named proficient<br>Ukrainian reviewer supplies linguistic approval; resource parity and screenshots do not.</p><p>Follow [motion](../docs/design/motion.md), [S00D](S00D.md) and [input inventory](../docs/input/inventory.md).<br>Specify purpose, interruption, commit/cancel, reduced motion, focus timing and host limitations<br>together with appearance. Browser tests remain distinct from physical input/native E2E. No<br>Computer Use or foreground reservation is granted by this task.</p><p>Follow [color representations](../docs/design/color-representations.md) when a color-control slice<br>is authorized. Keep representations separate from document color space and future gamut behavior.<br>The current unavailable color entry does not authorize a picker or change existing macOS behavior.</p><h3>Scope and verification of this documentation slice</h3><p>Security impact: no runtime input, authority, trust boundary, dependency or private-data flow<br>changes. This inventory does not create controls or alter command/persistence semantics.<br>Feature edge cases remain in the owning tasks; documentation readiness is not a replacement<br>for their concrete trigger/outcome/invariant tables and independent review.</p><p>Validation for this slice: local Markdown link targets and obsolete tool-specific wording.<br>No application tests are required for prose-only changes; referenced runtime results remain<br>owned by their exact P05 evidence packets. DS-05 remains pending rather than inferred from<br>the completion of this documentation edit.<br></p></div></details>
+<p class="meta source-link"><a href="https://github.com/AlexandrLesiv/Linefield/blob/codex/dx-t02-task-packages/tasks/S00A.md" rel="noreferrer">View source ↗</a></p></main>
+</div></body></html>

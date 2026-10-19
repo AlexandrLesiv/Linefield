@@ -1,0 +1,5 @@
+
+> linefield@0.0.0 tasks:browser /Users/oleksandr/projects/linefield/.worktrees/dx-t02-task-packages
+> node scripts/tasks/preview-browser.ts
+
+9 task preview browser scenarios passed. Captures: /Users/oleksandr/projects/linefield/.worktrees/dx-t02-task-packages/.build-cache/task-preview-v4

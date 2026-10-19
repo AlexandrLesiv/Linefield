@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import type { TaskEntry } from "./source-tasks.ts";
 import type { Document, Evidence, Task } from "./model.ts";
 import { readTaskFile } from "./files.ts";
 import { acceptance, pullRequest, scope } from "./sections.ts";
@@ -20,7 +21,7 @@ async function documents(root: string, task: Task, reviews: boolean): Promise<st
   const rendered = await Promise.all(
     items.map(
       async (item) => `<details id="document-${e(item.id)}">
-<summary>${e(item.title)} <span class="tag">${e(item.kind)}</span></summary>
+<summary>${e(item.title)}</summary>
 <div class="document">${prose(await contents(root, item))}<p class="digest">SHA-256 ${e(item.sha256)}</p>
 <a href="${e(sourceLink(item.path, item.artifactRevision))}" rel="noreferrer">${item.artifactRevision ? "Preserved source at " + e(item.artifactRevision.slice(0, 8)) : "Authored source · mutable task branch"} ↗</a></div></details>`,
     ),
@@ -56,21 +57,21 @@ export async function renderTask(root: string, task: Task, style: string): Promi
 ${task.stage === "blocked" ? `<p class="blocker">${e(task.handoff)}</p>` : ""}
 ${task.pr ? `<a class="primary" href="${e(task.pr.url)}" rel="noreferrer">Review PR #${task.pr.number} ↗</a>` : ""}</header>
 <div class="groups">
-${disclosure("scope-group", "Scope and design", scope(task) + `<section id="documents"><h2>Supporting documents</h2>${await documents(root, task, false)}</section>`)}
+${disclosure("scope-group", "Scope &amp; design", scope(task) + `<section id="documents"><h2>Supporting documents</h2>${await documents(root, task, false)}</section>`)}
 ${disclosure("verification-group", "Verification", acceptance(task) + `<section id="evidence"><h2>Recorded evidence</h2><p class="warning">Recorded results retain their original scope. Artifact integrity does not establish current acceptance.</p>${await evidence(root, task)}</section>`)}
-${disclosure("review-group", "Review findings", `<section id="review">${await documents(root, task, true)}</section>`)}
-${disclosure("technical-group", "Technical details and history", pullRequest(task) + `<section id="handoff"><h2>Next handoff</h2><p>${e(task.handoff)}</p></section><p class="meta">${e(task.id)} · Read-only review snapshot. Artifact hashes verify preserved records; they do not certify current code or a future merge.</p>`)}
+${disclosure("review-group", "Review", `<section id="review">${await documents(root, task, true)}</section>`)}
+${disclosure("technical-group", "Details &amp; history", pullRequest(task) + `<section id="handoff"><h2>Next handoff</h2><p>${e(task.handoff)}</p></section><p class="meta">${e(task.id)} · Read-only review snapshot. Artifact hashes verify preserved records; they do not certify current code or a future merge.</p>`)}
 </div></main>`,
   );
 }
-export function renderIndex(tasks: readonly Task[], style: string): string {
+export function renderIndex(tasks: readonly TaskEntry[], style: string): string {
   return shell(
     "Tasks",
     style,
-    `<main id="main"><h1>Tasks</h1><ul class="task-list">${tasks
+    `<main id="main"><h1>Tasks</h1><p class="meta">Source tasks show their original documents; their workflow status has not been reconciled.</p><ul class="task-list">${tasks
       .map(
         (task) =>
-          `<li><a href="${e(task.id)}.html"><span>${e(task.title)}</span><span class="status">${e(attention(task))}</span></a></li>`,
+          `<li><a href="${e(task.id)}.html"><span><span class="task-id">${e(task.id)}</span>${e(task.title)}</span><span class="status">${e(task.status)}</span></a></li>`,
       )
       .join("")}</ul></main>`,
   );

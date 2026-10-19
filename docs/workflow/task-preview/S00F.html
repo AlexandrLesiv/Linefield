@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>Input inventory and feature-design integration · Linefield tasks</title><style>
+html { scrollbar-gutter: stable; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #FFFFFF; color: #233148; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; font-size: 16px; line-height: 1.6; overflow-wrap: anywhere; }
+.page { max-width: 720px; padding: 80px 24px; margin: auto; }
+a { color: inherit; text-underline-offset: 4px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible, summary:focus-visible { outline: 3px solid #233148; outline-offset: 5px; border-radius: 3px; }
+.skip { position: absolute; top: -100px; padding: 12px; background: #FFFFFF; }
+.skip:focus { top: 8px; }
+.back { display: inline-block; margin-bottom: 44px; color: #59677C; text-decoration: none; }
+h1 { font-size: calc(40px * .8); line-height: 1.25; letter-spacing: -.02em; margin: 0 0 12px; }
+h2 { font-size: 20px; line-height: 1.4; margin: 28px 0 16px; }
+h3 { font-size: 16px; line-height: 1.5; margin: 24px 0 10px; }
+p { margin: 0 0 16px; }
+.status, .meta, .back { color: #59677C; }
+.status { margin: 0; }
+.meta { font-size: 14px; }
+.lead { white-space: pre-line; font-size: 18px; margin: 36px 0 28px; max-width: 540px; }
+.primary { display: inline-block; border-radius: 8px; padding: 10px 20px; background: #233148; color: #FFFFFF; font-weight: 600; text-decoration: none; }
+.primary:hover { text-decoration: underline; }
+.blocker { border-left: 2px solid #E1E6ED; padding-left: 16px; margin-bottom: 28px; }
+.groups { margin-top: 48px; }
+.group { border-top: 1px solid #E1E6ED; }
+.group:last-child { border-bottom: 1px solid #E1E6ED; }
+.group > summary { padding: 22px 0; font-weight: 500; }
+summary { cursor: pointer; padding: 12px 0; }
+summary::marker { color: #59677C; }
+.group-content { padding: 0 0 28px 20px; }
+.group-content > section:first-child h2 { margin-top: 8px; }
+.group-content details { margin-top: 12px; }
+.panel { margin: 0 0 28px; }
+.item { padding: 18px 0; border-bottom: 1px solid #E1E6ED; }
+.item:last-child { border-bottom: 0; }
+.row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.tag { color: #59677C; font-size: 14px; }
+.warning { color: #59677C; }
+code, .digest { font-family: ui-monospace, monospace; font-size: 14px; overflow-wrap: anywhere; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; line-height: 1.6; background: #F7F8FA; padding: 16px; max-height: 440px; overflow-y: auto; }
+ul { padding-left: 22px; margin: 8px 0 18px; }
+.task-list { padding: 0; margin: 36px 0 0; list-style: none; }
+.task-list li { border-bottom: 1px solid #E1E6ED; }
+.task-list a { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 18px 0; text-decoration: none; }
+.task-list a:hover > span:first-child { text-decoration: underline; }
+.task-id { display: block; color: #59677C; font-size: 14px; }
+.source-link { margin-top: 24px; }
+.task-list .status { flex-shrink: 0; font-size: 14px; }
+@media (max-width: 600px) {
+  .page { padding: 32px 24px; }
+  .task-list a { flex-direction: column; gap: 4px; }
+  .back { margin-bottom: 36px; }
+  .lead { margin-top: 28px; }
+  .group-content { padding-left: 8px; }
+}
+@media print { .page { padding: 0; } .back, .skip { display: none; } }
+</style></head>
+<body><a class="skip" href="#main">Skip to task content</a><div class="page"><a class="back" href="index.html">← Tasks</a>
+<main id="main"><h1>Input inventory and feature-design integration</h1><p class="status">S00F · Source task</p>
+<p class="lead">Original task document. Status and evidence have not yet been reconciled into a structured package.</p>
+<details class="group"><summary>Task details</summary><div class="group-content"><h3>S00F Input inventory and feature-design integration</h3><p>Status: inventory documented; per-feature behavior and identified design approval remain pending.<br>Owner explicitly deferred up-front binding decisions (decision 151). Read [input inventory](../docs/input/inventory.md).<br>No new keyboard, stylus, touch or OS-action mapping is selected by this task.</p><p>ui_ux_designer owns applicable-input coverage for each feature, including native app menus/Services/system actions.<br>Platform engineers verify native capabilities and conventions; rust_engine verifies shared command<br>semantics; UI designs discoverability/adaptive/focus/motion presentation in identified design; build<br>reliability maps acceptance to evidence. Lead assigns Linux/web/Apple-viewer feasibility explicitly.</p><p>For each feature: inventory applicable and inapplicable inputs with reasons, propose behavior/context,<br>conflicts/native text/IME priority, availability, interruption/cancel, simultaneous devices, accessible<br>alternatives and hardware gaps. Include native-only effects versus shared commands and CT/INV/SU/test<br>IDs. Preserve selected semantics; call out proposed changes rather than silently replacing them.</p><p>Submit this interaction plan with the feature design/design review for owner review BEFORE implementation.<br>Do not require a global shortcut or pen-mapping questionnaire before feature design can begin.<br>Use [historical matrix](../docs/input/platform-matrix.md) as research, not binding requirements.</p><p>watchOS, tvOS, Wear OS and Android TV/Google TV are view-only (decision 152). Plan only viewing,<br>browsing/navigation and applicable OS actions; shared capability tests must reject content mutation.<br>This does not approve new viewer features, toolkit/network choices or implementation.</p><p>After implementation authorization, feature owners add shared semantic and actual native E2E cases,<br>with real device evidence where needed. Replay is not physical pen/native coverage. Unknown capability,<br>missing hardware or inaccessible authoring remains a gap, not a pass. No tests/design review/code implemented.</p><p>[Historical research review](../quality/input-distribution-review.md) records earlier snapshots; the<br>new owner-directed inventory/workflow supersedes its pending consolidated-binding approval agenda.<br></p></div></details>
+<p class="meta source-link"><a href="https://github.com/AlexandrLesiv/Linefield/blob/codex/dx-t02-task-packages/tasks/S00F.md" rel="noreferrer">View source ↗</a></p></main>
+</div></body></html>

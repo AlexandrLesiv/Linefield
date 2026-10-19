@@ -19,8 +19,8 @@ export function list(values: readonly string[]): string {
   return `<ul>${values.map((value) => `<li>${escape(value)}</li>`).join("")}</ul>`;
 }
 export function attention(task: Task): string {
-  if (task.stage === "blocked") return "Implementation is blocked";
-  if (task.stage === "owner-review") return "Awaiting your review";
+  if (task.stage === "blocked") return "Blocked";
+  if (task.stage === "owner-review") return "Review";
   return title(task.stage);
 }
 export function shell(name: string, style: string, content: string): string {

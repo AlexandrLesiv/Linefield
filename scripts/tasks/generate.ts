@@ -6,6 +6,8 @@ import { readTaskFile } from "./files.ts";
 import { agentBrief } from "./markdown.ts";
 import { previewStyle } from "./preview-style.ts";
 import { renderIndex, renderTask } from "./render.ts";
+import { sourceTasks, renderSourceTask } from "./source-tasks.ts";
+import { attention } from "./presentation.ts";
 import { loadTask } from "./validate.ts";
 
 export const root = fileURLToPath(new URL("../../", import.meta.url));
@@ -33,7 +35,17 @@ export async function outputs(): Promise<Map<string, string>> {
     files.set(`tasks/${task.id}/TASK.generated.md`, agentBrief(task));
     files.set(`docs/workflow/task-preview/${task.id}.html`, await renderTask(root, task, style));
   }
-  files.set("docs/workflow/task-preview/index.html", renderIndex(tasks, style));
+  const inventory = await sourceTasks(root);
+  const packaged = new Set(tasks.map((task) => task.id));
+  const remaining = inventory.filter((task) => !packaged.has(task.id));
+  for (const task of remaining)
+    files.set(`docs/workflow/task-preview/${task.id}.html`, renderSourceTask(task, style));
+  const entriesForIndex = [
+    ...tasks.map((task) => ({ id: task.id, title: task.title, status: attention(task) })),
+    ...remaining,
+  ];
+  entriesForIndex.sort((a, b) => a.id.localeCompare(b.id, "en"));
+  files.set("docs/workflow/task-preview/index.html", renderIndex(entriesForIndex, style));
   return files;
 }
 async function safeDirectory(path: string): Promise<void> {

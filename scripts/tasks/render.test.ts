@@ -34,7 +34,7 @@ test("TASK-03 blocked pilot never substitutes healthy evidence for implementatio
   const html = await renderTask(root, task, "");
   assert.equal(task.stage, "blocked");
   assert.ok(task.tests.every((item) => item.status === "planned"));
-  assert.ok(html.includes("Implementation is blocked"));
+  assert.ok(html.includes("Blocked"));
   assert.ok(html.includes("Recorded mixed"));
   assert.ok(html.includes("Recorded failed"));
   assert.ok(html.includes("current-code freshness not assessed"));

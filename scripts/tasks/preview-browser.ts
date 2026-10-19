@@ -24,7 +24,7 @@ const tokens: unknown = JSON.parse(
 const fixture = await renderTask(root, malicious, previewStyle(loadTokens(tokens)));
 const { server, url } = await startPreview(new Map([["/hostile.html", fixture]]));
 const browser = await playwright.chromium.launch({ channel: "chrome", headless: true });
-const output = join(root, ".build-cache/task-preview-v3");
+const output = join(root, ".build-cache/task-preview-v4");
 await mkdir(output, { recursive: true });
 const results: { id: string; status: string; screenshot?: string; sha256?: string }[] = [];
 try {
@@ -54,9 +54,17 @@ try {
       if (task !== "index") {
         assert.equal(await page.locator("details.group[open]").count(), 0);
         assert.equal(await page.locator("details.group").count(), 4);
+        const before = await page.locator("h1").boundingBox();
+        assert.equal(
+          await page.evaluate(() => getComputedStyle(document.documentElement).scrollbarGutter),
+          "stable",
+        );
         await page.locator("#verification-group > summary").focus();
         await page.keyboard.press("Enter");
         assert.equal(await page.locator("#verification-group").getAttribute("open"), "");
+        const after = await page.locator("h1").boundingBox();
+        assert.equal(after?.x, before?.x);
+        assert.equal(after?.width, before?.width);
       }
       if (task === "P05-S01") {
         assert.equal(await page.locator(".primary").isVisible(), true);
@@ -71,7 +79,7 @@ try {
         await page.locator("#technical-group > summary").click();
       }
       if (task === "S02L") {
-        assert.match(await page.locator(".status").innerText(), /blocked/);
+        assert.match(await page.locator(".status").innerText(), /Blocked/);
         assert.match(await page.locator("#evidence").innerText(), /Recorded failed/);
         assert.equal(await page.locator("#acceptance article").count(), 6);
       }
@@ -122,6 +130,17 @@ try {
     }
   }
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await page.goto(url);
+  await page.locator('a[href="S00.html"]').click();
+  assert.match(await page.locator(".status").innerText(), /Source task/);
+  await page.locator("summary").click();
+  assert.match(
+    await page.locator(".group-content").innerText(),
+    /Status: planned; not implemented/,
+  );
+  await page.locator(".back").click();
+  assert.equal(await page.locator("h1").innerText(), "Tasks");
+  results.push({ id: "TASK-05-source-task-navigation", status: "passed" });
   const external: string[] = [];
   page.on("request", (request) => {
     if (!request.url().startsWith(url)) external.push(request.url());

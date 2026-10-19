@@ -37,7 +37,7 @@ ${task.acceptance
     (criterion) => `<article class="item"><div class="row"><strong>${e(criterion.id)}</strong>
 <span class="tag">${criterion.required ? "Required" : "Optional"}</span></div><p>${e(criterion.statement)}</p>
 <p class="meta">Scenarios: ${e(criterion.scenarioIds.join(", ") || "Review-based criterion")}</p>
-<details><summary>${criterion.testIds.length} linked checks · ${criterion.evidenceIds.length} evidence records</summary>
+<details><summary>${criterion.testIds.length} ${criterion.testIds.length === 1 ? "check" : "checks"} · ${criterion.evidenceIds.length} ${criterion.evidenceIds.length === 1 ? "record" : "records"}</summary>
 ${criterion.testIds
   .map((id) => {
     const test = task.tests.find((entry) => entry.id === id);

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>Developer preview acceptance · Linefield tasks</title><style>
+html { scrollbar-gutter: stable; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #FFFFFF; color: #233148; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; font-size: 16px; line-height: 1.6; overflow-wrap: anywhere; }
+.page { max-width: 720px; padding: 80px 24px; margin: auto; }
+a { color: inherit; text-underline-offset: 4px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible, summary:focus-visible { outline: 3px solid #233148; outline-offset: 5px; border-radius: 3px; }
+.skip { position: absolute; top: -100px; padding: 12px; background: #FFFFFF; }
+.skip:focus { top: 8px; }
+.back { display: inline-block; margin-bottom: 44px; color: #59677C; text-decoration: none; }
+h1 { font-size: calc(40px * .8); line-height: 1.25; letter-spacing: -.02em; margin: 0 0 12px; }
+h2 { font-size: 20px; line-height: 1.4; margin: 28px 0 16px; }
+h3 { font-size: 16px; line-height: 1.5; margin: 24px 0 10px; }
+p { margin: 0 0 16px; }
+.status, .meta, .back { color: #59677C; }
+.status { margin: 0; }
+.meta { font-size: 14px; }
+.lead { white-space: pre-line; font-size: 18px; margin: 36px 0 28px; max-width: 540px; }
+.primary { display: inline-block; border-radius: 8px; padding: 10px 20px; background: #233148; color: #FFFFFF; font-weight: 600; text-decoration: none; }
+.primary:hover { text-decoration: underline; }
+.blocker { border-left: 2px solid #E1E6ED; padding-left: 16px; margin-bottom: 28px; }
+.groups { margin-top: 48px; }
+.group { border-top: 1px solid #E1E6ED; }
+.group:last-child { border-bottom: 1px solid #E1E6ED; }
+.group > summary { padding: 22px 0; font-weight: 500; }
+summary { cursor: pointer; padding: 12px 0; }
+summary::marker { color: #59677C; }
+.group-content { padding: 0 0 28px 20px; }
+.group-content > section:first-child h2 { margin-top: 8px; }
+.group-content details { margin-top: 12px; }
+.panel { margin: 0 0 28px; }
+.item { padding: 18px 0; border-bottom: 1px solid #E1E6ED; }
+.item:last-child { border-bottom: 0; }
+.row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.tag { color: #59677C; font-size: 14px; }
+.warning { color: #59677C; }
+code, .digest { font-family: ui-monospace, monospace; font-size: 14px; overflow-wrap: anywhere; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; line-height: 1.6; background: #F7F8FA; padding: 16px; max-height: 440px; overflow-y: auto; }
+ul { padding-left: 22px; margin: 8px 0 18px; }
+.task-list { padding: 0; margin: 36px 0 0; list-style: none; }
+.task-list li { border-bottom: 1px solid #E1E6ED; }
+.task-list a { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 18px 0; text-decoration: none; }
+.task-list a:hover > span:first-child { text-decoration: underline; }
+.task-id { display: block; color: #59677C; font-size: 14px; }
+.source-link { margin-top: 24px; }
+.task-list .status { flex-shrink: 0; font-size: 14px; }
+@media (max-width: 600px) {
+  .page { padding: 32px 24px; }
+  .task-list a { flex-direction: column; gap: 4px; }
+  .back { margin-bottom: 36px; }
+  .lead { margin-top: 28px; }
+  .group-content { padding-left: 8px; }
+}
+@media print { .page { padding: 0; } .back, .skip { display: none; } }
+</style></head>
+<body><a class="skip" href="#main">Skip to task content</a><div class="page"><a class="back" href="index.html">← Tasks</a>
+<main id="main"><h1>Developer preview acceptance</h1><p class="status">S08 · Source task</p>
+<p class="lead">Original task document. Status and evidence have not yet been reconciled into a structured package.</p>
+<details class="group"><summary>Task details</summary><div class="group-content"><h3>S08 Developer preview acceptance</h3><p>Status: planned; not implemented. </p><p>Outcome: Integrate required work and present actual running local app with evidence and remaining limitations.</p><p>Dependencies: S00–S07 and S07E PNG export (owner-selected in decision 18).</p><p>Responsible roles: Lead, designer and fresh reviewer.</p><p>Acceptance IDs: SU-01 through SU-21, including required PNG export SU-19 (decision 18) and gallery SU-21. See ../docs/successor/delivery.md for observable cases.</p><p>Required evidence: Required acceptance matrix, designer/fresh review, exact revision/build and owner review packet.</p><p>Before assigning writers, lead records exact base commit, owned paths, contract owner, dependency direction, applicable failure/privacy tests and stopping condition. Use isolated worktrees for concurrent writers. Implementers add structured diagnostics and tests alongside behavior. Do not claim independent review until a fresh reviewer actually ran.</p><p>Stop if a material ABI/schema/thread/security choice or new UI lacks owner approval. Keep missing device/permission evidence visible and continue independent authorized work. No main merge or release publication.</p><h3>Contract and shared E2E work</h3><p>Require every applicable CT/INV/SU/scenario mapping to have discovered tests and current exact-build evidence. List missing native/physical/hardware checks honestly. Designer and fresh reviewer inspect native variants and mislabeled integration/E2E claims.</p><p>References: [contracts](../docs/contracts.md), [shared scenarios](../docs/testing/shared-e2e.md).</p><h3>Internationalization</h3><p>Require SU-20 readiness evidence alongside existing acceptance. List which real languages are reviewed/shipped separately from pseudo-locales or source fallback.</p><p>Read [i18n plan](../docs/internationalization.md) and [locale scenarios](../docs/testing/internationalization.md).</p><p>Apply [navigation/motion scenarios](../docs/testing/navigation-motion.md) to the features<br>implemented in this task. Preserve phase boundaries: S04/S05 control/canvas motion and focus;<br>S06 document guards/files; S07/S08 applicable runtime evidence. No unapproved chooser/deep links.</p><h3>Selected verification baseline</h3><p>Decision 21 requires exact-build evidence on the owner&#39;s current Apple Silicon Mac/installed<br>macOS with mouse/keyboard and Cintiq/Pro Pen 3. Capture model/chip/memory, OS/SDK/toolchain,<br>tablet driver and display configuration. Keep tablet evidence separate; missing access/hardware<br>is not pass. Other Macs/Intel/older OS remain unverified. Review minimum deployment OS from API<br>requirements. Physical pen-to-screen measurement remains pending a suitable camera; this<br>baseline choice does not reserve the desktop or authorize implementation.<br></p></div></details>
+<p class="meta source-link"><a href="https://github.com/AlexandrLesiv/Linefield/blob/codex/dx-t02-task-packages/tasks/S08.md" rel="noreferrer">View source ↗</a></p></main>
+</div></body></html>
