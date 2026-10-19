@@ -24,7 +24,7 @@ export const drawingTool = style({
     "&:not(:disabled):hover": {
       background: theme.buttonHover,
     },
-    '&[aria-pressed="true"]:hover': {
+    '&[aria-pressed="true"]:not(:disabled):hover': {
       background: theme.primaryHover,
     },
     "&:focus-visible": {

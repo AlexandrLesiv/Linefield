@@ -107,3 +107,9 @@ export const diagnosticsControl = style({
     },
   },
 });
+export const interactionLock = style({
+  selectors: {
+    "&:is(button,input):disabled": { opacity: 1, cursor: "not-allowed" },
+    '&:is(input[type="range"]):disabled': { borderColor: "currentColor" },
+  },
+});

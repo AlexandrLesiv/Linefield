@@ -3,6 +3,7 @@ import type { StateValue } from "./bridge.ts";
 import { bridge } from "./bridge.ts";
 import { penBridge } from "./pen-bridge.ts";
 import type { EditorCommands } from "./pen-input.ts";
+import { interactionLock } from "./view.css.ts";
 export function attachEditorControls(surface: HTMLElement, commands: EditorCommands) {
   const width = surface.querySelector<HTMLInputElement>("[data-memory-width]");
   const color = surface.querySelector<HTMLInputElement>("[data-memory-color]");
@@ -10,6 +11,8 @@ export function attachEditorControls(surface: HTMLElement, commands: EditorComma
   const redo = surface.querySelector<HTMLButtonElement>("[data-memory-redo]");
   const pen = surface.querySelector<HTMLButtonElement>("[data-memory-pen]");
   let acceptedWidth = 8;
+  let idleUndo = false;
+  let idleRedo = false;
   const widthView = width ? widthControl(width, surface, () => acceptedWidth) : undefined;
   const refresh = () => {
     let state: StateValue;
@@ -22,6 +25,14 @@ export function attachEditorControls(surface: HTMLElement, commands: EditorComma
     acceptedWidth = state.width;
     const idle = state.interaction === 0n;
     const available = state.phase === "ready";
+    if (idle) {
+      idleUndo = available && state.canUndo;
+      idleRedo = available && state.canRedo;
+    }
+    const locked = !idle && available;
+    for (const control of [pen, width, color]) control?.classList.toggle(interactionLock, locked);
+    undo?.classList.toggle(interactionLock, locked && idleUndo);
+    redo?.classList.toggle(interactionLock, locked && idleRedo);
     if (width) {
       width.disabled = !idle || !available;
       width.value = String(state.width);
