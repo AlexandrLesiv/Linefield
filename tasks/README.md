@@ -8,6 +8,11 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 # Task board
 
+See the [approved product backlog](BACKLOG.md) for the owner-confirmed order of upcoming functionality.
+Those priorities do not mark the milestones below complete or waive implementation gates.
+[P05-L01](P05-L01.md) prepares the first saved-drawing slice; production work remains gated,
+with [S02-P01](S02-P01.md) the next synthetic storage prerequisite.
+
 ## Proposed priority — in-memory shared web editor (2026-10-19)
 
 Owner requested the smallest usable Rust/Wasm/CanvasKit pen slice, with confirmation of each
