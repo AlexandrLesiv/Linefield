@@ -242,7 +242,7 @@ defines Resume wording and explicit reload/tab-close loss. No gallery tile or du
 capability. Known temporary route cold-load behavior and navigation are defined by WMP-D3.
 This is not a save/reconciliation/receipt contract. There are no pending worker writes.
 
-Begin idle+ready+acknowledged-presentation captures width/color/mapping and first sample index0, returns interaction.
+Begin idle+ready+acknowledged-current-mapping captures width/color/mapping and first sample index0, returns interaction.
 The host admits only mouse and pen input for ink and captures only the first primary
 eligible canvas pointer while idle; further pointers cannot
 replace it. Rust stores the integer pointer ID (Number safe integer,0…2^53−1). Append/end
@@ -365,8 +365,8 @@ samples. Canvas center(width/2,height/2) maps to that center. Resize preserves a
 viewport center/zoom and changes framing, never stored ink. Browser page gestures remain
 distinct from editor viewport commands and cannot silently mutate Rust's mapping.
 
-Recommend named checked `memoryPanBegin`, `memoryPanUpdate`, `memoryPanEnd` and shared
-Cancel, plus `memoryPanStep` and `memoryZoomStep` for the owner-approved P1 UI step origins. These are **owner-approved interface contracts**, not emitted/generated source.
+Named checked `memoryPanBegin`, `memoryPanUpdate`, `memoryPanEnd` and shared
+Cancel, plus `memoryPanStep` and `memoryZoomStep`, implement the owner-approved P1 UI step origins. These are **owner-approved interface contracts**, emitted by the checked Wasm adapter.
 Pan captures center/zoom/start point and an interaction token; ordered updates carry that
 token, captured mapping generation and current canvas point. Derive every preview from
 `capturedCenter−(current−start)/capturedZoom`, not accumulated rounded deltas. Each accepted
@@ -421,13 +421,20 @@ verbs per scheduled turn; this does **not** bound snapshot, allocation, tessella
 time. These calls are nonpreemptible and require release measurements. No O(batch) total
 preview-cost promise follows from incremental geometry generation.
 
-Keep one complete committed-scene image and draw the complete active-stroke snapshot over
-it. Background key: module/owner, content revision, mapping, surface generation and geometry
+The owner-approved rapid-stroke amendment separates current mapping admission from content
+presentation. Rust End commits immediately; the next Begin on an already acknowledged,
+unchanged mapping does not wait for cache rebuilding or current-content publication. No
+input queue, deferred replay, sample dropping, worker or alternate renderer is introduced.
+Keep one complete visible-composition image and the committed prefix in staging. Draw the
+complete active-stroke snapshot over a temporary staging snapshot only after including the
+recent committed tail. Background key: module/owner, content revision, mapping, surface generation and geometry
 algorithm/style version. Active preview additionally carries interaction/geometry generation
 and accepted prefix cursor. Appending samples leaves an unchanged committed background valid.
-Cancellation removes only preview. If the renderer/context remains usable, restore the
-already-held coherent committed image without requiring a new allocation. A lost/failed
-renderer may instead show display-unavailable while the independent Rust owner retains work. Successful End may append the complete stroke once to matching
+Cancellation removes only preview. Restore the complete predecessor content from staging
+using a new bounded snapshot; the temporary-pan amendment replaces the former no-allocation
+restore promise because the held image now includes the full visible composition. Snapshot
+failure follows recoverable display-unavailable while the independent Rust owner retains
+completed work/history and the cancelled stroke stays cancelled. Successful End may append the complete stroke once to matching
 staging before publishing its new snapshot. Rendering failure cannot undo a Rust commit. Pan cancellation restores the captured Rust viewport;
 if its old image was released, rebuild and acknowledge that view before fresh ink.
 
@@ -435,23 +442,83 @@ Undo/Redo, viewport changes, context recovery and cache misses rebuild in paint 
 one ordinary full-frame offscreen staging surface. Build/draw/release one full stroke at a
 time, or reuse a complete optional cached path; never require all paths resident. Fill each
 stroke once, never separate segments. Retain the last coherent image during reconstruction;
-publish only a complete image matching current content/mapping/surface generations. A late
+publish only a coherent completed target under its history/mapping/surface fences. The staged
+raster cache is a contiguous paint-order prefix with a last included stroke ID. Newly ended
+strokes extend the Rust-owned committed tail without invalidating that prefix. Build/draw
+one whole pending stroke at a time, reusing a compatible active builder when possible;
+no required all-path cache or JS queue of revisions. Advance the prefix only after a whole
+stroke is included. Each render pass captures a finite terminal target ID/content and never
+extends that target when newer Ends arrive. Publish the completed target as a monotonic
+coherent prefix, then schedule the newest tail; an unchanged history branch, mapping and
+surface fence every continuation. An already newer visible completed preview must not be
+overwritten by an older prefix. Compose active ink only when all its predecessors are
+included. Cache adoption and visible composition share publication, with no separate cache
+acknowledgement gate. Intermediate prefixes do not acknowledge a newer Rust content version.
+Undo/Redo/branch replacement and mapping/session/surface changes invalidate incompatible
+prefix work; a stale asynchronous result cannot promote or overwrite newer content.
+Cancellation must preserve all completed strokes, including recent uncached work: restore
+the held image only when it includes the current committed content, otherwise retain the
+front frame until coherent catchup. Required path work remains bounded to one stroke and
+one page per transfer; the canonical pending tail has no invented stroke-count quota. A late
 final frame after resize or viewport change is discarded. One rebuild request and one latest
 dirty marker; no queue of snapshots or stale builds. The retained frame is an updating presentation, never misrepresented as the current accepted
-mapping. Approved R1 reuses memory.loading in the existing fixed canvas status overlay,
-marks the canvas busy and preserves focus/unsaved disclosure. No modal, layout shift, fake
+mapping. Owner-approved ordinary progress keeps the existing artwork visible with nonblocking
+`updating`/`aria-busy`; no preparation overlay or progress cursor appears after each stroke.
+Initial or unavailable display preparation still uses the existing fixed status overlay.
+Preserve focus/unsaved disclosure. No modal, layout shift, fake
 percentage, failure copy or Retry for ordinary progress. Keep Back/pan/zoom/cancel operable;
 this status cannot intercept their input. Rejected ink requires release and fresh contact
 after acknowledgement, never deferred input. Actual failure uses the approved failure state.
 
+Cooperative reconstruction may group complete short strokes in one turn, keeping aggregate
+scene transfers at most4096 verbs and a4ms cooperative work target. A whole path draw remains
+nonpreemptible; this scheduling target is not a new acceptance threshold or performance pass.
+The owner approved a temporary pan preview on2026-10-19: freeze the complete visible
+composition at the first accepted pan, translate it using a Rust-derived absolute offset,
+clear exposed pixels white, and replace it atomically with accurate current-mapping rendering.
+Do not accumulate transforms or capture a translated/cropped preview as a new source.
+During a drag, defer expensive exact reconstruction; End/Cancel schedules accurate catchup.
+Recent completed visible ink belongs to the frozen composition. Accepted ink not yet visible
+remains canonical and appears in accurate catchup; it is never discarded.
+
+`memoryPanPreview(owner:u64, session:u64, mapping:u64) -> PanPreview` is a read-only named
+query with ordinary checked bigint inputs and explicit snapshot disposal. The snapshot includes
+the ordinary Reply identities and `sourceInteraction:u64`, `sourceMapping:u64`, `active:bool`,
+`outside:bool`, `offsetX:f64`, `offsetY:f64` (backing pixels). `unavailable` has zero payload.
+Rust retains one source viewport/content/metrics/session record, never artwork or a frame queue.
+Offsets use checked regional subtraction, bounded local floating arithmetic and unchanged zoom;
+when the original raster cannot overlap the current viewport, `outside` requests white while
+retaining the source for reversal. Querying changes no readiness, history or document state.
+An exact current publication retires that origin. Content/history changes, unrelated mapping
+changes, suspension, surface replacement or session departure invalidate it. A later pan may
+begin from this valid origin before exact catchup; its cancellation base is the latest accepted
+viewport while presentation still derives from the original image. Fresh ink, zoom and arrow
+steps retain exact-mapping acknowledgement rules. No preview scaling is added.
+
+WMP-11 edge cases (writer owns browser E2E and isolated boundary-fixture evidence): dense held
+drag must show two positions before release; recent visible uncached ink moves with old ink;
+End preserves position; Escape restores the latest pre-pan position; a second pan/reversal
+before exact catchup restores original pixels without cumulative clipping; resize/context/session
+or history invalidation rejects stale transforms and accurate frames; preview never unlocks ink.
+Snapshot/draw failure follows recoverable renderer failure, preserving Rust RAM/history.
+Because the browser may discard the onscreen drawing buffer after swap, retain the complete
+published composition at publication time, then freeze its reference at PanBegin. An active
+preview obtains a temporary staging baseline snapshot, draws baseline plus active ink, releases
+the temporary snapshot, and captures the front before flush; replace the previous held image.
+This uses at most two simultaneous image handles, no readPixels or CPU image copy and no new
+surface or preserveDrawingBuffer context policy. Cancellation restores the completed staging
+prefix. Measure the additional snapshot cost; the handle bound is not a performance pass.
+
 A1 adds a Rust-issued presentation token and named memoryPresented acknowledgement.
-Rust invalidates readiness and advances this token on accepted committed-content/mapping
-change, Enter, Suspend or surface invalidation. The adapter must Suspend before replacing
+Rust clears exact-content acknowledgement and advances this token on accepted committed-content/mapping
+change, Enter, Suspend or surface invalidation. A private current-mapping admission flag is
+established only by successful coherent publication; End/Undo/Redo preserve it, while every
+mapping/session/surface invalidation clears it. The adapter must Suspend before replacing
 or losing a surface, including same-size replacement; resuming metrics issues a fresh token.
 A complete publication acknowledges exact owner/session/presentation/mapping/content with
 no intervening asynchronous work. Old surface callbacks therefore cannot unlock a new one,
 even with identical dimensions/content. Module identity remains bound in the host closure.
-Rust returns canBeginInk only when current acknowledgement, phase and interaction guards
+Rust returns canBeginInk only when current-mapping acknowledgement, phase and interaction guards
 all permit it. An acknowledgement is accepted only for an attached, nonsuspended current
 presentation; it cannot resume a suspended/detached owner. Stale acknowledgement rejects unchanged; it neither mutates artwork/history
 nor creates a viewport interaction. Active-prefix Append changes scene/geometry only and does
@@ -459,10 +526,12 @@ not invalidate the committed background's token or stop already-admitted ink. Re
 presentation increments with other generations. This is an owner-approved addition,
 not a security proof against hostile same-origin JavaScript.
 
-R1 explicitly permits temporarily withholding fresh ink until displayed mapping/content is current. Viewport requests may supersede a
+R1 with the owner-approved rapid-stroke amendment withholds fresh ink until the displayed
+mapping is current; pending content publication alone cannot reject the next stroke.
+Viewport requests may supersede a
 rebuild; Back/cancel remain available. System remap or actual renderer failure cancels
 unfinished ink through Rust before invalidating mapping. Preserve completed Rust state and
-history. Do not transform stale raster content as an unreviewed pan shortcut. If release
+history. Transform an older raster only under the owner-approved temporary pan protocol above. If release
 measurements cannot meet interactive expectations, return findings before adopting tiles,
 workers or per-segment drawing. This proposal adds no such mechanism. P1 approval alone does not approve arbitrary freezes;
 measure accepted-view publication delay and time to fresh ink under repeated pan supersession.

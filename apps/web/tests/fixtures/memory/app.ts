@@ -2,6 +2,7 @@ import "../../../src/main.ts";
 import * as api from "#memory-bindings";
 import { loadEngine } from "../../../src/memory/loader.ts";
 import { diagnosticSnapshot } from "../../../src/memory/diagnostics.ts";
+import { Presentation } from "../../../src/memory/presentation.ts";
 const arm = document.querySelector("#arm");
 if (!(arm instanceof HTMLButtonElement)) throw Error("isolated control absent");
 arm.addEventListener("click", () => {
@@ -16,4 +17,12 @@ arm.addEventListener("click", () => {
 // Observation-only fixture event. Never included in production application entry.
 document.addEventListener("fixture-observe", () => {
   document.body.dataset.fixtureDiagnostics = JSON.stringify(diagnosticSnapshot());
+});
+// One-shot renderer fault confined to this isolated fixture entry, after Rust accepts input.
+document.addEventListener("fixture-fail-pan-translation", () => {
+  const original = Presentation.prototype.translate;
+  Presentation.prototype.translate = function () {
+    Presentation.prototype.translate = original;
+    throw Error("fixture-pan-translation");
+  };
 });

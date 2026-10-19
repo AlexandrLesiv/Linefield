@@ -3,6 +3,9 @@ export const catalog = {
   version: 1,
   sourceLanguage: "en",
   messages: {
+    "memory.zoomOut": { kind: "plain", context: "Canvas zoom", arguments: {} },
+    "memory.zoomIn": { kind: "plain", context: "Canvas zoom", arguments: {} },
+    "memory.zoomValue": { kind: "plain", context: "Canvas zoom", arguments: { percent: "string" } },
     "memory.navigationUnavailable": {
       kind: "plain",
       context: "In-memory navigation failure",

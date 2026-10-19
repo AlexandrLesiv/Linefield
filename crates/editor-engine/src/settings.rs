@@ -4,7 +4,7 @@ impl Engine {
         if let Err(code) = self.session(owner, session) {
             return code;
         }
-        if self.document.active.is_some() {
+        if self.document.busy() {
             return Code::Active;
         }
         if !width.is_finite()

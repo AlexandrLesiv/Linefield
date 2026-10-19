@@ -308,6 +308,16 @@ zoom and focused Arrow keys provide keyboard pan without claiming full nonvisual
 
 ## Visual checklist and adaptive layout
 
+The owner-approved rapid-stroke amendment separates same-mapping input admission from exact
+content presentation. Completed strokes may await raster-cache promotion while the next
+stroke starts. Ordinary catchup retains visible artwork, with nonblocking busy semantics and
+no per-stroke preparation overlay or progress cursor. Current-mapping initialization/remap
+still requires coherent presentation before fresh ink. The implemented P1 controls preserve
+44px targets and the existing one-third footer cap; their temporary interaction lock keeps
+the prior appearance while native disabled state remains authoritative. Continuous pan over
+multi-turn scenes remains an observed rendering-progress gap, not a newly approved deferred
+pan behavior or permission for stale-raster transforms.
+
 Use existing semantic theme roles, typography, spacing, separators, 8 px rounded controls and
 Pen selected treatment. Keep rail order Pen/Select/Eraser/Line/Shapes/color; unavailable tools
 are visibly disabled and labeled as such. No wheel, submenu or custom settings page. Pen's
@@ -465,6 +475,20 @@ meaning, not permission to hardcode formatting. Resource/layout/runtime/linguist
 remain four distinct checks. No count/plural message is needed by this scope.
 
 ## Owner-approved R1 presentation mechanism
+
+On2026-10-19 the owner approved the temporary pan preview amendment: while Space-drag is
+active, the complete last visible drawing follows every accepted mouse position without
+waiting for accurate reconstruction. Recent visible completed ink moves with earlier ink.
+Exposed areas are white until accurate rendering catches up. The full source image is retained
+through successive pans and reversals; moving it offscreen never deletes artwork or crops the
+retained source. Escape returns to the current gesture's pre-pan position, including when
+another pan starts before accurate catchup. End retains the last position until atomic exact
+replacement; there is no animation, crossfade, recentering, preparation overlay or progress
+cursor. Fractional raster translation may refine antialiasing at replacement but must preserve
+geometry alignment. Exact readiness stays separate: transformed pixels do not admit fresh ink.
+Zoom resampling previews, workers and new tools are outside this amendment. WMP-11 adds dense
+held-drag captures, recent-ink alignment, successive pan/reversal/cancel, fractional/DPR2
+replacement and resize/history fencing. See the contract for source and resource ownership.
 
 The owner approved R1 at51d9345 on2026-10-19: coherent full-frame staging and Rust
 acknowledgement before fresh ink after a mapping/content change. This specifically approves

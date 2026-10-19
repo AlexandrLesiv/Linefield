@@ -56,6 +56,7 @@ snapshot!(Mapping);
 snapshot!(SceneIds);
 snapshot!(ScenePage);
 snapshot!(StrokeState);
+snapshot!(PanPreview);
 #[wasm_bindgen]
 impl SceneIds {
     #[wasm_bindgen(getter)]
@@ -94,7 +95,7 @@ impl Mapping {
     }
     #[wasm_bindgen(getter, js_name = regionY)]
     pub fn region_y(&self) -> i64 {
-        0
+        self.0.0.value.get().viewport.y.region
     }
     #[wasm_bindgen(getter, js_name = localX)]
     pub fn local_x(&self) -> f64 {
@@ -102,7 +103,7 @@ impl Mapping {
     }
     #[wasm_bindgen(getter, js_name = localY)]
     pub fn local_y(&self) -> f64 {
-        0.0
+        self.0.0.value.get().viewport.y.local
     }
     #[wasm_bindgen(getter)]
     pub fn zoom(&self) -> f64 {

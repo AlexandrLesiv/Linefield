@@ -37,6 +37,7 @@ pub(crate) struct Document {
     pub visible: usize,
     pub retired: usize,
     pub active: Option<Active>,
+    pub pan: Option<crate::pan::Pan>,
 }
 impl Default for Document {
     fn default() -> Self {
@@ -48,10 +49,14 @@ impl Default for Document {
             visible: 0,
             retired: 0,
             active: None,
+            pan: None,
         }
     }
 }
 impl Document {
+    pub fn busy(&self) -> bool {
+        self.active.is_some() || self.pan.is_some()
+    }
     pub fn charge(&self) -> usize {
         self.strokes.capacity() * size_of::<Stroke>()
             + self.strokes.iter().map(Stroke::charge).sum::<usize>()

@@ -1,19 +1,18 @@
 export function observeSurface(
   canvas: HTMLCanvasElement,
   resize: () => void,
-  lost: (event: Event) => void,
-  restored: () => void,
+  context: { contextLost(event: Event): void; contextRestored(): void },
 ) {
   const observer = new ResizeObserver(resize);
   observer.observe(canvas);
   window.addEventListener("resize", resize);
-  canvas.addEventListener("webglcontextlost", lost);
-  canvas.addEventListener("webglcontextrestored", restored);
+  canvas.addEventListener("webglcontextlost", context.contextLost);
+  canvas.addEventListener("webglcontextrestored", context.contextRestored);
   return () => {
     observer.disconnect();
     window.removeEventListener("resize", resize);
-    canvas.removeEventListener("webglcontextlost", lost);
-    canvas.removeEventListener("webglcontextrestored", restored);
+    canvas.removeEventListener("webglcontextlost", context.contextLost);
+    canvas.removeEventListener("webglcontextrestored", context.contextRestored);
   };
 }
 export function surfaceMetrics(canvas: HTMLCanvasElement) {

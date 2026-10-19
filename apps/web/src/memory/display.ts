@@ -6,10 +6,8 @@ import type { Bridge, ReplyValue } from "./bridge.ts";
 import type { MemoryView } from "./view.ts";
 import { Presentation } from "./presentation.ts";
 import { SceneRenderer } from "./scene-renderer.ts";
-import { attachPenInput } from "./pen-input.ts";
-import { attachEditorControls } from "./editor-controls.ts";
-import { recoverDisplay } from "./display-failure.ts";
-import { observePointerLifecycle } from "./pointer-diagnostics.ts";
+import { attachEditorAdapters } from "./editor-adapters.ts";
+import { DisplayHealth } from "./display-health.ts";
 export function attachDisplay(
   kit: CanvasKit,
   view: MemoryView,
@@ -25,19 +23,24 @@ export function attachDisplay(
   let renderer: SceneRenderer | undefined;
   let frame = 0;
   let stopped = false;
-  let lost = false;
   let size = "";
   let running = false;
   let dirty = false;
-  let input: ReturnType<typeof attachPenInput> | undefined;
-  let controls: ReturnType<typeof attachEditorControls> | undefined;
+  let adapters: ReturnType<typeof attachEditorAdapters> | undefined;
   const valid = () => !stopped && alive();
   function accept(next: ReplyValue): boolean {
-    view.command(state, next);
+    const previous = state;
     state = next;
+    try {
+      renderer?.changed(previous, next);
+    } catch (error: unknown) {
+      if (error instanceof EngineBoundaryError) fatal();
+      else failure();
+      return false;
+    }
+    view.command(previous, next);
     update(next);
-    input?.sync();
-    controls?.refresh();
+    adapters?.refresh();
     return next.code === "ok" || next.code === "noop";
   }
   function suspend(): void {
@@ -49,14 +52,30 @@ export function attachDisplay(
     presentation?.dispose();
     presentation = undefined;
   }
-  const failure = () => recoverDisplay(suspend, destroy, view, state.session, fatal);
+  const health = new DisplayHealth({
+    valid,
+    suspend,
+    destroy,
+    view,
+    fatal,
+    schedule,
+    session: () => state.session,
+    cancelFrames() {
+      dirty = false;
+      cancelAnimationFrame(frame);
+      frame = 0;
+    },
+  });
+  const failure = health.failure;
   function schedule(): void {
     dirty = true;
-    if (valid() && !frame && !running && !lost) frame = requestAnimationFrame(() => void render());
+    if (valid() && !frame && !running && !health.lost && !health.failed)
+      frame = requestAnimationFrame(() => void render());
   }
   async function render(): Promise<void> {
     frame = 0;
-    if (!valid() || lost || view.surface.dataset.entryReady !== "true") return;
+    if (!valid() || health.lost || health.failed || view.surface.dataset.entryReady !== "true")
+      return;
     running = true;
     dirty = false;
     try {
@@ -103,6 +122,10 @@ export function attachDisplay(
           () => valid() && renderer === currentRenderer,
           (shown) => {
             if (!valid() || renderer !== currentRenderer) return;
+            if (shown.content !== state.content || shown.mapping !== state.mapping) {
+              schedule();
+              return;
+            }
             try {
               if (!accept(api.presented(shown))) throw Error("engine-unavailable");
               view.status("ready");
@@ -126,7 +149,8 @@ export function attachDisplay(
   }
   const commands = editorCommands({
     read: () => state,
-    valid: () => valid() && !lost && surfaceIsCurrent(view.canvas, size, remap),
+    valid: () =>
+      valid() && !health.lost && !health.failed && surfaceIsCurrent(view.canvas, size, remap),
     accept,
     cancelled: () => {
       try {
@@ -138,9 +162,7 @@ export function attachDisplay(
     changed: schedule,
     fatal,
   });
-  input = attachPenInput(view.canvas, commands, view.pendingRelease);
-  const stopPointerTrace = observePointerLifecycle(view.canvas, () => state);
-  controls = attachEditorControls(view.surface, commands);
+  adapters = attachEditorAdapters(view, commands);
   const remap = () => {
     if (!valid()) return;
     const measured = surfaceMetrics(view.canvas).key;
@@ -156,28 +178,7 @@ export function attachDisplay(
     }
     schedule();
   };
-  const lostContext = (event: Event) => {
-    event.preventDefault();
-    if (!valid() || lost) return;
-    lost = true;
-    cancelAnimationFrame(frame);
-    frame = 0;
-    try {
-      suspend();
-    } catch {
-      fatal();
-      return;
-    }
-    destroy();
-    view.status("displayLost");
-  };
-  const restored = () => {
-    if (valid()) {
-      lost = false;
-      schedule();
-    }
-  };
-  const stopObserving = observeSurface(view.canvas, remap, lostContext, restored);
+  const stopObserving = observeSurface(view.canvas, remap, health);
   view.surface.addEventListener("memory-entry-ready", schedule);
   schedule();
   return () => {
@@ -189,9 +190,7 @@ export function attachDisplay(
       }
     }
     stopped = true;
-    input?.dispose();
-    stopPointerTrace();
-    controls?.dispose();
+    adapters?.dispose();
     stopObserving();
     view.surface.removeEventListener("memory-entry-ready", schedule);
     cancelAnimationFrame(frame);

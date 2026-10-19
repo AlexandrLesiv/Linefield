@@ -11,6 +11,12 @@ const commands = WebAssembly.Module.exports(module)
   .map((item) => item.name)
   .sort();
 const expected = [
+  "memoryPanBegin",
+  "memoryPanPreview",
+  "memoryPanUpdate",
+  "memoryPanEnd",
+  "memoryPanStep",
+  "memoryZoomStep",
   "memoryBegin",
   "memoryAppend",
   "memoryEnd",
@@ -37,7 +43,15 @@ if (WebAssembly.Module.exports(module).some((item) => /fixture/i.test(item.name)
 const glue = await readFile(join(generated, "linefield_web_memory.js"), "utf8");
 const declarations = await readFile(join(generated, "linefield_web_memory.d.ts"), "utf8");
 if (/fixture/i.test(glue + declarations)) throw Error("Fixture glue leaked");
-for (const name of ["Reply", "State", "Mapping", "SceneIds", "ScenePage", "StrokeState"]) {
+for (const name of [
+  "Reply",
+  "State",
+  "Mapping",
+  "SceneIds",
+  "ScenePage",
+  "StrokeState",
+  "PanPreview",
+]) {
   if (!declarations.includes(`export class ${name}`)) throw Error("Generated snapshot absent");
 }
 if (!glue.includes("getArrayU64FromWasm0") || !glue.includes(".slice()"))
@@ -48,7 +62,7 @@ if (/fixtures|fixture/i.test(manifest)) throw Error("Fixture build input leaked"
 for (const file of await readdir(join(dist, "assets"))) {
   const content = await readFile(join(dist, "assets", file));
   if (
-    /fixtureNearExhaustion|fixtureFailNextMetrics|Run boundary matrix|Run bounded calibration/.test(
+    /fixtureNearExhaustion|fixtureFailNextMetrics|fixture-fail-pan-translation|Run boundary matrix|Run bounded calibration/.test(
       content.toString("utf8"),
     )
   )
@@ -63,7 +77,7 @@ console.log(
     status: "passed",
     commands,
     engineSha256: createHash("sha256").update(bytes).digest("hex"),
-    generatedSnapshots: 6,
+    generatedSnapshots: 7,
     caveat:
       "Static export/glue/asset validation; browser E2E and independent glue inspection remain separate",
   }),

@@ -10,11 +10,52 @@ These pages explain what to verify; they are not a current pass certificate.
 - [Appearance](appearance/README.md): themes, elevation, touch feedback and paper continuity.
 
 The [live prototype specification](../../../docs/design/live-web-prototype.md) owns current behavior;
-[app tests](../tests) contain executable assertions. This is one responsive Web interface over
-in-memory samples. Browser evidence cannot establish persistent storage, a drawing engine,
-native hosts or physical-device acceptance.
+[app tests](../tests) contain executable assertions. The temporary drawing integrates shared
+Rust/Wasm editing with CanvasKit; the gallery remains a prototype. Browser evidence cannot
+establish persistent storage, native hosts or physical-device acceptance.
+
+## Pen release ordering
+
+WMP-02/CT-02/INV-04 uses the owner-approved pending-release exception in
+[WMP-C2](../../../docs/interfaces/web-memory.md), with the D3-04R presentation in
+[WMP-D3](../../../docs/design/web-memory-pen.md). `tests/memory/pen-release*.spec.ts`
+exercises the real app: browser-generated trusted capture loss followed by delayed CDP pen
+release; exact frozen-prefix pixels; one-operation Undo; same-pointer fresh contact; explicit
+interruptions; preserved completed content and both history stacks; and enlarged Ukrainian
+status/exit visibility. CDP pen input simulates browser events, not physical Wacom hardware.
+Hidden/cancel/conflicting-capture and malformed/stale conditions are explicitly injected
+browser event fixtures. The timestamp case uses a real CDP event with a deliberately older
+timestamp. No test trust bypass or production command-injection hook is provided.
+
+The state has no elapsed-time expiry: if no terminal or interruption event follows, the
+provisional stroke remains frozen with Escape/Back exits. Pointer ID reuse is fenced by the
+current Rust interaction and recognizable event timestamps; DOM does not expose a distinct
+contact generation for arbitrarily mislabelled events. Physical-device retesting, full E02
+acceptance and the previously failed long-path performance profile remain separate gates.
 
 ## Running and recording verification
+
+WMP-01/03 rapid-stroke tests hold browser RAF only after a real initial presentation, then
+send trusted input through the app and verify accepted strokes, per-stroke history and cold
+rebuild pixel parity. This is an explicitly controlled scheduling fixture, not latency
+evidence. WMP-11 viewport tests independently check held-drag pixel displacement before
+release, captured-view cancellation, native held-key behavior and viewport retention. The
+isolated Wasm viewport fixture checks hostile arguments, exact regional examples, stale
+tokens and terminal generation reservations; it is browser boundary evidence, not native UI.
+
+`viewport-throughput.spec.ts` collects bounded32/64-stroke diagnostics without ready waits
+between strokes. Inspect its explicit `continuousPanVerdict`, publication count during
+movement, pending age and cold-rebuild parity: collection completion is not a performance
+pass. Temporary pan previews intentionally remain `updating` during the gesture; count their
+publications separately from exact-ready frames. `pan-preview.spec.ts` asserts actual dense
+held-pointer displacement, integer-pixel exact replacement and recent-ink/re-pan reversal;
+`pan-preview-fractional.spec.ts` checks125% zoom/DPR2 alignment within one backing pixel.
+Scheduling fixtures that hold RAF are correctness evidence, not latency measurements.
+Maximum measured synchronous operations differ from browser Long Tasks and physical
+input/GPU latency. Inspect snapshot count/cost and pan-translation cost separately; active
+preview retains a complete published image before browser swap. The long-path performance
+profile remains failed. Do not hide failed/cold observations
+as warm-up or broaden this bounded collection into an acceptance claim.
 
 From the repository root, use `pnpm check`, `pnpm web:build` and
 `pnpm web:test` as appropriate. [App setup](../README.md) lists prerequisites;

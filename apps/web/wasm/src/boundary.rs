@@ -9,6 +9,7 @@ thread_local! {
 }
 #[derive(Default)]
 pub struct Payload {
+    pub pan_preview: linefield_editor_engine::PanPreview,
     pub page: linefield_editor_engine::GeometryPage,
     pub ids: Vec<u64>,
     pub done: bool,
@@ -94,6 +95,15 @@ where
 #[cfg(feature = "e2e-fixtures")]
 #[wasm_bindgen(js_name = fixtureNearExhaustion)]
 pub fn fixture_near_exhaustion() -> Result<(), JsValue> {
+    seed_fixture(Engine::fixture_near_exhaustion())
+}
+#[cfg(feature = "e2e-fixtures")]
+#[wasm_bindgen(js_name = fixtureNearPanExhaustion)]
+pub fn fixture_near_pan_exhaustion() -> Result<(), JsValue> {
+    seed_fixture(Engine::fixture_near_pan_exhaustion())
+}
+#[cfg(feature = "e2e-fixtures")]
+fn seed_fixture(value: Engine) -> Result<(), JsValue> {
     if LIVE.get() || BUSY.get() {
         return Err(JsValue::from_str("boundary-capacity"));
     }
@@ -101,7 +111,7 @@ pub fn fixture_near_exhaustion() -> Result<(), JsValue> {
     if active {
         return Err(JsValue::from_str("fixture-active-owner"));
     }
-    ENGINE.with(|engine| *engine.borrow_mut() = Engine::fixture_near_exhaustion());
+    ENGINE.with(|engine| *engine.borrow_mut() = value);
     Ok(())
 }
 #[cfg(feature = "e2e-fixtures")]

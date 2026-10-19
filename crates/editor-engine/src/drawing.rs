@@ -11,7 +11,7 @@ impl Engine {
     ) -> Code {
         let result = (|| {
             self.mapping(owner, session, mapping)?;
-            if self.document.active.is_some() {
+            if self.document.busy() {
                 return Err(Code::Active);
             }
             if !pointer.is_finite()
@@ -21,7 +21,7 @@ impl Engine {
                 return Err(Code::Invalid);
             }
             let state = self.projection(Code::Ok);
-            if state.phase != Phase::Ready || !state.presented {
+            if state.phase != Phase::Ready || !state.mapping_ready {
                 return Err(Code::Unavailable);
             }
             if !self.room(4)
@@ -41,6 +41,7 @@ impl Engine {
                 .try_reserve(1)
                 .map_err(|_| Code::Capacity)?;
             self.interaction_counter += 1;
+            self.pan_origin = None;
             self.stroke_counter += 1;
             let mut stroke = Stroke {
                 id: self.stroke_counter,
@@ -146,17 +147,17 @@ impl Engine {
         if let Err(code) = self.session(owner, session) {
             return code;
         }
-        if !self
-            .document
-            .active
-            .as_ref()
-            .is_some_and(|v| v.interaction == interaction)
-        {
+        if interaction == 0 || self.projection(Code::Ok).interaction != interaction {
             return Code::StaleInteraction;
         }
         self.cancel_current(if capacity { Code::Capacity } else { Code::Ok })
     }
     pub fn cancel_current(&mut self, code: Code) -> Code {
+        if let Some(pan) = self.document.pan.take() {
+            self.document.viewport = pan.before;
+            self.active_cancelled = true;
+            self.advance();
+        }
         if self.document.active.take().is_some() {
             self.active_cancelled = true;
             self.scene_changed();
@@ -171,6 +172,11 @@ impl Engine {
         code
     }
     pub(crate) fn cancel_for_mapping(&mut self) {
+        self.pan_origin = None;
+        if let Some(pan) = self.document.pan.take() {
+            self.document.viewport = pan.before;
+            self.active_cancelled = true;
+        }
         if self.document.active.take().is_some() {
             self.active_cancelled = true;
         }

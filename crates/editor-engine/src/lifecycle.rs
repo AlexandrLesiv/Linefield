@@ -56,6 +56,7 @@ impl Engine {
             return code;
         }
         self.document = Default::default();
+        self.pan_origin = None;
         self.current = None;
         self.disposed = owner;
         self.sequence = 0;
@@ -82,9 +83,12 @@ impl Engine {
             return Code::Unavailable;
         }
         if value.presented {
+            self.pan_origin = None;
             return Code::Noop;
         }
         value.presented = true;
+        value.mapping_ready = true;
+        self.pan_origin = None;
         Code::Ok
     }
     pub fn scene_ids(&self, owner: u64, session: u64, scene: u64, after: u64) -> Code {

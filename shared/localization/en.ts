@@ -1,5 +1,8 @@
 import type { Translation } from "./catalog.ts";
 export const en = {
+  "memory.zoomOut": "Zoom out",
+  "memory.zoomIn": "Zoom in",
+  "memory.zoomValue": "Zoom: {percent}",
   "memory.navigationUnavailable":
     "Navigation could not finish. Your drawing remains in this tab’s memory.",
   "memory.title": "Temporary drawing",
@@ -18,7 +21,7 @@ export const en = {
   "memory.smoothingOff": "Smoothing Off",
   "memory.canvas": "Temporary drawing canvas",
   "memory.foundation":
-    "Draw with mouse or pen. Long strokes may pause this preview. Pan and zoom are not available yet.",
+    "Draw with mouse or pen. Space-drag or Arrow keys pan the focused canvas. Long strokes may pause this preview.",
   "memory.copyDiagnostics": "Copy diagnostics",
   "memory.diagnosticsCopied": "Diagnostics copied",
   "memory.diagnosticsFailed": "Could not copy diagnostics",

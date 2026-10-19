@@ -1,19 +1,31 @@
-import type { CanvasKit, PathBuilder } from "canvaskit-wasm";
+import type { CanvasKit } from "canvaskit-wasm";
 import { bridge } from "./bridge.ts";
 import type { ReplyValue } from "./bridge.ts";
-import { penBridge } from "./pen-bridge.ts";
-import { appendPathPage } from "./path-page.ts";
 import type { Presentation } from "./presentation.ts";
-import { drawCommitted, rebuildCommitted, nextTurn } from "./committed-scene.ts";
+import { drawCommitted } from "./committed-scene.ts";
+import { RenderBudget } from "./render-budget.ts";
+import { StrokePath } from "./stroke-path.ts";
+import { sceneTarget } from "./scene-target.ts";
+import { PanPresentation } from "./pan-preview.ts";
+import {
+  renderCount,
+  renderPending,
+  renderCaughtUp,
+  renderOperation,
+  renderResources,
+} from "./render-metrics.ts";
 export class SceneRenderer {
-  private committed = "";
-  private committedState: ReplyValue | undefined;
-  private activeStroke = 0n;
-  private activeBase = "";
-  private builder: PathBuilder | undefined;
-  private prefix = 0n;
-  private activeKey = "";
-  private activeColor = [0, 0, 0];
+  private epoch = 0;
+  private staged = 0n;
+  private stagedCount = 0n;
+  private published = -1n;
+  private frontCompleted = 0n;
+  private frontActive = 0n;
+  private frontStroke = 0n;
+  private frontMapping = 0n;
+  private pan = new PanPresentation();
+  private path: StrokePath | undefined;
+  private reset = true;
   private stopped = false;
   private kit: CanvasKit;
   private display: Presentation;
@@ -21,16 +33,39 @@ export class SceneRenderer {
     this.kit = kit;
     this.display = display;
   }
-  private resetActive() {
-    if (this.builder) this.display.owner.resources.release("builder", this.builder);
-    this.builder = undefined;
-    this.prefix = 0n;
-    this.activeKey = "";
-    this.activeStroke = 0n;
+  changed(previous: ReplyValue, next: ReplyValue): void {
+    if (
+      previous.interaction !== next.interaction ||
+      previous.mapping !== next.mapping ||
+      previous.content !== next.content
+    ) {
+      if (this.pan.update(next, this.frontMapping, this.display)) this.epoch++;
+    }
+    if (previous.content === next.content && previous.mapping === next.mapping) return;
+    renderPending();
+    const ended = previous.interaction !== 0n && next.interaction === 0n && !next.activeCancelled;
+    if (previous.mapping !== next.mapping || !ended) {
+      this.epoch++;
+      renderCount("invalidations");
+      this.reset = true;
+      this.frontActive = 0n;
+      this.frontCompleted = 0n;
+    } else if (this.frontActive === previous.interaction) {
+      this.frontCompleted = this.frontStroke;
+      this.frontActive = 0n;
+    }
   }
-  restore() {
-    this.display.restore();
-    this.resetActive();
+  restore(): void {
+    // An ended preview may be ahead of the cache. Never erase it for a newer cancellation.
+    if (this.frontActive !== 0n) this.display.restore();
+    this.frontActive = 0n;
+  }
+  private select(id: bigint): StrokePath {
+    if (this.path?.id !== id) {
+      this.path?.dispose();
+      this.path = new StrokePath(this.kit, this.display, id);
+    }
+    return this.path;
   }
   async render(
     read: () => ReplyValue,
@@ -38,141 +73,93 @@ export class SceneRenderer {
     publish: (state: ReplyValue) => void,
   ): Promise<void> {
     const initial = read();
-    const key = `${initial.owner}:${initial.session}:${initial.mapping}:${initial.content}`;
-    const valid = () =>
-      !this.stopped &&
-      alive() &&
-      `${read().owner}:${read().session}:${read().mapping}:${read().content}` === key;
+    if (this.pan.active) return;
+    const epoch = this.epoch;
+    const valid = () => !this.stopped && alive() && this.epoch === epoch;
     if (!valid()) return;
+    const count = bridge.read(initial.owner).strokeCount;
+    const target = await sceneTarget(
+      read,
+      valid,
+      this.reset ? 0n : this.staged,
+      count - (this.reset ? 0n : this.stagedCount),
+      initial.interaction,
+    );
+    if (!target || !valid()) return;
     const { resources, staging } = this.display.owner;
     if (!staging) throw Error("display-unavailable");
+    if (this.reset) {
+      renderCount("rebuilds");
+      this.path?.dispose();
+      this.path = undefined;
+      staging.getCanvas().clear(this.kit.WHITE);
+      this.staged = 0n;
+      this.stagedCount = 0n;
+      this.published = -1n;
+      this.reset = false;
+    }
+    const backing = bridge.mapping(initial.owner, initial.session).backing;
+    const budget = new RenderBudget();
     const paint = new this.kit.Paint();
     resources.add("paint");
     paint.setAntiAlias(true);
     paint.setStyle(this.kit.PaintStyle.Fill);
     try {
-      if (key !== this.committed) {
-        const previous = this.committedState;
-        const reuse =
-          this.builder &&
-          previous &&
-          this.activeBase === this.committed &&
-          initial.owner === previous.owner &&
-          initial.session === previous.session &&
-          initial.mapping === previous.mapping &&
-          initial.content === previous.content + 1n &&
-          initial.interaction === 0n;
-        if (reuse) {
-          const terminal = penBridge.stroke(initial, this.activeStroke);
-          if (terminal.code !== "ok" || !terminal.terminal) return;
-          if (!(await this.extend(read, valid, this.activeStroke, terminal.geometry))) return;
-          if (!valid() || !this.builder) return;
-          paint.setColor(
-            this.kit.Color4f(this.activeColor[0]!, this.activeColor[1]!, this.activeColor[2]!, 1),
-          );
-          const path = this.builder.snapshot();
-          resources.add("path");
-          try {
-            drawCommitted(
-              this.display,
-              path,
-              paint,
-              bridge.mapping(initial.owner, initial.session).backing,
-            );
-          } finally {
-            resources.release("path", path);
-          }
-        } else {
-          this.resetActive();
-          if (!(await rebuildCommitted(this.kit, this.display, paint, read, valid))) return;
+      while (this.staged < target.terminal && valid()) {
+        const before = this.staged;
+        const ids = bridge.scene(read(), this.staged);
+        if (ids.code !== "ok") return;
+        for (const id of ids.ids) {
+          if (id > target.terminal) break;
+          if (!valid()) return;
+          const path = this.select(id);
+          if (!(await path.extend(read, valid, budget))) return;
+          path.draw(paint, (value) => drawCommitted(this.display, value, paint, backing));
+          renderCount("committedDraws");
+          this.staged = id;
+          this.stagedCount++;
         }
-        if (!valid()) return;
-        this.display.commit();
-        this.committed = key;
-        this.committedState = read();
-        publish(read());
+        if (valid() && before === this.staged) throw Error("invalid-scene");
       }
       if (!valid()) return;
+      // Do not overwrite a newer completed preview with an older catch-up target.
+      if (target.terminal >= this.frontCompleted && this.published !== initial.content) {
+        renderOperation(() => this.display.commit());
+        renderCount("prefixPublications");
+        this.published = initial.content;
+        this.frontCompleted = target.terminal;
+        this.frontMapping = initial.mapping;
+        this.frontActive = 0n;
+        publish(initial);
+        if (read().content === initial.content) renderCaughtUp();
+      }
       const current = read();
-      if (current.interaction === 0n) {
-        this.restore();
+      if (current.content !== initial.content || current.interaction === 0n || !target.active)
         return;
-      }
-      // The transient stroke is last in paint order; IDs are paged without retaining copies.
-      let stroke: bigint | undefined;
-      let after = 0n;
-      for (;;) {
-        const ids = bridge.scene(read(), after);
-        if (ids.code !== "ok") return;
-        stroke = ids.ids.at(-1) ?? stroke;
-        if (ids.done) break;
-        after = ids.ids.at(-1)!;
-      }
-      if (stroke === undefined) return;
-      const state = penBridge.stroke(read(), stroke);
-      if (state.code !== "ok" || state.terminal) return;
-      const activeKey = `${key}:${current.interaction}:${stroke}:${state.geometry}`;
-      if (activeKey !== this.activeKey) {
-        this.resetActive();
-        this.activeKey = activeKey;
-        this.activeBase = key;
-        this.activeStroke = stroke;
-        this.builder = new this.kit.PathBuilder();
-        resources.add("builder");
-      }
-      const builder = this.builder;
-      if (!builder) return;
       const activeValid = () => valid() && read().interaction === current.interaction;
-      if (!(await this.extend(read, activeValid, stroke, state.geometry))) return;
-      if (!activeValid()) return;
-      const backing = bridge.mapping(current.owner, current.session).backing;
-      paint.setColor(
-        this.kit.Color4f(this.activeColor[0]!, this.activeColor[1]!, this.activeColor[2]!, 1),
-      );
-      const path = builder.snapshot();
-      resources.add("path");
-      try {
+      const path = this.select(target.active);
+      if (!(await path.extend(read, activeValid, budget))) return;
+      path.draw(paint, (value) => {
         this.display.preview((canvas) => {
           canvas.save();
           canvas.scale(backing, backing);
           try {
-            canvas.drawPath(path, paint);
+            canvas.drawPath(value, paint);
           } finally {
             canvas.restore();
           }
         });
-      } finally {
-        resources.release("path", path);
-      }
+      });
+      this.frontActive = current.interaction;
+      this.frontStroke = target.active;
     } finally {
       resources.release("paint", paint);
+      renderResources(resources);
     }
   }
-  private async extend(
-    read: () => ReplyValue,
-    valid: () => boolean,
-    stroke: bigint,
-    geometry: bigint,
-  ) {
-    const builder = this.builder;
-    if (!builder) return false;
-    while (valid()) {
-      const latest = penBridge.stroke(read(), stroke);
-      if (latest.code !== "ok" || latest.geometry !== geometry) return false;
-      if (this.prefix >= latest.verbs) break;
-      const page = penBridge.page(read(), stroke, geometry, this.prefix);
-      if (page.code !== "ok") return false;
-      appendPathPage(this.kit, builder, page);
-      this.activeColor = [page.red, page.green, page.blue];
-      this.prefix += BigInt(page.verbs.length);
-      if (page.done) break;
-      if (page.next !== this.prefix) throw Error("invalid-scene");
-      await nextTurn();
-    }
-    return valid();
-  }
-  dispose() {
+  dispose(): void {
     this.stopped = true;
-    this.resetActive();
+    this.path?.dispose();
+    this.path = undefined;
   }
 }

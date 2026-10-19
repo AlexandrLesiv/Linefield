@@ -40,7 +40,7 @@ impl Engine {
         if let Err(code) = self.session(owner, session) {
             return code;
         }
-        if self.document.active.is_some() {
+        if self.document.busy() {
             return Code::Active;
         }
         if !self.room(3) || self.content_counter == u64::MAX {
@@ -61,6 +61,7 @@ impl Engine {
         Code::Ok
     }
     fn content_changed(&mut self) {
+        self.pan_origin = None;
         self.content_counter += 1;
         self.presentation_counter += 1;
         self.scene_changed();

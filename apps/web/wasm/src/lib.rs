@@ -6,16 +6,22 @@ mod exports;
 mod history;
 mod ink;
 mod mapping;
+mod pan;
+mod pan_preview;
 mod scene;
 mod scene_state;
 mod snapshots;
 mod state;
+mod view_steps;
 pub use exports::*;
 pub use history::*;
 pub use ink::*;
 pub use mapping::*;
+pub use pan::*;
+pub use pan_preview::*;
 pub use scene::*;
-pub use snapshots::{Mapping, Reply, SceneIds, ScenePage, State, StrokeState};
+pub use snapshots::{Mapping, PanPreview, Reply, SceneIds, ScenePage, State, StrokeState};
+pub use view_steps::*;
 use wasm_bindgen::prelude::*;
 #[wasm_bindgen(typescript_custom_section)]
 const TYPES: &str = r#"

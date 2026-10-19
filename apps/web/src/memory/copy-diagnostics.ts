@@ -5,24 +5,31 @@ import { inputDiagnostics } from "./input-diagnostics.ts";
 import { diagnosticSnapshot } from "./diagnostics.ts";
 import { diagnosticsControl } from "./view.css.ts";
 import { pointerDiagnostics } from "./pointer-diagnostics.ts";
+import { paperControl } from "./viewport.css.ts";
+import { renderMetrics } from "./render-metrics.ts";
 export function copyDiagnosticsControl() {
-  const control = button(t("memory.copyDiagnostics"), `${back} ${diagnosticsControl}`, () => {
-    const summary = {
-      format: "linefield-manual-input-v1",
-      build: new URL(import.meta.url).pathname.split("/").at(-1),
-      input: inputDiagnostics(),
-      pointerLifecycle: pointerDiagnostics(),
-      runtime: diagnosticSnapshot(),
-    };
-    void navigator.clipboard.writeText(JSON.stringify(summary, null, 2)).then(
-      () => {
-        control.textContent = t("memory.diagnosticsCopied");
-      },
-      () => {
-        control.textContent = t("memory.diagnosticsFailed");
-      },
-    );
-  });
+  const control = button(
+    t("memory.copyDiagnostics"),
+    `${back} ${diagnosticsControl} ${paperControl}`,
+    () => {
+      const summary = {
+        format: "linefield-manual-input-v1",
+        build: new URL(import.meta.url).pathname.split("/").at(-1),
+        input: inputDiagnostics(),
+        pointerLifecycle: pointerDiagnostics(),
+        runtime: diagnosticSnapshot(),
+        render: renderMetrics(),
+      };
+      void navigator.clipboard.writeText(JSON.stringify(summary, null, 2)).then(
+        () => {
+          control.textContent = t("memory.diagnosticsCopied");
+        },
+        () => {
+          control.textContent = t("memory.diagnosticsFailed");
+        },
+      );
+    },
+  );
   control.dataset.memoryDiagnostics = "";
   return control;
 }

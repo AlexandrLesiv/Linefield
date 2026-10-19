@@ -7,6 +7,11 @@ interface Event {
   time: number;
 }
 const commands = new Set([
+  "cancel",
+  "pan-begin",
+  "pan-end",
+  "pan-step",
+  "zoom-step",
   "create",
   "enter",
   "read",
@@ -21,6 +26,9 @@ const commands = new Set([
   "load",
 ]);
 const outcomes = new Set([
+  "stale-interaction",
+  "coordinate-overflow",
+  "numerical-capacity",
   "ok",
   "noop",
   "invalid",

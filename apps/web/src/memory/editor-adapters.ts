@@ -1,0 +1,30 @@
+import type { MemoryView } from "./view.ts";
+import type { EditorCommands } from "./pen-input.ts";
+import { attachPenInput } from "./pen-input.ts";
+import { attachViewportInput } from "./viewport-input.ts";
+import { attachEditorControls } from "./editor-controls.ts";
+import { attachZoomControls } from "./zoom-controls.ts";
+import { observePointerLifecycle } from "./pointer-diagnostics.ts";
+export function attachEditorAdapters(view: MemoryView, commands: EditorCommands) {
+  const viewport = attachViewportInput(view.canvas, commands);
+  const input = attachPenInput(view.canvas, commands, view.pendingRelease);
+  const controls = attachEditorControls(view.surface, commands);
+  const zoom = attachZoomControls(view.surface, commands);
+  const stopTrace = observePointerLifecycle(view.canvas, commands.read);
+  zoom.refresh();
+  return {
+    refresh() {
+      viewport.sync();
+      input.sync();
+      controls.refresh();
+      zoom.refresh();
+    },
+    dispose() {
+      viewport.dispose();
+      input.dispose();
+      controls.dispose();
+      zoom.dispose();
+      stopTrace();
+    },
+  };
+}

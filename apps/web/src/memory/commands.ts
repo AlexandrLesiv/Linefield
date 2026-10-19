@@ -17,7 +17,7 @@ export function editorCommands(options: {
       try {
         result = action(previous);
         options.accept(result);
-        if (!options.valid()) return undefined;
+        if (options.read() !== result || !options.valid()) return undefined;
       } catch {
         options.fatal();
         return undefined;

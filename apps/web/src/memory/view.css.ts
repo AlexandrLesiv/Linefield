@@ -86,11 +86,11 @@ export const colorInput = style({
     "&::-webkit-color-swatch-wrapper": { padding: 0 },
     "&::-webkit-color-swatch": {
       borderRadius: "50%",
-      border: `1px solid ${theme.paperText}`,
-      outline: `1px solid ${theme.paperText}`,
+      border: `1px solid ${theme.text}`,
+      outline: `1px solid ${theme.text}`,
       outlineOffset: "3px",
     },
-    "&::-moz-color-swatch": { borderRadius: "50%", border: `1px solid ${theme.paperText}` },
+    "&::-moz-color-swatch": { borderRadius: "50%", border: `1px solid ${theme.text}` },
   },
 });
 export const diagnosticsControl = style({

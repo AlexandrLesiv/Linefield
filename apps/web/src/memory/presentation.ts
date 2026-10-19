@@ -1,6 +1,7 @@
 import type { Canvas, CanvasKit, Image, Surface } from "canvaskit-wasm";
 import { SurfaceOwner } from "./surface.ts";
 import type { SurfaceFactory } from "./surface.ts";
+import { renderResources, renderSnapshot } from "./render-metrics.ts";
 export type PublishFrame = (kit: CanvasKit, surface: Surface, image: Image) => void;
 export const publishFrame: PublishFrame = (kit, surface, image) => {
   surface.getCanvas().clear(kit.WHITE);
@@ -37,7 +38,7 @@ export class Presentation {
     const { staging, front, resources } = this.owner;
     if (this.disposed || !staging || !front) throw Error("display-unavailable");
     staging.flush();
-    const next = staging.makeImageSnapshot();
+    const next = renderSnapshot(() => staging.makeImageSnapshot());
     if (!next) throw Error("display-unavailable");
     resources.add("image");
     try {
@@ -59,13 +60,27 @@ export class Presentation {
     this.image = next;
   }
   preview(draw: (canvas: Canvas) => void): void {
-    const { kit, front } = this.owner;
-    if (this.disposed || !front || !this.image) throw Error("display-unavailable");
+    const { kit, front, staging, resources } = this.owner;
+    if (this.disposed || !front || !staging || !this.image) throw Error("display-unavailable");
     const canvas = front.getCanvas();
-    canvas.clear(kit.WHITE);
-    canvas.drawImage(this.image, 0, 0);
+    staging.flush();
+    const baseline = renderSnapshot(() => staging.makeImageSnapshot());
+    if (!baseline) throw Error("display-unavailable");
+    resources.add("image");
+    try {
+      canvas.clear(kit.WHITE);
+      canvas.drawImage(baseline, 0, 0);
+    } finally {
+      resources.release("image", baseline);
+    }
     try {
       draw(canvas);
+      // Capture before swap: the browser may discard its onscreen drawing buffer afterward.
+      const next = renderSnapshot(() => front.makeImageSnapshot());
+      if (!next) throw Error("display-unavailable");
+      resources.add("image");
+      resources.release("image", this.image);
+      this.image = next;
       front.flush();
     } catch (error: unknown) {
       this.publish(kit, front, this.image);
@@ -73,8 +88,18 @@ export class Presentation {
     }
   }
   restore(): void {
-    if (this.image && this.owner.front && !this.disposed)
-      this.publish(this.owner.kit, this.owner.front, this.image);
+    if (this.image && this.owner.front && !this.disposed) this.commit();
+  }
+  freezeFront(): void {
+    if (this.disposed || !this.owner.front || !this.image) throw Error("display-unavailable");
+  }
+  translate(x: number, y: number, outside: boolean): void {
+    const { kit, front } = this.owner;
+    if (this.disposed || !front || !this.image) throw Error("display-unavailable");
+    const canvas = front.getCanvas();
+    canvas.clear(kit.WHITE);
+    if (!outside) canvas.drawImage(this.image, x, y);
+    front.flush();
   }
   replaceStaging(): void {
     this.owner.replaceStaging();
@@ -110,5 +135,6 @@ export class Presentation {
     this.owner.resources.release("image", this.image);
     this.image = null;
     this.owner.dispose();
+    renderResources(this.owner.resources);
   }
 }

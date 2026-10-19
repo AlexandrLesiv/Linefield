@@ -64,6 +64,24 @@ export async function resourceLifetimes(kit: CanvasKit, canvas: HTMLCanvasElemen
     const frontBefore = await pixelDigest(frontPixels);
     if (frontBefore !== before) throw Error("front differs from committed snapshot");
     const overTarget = display.stats();
+    const snapshot = display.owner.front!.makeImageSnapshot.bind(display.owner.front);
+    display.owner.front!.makeImageSnapshot = () => {
+      throw Error("fixture-front-snapshot");
+    };
+    let previewFailed = false;
+    try {
+      display.preview((target) => target.drawPath(second, paint));
+    } catch {
+      previewFailed = true;
+    } finally {
+      display.owner.front!.makeImageSnapshot = snapshot;
+    }
+    if (
+      !previewFailed ||
+      (await pixelDigest(display.pixels())) !== before ||
+      resources.peak.image > 2
+    )
+      throw Error("preview snapshot failure preservation");
     state = bridge.suspend(state, 2n);
     failAllocation = true;
     let allocationFailed = false;
@@ -116,6 +134,7 @@ export async function resourceLifetimes(kit: CanvasKit, canvas: HTMLCanvasElemen
       frontRestored,
       allocationFailed,
       publicationFailed,
+      previewFailed,
       frameRestored: true,
       overTarget,
       before,

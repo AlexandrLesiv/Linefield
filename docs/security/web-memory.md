@@ -82,6 +82,28 @@ Changing numerical admission or memory categories also requires rendering/Rust r
 
 ## Investigation and independent assessment
 
+P05-E02 rapid-input/P1 implementation delta retains the same single Rust owner and copied
+typed boundary. SEC-02/03 re-review covers checked pan coordinates/base mapping/sequence,
+restore-on-current-error, stale-pan rejection, reserved cancellation/departure generations,
+and separate current-mapping admission versus exact-content acknowledgement. SEC-09 permits
+only bounded aggregate render counters/times/live-handle counts in the existing explicit
+Copy diagnostics payload, plus allowlisted pan begin/end/step outcomes; no pan-update/sample
+stream, coordinates, colors or artwork. SEC-10 requires the near-exhaustion seed and boundary
+fixtures to remain absent from release exports/assets. No dependency, worker, transport,
+storage, CSP or origin-authority change is introduced. The owner separately approved temporary
+pan preview translation on2026-10-19. SEC-02 covers one retained complete published image and
+at most two transient image handles, bounded Rust offsets and checked non-overlap, with no
+CPU readback or new surface. Active publication snapshots add measured work, not a budget waiver.
+SEC-03 covers the read-only checked `memoryPanPreview` query and one Rust origin fenced by
+owner/session/content/metrics/mapping, invalidated by exact acknowledgement, unrelated mapping,
+history, surface or session changes. Re-pan retains the original image; cancellation restores
+the current gesture's base. Preview never acknowledges exact rendering or grants ink readiness.
+Snapshot/draw failure suspends display with explicit Retry and preserves Rust RAM/history;
+failed publication cannot queue automatic recovery or install stale input capture. SEC-09
+allows only aggregate snapshot/translation timing and handle peaks, no query/update event log.
+SEC-10 release-export inspection includes the named query but excludes all negative-fixture
+controls. Boundary/UI/failure evidence and independent review remain required separately.
+
 Local source experiments consume fixed synthetic vectors and write ignored reports; they are
 not app entry points or newly installed unit/developer-tool suites. Record compiler, source
 hashes, exact candidate/corpus and failure cases. Preserve limitations and do not substitute

@@ -74,6 +74,7 @@ pub struct Projection {
     pub phase: Phase,
     pub metrics: Option<Metrics>,
     pub presented: bool,
+    pub mapping_ready: bool,
     pub cpu_charge: usize,
     pub interaction: u64,
     pub active_cancelled: bool,
@@ -86,6 +87,7 @@ pub struct Projection {
 }
 #[derive(Default)]
 pub struct Engine {
+    pub(crate) pan_origin: Option<crate::pan_preview::PanOrigin>,
     pub(crate) owner_counter: u64,
     pub(crate) session_counter: u64,
     pub(crate) mapping_counter: u64,
@@ -113,6 +115,7 @@ impl Engine {
             phase: Phase::Gallery,
             metrics: None,
             presented: false,
+            mapping_ready: false,
             cpu_charge: 0,
             interaction: 0,
             active_cancelled: false,
@@ -125,7 +128,10 @@ impl Engine {
         });
         value.code = code;
         value.cpu_charge = size_of::<Self>() + self.document.charge();
-        value.interaction = self.document.active.as_ref().map_or(0, |v| v.interaction);
+        value.interaction = self.document.active.as_ref().map_or_else(
+            || self.document.pan.map_or(0, |v| v.interaction),
+            |v| v.interaction,
+        );
         value.active_cancelled = self.active_cancelled;
         value.width = self.document.width;
         value.color = self.document.color;
@@ -176,15 +182,7 @@ impl Engine {
             value.presentation = self.presentation_counter;
             value.scene = self.scene_counter;
             value.presented = false;
-        }
-    }
-    #[cfg(feature = "e2e-fixtures")]
-    pub fn fixture_near_exhaustion() -> Self {
-        Self {
-            mapping_counter: u64::MAX - 4,
-            presentation_counter: u64::MAX - 4,
-            scene_counter: u64::MAX - 4,
-            ..Self::default()
+            value.mapping_ready = false;
         }
     }
 }

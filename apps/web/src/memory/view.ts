@@ -77,7 +77,8 @@ export function createMemoryView(surface: HTMLElement, retry: () => void) {
       if (active && pendingNotice.parentElement) pendingNotice.parentElement.scrollTop = 0;
     },
     command(previous: ReplyValue, next: ReplyValue) {
-      if (previous.content !== next.content) this.status("updating");
+      if (previous.content !== next.content || previous.mapping !== next.mapping)
+        this.status("updating");
       if (previous.interaction === 0n && next.interaction !== 0n) inputNotice.hidden = true;
       if (next.activeCancelled && next.code !== "ok") {
         inputNotice.textContent =
