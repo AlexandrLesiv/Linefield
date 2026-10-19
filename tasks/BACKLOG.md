@@ -1,6 +1,6 @@
 # Product backlog
 
-This list records owner-approved functionality and priority. Positions 1–31 were explicitly
+This list records owner-approved functionality and priority. Positions 1–35 were explicitly
 approved in this chat. They are planned outcomes, not completed features or blanket approval
 of unresolved designs, ABI, numerical, storage or security choices. Execution begins only after
 applicable contracts and designs are approved. Split large outcomes into bounded child tasks,
@@ -44,6 +44,10 @@ by current owner policy. Preserve existing gallery/navigation, themes and Englis
 | 29 | Erase portions of strokes | [S03 Pure editor](S03.md), [P05 Web](P05.md) | Approved backlog; segment geometry/history/design remains |
 | 30 | Add curved and shaped guides | Child task to scope before implementation | Approved backlog; guide geometry/design contracts remain |
 | 31 | Add text labels | Child task to scope before implementation | Approved backlog; text/input/font/storage contracts remain |
+| 32 | Rotate the canvas view | [S05 Navigation and editing](S05.md) | Approved backlog; viewport/input/design contracts remain |
+| 33 | Customize keyboard shortcuts | [S00F Input contracts](S00F.md) | Approved backlog; binding/conflict/settings design remains |
+| 34 | Adjust layer opacity | Child task to scope before implementation | Approved backlog; compositing/storage/design contracts remain |
+| 35 | Duplicate and merge layers | Child task to scope before implementation | Approved backlog; appearance/history/storage contracts remain |
 
 ## Visual and interaction design approval
 
@@ -282,6 +286,36 @@ Include native text input and English/Ukrainian support. Review text/font repres
 layout fidelity, IME/focus, native text Undo priority and export portability before implementation.
 No rich-text editor, arbitrary font embedding or text-to-path conversion is implied.
 Concepts reference: CS-DOC-013 (documented, not exercised).
+
+## 32. Rotate the canvas view
+
+Rotate the view while drawing, with reset to upright. Preserve artwork coordinates; keep
+viewport rotation separate from selected-artwork rotation (#13). Review gesture admission,
+coordinate mapping and cancellation rules; this approval does not waive existing active-stroke
+navigation guards or implicitly allow simultaneous rotation and stroke input.
+Concepts reference: CS-DOC-017 (documented; direct multitouch was not exercised).
+
+## 33. Customize keyboard shortcuts
+
+Assign shortcuts to supported actions, detect conflicts and restore defaults. Preserve system
+shortcuts and text/IME priority. Review per-platform bindings, held/repeated input, interrupted
+key state and settings persistence; no new action becomes approved merely by exposing a binding.
+Concepts reference: CS-OBS-014 (shortcut editor inspected, settings not changed).
+
+## 34. Adjust layer opacity
+
+Change a layer’s opacity without rewriting individual stroke colors or opacity. Preserve the
+setting in saving and export. Depends on #11; review compositing, history, preview/commit/cancel
+and interactions with hidden/locked layers and stroke opacity (#15). Blend modes are separate.
+Concepts reference: CS-DOC-020 and CS-OBS-015 (opacity control observed, not exercised).
+
+## 35. Duplicate and merge layers
+
+Duplicate a layer independently or merge layers with reviewed appearance preservation and
+Undo behavior. Depends on #11 and #34; review membership, identity, ordering, opacity, lock/hidden
+states, grouping, image/text content and durable atomicity. Do not silently rasterize editable
+content or claim appearance equivalence before defining and verifying the supported cases.
+Concepts reference: CS-DOC-020 (documented, not exercised).
 
 ## Further candidates
 
