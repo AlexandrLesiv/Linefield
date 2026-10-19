@@ -55,6 +55,11 @@ export const catalog = {
       context: "Stroke admission waits for coherent frame",
       arguments: {},
     },
+    "memory.pendingRelease": {
+      kind: "plain",
+      context: "Frozen provisional pen stroke awaiting genuine release; Escape remains available",
+      arguments: {},
+    },
     "memory.color": { kind: "plain", context: "In-memory web pen color control", arguments: {} },
     "memory.undo": { kind: "plain", context: "In-memory web canvas foundation", arguments: {} },
     "memory.redo": { kind: "plain", context: "In-memory web canvas foundation", arguments: {} },

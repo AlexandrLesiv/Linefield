@@ -27,6 +27,7 @@ export const en = {
   "memory.inputInvalid":
     "This stroke was cancelled because its input could not be accepted. Previous strokes are unchanged.",
   "memory.inputBusy": "The drawing is still updating. Please try the stroke again.",
+  "memory.pendingRelease": "Waiting for pen release. Escape cancels.",
   "memory.color": "Pen color",
   "memory.displayLost":
     "Drawing display is unavailable. Your drawing remains in this tab’s memory.",

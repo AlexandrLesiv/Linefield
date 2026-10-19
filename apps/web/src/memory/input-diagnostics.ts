@@ -25,6 +25,9 @@ const reasons = new Set([
   "capture-loss",
   "queue-overflow",
   "shared-cancel",
+  "release-pending",
+  "fresh-contact",
+  "pressed-move",
 ]);
 const outcomes = new Set([
   "ok",

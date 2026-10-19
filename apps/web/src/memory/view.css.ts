@@ -99,6 +99,7 @@ export const diagnosticsControl = style({
   flexShrink: 0,
   selectors: {
     "&:is(button)": {
+      paddingBlock: "6px",
       minWidth: 0,
       maxWidth: "100%",
       whiteSpace: "normal",

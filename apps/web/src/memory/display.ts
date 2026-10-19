@@ -138,7 +138,7 @@ export function attachDisplay(
     changed: schedule,
     fatal,
   });
-  input = attachPenInput(view.canvas, commands);
+  input = attachPenInput(view.canvas, commands, view.pendingRelease);
   const stopPointerTrace = observePointerLifecycle(view.canvas, () => state);
   controls = attachEditorControls(view.surface, commands);
   const remap = () => {

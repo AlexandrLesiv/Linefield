@@ -56,6 +56,12 @@ export function createMemoryView(surface: HTMLElement, retry: () => void) {
   inputNotice.setAttribute("role", "status");
   inputNotice.hidden = true;
   surface.querySelector(".canvas-notice")?.append(inputNotice);
+  const pendingNotice = element("span", statusText);
+  pendingNotice.dataset.memoryPendingRelease = "";
+  pendingNotice.setAttribute("role", "status");
+  pendingNotice.textContent = t("memory.pendingRelease") + " ";
+  pendingNotice.hidden = true;
+  surface.querySelector(".canvas-notice")?.prepend(pendingNotice);
   const measure = () => {
     if (context) overlay.style.top = `${context.offsetTop + context.offsetHeight + 4}px`;
     if (footer) overlay.style.bottom = `${surface.clientHeight - footer.offsetTop + 4}px`;
@@ -66,6 +72,10 @@ export function createMemoryView(surface: HTMLElement, retry: () => void) {
   return {
     canvas,
     surface,
+    pendingRelease(active: boolean) {
+      pendingNotice.hidden = !active;
+      if (active && pendingNotice.parentElement) pendingNotice.parentElement.scrollTop = 0;
+    },
     command(previous: ReplyValue, next: ReplyValue) {
       if (previous.content !== next.content) this.status("updating");
       if (previous.interaction === 0n && next.interaction !== 0n) inputNotice.hidden = true;
@@ -91,6 +101,7 @@ export function createMemoryView(surface: HTMLElement, retry: () => void) {
       canvas.remove();
       overlay.remove();
       inputNotice.remove();
+      pendingNotice.remove();
     },
   };
 }
