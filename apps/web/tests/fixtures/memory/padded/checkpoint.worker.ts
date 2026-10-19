@@ -79,8 +79,10 @@ async function run({ width, height, halo, legacy, pages }: Request) {
     observations.environment = gpu.environment;
     observations.gpuDrawFlushMs = gpu.drawFlushMs;
     observations.gpuReadMs = gpu.readMs;
-    observations.cpuGpuDifference = comparePixels(gpuPixels, candidate);
-    observations.cpuInkPixels = inkPixels(candidate);
+    observations.cpuGpuDifference = comparePixels(gpuPixels, reference);
+    observations.candidateGpuDifference = comparePixels(gpuPixels, candidate);
+    observations.cpuWholeInkPixels = inkPixels(reference);
+    observations.candidateInkPixels = inkPixels(candidate);
     observations.gpuInkPixels = inkPixels(gpuPixels);
     const lost = inkPixels(gpuPixels) > 0 && inkPixels(candidate) === 0;
     progress("bitmap-conversion");
