@@ -1,6 +1,7 @@
 # In-memory web pen — drawing screen amendment v3
 
-Status: **proposal for owner approval; no product implementation or visual acceptance**.
+Status: **owner approved choices 1A/2A (RAM drawing/settings and Undo/Redo retention);
+remaining design/contract choices pending; no product implementation or visual acceptance**.
 Task: [S02-W01](../../tasks/S02-W01.md), confirmed first on 2026-10-19, including bounded
 synthetic numerical experiments. Base: integrated `8dbd9b1` (PR #7). Design identity:
 `WMP-D3`, states `D3-01`–`D3-12` below, together with this file's final PR revision/hash.
@@ -15,28 +16,30 @@ resource accounting and fault dispositions. Neither document approves the other 
 
 ## Approval items and recommendation
 
-Approve the following as one identified screen/lifecycle amendment, separately from the exact
-engine contract. P05-E01 and P05-E02 each still require their own scope/position confirmation.
+On 2026-10-19 the owner selected **1A and 2A**: retain the temporary drawing and accepted
+settings, and retain both Undo/Redo stacks across gallery Back/Resume. These two choices are
+approved for this in-memory web slice; do not request them again. The remaining screen,
+wording, interaction, numerical, ABI and budget proposals still require their applicable
+approval. P05-E01 and P05-E02 each require their own scope/position confirmation.
 
-1. Retain **one temporary Rust document in this page's memory** across accepted gallery returns.
-   Successful departure ends Undo/Redo history; resuming starts fresh history. Keep completed
-   ink and accepted pen settings. No library record, thumbnail, automatic persistence or recovery.
-2. While that document exists, replace both existing desktop New and compact floating New
+1. **Approved 1A/2A:** retain one temporary Rust document, accepted pen settings and its bounded
+   Undo/Redo history in this page's memory across accepted gallery returns. Resume preserves
+   both stacks and their current position. No library record, thumbnail, persistence or recovery.
+2. **Proposed presentation:** while that document exists, replace both desktop New and compact New
    actions with **Resume temporary drawing**. Change their plus pictogram to the existing Pen
    pictogram; retain position and target. The action never silently starts a replacement. No
    second temporary drawing, clear/reset command, extra gallery tile or launch restoration.
 3. Show an always-visible not-saved disclosure in the editor, plus a gallery disclosure when
-   retained. Explicitly explain reload/tab-close loss and history ending on gallery departure.
-4. Enable only Pen, width, color and session Undo/Redo. Other tools remain visible but unavailable;
+   retained. Explain reload/tab-close loss and retention of drawing/history across gallery return.
+4. Enable only Pen, width, color and in-memory Undo/Redo. Other tools remain visible but unavailable;
    opacity is fixed at 100%, smoothing is Off, zoom is a noninteractive 100% readout.
 5. Use the browser-owned opaque sRGB color input, the existing width range expanded to 1–512
    with default 8, and explicit Undo/Redo controls and scoped keyboard shortcuts below.
 
-The smaller alternative is New-always-blank with a Stay / Leave without saving confirmation
-before destroying completed work. It needs an extra destructive-navigation decision and prompt,
-and makes routine Back destructive. Recommendation: retention above, with no discard prompt for
-an ordinary in-app Back. Do not implement a blend of these alternatives. Reload remains the
-browser's action, never the app's suggested capacity remedy while usable RAM content exists.
+Ordinary in-app Back retains work/history and needs no discard prompt. New-always-blank or
+clearing history on departure conflicts with the selected 1A/2A lifecycle and is not a current
+alternative. Reload remains the browser's action, never the app's suggested capacity remedy
+while usable RAM content exists.
 This same-page Resume is not automatic launch restoration or the durable Continue feature
 excluded by decision 19. No storage decision is reopened or made a prerequisite.
 
@@ -54,31 +57,39 @@ Rust owns document/interaction/history/settings/capability state. Browser code a
 performs native event-to-element conversion, hosts native controls and presents accepted Rust
 projections. It does not compute world points, pressure geometry, edit policy or a second model.
 One temporary identity and one active session come from Rust; URLs grant no authority.
+The session is an editing attachment with fresh generations on re-entry, not the lifetime
+of Undo/Redo history. History belongs to the retained temporary document. Leave releases
+the attachment/mapping and cancels unfinished input without clearing either history stack.
+New accepted strokes may clear the redo branch and bounded history may retire oldest whole
+operations under the reviewed contract; navigation alone never does. Page teardown/reload
+loses drawing, settings and history together; no durable or crash-recovery claim is implied.
 
 Keep `/` and existing `/drawing/<sample-id>` routes. Reuse `/drawing/preview-new` for the
 same-page temporary editor; its historical spelling is an implementation detail. Accept it only
 with a live temporary owner or an explicit New request. On cold direct entry/reload, replace
 that route with `/` and announce temporary drawing unavailable; never silently show a new blank
 as recovered content. New from the gallery is the only initial creation intent. Same-page
-Forward to the temporary route resumes retained content with a new history session. Back to a
+Forward to the temporary route resumes content/history with a fresh editing attachment. Back to a
 sample remains a preview. Validate unknown routes through the existing safe gallery fallback.
 
 Departure ordering is narrow and explicit. Prepare the destination's inert shell and validate
-its availability before leaving; perform any fallible history write before calling Rust Leave.
+its availability before leaving; perform any fallible browser-history write before Rust Leave.
 Back requests browser traversal, then waits for actual `popstate`; a Back click without a
-traversal event does not clear history. On `popstate` the browser has already selected its
+traversal event does not release the attachment; neither event clears Undo/Redo. On `popstate`
+the browser has already selected its
 entry, so no synthetic duplicate entry is pushed. Recheck the latest route-request generation
 immediately before synchronous Leave, with no await between that check and the command.
 An obsolete request does nothing and reconciles the newest one. Only accepted Leave is the
 semantic departure; switch to the prepared destination, then run optional motion. A later
-animation/display failure settles that destination or its unavailable state, never restores
-old history. Initialization/history-write failure before Leave preserves the accepted session.
+animation/display failure settles that destination or its unavailable state without restoring
+an obsolete attachment or changing retained history. Initialization/browser-history-write
+failure before Leave preserves the accepted attachment and document/history.
 If Leave unexpectedly rejects with usable authority, retain the accepted editor and show
 navigation unavailable; attempt one generation-guarded URL reconciliation to its accepted
 route. Browser history rollback is not guaranteed, and no traversal loop or automatic retry
 may pretend it is. A reconciliation failure keeps editing suspended and Back available.
 If authority is fatal, use D3-10; Back changes host presentation while keeping the tombstone,
-without invoking unsafe Rust commands or claiming a successful semantic history operation.
+without invoking unsafe Rust commands or claiming usable preserved history after engine failure.
 
 No special unload prompt is recommended: there is no reliable recovery behind it. The disclosure
 is present before first ink. Browser reload/close/origin navigation may lose RAM; no saving,
@@ -95,18 +106,18 @@ late loaders, renderer work and focus restoration. Repeated requests are coalesc
 | State | Trigger / precondition | Outcome, next state and invariant |
 | --- | --- | --- |
 | D3-01 Gallery, no temporary owner | Explicit New | Reserve/create through Rust and show D3-02; accepted route matches destination. No sample mutation or new card. |
-| D3-02 Initializing | Wasm and CanvasKit/surface become ready for current request | Fresh creation enters D3-03 blank editor; selected Pen, width 8, opaque black, empty history. Resume preserves ink/settings as D3-05 specifies. Loading has no fake percentage or decorative minimum delay. Back can cancel entry. Late completion after Back is released, never reopened. |
+| D3-02 Initializing | Wasm and CanvasKit/surface become ready for current request | Fresh creation enters D3-03 blank editor; selected Pen, width 8, opaque black, empty history. Resume preserves ink/settings and both history stacks as D3-05 specifies. Loading has no fake percentage or decorative minimum delay. Back can cancel entry. Late completion after Back is released, never reopened. |
 | D3-03 Ready, empty or completed ink | Admitted primary contact on canvas, idle, surface ready | D3-04 active stroke with captured Rust settings/mapping/identity. An empty ready canvas needs no instructional modal. |
 | D3-04 Drawing | Ordered actual samples, then matching end | One complete round stroke, one history operation; D3-03. Tap gives a dot. Duplicate-position/pressure behavior follows exact Rust geometry contract. No prediction, filtering, tilt or opacity behavior. |
-| D3-04 Drawing | Escape, window blur, hidden page, pointer cancellation/capture loss, navigation request or mapping invalidation | Cancel current interaction before transition/remap. Remove its entire transient stroke, preserve completed ink/settings; reject late input. Preserve history until successful semantic departure, then clear it as in D3-03. Remain D3-03 unless navigating or unavailable. No half-stroke commit. |
+| D3-04 Drawing | Escape, window blur, hidden page, pointer cancellation/capture loss, navigation request or mapping invalidation | Cancel current interaction before transition/remap. Remove its entire transient stroke, preserve completed ink/settings and both history stacks; reject late input. Accepted departure releases the editing attachment without clearing history. Remain D3-03 unless navigating or unavailable. No half-stroke commit. |
 | D3-04 Drawing | Undo/Redo, tool/style change, competing pointer | Rust rejects conflicting command; no queue, forced finish or settings mutation. Availability visibly disabled. Foreign pointer cannot finish/cancel the owner. |
-| D3-03 Ready | Accepted Back or same-page departure | Cancel transient field adjustment; end history only at successful semantic departure; D3-05 gallery retains document and settings. Failed/cancelled destination keeps old session/history. Show history explanation before departure, not as a surprise afterwards. |
-| D3-05 Gallery with retained document | Resume or valid same-page Forward | D3-02 if surface rebuild needed, then D3-03 with retained ink/settings and empty history. Gallery focus/scroll survive. Resume remains available after sample navigation. |
+| D3-03 Ready | Accepted Back or same-page departure | Cancel transient field adjustment; release the editing attachment only at successful semantic departure. D3-05 retains document/settings and both history stacks. Failed/cancelled destination keeps the old attachment and history. Gallery itself has no temporary-document Undo/Redo command. |
+| D3-05 Gallery with retained document | Resume or valid same-page Forward | D3-02 if surface rebuild needed, then D3-03 with retained ink/settings, Undo/Redo stacks and history position. Fresh attachment/mapping generations reject stale input. Gallery focus/scroll survive. Resume remains available after sample navigation; unavailable variants keep their guards. |
 | D3-06 Initialization failure | Asset/runtime/surface fails before usable entry | Localized error overlay within the canvas area, Retry and Back. Retry only the failed idempotent initialization stage; current request token required. Never claim drawing recovered. |
 | D3-07 Rejected stroke/capacity | Current batch violates finite/envelope/queue/sample/memory admission | Cancel only its unfinished stroke; existing ink/history preserved. Show specific localized reason once per event, no per-sample announcement. Subsequent fresh stroke allowed only if Rust reports admission available. |
 | D3-08 History retention boundary | Accepted whole-operation eviction by Rust | Existing ink remains; Undo availability matches retained operations. Announce oldest Undo steps unavailable once per eviction episode. No pretend unlimited history. A failed edit cannot secretly evict history. |
 | D3-09 Surface unavailable | Context loss or backing-size admission failure with Rust owner usable | Cancel transient input, suspend canvas drawing; preserve document/history. Show Retry display for context loss; size failure asks to resize the window. Rebuild from accepted RAM scene, not host copies. Renderer errors never reset document. |
-| D3-09 Budget failure variant | Observed CanvasKit/CPU operating allowance exceeded while Rust owner remains usable | Cancel unfinished interaction; suspend drawing/display/history/settings for this page lifetime, preserving completed Rust ink/history until normal accepted departure. Show `memory.budgetUnavailable` and Back, without Retry. Gallery keeps the budget explanation; Resume/Forward returns to the same unavailable state without restarting rendering, replacing the owner or announcing normal resume/history restart. Trap/OOM or uncertain owner uses the fatal state instead. Never suggest reload as recovery; reload loses RAM. Cover this sequence in WMP-05/09. |
+| D3-09 Budget failure variant | Observed CanvasKit/CPU operating allowance exceeded while Rust owner remains usable | Cancel unfinished interaction; suspend drawing/display/history/settings commands for this page lifetime, preserving completed Rust ink and both history stacks across Back. Show `memory.budgetUnavailable` and Back, without Retry. Gallery keeps the budget explanation; Resume/Forward returns to the same unavailable state without restarting rendering, replacing the owner or announcing normal resume. Trap/OOM or uncertain owner uses the fatal state instead. Never suggest reload as recovery; reload loses RAM. Cover this sequence in WMP-05/09. |
 | D3-10 Fatal engine failure | Wasm trap/poison or unusable authority | Fail closed; disable edits/history/settings. Keep last completed image only if safely available, visibly marked unavailable. Explain RAM cannot be recovered here. Back remains available; no Retry that silently replaces owner/content. |
 | D3-11 Temporary content unavailable | Cold temporary URL or missing owner after page restoration | Gallery, unavailable announcement, New available. Do not claim previous content intact, saved or recoverable. |
 | D3-12 Preview | Open existing raster sample | Existing non-editable sample screen; no pen intake/history command. Return preserves temporary owner if present. |
@@ -118,8 +129,9 @@ When allocation fails before any owner was created, gallery keeps New. The Rust 
 expose this distinction; host code may not infer it from a rendered blank canvas.
 An owner with zero strokes still counts as retained: Undo-all, cancelled first stroke and
 enter-then-Back retain the same temporary identity/settings, title and Resume label. Do not
-infer disposal or replacement from an empty image. Undo-all followed by Redo works until an
-accepted departure; after departure the blank retained drawing resumes with empty history.
+infer disposal or replacement from an empty image. Undo-all → Back → Resume retains the blank
+drawing and its redo branch: Redo restores the same strokes. A fresh accepted stroke after
+Resume clears that redo branch according to the shared edit contract; Back itself does not.
 
 ## Controls, inputs and focus
 
@@ -218,33 +230,22 @@ After a cancelled-stroke warning, a fresh admitted contact outside the overlay c
 warning before starting; the overlay itself never produces ink. Back remains separate and
 reachable. Errors do not replace or conceal the lifetime/history statements.
 
-Space tradeoff: a lead-run headless Chrome 155.0.8059.80 text-metric probe on 2026-10-19 used
-these exact two catalogue sentences, system-ui at 12/24 px, 1.4 line-height, word wrapping,
-16 px vertical padding and available width = viewport − rail − 32 px. It measures text and
-computes wrapping; **it is not application layout, E2E, native evidence or visual approval**.
-The raw local result is ignored `.build-cache/web-memory-design/text-metrics.json`.
+Disclosure sizing evidence is **stale for the revised 1A/2A wording**. The lead-run headless
+Chrome 155.0.8059.80 text-metric probe on 2026-10-19 measured the former history-clearing
+disclosure. Its line counts, heights and derived canvas-space estimates do not certify the
+current en/uk text. It was not rerun for this amendment. The ignored raw result remains at
+`.build-cache/web-memory-design/text-metrics.json`; it is neither current layout evidence nor
+application E2E, native evidence or visual approval. Current copy must be measured afresh.
 
-| Viewport width / text scale | English disclosure lines / height | Ukrainian disclosure lines / height |
-| --- | --- | --- |
-| 320 / 100% | 3 / 67 px | 5 / 100 px |
-| 320 / 200% | 5 / 184 px | 9 / 319 px |
-| 740 / 100% | 2 / 50 px | 2 / 50 px |
-| 740 / 200% | 2 / 84 px | 4 / 151 px |
-| 1280 / 100% | 2 / 50 px | 2 / 50 px |
-| 1280 / 200% | 2 / 84 px | 2 / 84 px |
-
-Therefore cap the footer at one third of viewport height and make overflow keyboard-scrollable,
-with the not-saved opening initially visible; use a smaller cap if needed to retain a 44×44
-CSS px admitted ink area. At 740×320, header 64/top row 72 and the measured 50 px disclosure
-leave about 134 px before zoom/safe-area allowances. At 320×700 uk/200%, a 233 px footer cap,
-96 px header and 72 px top row leave about 299 px before those allowances, with scrolling
-required for the 319 px disclosure. The zoom readout follows the disclosure at the trailing
-edge; it can require an extra text row and must be included in actual footer measurement.
-At short landscape/200%, these assumptions leave little space, so actual row heights/safe
-areas may make drawing unavailable. Preserve Back and scrollable controls and show the size
-state when the minimum admitted ink area cannot fit. This threshold protects a basic target,
-not a performance or universal minimum-window guarantee. DOM wrapping, pseudo-expansion,
-fallback fonts, scrollbar effects and context-row height remain required runtime checks.
+The proposed space rule remains: cap the footer at one third of viewport height and make
+overflow keyboard-scrollable, with the not-saved opening initially visible; use a smaller cap
+if needed to retain a 44×44 CSS px admitted ink area. The zoom readout follows the disclosure
+at the trailing edge; it can require another text row and belongs in actual footer measurement.
+At short landscape/200%, actual row heights/safe areas may make drawing unavailable. Preserve
+Back and scrollable controls and show the size state when the minimum admitted ink area cannot
+fit. This threshold protects a basic target, not a performance or universal minimum-window
+guarantee. Revised en/uk copy, DOM wrapping, pseudo-expansion, fallback fonts, scrollbar effects
+and context-row height remain required runtime checks; no fit claim is carried over.
 
 Define the actual drawable rectangle between header/context, rail and footer; chrome never
 receives ink. Rust maps its center to fixed world origin at zoom 1; resize changes visible
@@ -297,7 +298,7 @@ last action to distinguish it from Cancel; retain gallery's existing labels inde
 | memory.title | Temporary drawing | Тимчасовий малюнок |
 | memory.resume | Resume temporary drawing | Продовжити тимчасовий малюнок |
 | memory.lifetime | Not saved. Lost on reload or tab close. | Не збережено. Перезавантаження чи закриття вкладки призведе до втрати малюнка. |
-| memory.historyLifetime | Back keeps the drawing, but clears Undo/Redo. | Назад залишає малюнок у пам’яті, але очищує історію дій. |
+| memory.historyLifetime | Back keeps the drawing and Undo/Redo history. | Назад залишає малюнок та історію скасування й повторення дій у пам’яті. |
 | memory.retained | Temporary drawing is only in this tab’s memory. Reloading or closing the tab loses it. | Тимчасовий малюнок є лише в пам’яті цієї вкладки. Перезавантаження або закриття вкладки призведе до його втрати. |
 | memory.loading | Preparing drawing… | Підготовка малюнка… |
 | memory.loadFailed | Drawing could not start. Try again. | Не вдалося підготувати малюнок. Спробуйте ще раз. |
@@ -329,7 +330,7 @@ last action to distinguish it from Cancel; retain gallery's existing labels inde
 | memory.fatal | Drawing stopped after an internal error. This temporary drawing cannot be recovered here. | Малювання зупинено через внутрішню помилку. Цей тимчасовий малюнок тут неможливо відновити. |
 | memory.unavailable | The temporary drawing is unavailable. It was not saved. | Тимчасовий малюнок недоступний. Його не було збережено. |
 | memory.navigationUnavailable | Navigation could not finish. Your drawing remains in this tab’s memory. | Не вдалося завершити перехід. Малюнок залишається в пам’яті цієї вкладки. |
-| memory.historyRestarted | Temporary drawing resumed. Undo/Redo history starts here. | Тимчасовий малюнок продовжено. Історія скасування й повторення дій починається звідси. |
+| memory.resumed | Temporary drawing resumed. Undo/Redo history is kept. | Тимчасовий малюнок продовжено. Історію скасування й повторення дій збережено в пам’яті. |
 
 Error selection uses stable typed outcomes; never parse English Rust text. `{tool}` is a
 localized app-owned tool label and `{color}` is validated opaque sRGB text, not raw user input.
@@ -354,7 +355,7 @@ bridge-suite wording. Numerical experiments are analysis, not browser/physical-d
 | WMP-02A / DRAW-CANCEL-001, FOCUS-001; CT-02/03, INV-03/04 | Escape/blur/hidden/capture loss/remap cancel whole transient ink; A/B/C/late-A sequence leaves C valid. Repeated cancel is harmless. | Browser lifecycle/input E2E with labeled injected conditions; before/after completed pixels and history eligibility. |
 | WMP-02B / CT-02/06, INV-04/08/11, SU-14/16 | Resize, backing-density change, orientation and virtual keyboard while active cancel once; idle resize preserves world content/settings/history. | Real resize E2E plus synthetic DPR/keyboard fixtures; hardware transition gap separately. |
 | WMP-03A / HISTORY-SESSION-001 (memory subset), FOCUS-001; INV-04/05 | Buttons and scoped shortcuts undo/redo, active stroke blocks them; field/IME keeps native commands; settings create no history. | Actual focus/key E2E; physical IME and screen-reader gap. |
-| WMP-10 / CT-03/08, INV-01/04, SU-13 | Back retains ink but clears history only on accepted departure; Resume/Forward same ink/settings; rapid traversal/stale loader/failed target cannot corrupt it. Samples and Reset samples preserve temporary owner. | Browser history/Back/Forward, short/long transition and reduced-motion E2E, gallery focus/scroll assertions. |
+| WMP-10 / CT-03/08, INV-01/04, SU-13 | Back retains ink/settings, both Undo/Redo stacks and history position; Resume/Forward uses a fresh editing attachment without a history reset. Undo-all → Back → Resume → Redo restores the same strokes. Rapid traversal/stale loader/failed target cannot corrupt retained state; old-session input rejects. Samples and Reset samples preserve the temporary owner/history. | Browser history/Back/Forward, short/long transition and reduced-motion E2E, gallery focus/scroll assertions; resumed Undo/Redo controls and visible exact artwork. |
 | WMP-04 / REG-PREC-01/04/06; CT-02/04, INV-03 | Approved finite/numerical boundary fixtures exercise real app intake; current malformed/over-limit batch cancels only current stroke. | Reviewed isolated fixture path; exact coordinates stay out of normal logs; visible prior artwork and eligibility checked. |
 | WMP-05A / SEC-02/03/13; CT-04/06, INV-08/09 | Asset failure/retry/back race, capacity and oldest-history boundary preserve completed ink, no silent owner replacement. | Fault E2E and actual messages; production artifact excludes fault controls. |
 | WMP-05B / CT-03/06, INV-01/08 | Surface loss → retry display retains owner/history; fatal engine failure disables editing and discloses unrecoverability; reload temporary route returns gallery unavailable. | Separately labeled renderer/engine fault lanes, reload and cold URL E2E; no crash-recovery claim. |

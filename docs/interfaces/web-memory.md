@@ -22,6 +22,10 @@ Owner also approved memory-based admission without a fixed document stroke quota
 Rust allocation accounting, observed CanvasKit heap, measured renderer estimates and disposable
 cache eviction. Exact accounting/reporting and coherent redraw mechanisms still need review
 and runtime evidence. Remaining decisions are being reviewed in owner-facing batches.
+Owner choices1A/2A retain the temporary drawing, accepted settings and both Undo/Redo
+stacks across gallery Back/Resume. History belongs to the page-lived document; editing
+session attachment generations do not define or reset its lifetime. This approved
+lifecycle does not authorize production implementation or imply survival after page loss.
 The numerical investigation supports a conservative candidate; browser/CanvasKit fidelity,
 allocation high-water and release workload gates remain P05-E02 acceptance requirements.
 
@@ -162,14 +166,15 @@ interaction. Near-exhaustion browser fault fixture must prove cancel/leave canno
 by a counter consumed by ordinary work; this is WMP-05/07, not a wrap exception.
 
 Create allocates one blank owner in gallery; a second live create rejects `active`.
-Enter from gallery creates a fresh empty history session and suspended mapping. Existing
-completed strokes/settings survive. Enter while already entered is `noop`, no history
-reset. Leave current session atomically cancels unfinished interaction, invalidates mapping,
-clears both history stacks and releases session. Host first resolves/preflights destination
+Enter from gallery creates a fresh input attachment session and suspended mapping. Existing
+completed strokes, accepted settings and both history stacks survive unchanged. Enter while
+already entered is `noop`; neither form resets history. Leave current session atomically
+cancels unfinished interaction, invalidates mapping and releases the input attachment;
+document/settings/Undo/Redo remain retained by the page-lived owner. Host first resolves/preflights destination
 and completes fallible history API updates; Back waits for actual popstate. Only then call
 Leave synchronously and install presentation. Before Leave, failed resolution/history
-update preserves Rust session/history. After accepted Leave, visual failure cannot restore
-history or undo semantic departure. Unexpected usable Leave rejection after browser URL
+update preserves Rust session/history. After accepted Leave, visual failure cannot undo
+semantic departure; the retained history needs no restoration. Unexpected usable Leave rejection after browser URL
 changed retains editor/Rust state with navigation-unavailable and attempts one guarded URL
 reconciliation; if it fails, suspend rather than promise route rollback. No automatic repeat
 of stale commands. Fatal-owner Back uses the host tombstone route without another Wasm call.
@@ -180,8 +185,8 @@ Read in gallery remains available. Dispose releases all retained document/histor
 state only during deliberate page teardown; duplicate dispose returns `disposed` without
 releasing a newer owner. There is no user-facing reset/destructive-discard API in this slice.
 
-WMP-D3 proposes retained RAM across Back/New, Resume wording and explicit reload/tab-close
-loss. No gallery tile or durable claim. Existing sample previews never obtain editing
+Owner-approved retention across Back/Resume includes drawing/settings/Undo/Redo; WMP-D3
+defines Resume wording and explicit reload/tab-close loss. No gallery tile or durable claim. Existing sample previews never obtain editing
 capability. Known temporary route cold-load behavior and navigation are defined by WMP-D3.
 This is not a save/reconciliation/receipt contract. There are no pending worker writes.
 
@@ -220,9 +225,11 @@ scene revision changes whenever accepted visible state changes, including previe
 Width defaults8, color defaults opaque sRGB(0,0,0); finite channels[0,1]. Settings are atomic,
 idle-only replacements; no history entry and no effect on prior strokes. Browser localized
 field staging/IME remains presentation; Rust revalidates typed values. Undo/Redo active
-rejects without queuing. Idle Undo removes last session stroke; Redo restores that exact
+rejects without queuing. Idle Undo removes the latest eligible stroke from the page-lived
+document history, including strokes completed before Back; Redo restores that exact
 stroke/settings. New committed stroke clears redo. Oldest complete history entries retire
-only for budget; completed visible strokes remain. No retained undo for sessions before Back.
+only for budget; completed visible strokes remain. Undo-all→Back→Resume retains Redo and
+restores its eligibility from the retained stack; a blank document is not a history reset.
 Begin/Append/cancel/rejected End never retire earlier history or clear redo. Admission reserves
 future capacity without mutating those stacks, or rejects. Only successful End atomically
 clears redo, retires eligible oldest complete entries and installs new model/history state.
@@ -286,7 +293,7 @@ The owner approved replacing decision194's former128MiB web aggregate with a
 JS. This is an admission/observed-capacity target, not an enforceable hard memory ceiling.
 Stock CanvasKit permits growth to2GiB; a single call can overshoot the target before detection.
 The extra128MiB above its initial heap is proposed headroom, not measured sufficient capacity.
-One session history<=16MiB; existing32MiB cross-client ceiling is irrelevant to one client.
+The page-lived document's history<=16MiB; existing32MiB cross-client ceiling is irrelevant to one client.
 Count capacities/overhead and old/new/copy peaks, not only logical lengths. Subordinate
 pools remain inside their category; do not add them again to the operating budget.
 
@@ -301,7 +308,7 @@ Withdraw the fixed64KiB-plus-multiplier per-path reservation and the4,096-stroke
 Approved policy direction: charge Rust records/containers by actual allocated capacity,
 including headers, alignment, spare capacity and allocation overhead established by the build.
 The earlier64-byte sample/256-byte header/128-byte history figures are sizing estimates,
-not substitutes for actual layout/capacity accounting. Session history retained-state
+not substitutes for actual layout/capacity accounting. Page-lived history retained-state
 charge<=16MiB; shared visible/redo canonical samples counted once physically in Rust16MiB.
 No extra16MiB physical history allocation is implied. Geometry cache<=16MiB combines any
 Rust cached geometry with CanvasKit paths; each is charged inside its respective heap,
@@ -370,8 +377,8 @@ enforcement inside CanvasKit. Deleting paths cannot shrink linear memory. Do not
 resume, restart the engine or reload/discard the drawing after this budget failure.
 Keep this budget-failure state suspended for the page lifetime: Back remains available,
 but Retry and Resume cannot restart rendering or replace the retained Rust owner. Re-entering
-the temporary route shows the same unavailable state. Accepted Back still follows W2's
-history-departure rule. This is distinct from recoverable context loss. WMP-05/09 must cover
+the temporary route shows the same unavailable state. Accepted Back releases only the
+input attachment and preserves both history stacks under W2. This is distinct from recoverable context loss. WMP-05/09 must cover
 budget excess → Back → Resume/Forward and prove no restart, blank replacement or false recovery.
 E01 must verify access to pinned heap capacity and safe handling; unavailable instrumentation or an
 insufficient allowance returns measured options for review. A hard256MiB CanvasKit ceiling
@@ -417,14 +424,14 @@ reviewer evidence labels. No new unit/property/bridge-only/developer-tool suites
 | --- | --- |
 | WMP-01 | Dot, sharp turn, duplicate center/changed pressure, alternating pressure → same-winding swept disk; full-width absent pressure; no seams, immutable old color/width |
 | WMP-02 | A/B/lostcapture/C/lateA; Escape, blur, resize, Back → only matching unfinished work disappears, no history; fields/IME keep priority |
-| WMP-03 | Undo during input rejects; completed stroke Undo/Redo as one; Back/Resume has retained ink and empty history; no save claim |
+| WMP-03 | Undo during input rejects; completed stroke Undo/Redo as one; Back/Resume retains ink/settings and both history stacks; Undo-all→Back→Resume preserves Redo; no save claim |
 | WMP-04 | Bound±adjacent value, batch256/257, sample65,536/65,537, invalid pressure/sequence → current batch atomic cancel; stale unrelated event does not cancel current work |
 | WMP-05 | Capacity including Begin→cancel/invalid batch with full history, context loss/recovery, asset failure, stale scene page, disposed owner, trapped engine, generation exhaustion → declared state/failure, no accepted artwork/history silently replaced; terminal cancellation/leave still works |
 | WMP-06 | en/uk, field staging, theme changes, reduced motion, gallery/history → unchanged navigation/AX, honest RAM lifecycle, artwork colors unchanged |
 | WMP-07 | Huge bigint/u32-like Number, fake/detached/shared array, mismatched lengths, reentrancy → reject before coercion/copy/mutation; reviewed browser-only fault facility, no production fault endpoint |
 | WMP-08 | Offscreen crossing segment, thick offscreen centerline, near containment, subpixel/min pressure, projected extreme → visible clipping/round geometry; semantic and screenshot expectations both |
 | WMP-09 | Cold/warm bounded maximum scene, cancellation during rebuild, cache eviction, repeated resize/context recovery → bounded queues/live resources; report actual release timings/heap, no fabricated physical latency |
-| WMP-10 | Failed loader/history write, delayed Back popstate, superseded route request, renderer fault after accepted Leave → preflight before Leave; no history reset on failed preflight, no post-Leave false restoration, stale completion cannot navigate newer session |
+| WMP-10 | Failed loader/browser-history write, delayed Back popstate, superseded route request, renderer fault after accepted Leave → preflight before Leave; document Undo/Redo preserved on failed or accepted departure, no post-Leave false rollback, stale completion cannot navigate newer session |
 
 The isolated diagnostic is not any row's browser pass. Exact release revision/browser/device,
 discovered E2E IDs, results and ignored artifacts belong with each implementing task. No main
