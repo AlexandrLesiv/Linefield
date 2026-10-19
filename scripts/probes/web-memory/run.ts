@@ -73,7 +73,15 @@ const observations = rows.map((row, index) => {
 const paths = [
   "experiments/web-memory/Cargo.toml",
   "experiments/web-memory/Cargo.lock",
-  ...["main.rs", "exact.rs", "paint.rs"].map((name) => `experiments/web-memory/src/${name}`),
+  ...[
+    "main.rs",
+    "exact.rs",
+    "paint.rs",
+    "magnitude.rs",
+    "viewport.rs",
+    "culling.rs",
+    "zoom.rs",
+  ].map((name) => `experiments/web-memory/src/${name}`),
   ...["run.ts", "corpus.ts", "oracle.ts", "paint-reference.ts"].map(
     (name) => `scripts/probes/web-memory/${name}`,
   ),
@@ -97,6 +105,13 @@ const report = {
   rust: spawnSync("rustc", ["--version"], { encoding: "utf8" }).stdout.trim(),
   base: spawnSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).stdout.trim(),
   rows: rows.length,
+  distinctInputs: new Set(rows.map((row) => row.input)).size,
+  categories: Object.fromEntries(
+    [...new Set(rows.map((row) => row.kind))].map((kind) => [
+      kind,
+      rows.filter((row) => row.kind === kind).length,
+    ]),
+  ),
   normalizationMismatches,
   containmentMismatches,
   conservativeHulls,

@@ -89,7 +89,7 @@ fn round(value: &Magnitude) -> f64 {
     if shift == 0 {
         f64::from_bits(significand)
     } else {
-        (significand as f64) * 2_f64.powi(shift as i32 - 1074)
+        f64::from_bits((((shift + 1) as u64) << 52) + significand - (1_u64 << 52))
     }
 }
 

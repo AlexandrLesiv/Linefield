@@ -1,6 +1,6 @@
 # In-memory web editor threat delta — WMP v1
 
-Status: proposed design, not owner-approved or implemented. Task: [S02-W01](../../tasks/S02-W01.md).
+Status: owner-approved W1–W4 security direction; concrete additions and implementation evidence remain gated. No production implementation. Task: [S02-W01](../../tasks/S02-W01.md).
 Date: 2026-10-19. Lead confirms new language, rendering-resource and dependency boundaries.
 The confirmed investigation contains synthetic local arithmetic/geometry experiments only.
 No app runtime, new storage, network feature, system permission or private drawing is added.
@@ -12,7 +12,12 @@ reduce optional rendering first; reject work only when allocation cannot safely 
 another actual resource failure occurs. Preserve accepted Rust content/history while usable.
 No automatic reload or blank replacement. Browser/OS termination may provide no recoverable
 warning. Pan/zoom now belongs to this slice; numerical/resource work still needs bounded
-input validation and measured evidence. The history/cache policies retain their stated gates.
+input validation and measured evidence. H1 newest-entry retention is approved. A1 presentation tokens and R1 staging/accounting
+remain explicit owner decisions. A stale renderer completion must not unlock input after
+surface replacement, pan, resize or navigation. The Rust-issued token is lifecycle fencing,
+not authentication against same-origin JavaScript; it contains no drawing data. Multiple
+staging/snapshot backings can exceed the soft graphics target before optional cache cleanup;
+no exact driver/path-allocation claim is permitted.
 
 ## Assets and authority
 

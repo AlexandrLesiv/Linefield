@@ -2,7 +2,7 @@
   "width": 1440,
   "height": 900,
   "title": "Proposed in-memory web editor boundary",
-  "description": "One page-owned Rust editor supplies immutable geometry to CanvasKit; temporary content lifetime and all exact contracts await owner approval.",
+  "description": "One page-owned Rust editor supplies immutable geometry to CanvasKit; product lifetime and controls are approved; remaining numerical, ABI and rendering mechanisms await approval.",
   "elements": [
     {
       "tag": "rect",
@@ -19,7 +19,7 @@
         "y": "58",
         "class": "meta"
       },
-      "text": "LINEFIELD / S02-W01 / WMP v1"
+      "text": "LINEFIELD / S02-W01 / WMP-C2"
     },
     {
       "tag": "text",
@@ -28,7 +28,7 @@
         "y": "58",
         "class": "meta"
       },
-      "text": "PROPOSAL · OWNER APPROVAL PENDING"
+      "text": "TECHNICAL CHOICES PENDING"
     },
     {
       "tag": "text",
@@ -86,7 +86,7 @@
         "y": "351",
         "class": "node"
       },
-      "text": "Width, color, Undo / Redo"
+      "text": "Pen, settings, history, pan / zoom"
     },
     {
       "tag": "text",
@@ -247,7 +247,7 @@
         "y": "639",
         "class": "body"
       },
-      "text": "Retain content on Gallery return"
+      "text": "Retain content and viewport on Back"
     },
     {
       "tag": "text",
@@ -377,7 +377,7 @@
         "y": "800",
         "class": "body"
       },
-      "text": "Recommendation only: exact ABI, numerical limits, lifecycle and UI states are in the linked packet."
+      "text": "Product choices approved; exact numerical, ABI and rendering additions are in the linked packet."
     },
     {
       "tag": "text",

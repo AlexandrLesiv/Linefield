@@ -56,5 +56,21 @@ export function corpus() {
   for (const value of [Number.MIN_VALUE, Number.MIN_VALUE * 2, 2 ** -1022]) {
     rows.push({ input: `P 0 0 ${value} ${value} 256 256`, kind: "paint-subnormal-diagonal" });
   }
+  for (const exponent of [-1074, -1073, -1023, -1022, -1021, -1000, -512, -53, -1, 0, 15])
+    for (const delta of [-1n, 0n, 1n]) {
+      const value = numberFromBits(bits(2 ** exponent) + delta);
+      rows.push({
+        input: `N 0 ${value} 0`,
+        expected: normalized(0n, value, 0),
+        kind: "normalization-exponent-band",
+      });
+    }
+  for (const radius of [0.4, 204.8, 2048])
+    for (const other of [radius, 2048])
+      for (const slope of [0, 0.5, 1])
+        rows.push({
+          input: `P -1314816 -1314816 4096 ${-1314816 + 1318912 * slope} ${radius} ${other}`,
+          kind: "paint-zoomed-extreme",
+        });
   return rows;
 }

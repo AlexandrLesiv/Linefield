@@ -1,5 +1,9 @@
+mod culling;
 mod exact;
+mod magnitude;
 mod paint;
+mod viewport;
+mod zoom;
 
 use std::io::{self, BufRead};
 
@@ -21,6 +25,9 @@ fn main() {
                 }
             }
             Some("P") => paint::observe(&fields[1..]),
+            Some("Q") => viewport::observe(&fields[1..]),
+            Some("C") => culling::observe(&fields[1..]),
+            Some("Z") => zoom::observe(&fields[1..]),
             _ => panic!("synthetic-operation"),
         }
     }

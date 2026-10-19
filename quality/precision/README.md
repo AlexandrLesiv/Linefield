@@ -35,10 +35,9 @@ No historical count or developer-tool test suite is reinstated by this documenta
 ## S02-W01 memory-web candidate
 
 The [WMP-C2 proposal](../../docs/interfaces/web-memory.md) and
-[numerical definition](../../docs/interfaces/web-memory-numerics.md) document the original
-fixed-zoom1 diagnostic for a solid round pen. Owner subsequently required pan/zoom: these
-existing observations do not certify variable-zoom mapping, translated viewports or expanded
-painted bounds. Extend the exact-reference investigation before claiming that coverage.
+[numerical definition](../../docs/interfaces/web-memory-numerics.md) document the solid round pen and the bounded exact-reference pan/zoom extension. The
+original fixed-zoom1 observations remain a separate baseline; they do not certify variable
+zoom. See the numerical definition for exact per-category counts, distinct inputs and limits.
 No old global-f64 ABI, browser storage or product code is adopted here.
 
 Run `node scripts/probes/web-memory/run.ts` from the repository root with the documented
@@ -46,7 +45,9 @@ Node/Rust tools. It builds the isolated [Rust candidate](../../experiments/web-m
 into `.build-cache/web-memory/target` and compares fixed synthetic inputs with the
 independent exact-reference calculation. Its ignored `report.json` includes input vectors,
 candidate output, source hashes, tool/platform/base identity and mismatch/error observations.
-Do not commit generated reports, binaries or captured previews. Reproduce against the exact
+Run `node scripts/probes/web-memory/viewport-run.ts` for the separately reported zoom/pan
+normalization extension. Its exact rational oracle is independent of the fixed-storage Rust
+candidate. Do not commit generated reports, binaries or captured previews. Reproduce against the exact
 reviewed source; an old report cannot certify changed arithmetic.
 
 Use `cargo fmt --check --manifest-path experiments/web-memory/Cargo.toml` and
@@ -62,7 +63,7 @@ near-containment counterexample and conservative branch rationale in the current
 definition. A circle/tangent residual or f32 narrowing result is not a raster proof.
 
 Future P05-E01/E02 must exercise the actual approved Rust/Wasm/CanvasKit path through browser
-E2E, including WMP-01–10, declared surface limits, cold/warm/evicted geometry, active cancellation,
+E2E, including WMP-01–12, declared surface limits, cold/warm/evicted geometry, active cancellation,
 en/uk/focus/navigation and privacy/failure cases. Physical pressure, native hosts, full transform
 envelopes, GPU/RSS and latency remain outside this diagnostic. Never relabel an injected call
 or a synthetic numerical observation as an actual pointer/device or native acceptance result.
