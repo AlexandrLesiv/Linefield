@@ -1,6 +1,6 @@
 # Product backlog
 
-This list records owner-approved functionality and priority. Positions 1–21 were explicitly
+This list records owner-approved functionality and priority. Positions 1–26 were explicitly
 approved in this chat. They are planned outcomes, not completed features or blanket approval
 of unresolved designs, ABI, numerical, storage or security choices. Execution begins only after
 applicable contracts and designs are approved. Split large outcomes into bounded child tasks,
@@ -34,6 +34,11 @@ by current owner policy. Preserve existing gallery/navigation, themes and Englis
 | 19 | Snap while drawing and editing | [S05 Navigation and editing](S05.md) | Approved backlog; target/admission/precision contracts remain |
 | 20 | Draw with precision guides | Child task to scope before implementation | Approved backlog; straight-line guide design/contracts remain |
 | 21 | Measure artwork to scale | Child task to scope before implementation | Approved backlog; units/scale/numerical contracts remain |
+| 22 | Duplicate a drawing | [S02L Library](S02L.md) | Approved backlog; copy/identity/storage contracts remain |
+| 23 | Duplicate selected artwork | [S05 Navigation and editing](S05.md) | Approved backlog; copy/placement/history design remains |
+| 24 | Import an image reference | [S06 Files and recovery](S06.md) | Approved backlog; image/security/storage contracts remain |
+| 25 | Define artboard dimensions and export region | [S07E PNG export](S07E.md) | Approved backlog; bounds and outside-artwork behavior remain to review |
+| 26 | Save reusable drawing objects | Child task to scope before implementation | Approved backlog; local object storage/design contracts remain |
 
 ## Visual and interaction design approval
 
@@ -196,6 +201,46 @@ regional formatting, scale conversion, precision limits and saved settings befor
 Clarify measurement endpoints and feedback through owner design review; do not infer persistent
 dimension annotations, areas or automatic geometry rescaling. Depends on navigation and relevant
 precision contracts. Concepts reference: CS-OBS-013/016 (measurement controls inspected only).
+
+## 22. Duplicate a drawing
+
+Create an independent library copy with its own identity while preserving the original.
+Review coherent source revision capture, naming, failure/cancellation and resource ownership.
+Depends on durable artwork (#4); shared storage references must not make edits to one copy
+mutate another. Concepts reference: CS-DOC-011 (documented, not exercised in the device study).
+
+## 23. Duplicate selected artwork
+
+Copy selected strokes within the drawing, then position the copy; support Undo and saving.
+Depends on #12 and shared editing/history. Define when duplication commits and how placement
+cancellation behaves before implementation. No cross-drawing clipboard behavior is implied.
+Concepts reference: CS-DOC-016 (documented, not exercised).
+
+## 24. Import an image reference
+
+Import a local PNG/JPEG as a copy, position/scale/rotate it, and retain it with the drawing.
+No external-file write-through. Review decoding/resource bounds, durable asset ownership,
+color handling, transforms and failure/cancellation. Depends on saved artwork and appropriate
+layer/render integration. PDF, camera acquisition and remote image retrieval are excluded.
+Concepts reference: CS-DOC-021; CS-OBS-012 inspected import options without importing a file.
+
+## 25. Define artboard dimensions and export region
+
+Define artboard dimensions and use the artboard as an export region. This is the owner-revised
+scope: orientation controls and preservation/deletion of artwork outside the region were not
+confirmed as Concepts observations and are not settled by this approval. Review outside-artwork
+behavior explicitly before implementation; do not infer permission to delete or crop stored art.
+Depends on #9 and reviewed coordinate/dimension semantics. Concepts references: CS-OBS-013
+(dimensions/presets inspected) and CS-OBS-018 (Artboard export option observed); artboard changes
+and outside-artwork behavior were not exercised.
+
+## 26. Save reusable drawing objects
+
+Save selected strokes as named reusable objects and insert independent copies into drawings.
+Local library only; no marketplace or sharing service. Depends on selection and duplication.
+Review object identity, storage, naming and insertion/Undo behavior; no linked instances,
+automatic propagation, asset packs or proprietary Concepts assets are implied.
+Concepts reference: CS-DOC-024; CS-OBS-017 inspected the library without inserting objects.
 
 ## Further candidates
 
