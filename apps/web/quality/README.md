@@ -29,12 +29,12 @@ remain explicit gaps. Preserve unresolved failure material outside disposable-ar
 Browser output belongs in ignored `apps/web/test-results/`; other local captures/reports can
 use ignored `.build-cache/`. Do not add those payloads to this documentation directory.
 
-## Open findings
+## Rename recurrence diagnostics
 
-The intermittent WEB-D2-08 failure remains open: the literal renamed title was expected, but “Coastal house” remained.
-The cleanup run had 120 passes and one failure; five explicit focused reruns passed without
-source changes. The cause remains unconfirmed. [WEB-D2-08](../../../tasks/WEB-D2-08.md) owns the bounded
-investigation. Further passing attempts do not establish a cause or close the original failure.
+The historical WEB-D2-08 rename failure was not reproduced during investigation, and no cause
+or fix was established. The owner retired its task record; create a new defect if it recurs.
+Investigation evidence and the distinction between failed runs and passing reruns remain in
+[PR #7](https://github.com/AlexandrLesiv/Linefield/pull/7).
 
 WEB-D2-08 now lives in tests/rename-literal.spec.ts. Its original clicks, literal-title assertion,
 context-menu assertion and control bounds remain intact. A test-only bounded recorder retains
@@ -59,7 +59,7 @@ animation running. Freezing all surface/artwork tracks restores the exact source
 WEB-G01 now checks x/y/width/height at the original tolerance and requires a geometry track;
 WEB-M04 selects that geometry track explicitly for natural playback. No product motion changed.
 Keep sampled geometry and natural playback evidence separate. The earlier failed runs remain
-historical failures; latest full-suite results are recorded in PR #7. WEB-D2-08 remains unresolved.
+historical failures; latest full-suite results are recorded in PR #7.
 
 Physical touch/stylus, system keyboards/IME, screen-reader walkthroughs, native hosts and
 proficient Ukrainian linguistic review remain separate acceptance work. Headless WebKit touch

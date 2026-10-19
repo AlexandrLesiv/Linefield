@@ -30,8 +30,8 @@ CT/INV/SU identifiers are acceptance context, not proof of real editing semantic
 
 Narrow keyboard coverage includes reverse traversal and a partially clipped range: pointer focus
 must not scroll the bar and move the control under the pointer. These are executable cases; an
-earlier unrun report is not their current status. The [web verification guide](../README.md) preserves
-the open WEB-D2-08 intermittent rename finding.
+earlier unrun report is not their current status. The [web verification guide](../README.md) describes
+WEB-D2-08 recurrence diagnostics; create a new defect if the rename failure recurs.
 
 ## Presentation checklist and limits
 
