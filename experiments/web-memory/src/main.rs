@@ -2,6 +2,8 @@ mod culling;
 mod exact;
 mod magnitude;
 mod paint;
+mod rotation;
+mod rotation_culling;
 mod viewport;
 mod zoom;
 
@@ -28,6 +30,8 @@ fn main() {
             Some("Q") => viewport::observe(&fields[1..]),
             Some("C") => culling::observe(&fields[1..]),
             Some("Z") => zoom::observe(&fields[1..]),
+            Some("R") | Some("I") => rotation::observe(&fields[1..], fields[0] == "I"),
+            Some("B") => rotation_culling::observe(&fields[1..]),
             _ => panic!("synthetic-operation"),
         }
     }

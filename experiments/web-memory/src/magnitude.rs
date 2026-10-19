@@ -1,5 +1,5 @@
 // Fixed-storage unsigned arithmetic for the isolated rational viewport experiment.
-pub const WORDS: usize = 20;
+pub const WORDS: usize = 22;
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct Magnitude(pub [u64; WORDS]);
 

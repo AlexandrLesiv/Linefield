@@ -1,7 +1,7 @@
 // Synthetic candidate only: local + (a-b)/zoom, exact supplied binary64 operands.
 use crate::magnitude::{Magnitude, decode, signed_add};
 
-fn round(numerator: Magnitude, denominator: Magnitude) -> f64 {
+pub(crate) fn round(numerator: Magnitude, denominator: Magnitude) -> f64 {
     if numerator.width() == 0 {
         return 0.0;
     }

@@ -1,5 +1,11 @@
 # WMP-C2 numerical candidate and evidence
 
+The owner-selected buttons-only rotation extension has a separate current
+[bounded numerical proposal](web-memory-rotation.md). Its measured candidate and concrete
+ABI recommendations await owner approval; the approved N1 contract below is unchanged.
+The isolated experiment's shared magnitude helper now has22words for that candidate;
+the N1 capacity derivation remains20words and production N1 is unchanged.
+
 Part of [WMP-C2](web-memory.md). Owner G1/P1 includes pan/zoom and approves its controls; G2 approves screen/surface
 limits, G3 precision/normalization policy and G4 swept-disk geometry. Concrete zoom-aware
 mapping algorithm and projection policy below received owner N1 approval at51d9345
