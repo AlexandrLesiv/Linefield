@@ -8,6 +8,13 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 # Task board
 
+## R05 CPU raster checkpoint
+
+[P05-R05](P05-R05.md) completed with a rejected unpadded CPU tiling candidate:256 coincident
+samples fail exact tile/whole parity. Thin case matched; long-stroke performance remains
+unmeasured. Current previews remain unchanged; no production migration follows. PR #11
+remains an unmerged dependency; R05 owner review is pending.
+
 ## R01 rendering checkpoint
 
 [P05-R01](P05-R01.md) is owner-approved and stopped with a rejected PathOps grouping candidate.
