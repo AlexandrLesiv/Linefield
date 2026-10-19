@@ -1,6 +1,6 @@
 # Product backlog
 
-This list records owner-approved functionality and priority. Positions 1–11 were explicitly
+This list records owner-approved functionality and priority. Positions 1–16 were explicitly
 approved in this chat. They are planned outcomes, not completed features or blanket approval
 of unresolved designs, ABI, numerical, storage or security choices. Execution begins only after
 applicable contracts and designs are approved. Split large outcomes into bounded child tasks,
@@ -24,6 +24,24 @@ by current owner policy. Preserve existing gallery/navigation, themes and Englis
 | 9 | Export a PNG | [S07E PNG export](S07E.md) | Approved backlog; export/destination contracts remain |
 | 10 | Change a selected stroke’s appearance | [S05 Navigation and editing](S05.md) | Approved backlog; new restyling scope, design/contracts remain |
 | 11 | Organize artwork into layers | Child milestone to scope before implementation | Approved backlog; new layer scope, design/schema contracts remain |
+| 12 | Select multiple strokes | [S05 Navigation and editing](S05.md) | Approved backlog; selection contracts/design remain |
+| 13 | Rotate selected artwork | [S05 Navigation and editing](S05.md) | Approved backlog; transform contracts/design remain |
+| 14 | Save reusable color palettes | Child task to scope before implementation | Approved backlog; palette ownership/storage/design remain |
+| 15 | Adjust stroke opacity | [S03 Pure editor](S03.md), [P05 Web](P05.md) | Approved backlog; rendering/editing contracts/design remain |
+| 16 | Smooth new strokes | [S03 Pure editor](S03.md), [P05 Web](P05.md) | Approved backlog; algorithm/input contracts/design remain |
+
+## Visual and interaction design approval
+
+Backlog approval confirms functionality and order, not visual design approval. Before implementing
+new feature UI, ui_ux_designer prepares its layout, interactions, adaptive states, themes,
+English/Ukrainian, accessibility/focus and motion/reduced-motion behavior. Present concrete
+review artifacts and identify their source commit/version for owner approval. Record the exact
+approved scope in the executable task. Follow [design workflow](../docs/design/workflow.md).
+Existing approved components/screens may be reused within their approved scope; they do not
+approve unseen states or new behavior. Design prototypes are review artifacts, not production
+implementation approval. Designer review and independent review cannot replace owner approval.
+Keep current authored specifications in Git; generated previews/captures stay ignored or in PR
+attachments. After implementation, verify fidelity and E2E behavior against the approved design.
 
 ## 1. Create a saved drawing
 
@@ -62,8 +80,8 @@ interaction guards, cancellation on mapping changes, focus and viewport/render a
 ## 6. Select and edit one stroke
 
 Select, move, uniformly scale and delete one stroke. Integrate completed operations with
-session history and saving; cancelled operations preserve previous artwork. Exclude multi-select,
-rotation. Selected-stroke restyling belongs to #10.
+session history and saving; cancelled operations preserve previous artwork. Exclude multi-select and
+rotation from this slice. Selected-stroke restyling belongs to #10.
 
 ## 7. Rename a drawing
 
@@ -100,6 +118,42 @@ This adds product scope; review layer identity, stroke membership, ordering, hid
 behavior, history and storage changes before implementation. Define how selection and export
 interact with layers. Do not infer layer deletion, opacity, grouping or blending from this approval.
 Concepts reference: CS-OBS-015 (panel observed; layer operations were not exercised).
+
+## 12. Select multiple strokes
+
+Lasso-select strokes, add/remove strokes from selection, and move, uniformly scale or delete
+selected strokes together. Respect locked layers. Depends on #6 and #11; define hit testing,
+selection feedback and atomic history/save behavior. Partial-stroke selection is not included.
+Concepts reference: CS-OBS-010 (controls observed; multi-selection was not exercised).
+
+## 13. Rotate selected artwork
+
+Rotate one or multiple selected strokes with undoable, saved results. Canvas rotation stays
+separate. Depends on #12 and reviewed transform precision/pivot/interaction semantics.
+Concepts reference: CS-OBS-010 (rotation affordance observed; rotation was not exercised).
+
+## 14. Save reusable color palettes
+
+Create named palettes, add/remove colors, and apply a swatch to the pen or selected artwork.
+No branded palette dependency. Review palette ownership and durability separately from drawing
+colors; specify selection application and Undo behavior. Depends on #10 and, where multiple
+selected strokes are supported, #12. Concepts reference: CS-OBS-009.
+
+## 15. Adjust stroke opacity
+
+Set opacity for future strokes or change selected strokes, with clear previews and Undo for
+artwork edits. Depends on history, saved artwork and selected-stroke editing. Review canonical
+alpha/compositing, preview/commit/cancel and multi-selection behavior. Layer opacity is excluded.
+Concepts reference: CS-OBS-005; selected-stroke opacity is a Linefield proposal, not a tested
+observation from that study.
+
+## 16. Smooth new strokes
+
+Provide optional adjustable smoothing for newly drawn strokes. Preserve cancellation and
+responsive input; do not reshape existing artwork automatically. Depends on shared input/geometry
+contracts and bounded performance evidence. The earlier unfiltered pen remains the baseline;
+backlog approval does not select a smoothing algorithm or change existing stroke geometry.
+Concepts reference: CS-OBS-006; the observed slider mismatch remains inconclusive.
 
 ## Further candidates
 
