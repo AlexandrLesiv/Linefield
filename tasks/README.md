@@ -17,6 +17,8 @@ both unchanged references matched exactly. Remaining correctness/performance gat
 The correctness failure blocks interactive integration/handoff. Current previews stay unchanged;
 no production adoption/merge. Owner review pending.
 
+[PR #15](https://github.com/AlexandrLesiv/Linefield/pull/15) retains the rejected experiment.
+
 ## R07 untiled retained-path checkpoint
 
 [P05-R07](P05-R07.md) completed with a rejected candidate on
