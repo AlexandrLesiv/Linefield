@@ -50,7 +50,8 @@ export async function lifecycle(h: Harness) {
     h.rows.push({ label: "old-completion-after-undo", rejectedBeforePublication: true });
     state = accepted(penBridge.redo(state));
     state = accepted(penBridge.begin(state, 4, 10, 10, 0, false));
-    state = accepted(bridge.metrics(state, 2n, h.width, h.height, 1.25));
+    // Change logical/backing mapping while retaining the admitted backing-pixel area.
+    state = accepted(bridge.metrics(state, 2n, h.width / 2, h.height / 2, 2));
     if (!state.activeCancelled) throw Error("remap-did-not-cancel");
     state = accepted(bridge.metrics(state, 3n, h.width, h.height, 1));
     state = accepted(bridge.presented(state));
