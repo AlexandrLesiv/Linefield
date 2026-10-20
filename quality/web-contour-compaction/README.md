@@ -1,7 +1,8 @@
 # Conservative contour compaction verification
 
 [P05-R08](../../tasks/P05-R08.md) is the owner-approved bounded experiment and isolated
-interactive preview task. Current state: Gate0 design review passed; baseline complete; no candidate result.
+interactive preview task. Current state: candidate rejected by its first exact-pixel case;
+interactive integration/handoff blocked. Gate0 design review and baseline diagnostics are complete.
 An unchanged CPU reference, mathematical set equality and actual submitted pixels are separate
 obligations. A repeated blank frame cannot establish correctness.
 
@@ -10,11 +11,11 @@ obligations. A repeated blank frame cannot establish correctness.
 | Lane | Required observation | Initial state |
 | --- | --- | --- |
 | Baseline | Six unchanged CPU cold rows, moving/sparse/pressure65,537 × two backing sizes | All six failed the whole-path draw guard |
-| Numerical/ownership | Full-area certificate and whole-prefix winding proof; bounded arithmetic; source capture/lifetime | Design review passed; implementation unverified |
-| Candidate correctness | Existing32 corpus pairs plus bounded cases below; exact original/reference/submitted RGBA | Not implemented/run |
-| Candidate performance | Long coincident/moving/sparse/pressure, continuation/history/held pan | Not run |
-| Actual app | Real pointer/controls, en/uk, focus, cancellation, immediate next stroke, continuous pan | Not run |
-| Full profile | Five runs per approved workload, sufficient observations, unchanged absolute/relative gates | Not run |
+| Numerical/ownership | Full-area certificate and whole-prefix winding proof; bounded arithmetic; source capture/lifetime | Preliminary kernel/adapter static review passed; capture implementation and numerical runtime conformance unrun |
+| Candidate correctness | Existing32 corpus pairs plus bounded cases below; exact original/reference/submitted RGBA | First static corpus row failed; remaining31 and additional cases unrun |
+| Candidate performance | Long coincident/moving/sparse/pressure, continuation/history/held pan | Unrun after correctness stop |
+| Actual app | Real pointer/controls, en/uk, focus, cancellation, immediate next stroke, continuous pan | Unimplemented/unrun; handoff blocked by correctness |
+| Full profile | Five runs per approved workload, sufficient observations, unchanged absolute/relative gates | Unrun |
 
 Baseline diagnostics are independent and continue after individual failure only for the six
 frozen rows. Failed rows remain failed. The first candidate correctness failure stops the
@@ -28,6 +29,25 @@ This confirms the unresolved indivisible draw cost across moving, sparse and pre
 geometry. It does not establish candidate performance or physical input latency. Exact identities,
 individual timings and unchanged-renderer hashes are retained in the ignored `r08-baseline`
 lane, along with its frozen served site. No diagnostic was retried.
+
+## Current rejected-candidate finding
+
+At cleanf4ce2e1c2bc1798137ce08230b0b0be3b67bca96, `control-256-small` reduced256
+byte-identical six-verb discs to one. Its54 differing color channels (maximum delta7, total150)
+fail exact equality. Both fresh unchanged CPU references matched exactly; the candidate remained
+nonblank with69 ink pixels. The mismatch occurs before bitmap publication, which was not attempted.
+Independent review verified the source-array and served-asset hashes and duplicate-only removal.
+No containment predicate ran, and no specific Skia-internal cause is established.
+
+This experiment rejects raster equivalence even for exact duplicate removal under the current
+CanvasKit CPU AA contract. It does not prove canonical input loss or refute mathematical union
+equality. Preserve the first failure; do not treat an original-geometry fallback as successful
+compaction or loosen tolerance. Small-case preparation timings are unguarded correctness-run
+observations and cannot be compared as a speedup against65,537-sample baseline draws.
+
+The source fixture deliberately retains original pages for its independent oracle. Bounded
+production transport, finite capture queries and interactive lifecycle are not implemented here.
+No runtime/source change follows from the planning sections below without renewed authorization.
 
 ## Additional bounded cases
 

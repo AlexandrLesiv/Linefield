@@ -3,7 +3,16 @@
 Current owner-approved R4 contract refinement. Independent Gate0 design review passed on
 2026-10-20 at packet SHA256
 `3b5efd7093ac7b3f928b8ee1fb1dc0759962d4cad83a99e3910ae6d89e5718e1`.
-Implementation arithmetic, generated declarations, runtime parity and performance remain unverified.
+That design review did not establish implementation or performance acceptance; the current
+experimental disposition is recorded below.
+
+Current disposition: the candidate implementation atf4ce2e1 failed the first exact CPU pixel
+case after removing255 of256 byte-identical contours. The mathematical region is unchanged,
+but54 color channels differ from repeatable original references. Preliminary kernel/adapter
+static review passed; containment predicates, finite editor captures, later conformance and
+performance remain unverified. This contract records the bounded investigation and unresolved
+interfaces, not an adopted application boundary. Do not implement its remaining sections or
+integrate preparation after this stop without a new owner-approved task.
 
 2026-10-20. Prepared by the sole implementation writer for independent review BEFORE kernel implementation. Base `6c1fd32c343de1294da1b8ffc7693415b03ffd1a`, worktree `/Users/oleksandr/projects/linefield/.worktrees/p05-r08-contour-compaction`. This is a proof/contract packet, not implemented or passing evidence. Owner-approved R4 is the scope authority. No canonical simplification, retired retained contours, new coverage rule or changed tolerance.
 

@@ -10,12 +10,12 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 ## R08 conservative contour compaction
 
-[P05-R08](P05-R08.md) is owner-approved and in candidate implementation after Gate0 design review
-and the six unchanged-renderer baseline diagnostics on
+[P05-R08](P05-R08.md) stopped with a rejected exact-pixel candidate on
 `codex/p05-r08-contour-compaction`, stacked on PR #14 at6c1fd32.
-The bounded candidate keeps CanvasKit and original Rust geometry while proving whole-contour
-redundancy. Current previews stay unchanged. Correctness-safe actual-app integration and a
-separate Codex preview are required even if timings fail; no production adoption/merge.
+The first256-identical-contour case changed54 color channels after duplicate removal;
+both unchanged references matched exactly. Remaining correctness/performance gates are unrun.
+The correctness failure blocks interactive integration/handoff. Current previews stay unchanged;
+no production adoption/merge. Owner review pending.
 
 ## R07 untiled retained-path checkpoint
 
