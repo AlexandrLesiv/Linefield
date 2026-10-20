@@ -34,6 +34,9 @@ export default defineConfig(({ mode }) => {
                 cpuRaster: fileURLToPath(
                   new URL("tests/fixtures/memory/cpu-raster/index.html", import.meta.url),
                 ),
+                untiled: fileURLToPath(
+                  new URL("tests/fixtures/memory/untiled/index.html", import.meta.url),
+                ),
                 padded: fileURLToPath(
                   new URL("tests/fixtures/memory/padded/index.html", import.meta.url),
                 ),

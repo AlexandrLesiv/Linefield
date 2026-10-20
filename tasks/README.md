@@ -8,6 +8,15 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 # Task board
 
+## R07 untiled retained-path checkpoint
+
+[P05-R07](P05-R07.md) completed with a rejected candidate on
+`codex/p05-r07-untiled-retained-checkpoint`, stacked on PR #13 at7bd4791.
+All32 CPU correctness pairs and both lifecycle rows completed; the first65,537-sample
+cold draw took129.5ms against the8ms guard. Later performance rows are unrun.
+Existing previews and production sources stay unchanged.
+[PR #14](https://github.com/AlexandrLesiv/Linefield/pull/14) awaits owner review; no adoption/merge.
+
 ## R06 padded raster checkpoint
 
 [P05-R06](P05-R06.md) completed with all approved padding sizes rejected. Padding 8px
