@@ -1,7 +1,7 @@
 # Conservative contour compaction verification
 
 [P05-R08](../../tasks/P05-R08.md) is the owner-approved bounded experiment and isolated
-interactive preview task. Current state: Gate0 design review passed; baseline ready; no candidate result.
+interactive preview task. Current state: Gate0 design review passed; baseline complete; no candidate result.
 An unchanged CPU reference, mathematical set equality and actual submitted pixels are separate
 obligations. A repeated blank frame cannot establish correctness.
 
@@ -9,7 +9,7 @@ obligations. A repeated blank frame cannot establish correctness.
 
 | Lane | Required observation | Initial state |
 | --- | --- | --- |
-| Baseline | Six unchanged CPU cold rows, moving/sparse/pressure65,537 × two backing sizes | Not run |
+| Baseline | Six unchanged CPU cold rows, moving/sparse/pressure65,537 × two backing sizes | All six failed the whole-path draw guard |
 | Numerical/ownership | Full-area certificate and whole-prefix winding proof; bounded arithmetic; source capture/lifetime | Design review passed; implementation unverified |
 | Candidate correctness | Existing32 corpus pairs plus bounded cases below; exact original/reference/submitted RGBA | Not implemented/run |
 | Candidate performance | Long coincident/moving/sparse/pressure, continuation/history/held pan | Not run |
@@ -21,6 +21,13 @@ frozen rows. Failed rows remain failed. The first candidate correctness failure 
 candidate; the first candidate timing failure stops later performance rows. A correctness-safe
 manual preview remains required after a timing failure and must be labelled experimental.
 No failure authorizes a different algorithm, larger threshold, altered appearance or dropped input.
+
+The frozen baseline at clean1113f190f4994be21d282818a8a45a5251f3dcfa accepted all65,537
+samples in each row and reached the CPU draw. Every row exceeded8ms; no frame was submitted.
+This confirms the unresolved indivisible draw cost across moving, sparse and pressure-varying
+geometry. It does not establish candidate performance or physical input latency. Exact identities,
+individual timings and unchanged-renderer hashes are retained in the ignored `r08-baseline`
+lane, along with its frozen served site. No diagnostic was retried.
 
 ## Additional bounded cases
 

@@ -50,6 +50,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "linefield-contour-preparation"
+version = "0.1.0"
+
+[[package]]
 name = "linefield-editor-engine"
 version = "0.1.0"
 
@@ -59,6 +63,15 @@ version = "0.1.0"
 dependencies = [
  "js-sys",
  "linefield-editor-engine",
+ "wasm-bindgen",
+]
+
+[[package]]
+name = "linefield-web-preparation"
+version = "0.1.0"
+dependencies = [
+ "js-sys",
+ "linefield-contour-preparation",
  "wasm-bindgen",
 ]
 

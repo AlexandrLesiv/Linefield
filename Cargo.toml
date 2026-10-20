@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/editor-engine", "apps/web/wasm"]
+members = ["crates/editor-engine", "crates/contour-preparation", "apps/web/wasm", "apps/web/preparation-wasm"]
 resolver = "3"
 
 [profile.release]

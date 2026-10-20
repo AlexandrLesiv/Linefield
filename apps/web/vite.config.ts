@@ -12,6 +12,7 @@ export default defineConfig(({ mode }) => {
       alias: {
         "#memory-bindings": fileURLToPath(new URL("linefield_web_memory.js", generated)),
         "#memory-wasm": fileURLToPath(new URL("linefield_web_memory_bg.wasm", generated)),
+        "#preparation-bindings": fileURLToPath(new URL("linefield_web_preparation.js", generated)),
       },
     },
     server: { host: "127.0.0.1", strictPort: true },
@@ -39,6 +40,9 @@ export default defineConfig(({ mode }) => {
                 ),
                 compactionBaseline: fileURLToPath(
                   new URL("tests/fixtures/memory/compaction-baseline/index.html", import.meta.url),
+                ),
+                compaction: fileURLToPath(
+                  new URL("tests/fixtures/memory/compaction/index.html", import.meta.url),
                 ),
                 padded: fileURLToPath(
                   new URL("tests/fixtures/memory/padded/index.html", import.meta.url),
