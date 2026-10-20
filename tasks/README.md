@@ -10,11 +10,11 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 ## R07 untiled retained-path checkpoint
 
-[P05-R07](P05-R07.md) is owner-approved and in progress on
+[P05-R07](P05-R07.md) completed with a rejected candidate on
 `codex/p05-r07-untiled-retained-checkpoint`, stacked on PR #13 at7bd4791.
-It tests exact whole-CPU correctness, then bounded large-stroke performance, with reusable
-current-mapping stroke paths. Existing previews and production sources stay unchanged.
-One fixture writer; no production adoption or automatic merge.
+All32 CPU correctness pairs and both lifecycle rows completed; the first65,537-sample
+cold draw took129.5ms against the8ms guard. Later performance rows are unrun.
+Existing previews and production sources stay unchanged. Owner review pending; no adoption/merge.
 
 ## R06 padded raster checkpoint
 

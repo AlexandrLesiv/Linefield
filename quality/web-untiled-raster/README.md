@@ -48,13 +48,83 @@ Keep this acceptance guide in source; exclude generated JSON/images/logs.
 
 | ID | Evidence required | Current disposition |
 | --- | --- | --- |
-| WMP-R07-01 | 32 corpus pairs, known coverage, exact repeat/reference/submission, lifecycle identity | Pending |
-| WMP-R07-02 | Four frozen large shapes, cold/warm/evicted, +256 same interaction | Conditional on Gate1 |
-| WMP-R07-03 | Accepted EndA/BeginB and complete B preview while A outstanding | Conditional |
-| WMP-R07-04 | Undo/Redo membership and held-pan coverage before release | Conditional |
-| WMP-R07-05 | Cancellation/remap/stale completion/failure and production isolation | Pending |
+| WMP-R07-01 | 32 corpus pairs, known coverage, exact repeat/reference/submission, lifecycle identity | All32 pairs and both lifecycle rows completed; exact CPU parity |
+| WMP-R07-02 | Four frozen large shapes, cold/warm/evicted, +256 same interaction | First cold coincident case rejected at129.5ms; remainder unrun |
+| WMP-R07-03 | Accepted EndA/BeginB and complete B preview while A outstanding | Unrun/unimplemented after early rejection |
+| WMP-R07-04 | Undo/Redo membership and held-pan coverage before release | Small command-driven history assertions passed; held-pan/large-history timing unrun |
+| WMP-R07-05 | Cancellation/remap/stale completion/failure and production isolation | Synthetic lifecycle/fault controls and production isolation passed; no native focus claim |
 
 CT-02/03/04/06/08; INV-01–04/08/09/11; SU-03/04/13/14/16/20; SEC-02/03/09/13.
-Exact revision/build, per-case results, resource counts, static checks, designer review and
-independent review will be recorded after execution. A rejected checkpoint is a bounded
-investigation outcome, not a passing renderer or completed production performance requirement.
+## Observed outcome
+
+The candidate is rejected. Clean executable source:
+`c5427c774677c31c51b218d24955ea9c4d48c062`, run2026-10-20.
+All16 corpus cases at both sizes and both lifecycle controls completed before performance.
+Known ink, independent reference repeatability, same-prefix End, cache eviction, Undo/Redo,
+bitmap parity and stale/failure assertions passed in the bounded synthetic corpus.
+This is not a universal raster-equivalence proof.
+
+The first Gate2 case has65,537 coincident samples at1024×768. Its full-path draw returned
+in **129.5ms**, exceeding the unchanged8ms operation guard. This is a returned measurement,
+not an inferred watchdog duration. The driver correctly failed and stopped after35 rows.
+
+| Recorded stage | Observation in that one cold case |
+| --- | --- |
+| Rust geometry queries/copies | 97 pages;25.6ms total;0.7ms largest page |
+| Retained builder page append | 58.8ms total;2.4ms largest page |
+| Active path snapshot | 3.1ms |
+| Whole-path draw | 129.5ms; decisive rejection |
+| Longest recorded uninterrupted worker segment | 133.8ms |
+| Worker wall time | 201ms |
+| Capture→failed result | 687.2ms partial interval; not complete-frame latency |
+
+The path contains393,222 verbs; copied geometry totals6,160,478 bytes. The worker returned
+zero tracked paths/builders/snapshots after failure. CanvasKit heap capacity was128MiB;
+that is neither live path storage nor peak system residency, and no total-memory pass is claimed.
+The frame was not submitted. Flush/readback/conversion and large reference/parity were not
+reached, nor warm/evicted/+256, the other large shapes/viewport, EndA/BeginB, held pan,
+history timing or Gate3. No p95 or same-host relative performance claim follows.
+
+The separate GPU256-coincident diagnostic reproduces at both sizes: CPU69 ink pixels,
+GPU0;207 differing channels with maximum delta255. Preserve that unexplained discrepancy.
+It neither invalidates exact CPU parity nor establishes a safe GPU visual oracle.
+
+## Evidence, checks and review
+
+Environment: Apple M2 Pro; Darwin27.0.0 arm64; headless Chrome155.0.8059.80 at1280×900;
+Node24.12.0; Rust1.99.0; wasm-bindgen0.2.129; CanvasKit0.41.1.
+Display refresh, power and thermal conditions were unmeasured.
+`identity.json` records clean source, fixture assets, fixed generator/catalogue and runtime hashes.
+Fixture Wasm SHA256:
+`65cef60924060c9689fc77f7ac6491918dd39dafe677c93b00a2fe27c52bc883`.
+
+Generated evidence root: `.build-cache/web-memory/untiled-checkpoint`.
+One discovered test, `WMP-R07 retained whole CPU correctness then early falsification`,
+fails at the unchanged performance assertion. `sequence.json` lists34 completed correctness/
+lifecycle rows and one failed cold-performance row. Per-case JSON and PNGs are retained locally.
+Do not commit generated reports or reinterpret the failing renderer assertion as green acceptance.
+
+The initial57aba0a run is preserved at `.build-cache/web-memory/untiled-run-57aba0a`.
+It stopped on invalid large-fixture metrics, not renderer failure:4096×2048 with backing1.25
+exceeded the existing8M-pixel limit. The one-line correction uses half logical dimensions with
+backing2, retaining exactly the same allowed backing extent and active-cancel/remap assertions.
+The independent reviewer verified that no bound or acceptance test was weakened.
+
+`pnpm check`, complete web formatting, strict types/lint/source-size checks, generated resource
+checks, release production/fixture Wasm builds and production/fixture Vite builds passed.
+Production manifest contains no fixture. App SHA256
+`448ff09a7f3737a91ecfa063ba917624113246eba8359b33ab319d2ef99239cf` and worker SHA256
+`88a9645703e40d2b535422cd56cb68b40e1011575bee9f505fb71a111635be3f` match the parent exactly.
+Existing preview worktrees, builds and servers were not changed.
+
+Rust specialist source review found no remaining identity/ownership or ABI blocker.
+Designer reviewed actual small/large CPU ink controls and the blank GPU diagnostics.
+Painter-order pixel assertions passed, but a separate colored-state screenshot is absent;
+do not call that a visual approval. Raw samples are not directly observable through this ABI,
+and individual cleanup timings are not exhaustive. These limitations prevent broader acceptance
+claims; they do not undermine the measured draw rejection.
+Independent implementation/evidence review disposition is recorded with the PR.
+
+The checkpoint demonstrates bounded correctness of retained paths, not sufficient performance.
+Do not adopt this candidate or infer a warm Undo/pan improvement from unrun rows. Further
+representation/raster changes require a new concrete owner-reviewed proposal.
