@@ -8,6 +8,17 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 # Task board
 
+## R08 conservative contour compaction
+
+[P05-R08](P05-R08.md) stopped with a rejected exact-pixel candidate on
+`codex/p05-r08-contour-compaction`, stacked on PR #14 at6c1fd32.
+The first256-identical-contour case changed54 color channels after duplicate removal;
+both unchanged references matched exactly. Remaining correctness/performance gates are unrun.
+The correctness failure blocks interactive integration/handoff. Current previews stay unchanged;
+no production adoption/merge. Owner review pending.
+
+[PR #15](https://github.com/AlexandrLesiv/Linefield/pull/15) retains the rejected experiment.
+
 ## R07 untiled retained-path checkpoint
 
 [P05-R07](P05-R07.md) completed with a rejected candidate on

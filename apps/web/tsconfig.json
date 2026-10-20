@@ -8,7 +8,10 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "paths": {
-      "#memory-bindings": ["../../.build-cache/web-memory/production/linefield_web_memory.d.ts"]
+      "#memory-bindings": ["../../.build-cache/web-memory/production/linefield_web_memory.d.ts"],
+      "#preparation-bindings": [
+        "../../.build-cache/web-memory/production/linefield_web_preparation.d.ts"
+      ]
     }
   },
   "include": ["src/**/*.ts", "tests/**/*.ts", "*.ts"],

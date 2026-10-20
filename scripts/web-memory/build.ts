@@ -34,10 +34,19 @@ run("cargo", [
   "wasm32-unknown-unknown",
   "-p",
   "linefield-web-memory",
-  ...(fixtures ? ["--features", "e2e-fixtures"] : []),
+  "-p",
+  "linefield-web-preparation",
+  ...(fixtures ? ["--features", "linefield-web-memory/e2e-fixtures"] : []),
 ]);
 run(cli, [
   join(target, "wasm32-unknown-unknown/release/linefield_web_memory.wasm"),
+  "--target",
+  "web",
+  "--out-dir",
+  output,
+]);
+run(cli, [
+  join(target, "wasm32-unknown-unknown/release/linefield_web_preparation.wasm"),
   "--target",
   "web",
   "--out-dir",
@@ -51,6 +60,7 @@ if (hash !== "bd669c88bd033eaf62d673103a42231a737c6d12e4cc99f8548b2784b5772430")
 }
 await copyFile(join(canvas, "LICENSE"), join(output, "CANVASKIT-LICENSE"));
 const engine = await readFile(join(output, "linefield_web_memory_bg.wasm"));
+const preparation = await readFile(join(output, "linefield_web_preparation_bg.wasm"));
 await writeFile(
   join(output, "build.json"),
   JSON.stringify(
@@ -60,6 +70,7 @@ await writeFile(
       wasmBindgen: "0.2.129",
       canvasKit: "0.41.1",
       engineSha256: createHash("sha256").update(engine).digest("hex"),
+      preparationSha256: createHash("sha256").update(preparation).digest("hex"),
       canvasSha256: hash,
     },
     null,
