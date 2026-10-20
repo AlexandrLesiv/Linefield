@@ -8,6 +8,14 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 # Task board
 
+## R07 untiled retained-path checkpoint
+
+[P05-R07](P05-R07.md) is owner-approved and in progress on
+`codex/p05-r07-untiled-retained-checkpoint`, stacked on PR #13 at7bd4791.
+It tests exact whole-CPU correctness, then bounded large-stroke performance, with reusable
+current-mapping stroke paths. Existing previews and production sources stay unchanged.
+One fixture writer; no production adoption or automatic merge.
+
 ## R06 padded raster checkpoint
 
 [P05-R06](P05-R06.md) completed with all approved padding sizes rejected. Padding 8px
