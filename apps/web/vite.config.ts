@@ -37,6 +37,9 @@ export default defineConfig(({ mode }) => {
                 untiled: fileURLToPath(
                   new URL("tests/fixtures/memory/untiled/index.html", import.meta.url),
                 ),
+                compactionBaseline: fileURLToPath(
+                  new URL("tests/fixtures/memory/compaction-baseline/index.html", import.meta.url),
+                ),
                 padded: fileURLToPath(
                   new URL("tests/fixtures/memory/padded/index.html", import.meta.url),
                 ),

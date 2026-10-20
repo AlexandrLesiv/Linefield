@@ -8,6 +8,14 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 # Task board
 
+## R08 conservative contour compaction
+
+[P05-R08](P05-R08.md) is owner-approved and in Gate0 numerical/contract review on
+`codex/p05-r08-contour-compaction`, stacked on PR #14 at6c1fd32.
+The bounded candidate keeps CanvasKit and original Rust geometry while proving whole-contour
+redundancy. Current previews stay unchanged. Correctness-safe actual-app integration and a
+separate Codex preview are required even if timings fail; no production adoption/merge.
+
 ## R07 untiled retained-path checkpoint
 
 [P05-R07](P05-R07.md) completed with a rejected candidate on
