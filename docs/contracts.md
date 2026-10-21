@@ -1,3 +1,10 @@
+## Current web migration amendment
+
+Decision242 and [MIG-C1](interfaces/web-gpu-editor.md) govern M01–M09. They explicitly extend
+the session-only web editor to raw pressure, Ink/pencils, layers, selection and Slice, direct
+WebGL and bounded geometry preparation. Older first-slice width/pressure/tool/topology limits
+are superseded for this migration. Native/storage contracts remain separate.
+
 Current scope clarification (163–165): one authoritative document mutation owner may serve multiple local editing clients. Scope interaction cancellation, viewport/selection and reviewed history per client. See architecture/incremental-collaboration.md and S02M. Future cloud conflicts initially use warning + explicit version-checked replacement. No custom command codec or new schema approved.
 
 # Shared contract catalog

@@ -1,3 +1,13 @@
+## Current priority — full vector migration (2026-10-21)
+
+Decision242 authorizes autonomous [M01](P05-M01.md) → [M02](P05-M02.md) → [M03](P05-M03.md) →
+[M04](P05-M04.md) → [M05](P05-M05.md) → [M06](P05-M06.md) → [M07](P05-M07.md) →
+[M08](P05-M08.md) → [M09](P05-M09.md) through2026-10-22 06:21:48UTC. Contracts/design are
+[MIG-C1](../docs/interfaces/web-gpu-editor.md)/[MIG-D1](../docs/design/web-gpu-editor.md).
+M01 is active; later tasks await frozen predecessors, not repeated owner permission.
+PR10 is verified merged at3eaaff8c07c3e15bdcbbbdb97c74031426fbe454. Older status statements
+below are historical. One task/branch/PR, parent-first stacked review, owner-only merges.
+
 # Current verification policy
 
 Task files retain the original plain Markdown format. Historical results in older briefs are not current pass claims. Quality links lead to maintained guidance, not archived run payloads. The owner selects E2E tests only; static type, lint, format, generation and build checks remain. Approval records cover their identified proposals, not automatically a newer document at a replacement link.
