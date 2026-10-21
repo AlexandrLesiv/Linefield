@@ -1,4 +1,4 @@
-use crate::boundary::{execute, id};
+use crate::boundary::{execute, execute_data, id};
 use crate::snapshots::{Mapping, Reply, SceneIds, State};
 use linefield_editor_engine::{Code, Engine};
 use wasm_bindgen::prelude::*;
@@ -53,8 +53,14 @@ pub fn memory_scene_ids(
     #[wasm_bindgen(unchecked_param_type = "bigint")] scene: JsValue,
     #[wasm_bindgen(unchecked_param_type = "bigint")] after: JsValue,
 ) -> Result<JsValue, JsValue> {
-    execute::<SceneIds>(|engine| {
-        (|| Ok(engine.scene_ids(id(owner)?, id(session)?, id(scene)?, id(after)?)))()
-            .unwrap_or_else(|code| code)
+    execute_data::<SceneIds>(|engine, data| {
+        match (|| engine.scene_list(id(owner)?, id(session)?, id(scene)?, id(after)?))() {
+            Ok(ids) => {
+                data.count.set(ids.len() as u64);
+                *data.ids.borrow_mut() = ids;
+                Code::Ok
+            }
+            Err(c) => c,
+        }
     })
 }

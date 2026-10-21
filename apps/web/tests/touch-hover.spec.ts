@@ -1,3 +1,4 @@
+import { testOrigin } from "./origin.ts";
 import { test, expect, webkit } from "@playwright/test";
 
 for (const scheme of ["light", "dark"] as const) {
@@ -34,7 +35,7 @@ test("WEB-TH02 WebKit touch feedback has no browser highlight or sticky hover sh
       viewport: { width: 840, height: 900 },
     });
     const page = await context.newPage();
-    await page.goto("http://127.0.0.1:65142/?preview=1");
+    await page.goto(`${testOrigin}/?preview=1`);
     const tile = page.locator(".new-cell > .new-tile");
     for (const control of [
       tile,

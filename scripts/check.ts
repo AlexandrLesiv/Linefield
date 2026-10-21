@@ -102,6 +102,7 @@ try {
   await checkSourceSize(join(root, "apps/web/tests"));
   await checkSourceSize(join(root, "apps/web/wasm/src"));
   await checkSourceSize(join(root, "crates/editor-engine/src"));
+  await checkSourceSize(join(root, "crates/editor-geometry/src"));
   console.log(JSON.stringify({ check: "script-source-size", status: "passed" }));
 } catch (error: unknown) {
   console.error(error instanceof Error ? error.message : "Tooling check failed");

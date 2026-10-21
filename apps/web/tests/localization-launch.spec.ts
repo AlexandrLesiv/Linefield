@@ -1,3 +1,4 @@
+import { testOrigin } from "./origin.ts";
 import { test, expect } from "@playwright/test";
 
 for (const locale of ["en", "en-US", "uk", "uk-UA", "de-DE"]) {
@@ -6,7 +7,7 @@ for (const locale of ["en", "en-US", "uk", "uk-UA", "de-DE"]) {
   }) => {
     const context = await browser.newContext({ locale });
     const page = await context.newPage();
-    await page.goto("http://127.0.0.1:65142/");
+    await page.goto(`${testOrigin}/`);
     const uk = locale.startsWith("uk");
     await expect(page.locator("html")).toHaveAttribute("lang", uk ? "uk" : "en");
     await expect(page.locator(".new-tile")).toHaveAccessibleName(
@@ -43,7 +44,7 @@ for (const languages of [
       Object.defineProperty(navigator, "languages", { get: () => values });
     }, languages);
     const page = await context.newPage();
-    await page.goto("http://127.0.0.1:65142/drawing/sample-0");
+    await page.goto(`${testOrigin}/drawing/sample-0`);
     await expect(page.locator(".back")).toBeFocused();
     const expected = languages[0] === "fr-FR" ? "uk" : "en";
     await expect(page.locator("html")).toHaveAttribute("lang", expected);
@@ -64,7 +65,7 @@ test("I18N-UK-002 browser Ukrainian labels and literal Unicode names survive nav
 }) => {
   const context = await browser.newContext({ locale: "uk-UA" });
   const page = await context.newPage();
-  await page.goto("http://127.0.0.1:65142/");
+  await page.goto(`${testOrigin}/`);
   await page.locator('[data-id="sample-0"] .more').click();
   await page.getByRole("menuitem", { name: "Перейменувати", exact: true }).click();
   const name = "Київ · e\u0301 · رسم · 🖊️";

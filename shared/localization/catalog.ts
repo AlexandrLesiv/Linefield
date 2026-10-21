@@ -3,6 +3,15 @@ export const catalog = {
   version: 1,
   sourceLanguage: "en",
   messages: {
+    "canvas.color": { kind: "plain", context: "Ink color", arguments: {} },
+    "memory.pan": { kind: "plain", context: "Canvas pan tool", arguments: {} },
+    "memory.rotate": { kind: "plain", context: "Canvas rotate tool", arguments: {} },
+    "memory.zoomIn": { kind: "plain", context: "Canvas zoom", arguments: {} },
+    "memory.zoomOut": { kind: "plain", context: "Canvas zoom", arguments: {} },
+    "memory.rotateLeft": { kind: "plain", context: "Canvas rotation", arguments: {} },
+    "memory.rotateRight": { kind: "plain", context: "Canvas rotation", arguments: {} },
+    "memory.resetView": { kind: "plain", context: "Reset canvas view", arguments: {} },
+    "memory.resetAngle": { kind: "plain", context: "Canvas rotation", arguments: {} },
     "memory.navigationUnavailable": {
       kind: "plain",
       context: "In-memory navigation failure",

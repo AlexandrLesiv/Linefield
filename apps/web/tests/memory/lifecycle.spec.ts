@@ -67,7 +67,7 @@ test("WMR-03/04 real WebGL context loss restores same attachment and supports Ba
   expect(await control.evaluate((value) => value.attributes)).toMatchObject({
     depth: false,
     antialias: false,
-    stencil: true,
+    stencil: false,
   });
   await control.evaluate((value) => value.extension.loseContext());
   await expect(canvas).toHaveAttribute("data-state", "displayLost");

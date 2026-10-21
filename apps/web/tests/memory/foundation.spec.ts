@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-test("WMR-01 real Wasm and CanvasKit empty canvas retains page owner through gallery", async ({
+test("WMR-01 real Wasm and direct WebGL2 canvas retains page owner through gallery", async ({
   page,
 }) => {
   const wasm: string[] = [];
@@ -13,14 +13,10 @@ test("WMR-01 real Wasm and CanvasKit empty canvas retains page owner through gal
   await expect(page.locator("[data-memory-canvas]")).toHaveAttribute("data-state", "ready");
   await expect(page.locator(".canvas-title")).toHaveText("Temporary drawing");
   await expect(page.locator(".canvas-notice")).toContainText("Not saved");
-  await expect(page.locator(".canvas-notice")).toContainText("not available yet");
-  for (const control of await page
-    .locator(".drawing-rail button, .drawing-context button, .drawing-context input")
-    .all()) {
-    await expect(control).toBeDisabled();
-  }
+  await expect(page.getByRole("button", { name: "Pen", exact: true })).toBeEnabled();
+  await expect(page.locator(".drawing-context input[type=range]")).toBeEnabled();
   expect(wasm.some((url) => url.includes("linefield_web_memory"))).toBe(true);
-  expect(wasm.some((url) => url.includes("canvaskit"))).toBe(true);
+  expect(wasm.some((url) => url.includes("canvaskit"))).toBe(false);
   await page.locator(".back").click();
   await expect(page.locator(".drawing-surface")).toHaveCount(0);
   await expect(page.locator(".new-tile")).toHaveAccessibleName("Resume temporary drawing");

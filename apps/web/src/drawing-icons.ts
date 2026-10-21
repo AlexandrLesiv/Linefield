@@ -1,5 +1,7 @@
 import { toolIcon, propertyIcon, strokeIcon } from "./drawing-controls.css.ts";
 const paths = {
+  pan: "M12 3v18M3 12h18M8 7l4-4 4 4M8 17l4 4 4-4M7 8l-4 4 4 4m10-8 4 4-4 4",
+  rotate: "M19 8a8 8 0 1 0 1 7M19 3v5h-5",
   undo: "M9 5 4 10l5 5M4 10h10a6 6 0 0 1 0 12",
   redo: "m15 5 5 5-5 5m5-5H10a6 6 0 0 0 0 12",
   pen: "M12 3 5 16l4 3h6l4-3L12 3Zm0 0v10m-3 8h6",

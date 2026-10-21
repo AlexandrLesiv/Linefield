@@ -1,3 +1,4 @@
+import { testOrigin } from "./origin.ts";
 import { test, expect } from "@playwright/test";
 test.beforeEach(async ({ page }) => {
   await page.goto("/");
@@ -144,7 +145,7 @@ test("WEB-G07 new blank drawing fills viewport", async ({ page }) => {
 test("WEB-G08 Ukrainian selected from browser language", async ({ browser }) => {
   const context = await browser.newContext({ locale: "uk-UA" });
   const page = await context.newPage();
-  await page.goto("http://127.0.0.1:65142");
+  await page.goto(`${testOrigin}`);
   await expect(page.locator("html")).toHaveAttribute("lang", "uk");
   await expect(page.locator(".new-tile")).toHaveAccessibleName("Новий малюнок");
   await context.close();

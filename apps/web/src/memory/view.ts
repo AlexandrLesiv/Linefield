@@ -19,7 +19,7 @@ export type Status =
   | "fatal";
 const messages = {
   loading: "memory.loading",
-  ready: "memory.foundation",
+  ready: "memory.lifetime",
   loadFailed: "memory.loadFailed",
   displayLost: "memory.displayLost",
   resourceUnavailable: "memory.resourceUnavailable",
@@ -32,7 +32,7 @@ export function createMemoryView(surface: HTMLElement, retry: () => void) {
   canvas.tabIndex = 0;
   canvas.setAttribute("role", "region");
   canvas.setAttribute("aria-label", t("memory.canvas"));
-  canvas.setAttribute("aria-description", t("memory.foundation"));
+  canvas.setAttribute("aria-description", t("memory.lifetime"));
   const overlay = element("div", overlayStyle);
   const message = element("div", messageStyle);
   const text = element("p", statusText);

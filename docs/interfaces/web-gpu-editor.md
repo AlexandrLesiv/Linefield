@@ -89,10 +89,15 @@ Rust derives source-local f64 curves. Disposable f32 pages are locally rebased a
 Rust-issued local-to-view mapping. A4096-world-unit partition target is not an endpoint clamp:
 split crossings with conservative support margins. Subdivision is resumable; output capacity
 or depth exhaustion yields another bounded unit, never a silently coarser curve.
-Target quarter device pixel error with a quarter logical-point ceiling, including curve-edge,
+Target quarter device pixel error with a quarter screen logical/CSS-point ceiling AFTER zoom, including curve-edge,
 pressure/radius interpolation, packing and transform arithmetic. Refine/rebase if uncertified;
 explicit numerical failure is not a passing approximation. Stable detail depends on effective
 scale, not pan position. Bounds include transformed thick support and fragment endpoints.
+
+GPU arithmetic certification must include fragment distance/radius evaluation and the operation
+error allowances in [GLSL ES3.00 section4.5.1](https://registry.khronos.org/OpenGL/specs/es/3.0/GLSL_ES_Specification_3.00.pdf),
+including its unspecified rounding mode and division/square-root accuracy. A CPU experiment
+using round-to-nearest f32 alone is not a guarantee for every conforming WebGL2 implementation.
 
 M03 worker input is≤132 source samples including neighbors,≤8KiB/job including metadata;
 result≤256KiB including bounds, with resumable geometry pages. At most8 in-flight jobs,
@@ -107,6 +112,19 @@ Direct WebGL2 analytic capsules. MAX coverage unions each logical stroke/source-
 source-over composites groups once in layer/paint order. Pencil remains nonopaque at opacity1.
 No cached image may change order, overlap, union identity or source appearance. Geometry cache
 misses cannot hide accepted strokes. Input acceptance never waits for a completed frame.
+
+M02 thin-taper AA refinement: evaluate the continuous envelope of the source discs' antialiased
+coverage, rather than applying the tiny-radius cap only to a numerically selected nearest disc.
+The reference nearest-disc choice can flip at near-containment and cause a large coverage pop.
+Keep equal-radius and cap-inactive behavior, the existing tiny-dab area treatment, and the stable
+analytic distance fast path. A bounded radius-domain search is permitted only when the subpixel
+cap binds; its explicit coverage-error budget and independent f64/GPU evidence are required.
+This is an intentional rendering robustness amendment, not a relaxed geometry tolerance or
+editing/source-curve change. Record the before/after case and conditional performance cost.
+For eight radius-domain bisections over an interval≤0.5device pixels, the exact-arithmetic
+coverage loss is≤1/256. Shader floating-point error and readback quantization are additional,
+separately reported terms; an alpha-value error is not a pixel-distance error. Bounded CPU/GPU
+conformance establishes evidence for the tested implementation, not every conforming driver.
 
 Soft monitoring targets:320MiB owned CPU,384MiB owned GPU. Exceeding targets alone never rejects
 input or sets document capacity. Report canonical/history/Wasm high-water/derived/worker/GPU
@@ -139,3 +157,34 @@ and group transforms are Rust-owned and independent of renderer warmth. M08 calc
 interval replacements from all accepted gesture samples; one gesture is one Undo, no-hit preserves
 redo. Shared-source siblings retain painter order with explicit union/blend identities.
 See MIG-D1 for controls and quality/web-gpu-editor for observable scenario requirements.
+
+## M02 concrete numerical/query refinement
+
+Continuous rotation uses bounded canvas-local f64 inverse offsets from the accepted sin/cos
+pair and its determinant, then the existing exact regional normalization of represented
+offsets. No global region flattening; account inverse/packing/projection error together.
+The logical-point ceiling is screen space after zoom, as in web-memory-numerics.md; it does
+not require0.25world-unit approximation at minimum zoom.
+
+Geometry queries address128-source-sample chunks with exact neighbor-dependent revisions.
+Page origin rebasing uses extent≤min(4096world units,4096/detail) to bound GPU intermediate
+arithmetic, as well as f32 packing. This is a disposable partition, never coordinate clipping.
+A bounded Rust subdivision/source continuation resumes without replaying prior capsules.
+Opaque cursors are owner/session/geometry/chunk/detail fenced; forged/stale/out-of-range
+continuations reject. Page identity reuses the same stroke/chunk/revision/detail/ordinal.
+Placement revalidates source dependence and sufficient detail for current view/backing.
+Discarded pages release their disposable descriptor leases; charge registry capacity.
+Initial M02 descriptor leases are bounded4096; host retained derived cache≤3072leases/16MiB,
+with≤512 transient chunk pages. A full forward scan streams uncached pages rather than
+evicting the next needed cached chunk. Unseen pages may remain as bounded disposable data
+for Undo/Redo reuse; evict them under admission pressure and revalidate source/detail before
+reuse. Retaining a page cannot retain canonical/history ownership or resurrect a source. Remaining
+geometry streams completely through the reserved buffers, releasing uncached leases. These
+working-cache choices are not document limits. M03 extends GPU retention/allocator reuse.
+
+Recognized trusted browser terminal ordering: matching primary mouse/pen capture loss with
+buttons0/button−1 may precede pointerup. The host freezes sample acquisition and waits for
+the matching trusted terminal release without a time cutoff. Genuine interruption, blur,
+pressed movement/fresh contact or capture transfer cancels through Rust; it never auto-commits.
+Late terminal events cannot affect a new interaction. This is acquisition ordering, not a
+second host editing policy. Synthetic event probes do not establish physical Wacom evidence.

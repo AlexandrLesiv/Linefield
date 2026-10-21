@@ -1,5 +1,11 @@
+import { gpuNumerics } from "./gpu-numerics.ts";
+import { gpuEdges } from "./gpu-edges.ts";
+import { gpuTaper } from "./gpu-taper.ts";
+import { terminalReserve } from "./gpu-terminal.ts";
+import { gpuContract } from "./gpu-contract.ts";
+import { loadRenderer } from "./renderer.ts";
 import { cleanupFailure } from "./cleanup.ts";
-import { loadEngine, loadRenderer } from "../../../src/memory/loader.ts";
+import { loadEngine } from "../../../src/memory/loader.ts";
 import { boundaryMatrix } from "./boundary.ts";
 import { calibration } from "./calibration.ts";
 import { resourceLifetimes } from "./lifetimes.ts";
@@ -45,3 +51,23 @@ action("Run resource lifetimes", async () => {
 action("Run bounded calibration", async () => calibration(await loadRenderer(), canvas));
 
 action("Run cleanup failure", async () => cleanupFailure(await loadRenderer(), canvas));
+
+action("Run GPU contract", async () => {
+  await loadEngine();
+  return gpuContract();
+});
+
+action("Run terminal reserve", async () => {
+  await loadEngine();
+  return terminalReserve();
+});
+
+action("Run GPU numerics", async () => {
+  await loadEngine();
+  return gpuNumerics();
+});
+action("Run GPU edges", async () => {
+  await loadEngine();
+  return gpuEdges(canvas);
+});
+action("Run GPU taper", async () => gpuTaper(canvas));

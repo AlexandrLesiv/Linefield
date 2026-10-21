@@ -58,6 +58,7 @@ export function drawingRange(property: Property, initial: number, update: () => 
     start = null;
     cancelled = true;
     render();
+    input.dispatchEvent(new Event("input", { bubbles: true }));
     record("adjustment-cancelled");
   };
   input.addEventListener("pointerdown", () => {

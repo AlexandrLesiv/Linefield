@@ -1,3 +1,4 @@
+import { testOrigin } from "./origin.ts";
 import { test, expect } from "@playwright/test";
 
 test("WEB-D2-04/05 pointer focus does not move a partially clipped range", async ({ page }) => {
@@ -88,7 +89,7 @@ test("WEB-D2-03/05 I18N-UK-002 keyboard values retain Ukrainian names in a Germa
   });
   const page = await context.newPage();
   try {
-    await page.goto("http://127.0.0.1:65142/drawing/sample-0");
+    await page.goto(`${testOrigin}/drawing/sample-0`);
     await expect(page.locator(".back")).toBeFocused();
     await expect(page.locator("html")).toHaveAttribute("lang", "uk");
     expect(await page.evaluate(() => navigator.language)).toBe("de-DE");

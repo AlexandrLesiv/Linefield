@@ -1,3 +1,4 @@
+import { testOrigin } from "./origin.ts";
 import { test, expect } from "@playwright/test";
 
 test("WEB-STYLE-01 component styling is local, independent of legacy query hooks", async ({
@@ -56,7 +57,7 @@ for (const scheme of ["light", "dark"] as const) {
       reducedMotion: "reduce",
     });
     const page = await context.newPage();
-    await page.goto("http://127.0.0.1:65142/");
+    await page.goto(`${testOrigin}/`);
     await page.locator('[data-id="sample-0"] .more').tap();
     await page.getByRole("menuitem", { name: "Rename", exact: true }).tap();
     const background = await page.locator(".rename-dialog").evaluate((node) => {

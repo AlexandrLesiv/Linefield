@@ -24,7 +24,12 @@ export function createNavigation(gallery: HTMLElement, onReturn: (restoreFocus: 
   }
   window.addEventListener("resize", settle);
   matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", settle);
-  async function move(from: DOMRect, to: DOMRect, imageFrom: DOMRect | null): Promise<void> {
+  async function move(
+    from: DOMRect,
+    to: DOMRect,
+    imageFrom: DOMRect | null,
+    stationary = false,
+  ): Promise<void> {
     const node = surface;
     if (!node || !origin) return;
     const token = ++generation;
@@ -44,6 +49,7 @@ export function createNavigation(gallery: HTMLElement, onReturn: (restoreFocus: 
       closing && origin.matches(".new-tile")
         ? getComputedStyle(origin).backgroundColor
         : getComputedStyle(node).getPropertyValue("--paper").trim(),
+      stationary,
     );
     try {
       await motion.finished;
@@ -98,7 +104,7 @@ export function createNavigation(gallery: HTMLElement, onReturn: (restoreFocus: 
       gallery.classList.add("away", away);
       document.body.classList.add("drawing-open", drawingOpen);
       record("opened");
-      await move(rect, viewport(), imageRect);
+      await move(rect, viewport(), imageRect, foundation);
       document.removeEventListener("focusin", trackFocus);
       window.removeEventListener("blur", trackFocus);
       if (surface === current && !closing) {
