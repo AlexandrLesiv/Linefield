@@ -12,6 +12,10 @@ pub enum Code {
     Unavailable,
     Disposed,
     Exhausted,
+    Capacity,
+    CoordinateOverflow,
+    NumericalCapacity,
+    StaleInteraction,
 }
 impl Code {
     pub fn label(self) -> &'static str {
@@ -28,6 +32,10 @@ impl Code {
             Self::Unavailable => "unavailable",
             Self::Disposed => "disposed",
             Self::Exhausted => "exhausted",
+            Self::Capacity => "capacity",
+            Self::CoordinateOverflow => "coordinate-overflow",
+            Self::NumericalCapacity => "numerical-capacity",
+            Self::StaleInteraction => "stale-interaction",
         }
     }
 }
@@ -65,9 +73,24 @@ pub struct Projection {
     pub metrics: Option<Metrics>,
     pub presented: bool,
     pub cpu_charge: usize,
+    pub resources: crate::Resources,
+    pub style: crate::document::Style,
+    pub view: crate::numerics::Viewport,
+    pub interaction: u64,
+    pub can_undo: bool,
+    pub can_redo: bool,
+    pub stroke_count: u64,
+    pub active_cancelled: bool,
 }
 #[derive(Default)]
 pub struct Engine {
+    pub(crate) pages: Vec<crate::scene::Descriptor>,
+    pub(crate) page_counter: u64,
+    pub(crate) continuation: Option<crate::geometry_cursor::Continuation>,
+    pub(crate) continuation_counter: u64,
+    pub(crate) document: crate::document::Document,
+    pub(crate) interaction_counter: u64,
+    pub(crate) active_cancelled: bool,
     pub(crate) owner_counter: u64,
     pub(crate) session_counter: u64,
     pub(crate) mapping_counter: u64,
@@ -79,6 +102,9 @@ pub struct Engine {
     pub(crate) sequence: u64,
 }
 impl Engine {
+    pub fn begin_command(&mut self) {
+        self.active_cancelled = false;
+    }
     pub fn projection(&self, code: Code) -> Projection {
         let mut value = self.current.unwrap_or(Projection {
             code,
@@ -92,9 +118,26 @@ impl Engine {
             metrics: None,
             presented: false,
             cpu_charge: 0,
+            resources: crate::Resources::default(),
+            style: self.document.style,
+            view: self.document.view,
+            interaction: 0,
+            can_undo: false,
+            can_redo: false,
+            stroke_count: 0,
+            active_cancelled: false,
         });
         value.code = code;
-        value.cpu_charge = size_of::<Self>();
+        value.resources = self.resources();
+        value.cpu_charge = value.resources.total();
+        value.style = self.document.style;
+        value.view = self.document.view;
+        value.interaction = self.document.gesture.map_or(0, |g| g.id);
+        value.can_undo = !self.document.busy() && self.document.visible > self.document.retired;
+        value.can_redo =
+            !self.document.busy() && self.document.visible < self.document.strokes.len();
+        value.stroke_count = self.document.visible as u64;
+        value.active_cancelled = self.active_cancelled;
         value
     }
     pub fn owner(&self, owner: u64) -> Result<(), Code> {

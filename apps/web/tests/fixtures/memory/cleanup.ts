@@ -1,5 +1,5 @@
 import type { CanvasKit } from "canvaskit-wasm";
-import { Presentation } from "../../../src/memory/presentation.ts";
+import { Presentation } from "./canvaskit/presentation.ts";
 export function cleanupFailure(kit: CanvasKit, canvas: HTMLCanvasElement) {
   const display = new Presentation(kit, canvas, 1024, 768);
   display.render();

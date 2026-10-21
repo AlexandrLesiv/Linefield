@@ -29,6 +29,9 @@ export type StateValue = ReplyValue &
       | "canBeginInk"
       | "strokeCount"
       | "cpuCharge"
+      | "canonicalCharge"
+      | "historyCharge"
+      | "derivedCharge"
     >
   >;
 export type MappingValue = ReplyValue &
@@ -44,6 +47,7 @@ export type MappingValue = ReplyValue &
       | "localX"
       | "localY"
       | "zoom"
+      | "angle"
     >
   >;
 function reply(value: Reply): ReplyValue {
@@ -88,6 +92,9 @@ export const bridge = {
         canBeginInk: value.canBeginInk,
         strokeCount: value.strokeCount,
         cpuCharge: value.cpuCharge,
+        canonicalCharge: value.canonicalCharge,
+        historyCharge: value.historyCharge,
+        derivedCharge: value.derivedCharge,
       }),
     ),
   mapping: (owner: bigint, session: bigint): MappingValue =>
@@ -105,6 +112,7 @@ export const bridge = {
         localX: value.localX,
         localY: value.localY,
         zoom: value.zoom,
+        angle: value.angle,
       }),
     ),
   metrics: (state: ReplyValue, sequence: bigint, width: number, height: number, backing: number) =>

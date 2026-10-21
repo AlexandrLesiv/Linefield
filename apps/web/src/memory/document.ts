@@ -1,6 +1,6 @@
-import { loadEngine, loadRenderer } from "./loader.ts";
+import { loadEngine } from "./loader.ts";
 import type { ReplyValue, Bridge } from "./bridge.ts";
-import { attachDisplay } from "./display.ts";
+import { attachGpuDisplay } from "./gpu-display.ts";
 import { createMemoryView } from "./view.ts";
 import type { MemoryView } from "./view.ts";
 import { diagnostic } from "./diagnostics.ts";
@@ -69,11 +69,9 @@ export function attachMemory(surface: HTMLElement): () => void {
       return;
     }
     try {
-      const kit = await loadRenderer();
       if (!valid() || !api || !current) return;
       const bridge = api;
-      releaseDisplay = attachDisplay(
-        kit,
+      releaseDisplay = attachGpuDisplay(
         view,
         bridge,
         current,

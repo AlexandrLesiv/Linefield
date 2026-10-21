@@ -76,3 +76,17 @@ Review actual changed states in light/dark/forced colors, English/Ukrainian, pse
 layout and100/200%text. Separate functional, visual, accessibility and physical-device evidence.
 Synthetic pen E2E does not certify actual Wacom timing or pressure. Native implementation is
 future scope; host behavior mappings must not duplicate Rust editing rules.
+
+M02 acquisition clarification: a recognized trusted capture-loss-before-release browser
+sequence freezes acquisition until matching terminal release, without a timeout; this is
+not treated as genuine gesture interruption. Blur/cancel/capture transfer still rolls back
+through Rust. Existing mouse/Wacom terminal-order handling must survive renderer migration.
+
+M02 entry-motion amendment: New/Resume establishes the final viewport-sized canvas and input
+mapping before the editor reports ready. Do not animate the interactive surface's position,
+size or transform during entry. Noninteractive chrome or tile presentation may fade; the
+minimal implementation skips geometry motion for this live route while preserving gallery
+mock-drawing motion and departure presentation after editor detachment. Animation completion
+cannot reclaim focus or change the accepted mapping. Real window/DPR remapping and genuine
+focus loss retain their shared cancellation rules. MIG-UI-01/03 must cover normal-motion
+first-ready drawing without a settling delay, as well as reduced-motion behavior.

@@ -43,13 +43,16 @@ run(cli, [
   "--out-dir",
   output,
 ]);
-const canvas = join(root, "apps/web/node_modules/canvaskit-wasm");
-const wasm = await readFile(join(canvas, "bin/canvaskit.wasm"));
-const hash = createHash("sha256").update(wasm).digest("hex");
-if (hash !== "bd669c88bd033eaf62d673103a42231a737c6d12e4cc99f8548b2784b5772430") {
-  throw Error("CanvasKit asset differs from approved stock 0.41.1");
+let hash: string | undefined;
+if (fixtures) {
+  const canvas = join(root, "apps/web/node_modules/canvaskit-wasm");
+  const wasm = await readFile(join(canvas, "bin/canvaskit.wasm"));
+  hash = createHash("sha256").update(wasm).digest("hex");
+  if (hash !== "bd669c88bd033eaf62d673103a42231a737c6d12e4cc99f8548b2784b5772430") {
+    throw Error("CanvasKit asset differs from approved stock 0.41.1");
+  }
+  await copyFile(join(canvas, "LICENSE"), join(output, "CANVASKIT-LICENSE"));
 }
-await copyFile(join(canvas, "LICENSE"), join(output, "CANVASKIT-LICENSE"));
 const engine = await readFile(join(output, "linefield_web_memory_bg.wasm"));
 await writeFile(
   join(output, "build.json"),
@@ -58,7 +61,8 @@ await writeFile(
       mode,
       rust: run("rustc", ["--version"]),
       wasmBindgen: "0.2.129",
-      canvasKit: "0.41.1",
+      renderer: fixtures ? "isolated-legacy-calibration" : "direct-webgl2",
+      ...(fixtures ? { canvasKit: "0.41.1" } : {}),
       engineSha256: createHash("sha256").update(engine).digest("hex"),
       canvasSha256: hash,
     },
@@ -78,5 +82,6 @@ await writeNotices(
     "--filter-platform",
     "wasm32-unknown-unknown",
   ]),
+  fixtures,
 );
 console.log(JSON.stringify({ action: "web-memory-build", mode, status: "passed" }));

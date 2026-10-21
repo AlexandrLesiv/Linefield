@@ -4,7 +4,10 @@ Decision242 authorizes autonomous [M01](P05-M01.md) → [M02](P05-M02.md) → [M
 [M04](P05-M04.md) → [M05](P05-M05.md) → [M06](P05-M06.md) → [M07](P05-M07.md) →
 [M08](P05-M08.md) → [M09](P05-M09.md) through2026-10-22 06:21:48UTC. Contracts/design are
 [MIG-C1](../docs/interfaces/web-gpu-editor.md)/[MIG-D1](../docs/design/web-gpu-editor.md).
-M01 is active; later tasks await frozen predecessors, not repeated owner permission.
+M01 is frozen at9e92c63 in [PR16](https://github.com/AlexandrLesiv/Linefield/pull/16).
+M02 is active on that frozen parent; later runtime tasks await frozen predecessors,
+not repeated owner permission. M05 material asset preparation is independently complete
+atd3d20e8 on its unpublished branch; M05 runtime integration still depends on M04.
 PR10 is verified merged at3eaaff8c07c3e15bdcbbbdb97c74031426fbe454. Older status statements
 below are historical. One task/branch/PR, parent-first stacked review, owner-only merges.
 

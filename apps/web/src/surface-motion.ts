@@ -28,6 +28,7 @@ export function moveSurface(
   elevatedShadow: string,
   targetShadow: string,
   targetBackground: string,
+  stationary = false,
 ) {
   const timing = {
     duration: reducedMotion() ? 0 : 360,
@@ -36,11 +37,15 @@ export function moveSurface(
   } satisfies KeyframeAnimationOptions;
   const shellFrames = (target: DOMRect) => [
     {
-      ...frame(from),
+      ...(stationary ? {} : frame(from)),
       borderRadius: closing ? appearance.radius : radius,
       backgroundColor: appearance.background,
     },
-    { ...frame(target), borderRadius: closing ? radius : "0px", backgroundColor: targetBackground },
+    {
+      ...(stationary ? {} : frame(target)),
+      borderRadius: closing ? radius : "0px",
+      backgroundColor: targetBackground,
+    },
   ];
   node.style.boxShadow = "none";
   const elevation = node.animate(

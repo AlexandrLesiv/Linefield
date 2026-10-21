@@ -4,6 +4,11 @@ import { platform, release, arch } from "node:os";
 import { test, expect } from "@playwright/test";
 for (const label of [
   "Run boundary matrix",
+  "Run GPU contract",
+  "Run terminal reserve",
+  "Run GPU numerics",
+  "Run GPU edges",
+  "Run GPU taper",
   "Run resource lifetimes",
   "Run bounded calibration",
   "Run cleanup failure",
@@ -13,7 +18,8 @@ for (const label of [
     page.on("pageerror", (error) => errors.push(error.message));
     await page.goto("/tests/fixtures/memory/index.html");
     await page.getByRole("button", { name: label, exact: true }).click();
-    await expect(page.locator("#result")).toContainText('"status":"passed"', { timeout: 150_000 });
+    await expect(page.locator("#result")).not.toHaveText("running", { timeout: 150_000 });
+    await expect(page.locator("#result")).toContainText('"status":"passed"');
     const result = await page.locator("#result").textContent();
     const build = await readFile("../../.build-cache/web-memory/e2e/build.json", "utf8");
     const manifest = await readFile("../../.build-cache/web-memory/e2e-site/.vite/manifest.json");

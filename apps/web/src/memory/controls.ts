@@ -29,10 +29,7 @@ export function applyFoundationControls(
   const width = ranges[0];
   if (width) width.input.max = "512";
   for (const range of ranges.slice(1)) range.label.remove();
-  context.append(
-    element("span", fixed, t("memory.opacityFixed")),
-    element("span", fixed, t("memory.smoothingOff")),
-  );
+  context.append(element("span", fixed, t("memory.opacityFixed")));
   for (const id of ["memory.redo", "memory.undo"] as const) {
     const control = button(t(id), drawingTool, () => {});
     control.disabled = true;

@@ -22,10 +22,6 @@ importers:
         version: 7.0.2
 
   apps/web:
-    dependencies:
-      canvaskit-wasm:
-        specifier: 0.41.1
-        version: 0.41.1
     devDependencies:
       '@playwright/test':
         specifier: 1.64.1
@@ -36,6 +32,9 @@ importers:
       '@vanilla-extract/vite-plugin':
         specifier: 5.2.6
         version: 5.2.6(@types/node@24.19.2)(esbuild@0.28.2)(vite@8.3.4(@types/node@24.19.2)(esbuild@0.28.2))
+      canvaskit-wasm:
+        specifier: 0.41.1
+        version: 0.41.1
       vite:
         specifier: 8.3.4
         version: 8.3.4(@types/node@24.19.2)(esbuild@0.28.2)

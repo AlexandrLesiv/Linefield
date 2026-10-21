@@ -1,7 +1,7 @@
 import { bridge } from "../../../src/memory/bridge.ts";
 import type { CanvasKit } from "canvaskit-wasm";
-import { Presentation, publishFrame } from "../../../src/memory/presentation.ts";
-import { stagingSurface } from "../../../src/memory/surface.ts";
+import { Presentation, publishFrame } from "./canvaskit/presentation.ts";
+import { stagingSurface } from "./canvaskit/surface.ts";
 import { pixelDigest } from "./geometry.ts";
 export async function resourceLifetimes(kit: CanvasKit, canvas: HTMLCanvasElement) {
   const created = bridge.create();

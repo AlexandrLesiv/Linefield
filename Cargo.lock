@@ -52,6 +52,13 @@ dependencies = [
 [[package]]
 name = "linefield-editor-engine"
 version = "0.1.0"
+dependencies = [
+ "linefield-editor-geometry",
+]
+
+[[package]]
+name = "linefield-editor-geometry"
+version = "0.1.0"
 
 [[package]]
 name = "linefield-web-memory"

@@ -1,5 +1,5 @@
 import type { CanvasKit, Path } from "canvaskit-wasm";
-import type { Resources } from "../../../src/memory/resources.ts";
+import type { Resources } from "./canvaskit/resources.ts";
 export const fixtureSeed = 0x4c463031;
 export interface Scene {
   name: string;

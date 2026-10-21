@@ -81,3 +81,50 @@ audits execution evidence. Each task reuses this table and adds feature-specific
 
 Live Slice is synchronous semantics in M08; its late completion in MIG-X04 is a disposable
 render/preparation result, not authorization of future background editing calculations.
+
+## Retained feature and optimization coverage
+
+This is a completeness checklist, not a pass record. Every row is pending implementation and
+fresh Linefield validation until a task records its concrete build/tests. The complete source
+manifest in docs/reuse-ledger.md identifies the reference; discarded experiments are excluded.
+
+| Capability / details to retain | Task / scenarios |
+| --- | --- |
+| Initial/coincident dabs, actual coalesced input, last-pressure changed release position, single pointer, safe terminal capture ordering | M02 / E01–02 |
+| Immutable256-sample blocks, raw pressure/style, stable sources/order/group IDs, redo ownership retirement | M02/M06 / E01–04 |
+| Corner-aware Hermite, exact endpoints, pressure extrema, no raw simplification; stable source intervals | M02/M08 / E01/E08/E10 |
+| Per-brush remembered widths, color/opacity capture including zero-alpha raw/history, pressure response chart/examples/live meter and fixed-width raw retention | M05 / E08 |
+| Spacepan, heldR rotation, V/S tools, frozen down-mode, continuous rotation/Shift snap, pointerzoom, explicit resets | M02/M07/M08 / E03/UI04 |
+| All layer commands, top-first order, last-layer protection, active hidden/locked guidance, stable rename focus, view-only selection without Undo | M06 / E09/UI05 |
+| Lasso partial/whole, concave/self-crossing even-odd, toggle hit set, Lasso more, cache-independent offscreen completeness | M07 / E09/UI06 |
+| Pick topmost tapered envelope, Shift toggle, empty clear, active-layer filter; exclude hidden/locked/packed-zero-opacity | M07 / E09 |
+| Live group move; corner scale about opposite corner; center rotation/Shift snap; minimum40screenpixel frame; keyboard transform; protected recheck | M07 / E09/UI06 |
+| Live Slice every accepted sample, width0–500, zero topology, active-layer filter, diameter/crosshair, original→final one-history transaction | M08 / E10/UI07 |
+| Slice cubic-source intersection, tangencies/multiple crossings, zero singlepointnoop, positive width centerline removal; not pixel erasure | M08 / E10 |
+| Fragment style/source/layer/order sharing; unchanged-transform siblings union; independently transformed siblings separate group at source paintposition | M08 / E07/E10 |
+| Warm/white/none paper, independent notebook/dots at24worldunits with smallzoom fade/area treatment; theme-independent artwork | M05 / E08/UI09 |
+| Paper-contact Hard/Soft, deposited-response interpolation/mips, fixed64worldunit grain, object transform resampling, width-derived loading limitation | M05 / E08 |
+| MAX self-union then source-over independent groups; no layer-crossinggroups; pencil never treated as opaqueInk | M02/M05/M06/M08 / E07–10 |
+| Field/IME shortcuts, blur/hidden/capture/resize/context cancellation; no active-tool autoswitch or autocommit | Every leaf / E02/X01/X04/X07 |
+| Existing gallery/navigation/themes/en+uk and persistent session-only notice; BackResume content/history/view/settings/selection | Every leaf / E04/E11/UI01/UI09 |
+
+| Retained performance mechanism | Task / verification |
+| --- | --- |
+|128-destination chunk neighborhoods/shared endpoints, visible-only preparation, actual capacity and changedtail-only rebuild | M02/M03 / E01/E06 |
+|Power-of-two DPR-aware detail, immediate refine/delayed coarsen, useful finer alternative, ULP stablekeys | M03 / E06 and coldzoom |
+|World chunk grid, rotated conservative queries, bounded oversized membership, painter-order restoration | M03 / E03/E06 |
+|Shared GPU pages/sizeclasses/contiguous batching, deferred validation/fences, recency eviction/pressure compaction, allocation rather than usedbyte accounting | M02/M03 / E05/E06 |
+|Broad overlap bounds plus chunk refinement, conservative budget-exhaustion split; layer/order/group safety | M04 / E07 |
+|Viewport fallback with scissored clear/composite, whole-group ownership, complete reserved streaming | M02 / E05/E07/X03 |
+|Sparse64pixeltiles, fine2segmentrouting,16spanhierarchy, endpointdisc/hullrejection, bounded highzoom selective intersection | M04 / E03/E07 |
+|Frozen projector, shared endpoints, repeatedrect reuse, stamped integerlookup/stagedarrays/power2divisors, exactsigned16routes with rangefallback | M04 / E07 plus CPUplanning/memory |
+|Dirty256pixelregions, exactintegerpan copy, compatible exactresolution documenttiles; invalidation on fractionalpan/zoom/rotation/content | M04 / E03/E07 |
+|Frontmostvisiblelayer translucent/pencil activeoverlay; middlelayer/opaqueInk uses safeorderedpath | M04/M05/M06 / E07–09 |
+|Geometry-only worker with copied bounded inputs, queue caps, stale fencing/watchdog, active synchronous path | M03 / E06/X02 |
+|Layer appearance versus metadata invalidation; rename/select/lock need not invalidate pixels | M06 / E09 |
+|Versioned prebuilt material response and rebuild-on-contextrestore; no synchronous firststroke bake | M05 / E05/E08 and coldreadiness |
+
+Substitution is allowed only with equal observable behavior and documented measured rationale.
+A mechanism omitted because its evidence is unfinished remains pending, not silently adopted.
+Current limitations: no persistence, per-layer opacity/groups/masks, arbitrary nonuniform
+transforms, text/shapes/images, physical paper wear/tilt simulation or post-M09 worker changes.

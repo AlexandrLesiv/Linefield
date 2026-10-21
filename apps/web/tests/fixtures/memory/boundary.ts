@@ -1,4 +1,4 @@
-import { diagnosticSnapshot } from "../../../src/memory/diagnostics.ts";
+import { diagnostic, diagnosticSnapshot } from "../../../src/memory/diagnostics.ts";
 import * as api from "#memory-bindings";
 import { bridge } from "../../../src/memory/bridge.ts";
 import type { ReplyValue } from "../../../src/memory/bridge.ts";
@@ -85,7 +85,10 @@ export function boundaryMatrix() {
   }
   check(bridge.read(owner).mapping === before.mapping && accessors === 0, "atomic invalid metrics");
   state = bridge.metrics(state, 1n, 1024, 768, 1);
-  check(state.code === "ok" && !bridge.read(owner).canBeginInk, "unpresented guard");
+  check(
+    state.code === "ok" && bridge.read(owner).canBeginInk,
+    "ink does not wait for presentation",
+  );
   const old = state;
   check(
     bridge.presented(state).code === "ok" && bridge.read(owner).canBeginInk,
@@ -96,7 +99,7 @@ export function boundaryMatrix() {
   state = bridge.metrics(state, 3n, 1024, 768, 1);
   check(state.presentation !== old.presentation, "same-size token fresh");
   check(
-    bridge.presented(old).code !== "ok" && !bridge.read(owner).canBeginInk,
+    bridge.presented(old).code !== "ok" && bridge.read(owner).canBeginInk,
     "old frame rejected",
   );
   check(bridge.presented(state).code === "ok", "new frame accepted");
@@ -133,8 +136,10 @@ export function boundaryMatrix() {
     "sequence fails closed",
   );
   check(bridge.leave(state).code === "ok", "sequence exhaustion cleanup");
-  for (let index = 0; index < 150; index++) bridge.read(replacement.owner);
+  for (let index = 0; index < 150; index++) bridge.leave(state);
+  diagnostic("display", "untrusted shader text /secret/path 123,456", state.session);
   const log = diagnosticSnapshot();
+  check(log.records.at(-1)?.outcome === "failed", "unknown display failure redacted");
   check(log.records.length === 100 && log.dropped > 0, "bounded diagnostics");
   for (const event of log.records) {
     check(

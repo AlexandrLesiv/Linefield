@@ -40,6 +40,9 @@ impl Engine {
         if let Err(code) = self.session(owner, session) {
             return code;
         }
+        self.cancel_current(Code::Ok);
+        self.pages.clear();
+        self.continuation = None;
         // Enter/update admission reserves this generation; cleanup cannot consume it early.
         self.advance();
         if let Some(value) = self.current.as_mut() {
@@ -55,6 +58,9 @@ impl Engine {
             return code;
         }
         self.current = None;
+        self.document = Default::default();
+        self.pages.clear();
+        self.continuation = None;
         self.disposed = owner;
         self.sequence = 0;
         Code::Ok
@@ -92,9 +98,7 @@ impl Engine {
         if self.current.is_some_and(|v| v.scene != scene) {
             return Code::StaleScene;
         }
-        if after != 0 {
-            return Code::Invalid;
-        }
+        let _ = after;
         Code::Ok
     }
 }

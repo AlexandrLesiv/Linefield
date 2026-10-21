@@ -1,5 +1,14 @@
 import type { Translation } from "./catalog.ts";
 export const en = {
+  "canvas.color": "Color",
+  "memory.pan": "Pan canvas",
+  "memory.rotate": "Rotate canvas",
+  "memory.zoomIn": "Zoom in",
+  "memory.zoomOut": "Zoom out",
+  "memory.rotateLeft": "Rotate canvas left 15°",
+  "memory.rotateRight": "Rotate canvas right 15°",
+  "memory.resetView": "Reset view",
+  "memory.resetAngle": "Reset canvas rotation",
   "memory.navigationUnavailable":
     "Navigation could not finish. Your drawing remains in this tab’s memory.",
   "memory.title": "Temporary drawing",

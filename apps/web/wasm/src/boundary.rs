@@ -11,6 +11,11 @@ pub struct Data {
     pub value: Cell<Projection>,
     pub consumed: Cell<bool>,
     _reserved: Vec<u8>,
+    pub ids: RefCell<Vec<u64>>,
+    pub count: Cell<u64>,
+    pub style: Cell<linefield_editor_engine::Style>,
+    pub page: RefCell<Option<linefield_editor_engine::Page>>,
+    pub placement: Cell<linefield_editor_engine::Placement>,
 }
 impl Drop for Data {
     fn drop(&mut self) {
@@ -36,7 +41,23 @@ pub fn number(value: JsValue) -> Result<f64, Code> {
         .filter(|v| v.is_finite())
         .ok_or(Code::Invalid)
 }
+pub fn pointer_id(value: JsValue) -> Result<u64, Code> {
+    let n = number(value)?;
+    if n.fract() != 0.0 || !(0.0..=u32::MAX as f64).contains(&n) {
+        Err(Code::Invalid)
+    } else {
+        Ok(n as u64)
+    }
+}
 pub fn execute<S>(operation: impl FnOnce(&mut Engine) -> Code) -> Result<JsValue, JsValue>
+where
+    S: From<Slot> + Into<JsValue>,
+{
+    execute_data::<S>(|engine, _| operation(engine))
+}
+pub fn execute_data<S>(
+    operation: impl FnOnce(&mut Engine, &Data) -> Code,
+) -> Result<JsValue, JsValue>
 where
     S: From<Slot> + Into<JsValue>,
 {
@@ -58,12 +79,18 @@ where
         value: Cell::new(value),
         consumed: Cell::new(false),
         _reserved: reserved,
+        ids: RefCell::new(Vec::new()),
+        count: Cell::new(0),
+        style: Cell::new(Default::default()),
+        page: RefCell::new(None),
+        placement: Cell::new(Default::default()),
     });
     LIVE.set(true);
     let result = S::from(Slot(Rc::clone(&data))).into();
     ENGINE.with(|engine| {
         if let Ok(mut engine) = engine.try_borrow_mut() {
-            let code = operation(&mut engine);
+            engine.begin_command();
+            let code = operation(&mut engine, &data);
             data.value.set(engine.projection(code));
         }
     });

@@ -21,3 +21,44 @@ The selected donor snapshot has no declared package license or LICENSE/NOTICE fi
 owner-directed transfer of the pinned authored reference, not assumed MIT/Apache licensing.
 Discarded Vello vendor licenses do not apply to these shaders/material. Inspect each adapted
 source for actual third-party provenance and preserve required notices if discovered.
+
+## M02 — shared Ink and direct WebGL baseline
+
+Owner-directed selective transfer from the complete5207 manifest above; no external donor
+runtime/build dependency. No license is invented for the authored donor snapshot. Source files
+inspected contain no additional third-party attribution notice. Existing npm/Cargo dependencies
+retain generated dependency notices. This leaf does not import the donor's unit suites/pass claims.
+
+| Pinned source / SHA-256 | Adapted destination / purpose |
+| --- | --- |
+| core/src/geometry.rs / d34d4c657313822295e74a7b995ff39ce0da7c01e5426f3c0064f713b0ab9e3f | crates/editor-geometry: Hermite tangents, corner threshold, linear endpoint radii and conservative edge error |
+| src/ink-shaders.ts / 5c659d2b290d97129ad8d71b37e45e333668f36f8ebe78f1e3e3cb01bd7ca422 | apps/web/src/memory/gpu-shaders.ts: analytic tapered capsules, interval-overlap AA and tiny-dab area |
+| src/coverage-renderer.ts / 9de059d6f345b1e2790be289b5a282dd1c3ac2784d0a28e79223ed532c30ddf5 | gpu-renderer.ts / gpu-scissor.ts: group MAX coverage, painter-order source-over and bounded scissor support |
+| src/gpu-arena.ts / dcdb519c42f62f446b96ce8aa3e4634139d4c7f77a07682b592311f5601b5e28 | gpu-allocation.ts: two retained bounded streaming buffers; newly authored failure cleanup |
+
+Deliberate M02 changes: canonical raw/camera arithmetic stays regional f64 Rust; all generated
+Wasm commands validate caller values. Geometry has a resumable fixed subdivision stack rather
+than the donor's depth-five unconditional acceptance. Pages are locally rebased, certified for
+the effective view and leased with bounded/accounted metadata. Coherent staging is published
+only after the whole baseline frame completes. Ink initialization does not bake pencil material.
+Cross-span simplification, worker preparation, resident geometry/atlas optimizations and remaining
+tools are sequenced later in M03–M09; this baseline does not claim their acceptance.
+
+Existing Linefield R08 at37834daa64eaaefb5863201dbe8c96a43a9c6424 supplied regional
+numerics/normalize,magnitude,round.rs and the reviewed pen-input/pen-contact/pointer-release
+terminal-ordering policy. The new thin acquisition adapter preserves terminal pressure and
+recognized trusted lostcapture-before-up behavior without a timeout. No old CanvasKit display
+orchestration is adopted. Legacy CanvasKit loading remains only in isolated test fixtures.
+
+Fresh evidence is recorded in P05-M02/quality/web-gpu-editor: MIG-INK-01/02 and MIG-VIEW-01
+are actual browser pointer/keyboard E2E; checked-boundary exploration is separately labeled.
+Physical Wacom timing and native-platform evidence remain explicit gaps.
+
+M02 numerical repair deliberately replaces the donor difference-of-squares distance with a
+stable perpendicular/axial tapered-disc union distance. Tiny-dab area treatment stays intact.
+For subpixel tapered strokes, a continuous union-of-AA-disc envelope replaces the donor
+nearest-disc radius cap, whose near-containment classification could abruptly change coverage.
+The conditional eight-step radius search has an exact-arithmetic coverage loss bound of1/256;
+floating-point error and RGBA8 quantization are separately checked, not geometric tolerances.
+The bounded GPU reference uses independent f64 maximization and includes equal-radius,
+cap-inactive and reversed-taper controls. CPU/GPU corpora do not prove every GLSL implementation.

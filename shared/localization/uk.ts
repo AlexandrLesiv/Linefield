@@ -1,5 +1,14 @@
 import type { Translation } from "./catalog.ts";
 export const uk = {
+  "canvas.color": "Колір",
+  "memory.pan": "Перемістити полотно",
+  "memory.rotate": "Обертати полотно",
+  "memory.zoomIn": "Збільшити масштаб",
+  "memory.zoomOut": "Зменшити масштаб",
+  "memory.rotateLeft": "Повернути полотно ліворуч на 15°",
+  "memory.rotateRight": "Повернути полотно праворуч на 15°",
+  "memory.resetView": "Скинути вигляд",
+  "memory.resetAngle": "Скинути поворот полотна",
   "memory.navigationUnavailable":
     "Не вдалося завершити перехід. Малюнок залишається в пам’яті цієї вкладки.",
   "memory.title": "Тимчасовий малюнок",

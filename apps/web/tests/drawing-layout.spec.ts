@@ -1,3 +1,4 @@
+import { testOrigin } from "./origin.ts";
 import { test, expect, webkit } from "@playwright/test";
 const variants = [
   { name: "desktop-light-en", width: 1440, height: 1000, locale: "en-US", scheme: "light" },
@@ -14,7 +15,7 @@ for (const variant of variants) {
       colorScheme: variant.scheme,
     });
     const page = await context.newPage();
-    await page.goto("http://127.0.0.1:65142/drawing/sample-0");
+    await page.goto(`${testOrigin}/drawing/sample-0`);
     await expect(page.locator(".back")).toBeFocused();
     await expect(page.locator("html")).toHaveAttribute("lang", variant.locale.slice(0, 2));
     for (const control of await page
@@ -84,7 +85,7 @@ test("WEB-D2-02/06 WebKit touch and blur/resize cancellation", async () => {
     hasTouch: true,
     locale: "uk-UA",
   });
-  await page.goto("http://127.0.0.1:65142/drawing/sample-0");
+  await page.goto(`${testOrigin}/drawing/sample-0`);
   await expect(page.locator(".back")).toBeFocused();
   await page.getByRole("button", { name: "Лінія", exact: true }).tap();
   await expect(page.getByRole("slider")).toHaveCount(2);
