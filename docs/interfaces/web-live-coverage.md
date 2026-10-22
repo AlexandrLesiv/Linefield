@@ -132,8 +132,11 @@ candidate work retains existing producer/queue/task/submission bounds. No fold/a
 wait on input callbacks, unbounded catch-up loop or per-stroke End queue.
 
 During active C, keep L/F/T. When C is obsolete, discard its contribution; when an installed
-validated Prefix includes C, retire its masks without folding twice. For ended C, stop hidden T,
-capture a DisplayOnly anchor and compose transformed B plus MAX(L,F) once in C's frozen style
+validated Prefix includes C, retire its masks without folding twice. After End with no newer
+active source, retain C and finish stable coverage through the existing single2ms live turn
+alongside candidate work. Do not fold away an empty or unfinished live image merely because End
+arrived before its first visible publication. A newer active D/E requires the bounded handoff:
+stop hidden T, capture a DisplayOnly anchor and compose transformed B plus MAX(L,F) once in C's frozen style
 into distinct X.RGB. Clear only RGB. Swap B/X and transfer the anchor after issue, then release
 old masks/anchors and initialize the latest active source E. S/G remain intact. If C ended and
 D began/ended before any render, fold only materialized C, record cutoffD and start E; candidate
@@ -181,8 +184,12 @@ erase D. During a view gesture retain B/S/ended-live anchors; at most one next g
 may wait in G. Do not restart a candidate per move. Source-invalidating history follows existing
 historical-display/reconstruction rules, not source-valid sealed reuse.
 
-At the first CanFold turn consume the visible completed graph into X at a fresh DisplayOnly
-anchor, excluding active E. With no surviving active owner, B/X may swap after ended masks are
+At the first eligible CanFold turn consume the visible completed graph into X at a fresh DisplayOnly
+anchor, excluding active E. If S excludes ended C, no newer active source needs the masks and C's
+stable coverage is unfinished, retain that sealed graph and advance C through the same single2ms
+live turn first. Consumption becomes eligible after stable completion, certified inclusion or a
+new active-source handoff; End alone must not discard unpublished ink through this path either.
+With no surviving active owner, B/X may swap after ended masks are
 consumed. With active E, do not swap: copy X.RGB back into physical B.RGB, blending off, both
 samplers bound to X, alpha writes off. This preserves physical L/F/T, including T in X and L
 in B. Display E once afterward. The extra full-surface copy is real work and must be measured.
