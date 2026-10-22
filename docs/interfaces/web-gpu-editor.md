@@ -165,19 +165,17 @@ failure streams complete output; context loss invalidates GPU leases without era
 Keep staging/mask/base/overlay capacity within the composite budget. Measure cold work, uploaded
 bytes, combined UI frame and visible reveal; transformed old pixels alone are not a reveal pass.
 
-M03 format amendment with transactional tail replacement: three R8 masks store scalar MAX
-coverage for live stable, visible tail and hidden replacement tail; two RGB8 targets hold
-opaque base/staging color. Candidate reconstruction remains mutually exclusive with the live
-accumulator in this narrow repair. Preserve 8-bit precision and ordered group coverage; future
-transparent layer intermediates still require alpha. For P backing pixels (at most 8,388,608),
-target payload is 9P bytes, at most 72 MiB. When RGB8/R8 fails, dispose the complete partial
-attempt before the three-RGBA8 fallback: existing color targets retain stable/front alpha,
-and a dedicated third alpha plane holds the hidden replacement. This uses 12P, at most 96 MiB.
-Check framebuffer completeness and failure cleanup for both paths.
+M03 independent live/candidate coverage follows the current
+[handoff contract](web-live-coverage.md). Three RGB8 colors hold display/candidate/fold scratch;
+four R8 masks hold candidate group/live stable/visible tail/hidden replacement. At most8,388,608
+backing pixels gives13P bytes,104MiB. Dispose the complete failed normal attempt before the
+four-RGBA8 packed fallback:16P,128MiB. Live alpha owners remain physical across color-role swaps.
+Preserve8-bit coverage and ordered group blending; future transparent layers still require alpha.
+Check framebuffer completeness, sampler/write separation and failure cleanup for both paths.
 
 Keep requested owned target and geometry allocations together within 192 MiB. Geometry,
 including the 256 KiB streaming reserve, is limited to min(128 MiB,192 MiB−target payload):
-120 MiB at maximum normal backing, 96 MiB for packed fallback. Count unique allocations,
+88 MiB at maximum normal backing, 64 MiB for packed fallback. Count unique allocations,
 unused slab capacity and retiring generations; optional pixel caches consume this same total.
 Retire old submitted work asynchronously before replacing a full generation, or subtract its
 still-charged capacity before growth. No blocking GPU wait on input callbacks. Context loss
@@ -446,19 +444,17 @@ than resurrecting its old terminal pixels. Clear obsolete front before covers/pr
 claim completeness; final promotion uses canonical stable only. A failed replacement keeps the
 previous valid front; cancelled/incompatible owner cleanup removes its entire contribution.
 
-When the live owner C ends, retire only its hidden back construction, retain its visible front
-and finish canonical stable C. Any following independent group D uses the now-free dedicated
-back target as scratch, preserving source-over group order. Never clear C's front for D or MAX
-their independent coverage together. Shared single-interaction admission excludes simultaneous
-C back construction and D scratch use. Test partial back at End followed by immediate D,
-translucent overlap and camera/cancellation in both format paths. D's existing immediate-cache
-capacity limitation remains separate; this refinement does not certify oversized D progress.
+When the live owner C ends, retire hidden back construction but preserve materialized stable/front
+coverage until the [independent handoff](web-live-coverage.md) folds or includes it. The next
+source receives independent streamed live authority; never MAX different strokes or rely on an
+unbounded retained-page queue. Candidate G remains separate throughout the handoff. Test partial
+back at End followed by immediate D, translucent overlap and camera/cancellation in both formats.
 
 After End, retained displayed coverage stays in its fixed anchor and follows Rust camera
 transforms until canonical promotion. Finer detail or newly exposed coverage remains provisional
 until the strict replacement path covers it. Context/metrics/fatal failures retain existing
-recovery and cancellation behavior. Candidate/live exclusion is unchanged: this narrow fix does
-not close the separate historical replacement plus oversized new-stroke cache-capacity issue.
+recovery and cancellation behavior. Independent coverage replaces candidate/live exclusion;
+its source, viewport-fold, sealed provisional layer and receipt bounds are specified separately.
 
 MIG-WORKER-33 requires the actual large-backing, 5%/wide-pen reproduction, meaningful intermediate
 pixels, exact pressure parity, continuous-input generation advancement, captured-neighbor tests,

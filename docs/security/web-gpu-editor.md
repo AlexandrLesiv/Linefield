@@ -58,6 +58,24 @@ Test distinct sampler/write textures, partial allocation cleanup and stale callb
 Cancel/End/pan/resize/restore/fatal. Healthy release disposes child descriptors; terminal-fatal
 host cleanup must never call the poisoned editor, including through wrapper finalizers.
 
+The current [independent live/candidate handoff](../interfaces/web-live-coverage.md) extends
+SEC-03/09/13 with Prefix/LiveSource/DisplayOnly authority and three checked named operations.
+Historical cutoff, semantic inclusion and GPU-complete pixels are distinct. Wrong proof kind
+must reject even at equal counts; source invalidation is permanent, while pan cancellation
+preserves pregesture completed coverage. The current query is bounded in document size and
+cannot secretly construct a full projection or resource sum. Recapture requires Rust-certified
+immutable source/view equivalence plus host validation of the unchanged GPU generation.
+
+Target payload is now13P/16P, with residual geometry and retiring generations still within192MiB.
+Fixed frame/tail storage is at most3072 Rust bytes and1024 host payload bytes, with at most8
+combined receipts and2 tails. Host object overhead remains separately accounted. Check both
+allocation orders, full-slot deferral, partial format cleanup and source-preserving failure.
+Sealed S cannot mutate until its visible graph is consumed. Packed active-E RGB copyback must
+preserve every physical L/F/T alpha plane and avoid sampler/write aliases. No rollback is
+claimed after ambiguous GPU issue; use bounded recovery, never duplicate group source-over.
+Test accepted/rejected gesture folds, late completions, equivalent-prefix negative controls,
+terminal no-more-exports and incomplete offscreen reveal without false exact acknowledgement.
+
 ## Bounded developer diagnostics
 
 Decision243 authorizes P05-DIAG01's bounded opt-in diagnostic UI/export (CT-06/07,

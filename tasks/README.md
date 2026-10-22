@@ -14,8 +14,9 @@ The migration sequence is [M01](P05-M01.md) → [M02](P05-M02.md) → [M03](P05-
 M01 is frozen at9e92c63 in [PR16](https://github.com/AlexandrLesiv/Linefield/pull/16).
 M02 runtime is frozen at1157aeba in draft [PR17](https://github.com/AlexandrLesiv/Linefield/pull/17).
 M03 is active in [draft PR18](https://github.com/AlexandrLesiv/Linefield/pull/18) on that frozen
-runtime; its Undo-continuity preview remains available on port65177. Active-stroke continuity,
-remaining capacity/performance work and exact-build checks are pending. Later tasks await
+runtime; its Undo-continuity preview remains available on port65177. The active-tail checkpoint
+on65179 and bounded cold-admission checkpoint have scoped passing checks/reviews; historical
+large-stroke capacity and full performance remain open. Later tasks await
 frozen predecessors, not repeated permission. M05 material asset preparation is independently complete
 atd3d20e8 on its unpublished branch; M05 runtime integration still depends on M04.
 PR10 is verified merged at3eaaff8c07c3e15bdcbbbdb97c74031426fbe454. Older status statements
