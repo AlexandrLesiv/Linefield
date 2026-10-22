@@ -15,10 +15,11 @@ M01 is frozen at9e92c63 in [PR16](https://github.com/AlexandrLesiv/Linefield/pul
 M02 runtime is frozen at1157aeba in draft [PR17](https://github.com/AlexandrLesiv/Linefield/pull/17).
 M03 is active in [draft PR18](https://github.com/AlexandrLesiv/Linefield/pull/18) on that frozen
 runtime; its Undo-continuity preview remains available on port65177. The active-tail checkpoint
-on65179 and bounded cold-admission checkpoint have scoped passing checks/reviews; historical
-large-stroke capacity and full performance remain open. Later tasks await
-frozen predecessors, not repeated permission. M05 material asset preparation is independently complete
-atd3d20e8 on its unpublished branch; M05 runtime integration still depends on M04.
+on65179 and bounded cold-admission checkpoint have scoped passing checks/reviews. Independent
+live coverage a1415304 passes the scoped large-stroke capacity/failure checks and designer review
+on65183; indexed visibility and full performance remain open. Later tasks await frozen
+predecessors, not repeated permission. M05 pencil and paper-grain asset preparation is independently
+complete atd6b84a9 on its unpublished branch; M05 runtime integration still depends on M04.
 PR10 is verified merged at3eaaff8c07c3e15bdcbbbdb97c74031426fbe454. Older status statements
 below are historical. One task/branch/PR, parent-first stacked review, owner-only merges.
 

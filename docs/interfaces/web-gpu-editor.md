@@ -64,6 +64,26 @@ unvalidated typed-array coercion. Ordinary fixed ArrayBuffers only; reject share
 backing. Copy snapshots to host ownership; release one outstanding boundary snapshot in finally
 before the next command. Read-page cursors are revision-scoped, not mutable editor handles.
 
+M03 classifies only `memoryFramePlacement` and `memoryFramePreparationCoverage` as read-only
+queries through the existing bounded query boundary. Their shared engine methods and helpers
+must remain read-only; preserve all owner/session/frame/source/detail/coverage and numerical
+checks. Their snapshots expose no resource-charge getters, so they need not recompute full
+resource projections. Ordinary State/resource reads and every mutation retain their current
+boundary and accounting. This is not authority to reclassify other apparent reads.
+
+Like existing visibility/current-coverage queries, these two queries preserve the
+`activeCancelled` latch on both success and typed rejection. They do not repeat cancellation,
+mutate history or acknowledge pixels. The next ordinary command resets the latch before its
+operation as before. This is an explicit observable amendment from their prior ordinary-call
+behavior, even though current host placement/coverage consumers do not read that getter.
+Keep the existing single-snapshot, LIVE/BUSY, pre-operation reservation/wrapper allocation,
+one-use matrix copy, destructor and poisoned-export protections unchanged. Required browser
+boundary evidence covers positive cancellation, successful/rejected queries (including invalid
+JS identity types), unchanged common identities and source/history, ordinary-command reset even
+on typed rejection, stale/incomplete/retired coverage, placement rejection, snapshot contention
+and terminal failure. Assert the latch before an ordinary State read can reset it. Freeze this narrow delta and
+compare the same warm/cold workload; fewer resource walks alone is not a performance pass.
+
 M02 adds named style/begin/append/end/cancel/Undo/Redo, pan begin/update/end, zoomAt/rotateAt,
 scene IDs, stroke snapshot and geometry-page exports to existing lifecycle/metrics APIs.
 Begin captures mapping/pointer; append includes interaction, base mapping and exact first index.
