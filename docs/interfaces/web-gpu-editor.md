@@ -472,7 +472,11 @@ resume a complete conservative scan. Camera-dependent worker planning remains ex
 
 Named `memoryFrameVisibility(owner,session,scene,frame,predecessor,cursor)` returns a generated snapshot
 with code, equal-length strokes/chunks/revisions arrays of at most128 entries, an opaque next
-cursor and done. Zero starts a query. Each call visits at most512 nodes and constructs at most
+cursor and done. Bounded scalar metadata includes visitedNodes, constructedHulls, indexBytes,
+cursorBytes and replyBytes. Report actual allocated capacity, not logical entry counts; embedded
+cursor storage is a subset of Engine overhead, never an additional derived-memory charge.
+Heap storage and copied host arrays remain charged to their actual owner until released.
+Zero starts a query. Each call visits at most512 nodes and constructs at most
 four missing chunk hulls; empty progress is valid. Include this CPU work in the host's existing
 cumulative2ms/1024-transition budget and yield an actual task. Read captured source positions
 directly rather than repeatedly scanning the beginning of the document for every page.
