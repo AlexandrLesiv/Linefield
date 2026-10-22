@@ -77,6 +77,15 @@ Cold-history latency, secondary immediate geometry uploads, active-pan fidelity,
 delayed coarsening, contiguous draw batching and complete recency behavior require their own
 successful evidence before M03 completion. A warm-refill functional pass does not close them.
 
+The isolated memory fixture lane currently has four unresolved failures: fatal engine trap
+followed by Back leaves the drawing surface mounted; GPU contract traversal reaches its
+1,000,000-page bound; GPU edge error is0.8001525320174778; taper coverage differs by1 at the
+first sampled boundary. Boundary matrix, terminal reserve, numerical checks, resource lifetimes,
+bounded calibration and cleanup pass in that run. This is not a numerical/recovery lane pass.
+Before assigning fixture drift or runtime regression, trace fatal teardown completion, inspect
+the repeated page cursor and compare each failed coverage sample with its renderer state and
+reference expectation. Preserve the failing inputs and bounds; do not loosen tolerances.
+
 Numerical boundary corpus includes min/max width/scale/zoom/DPR, far regions/crossings,
 large radii/clipping and pressure extrema. Validate total painted-edge error, not only centerline.
 Queue/resource tests include repeated Back/Resume, resize, context recovery, cache eviction,
