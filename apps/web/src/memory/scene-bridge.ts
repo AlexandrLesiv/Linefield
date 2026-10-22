@@ -2,14 +2,15 @@ import * as api from "#memory-bindings";
 import { editorHealthy } from "./editor-health.ts";
 import type { ReplyValue } from "./bridge.ts";
 import { take } from "./edit-bridge.ts";
+import { strokeCountObservation } from "./performance-observation.ts";
 export const scene = {
   ids: (s: ReplyValue, after: bigint) =>
     take(
       () => api.memorySceneIds(s.owner, s.session, s.scene, after),
       (v) => ({ code: v.code, done: v.done, ids: v.ids }),
     ),
-  stroke: (s: ReplyValue, id: bigint) =>
-    take(
+  stroke: (s: ReplyValue, id: bigint) => {
+    const value = take(
       () => api.memoryStroke(s.owner, s.session, s.scene, id),
       (v) => ({
         code: v.code,
@@ -17,7 +18,10 @@ export const scene = {
         active: v.active,
         color: [v.red, v.green, v.blue, v.opacity],
       }),
-    ),
+    );
+    if (value.code === "ok") strokeCountObservation(s, id, value.count, value.active);
+    return value;
+  },
   page: (
     s: ReplyValue,
     id: bigint,

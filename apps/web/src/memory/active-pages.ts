@@ -3,6 +3,7 @@ import { preparation } from "./preparation-bridge.ts";
 import { scene } from "./scene-bridge.ts";
 import type { ReplyValue } from "./bridge.ts";
 import type { PreparedPage } from "./prepared-cache.ts";
+import type { PreparedCache } from "./prepared-cache.ts";
 import { geometryMetrics as metrics } from "./geometry-metrics.ts";
 type Entry = {
   revision: bigint;
@@ -59,11 +60,22 @@ export class ActivePages {
       if (e.used !== this.frame || this.tickets >= 48) this.drop(key, e);
     }
   }
-  *read(stroke: bigint, count: bigint, detail: number): Generator<PreparedPage> {
+  *read(
+    stroke: bigint,
+    count: bigint,
+    detail: number,
+    completed?: PreparedCache,
+  ): Generator<PreparedPage> {
     for (let chunk = 0n; chunk < (count + 127n) / 128n; chunk++) {
       const key = `${stroke}:${chunk}`,
         revision = count < (chunk + 1n) * 128n + 1n ? count : (chunk + 1n) * 128n + 1n;
       let entry = this.entries.get(key);
+      const retained = completed?.completed(stroke, revision, detail, chunk);
+      if (retained) {
+        if (entry) this.drop(key, entry);
+        yield* retained;
+        continue;
+      }
       if (
         entry &&
         (entry.revision !== revision ||
@@ -89,6 +101,7 @@ export class ActivePages {
           return;
         }
         const started = performance.now();
+        metrics.immediatePreparations++;
         const input = preparation.begin(this.state(), stroke, chunk, revision, detail);
         if (input.code !== "ok") throw Error(input.code);
         if (!input.token) continue;
@@ -108,6 +121,7 @@ export class ActivePages {
         this.spent += performance.now() - started;
       }
       entry.used = this.frame;
+      if (entry.done) metrics.immediateHits++;
       yield* entry.pages;
       while (
         entry.job &&

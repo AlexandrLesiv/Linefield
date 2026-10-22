@@ -68,6 +68,8 @@ Record exact build and actual outcomes in the task; this mapping alone is not a 
 | MIG-WORKER-14 / pan-fidelity.observation.spec.ts | Settled committed receipt → integer pan while geometry worker starts are held → same-camera rebuilt receipt → release: compare exact shifted interior pixels across provisional/accurate/ended states |
 | MIG-WORKER-15 / cancellation.observation.spec.ts | Confirmed withheld real worker reply → Undo → matching current receipt acknowledgement within500ms; joined candidate has zero queue/job/copy charges; deliver obsolete reply, then fresh rebranch/Undo/Redo and repeat without resurrecting artwork |
 | MIG-WORKER-16 / pending-fatal.fixture.spec.ts | Confirmed pending candidate → real metrics trap or explicitly injected command/getter/destructor exception → immediate worker teardown, Back, late reply, forced GC and Resume: no subsequent canonical-editor export, fatal tombstone retained; positive export/call controls prevent vacuous proof |
+| MIG-WORKER-17 / control-work.observation.spec.ts | Begin/End positively change toolbar availability; unchanged accepted append batches issue zero toolbar mutations. Paired phase records preserve request/source identity and monotonic acquisition/Rust-return/state/control/contact times; these measure the batch body or command wrapper, not whole browser dispatch or physical latency |
+| MIG-WORKER-18 / shared-pages.observation.spec.ts and shared-coverage.observation.spec.ts | Completed secondary chunks reuse prepared page IDs through warm Undo/Redo with zero new immediate preparation/uploads and exact pixels; broad clipped source → camera beyond retained coverage → Redo requires fresh preparation, then reset-view pixels agree. Active source remains on its exact path |
 | MIG-LIVE-02 / pressure.observation.spec.ts |127/128/129 accepted pen points across chunk boundary: live, completed and rebuilt pixels agree; trusted browser pen events do not certify physical Wacom |
 | MIG-WORKER-04 / gpu-budget.spec.ts | Maximum8,388,608 backing pixels, optional and packed formats → resize → Back: mandatory target payload≤64MiB and released owned targets; requested payload is not physical driver residency |
 | MIG-WORKER-07 / worker-failure.spec.ts | Confirmed malformed worker reply during actual camera rebuild: reject geometry and preserve completed artwork/history |
@@ -79,6 +81,10 @@ MIG-WORKER-15 tests withheld actual replies separately from whole-view disposal.
 Cold-history latency, secondary immediate geometry uploads, active-pan fidelity, spatial index,
 delayed coarsening, contiguous draw batching and complete recency behavior require their own
 successful evidence before M03 completion. A warm-refill functional pass does not close them.
+The bounded observation snapshot includes copied aggregate cache-role/upload counters. Stroke-count
+records reuse existing Rust query results, deduplicate at most256 identities, and carry no raw
+coordinates. Nonzero ring drops invalidate pairing. Release assets exclude observation sinks,
+phase/count strings and hooks; inspect the actual frozen entry chunk, not stale output siblings.
 
 The isolated memory fixture lane requires fatal engine trap→Back/Resume without later engine
 calls, finite complete GPU-contract traversal, and the independent f64 edge/taper expectations.

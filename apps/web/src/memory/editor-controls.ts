@@ -1,4 +1,5 @@
 import { revealLabel } from "./control-visibility.ts";
+import { controlPresentation } from "./control-presentation.ts";
 import { drawingIcon } from "../drawing-icons.ts";
 import { button, element } from "../dom.ts";
 import { drawingTool } from "../drawing-controls.css.ts";
@@ -17,6 +18,7 @@ export function attachEditorControls(canvas: HTMLCanvasElement, commands: Comman
   const controller = new AbortController(),
     options = { signal: controller.signal };
   const width = context.querySelector<HTMLInputElement>("input[type='range']");
+  const presentation = controlPresentation(width);
   const history = Array.from(context.querySelectorAll<HTMLButtonElement>("button"));
   const undo = history.find((b) => b.title === t("memory.undo")),
     redo = history.find((b) => b.title === t("memory.redo"));
@@ -101,6 +103,7 @@ export function attachEditorControls(canvas: HTMLCanvasElement, commands: Comman
     width.addEventListener(
       "input",
       () => {
+        presentation.invalidate();
         const s = api.read(commands.read().owner);
         commands.run((v) => edit.style(v, Number(width.value), [s.red, s.green, s.blue]));
       },
@@ -110,6 +113,7 @@ export function attachEditorControls(canvas: HTMLCanvasElement, commands: Comman
   color.addEventListener(
     "input",
     () => {
+      presentation.invalidate();
       const value = color.value;
       const rgb = [1, 3, 5].map((i) => Number.parseInt(value.slice(i, i + 2), 16) / 255);
       commands.run((s) => edit.style(s, Number(width?.value ?? 8), rgb));
@@ -137,11 +141,11 @@ export function attachEditorControls(canvas: HTMLCanvasElement, commands: Comman
     const s = api.read(commands.read().owner),
       v = commands.view(),
       busy = s.interaction !== 0n;
+    if (!presentation.changed(s, v, canvas.dataset.tool ?? "ink")) return;
     if (width) {
       width.value = String(s.width);
-      const label = width.closest("label")?.querySelector(".property-value");
-      const text = new Intl.NumberFormat(navigator.language).format(s.width);
-      if (label) label.textContent = text;
+      const text = presentation.number.format(s.width);
+      if (presentation.label) presentation.label.textContent = text;
       width.setAttribute("aria-valuetext", text);
       width.setAttribute("aria-disabled", String(busy));
       width.classList.toggle(locked, busy);
@@ -177,10 +181,7 @@ export function attachEditorControls(canvas: HTMLCanvasElement, commands: Comman
       b.setAttribute("aria-disabled", String(busy));
       b.classList.toggle(locked, busy);
     }
-    zoom.textContent = new Intl.NumberFormat(navigator.language, {
-      style: "percent",
-      maximumFractionDigits: 0,
-    }).format(v.zoom);
+    zoom.textContent = presentation.percent.format(v.zoom);
     reset.textContent = `${Math.round((v.angle * 180) / Math.PI)}°`;
   }
   root

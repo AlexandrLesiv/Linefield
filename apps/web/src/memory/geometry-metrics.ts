@@ -25,4 +25,9 @@ export const geometryMetrics = {
   preparationCopies: 0,
   completeFrames: 0,
   pendingFrames: 0,
+  preparedHits: 0,
+  preparedMisses: 0,
+  preparedCoverageMisses: 0,
+  immediateHits: 0,
+  immediatePreparations: 0,
 };

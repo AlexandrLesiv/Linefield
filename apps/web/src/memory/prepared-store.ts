@@ -1,6 +1,7 @@
 import { preparation } from "./preparation-bridge.ts";
 import { frames } from "./frame-bridge.ts";
 import { PageBorrows } from "./page-borrows.ts";
+import { geometryMetrics as metrics } from "./geometry-metrics.ts";
 import type { ReplyValue } from "./bridge.ts";
 export type PreparedPage = { page: bigint; data: Float32Array; release?: () => void };
 export type Entry = {
@@ -31,6 +32,25 @@ export class PreparedStore {
   borrow(page: PreparedPage) {
     return this.borrows.borrow(page);
   }
+  completed(stroke: bigint, revision: bigint, detail: number, chunk: bigint) {
+    const hit = this.retained(stroke, revision, detail, 0n, chunk);
+    if (!hit) {
+      metrics.preparedMisses++;
+      return undefined;
+    }
+    metrics.preparedHits++;
+    return this.completedPages(hit);
+  }
+  private *completedPages(hit: Entry): Generator<PreparedPage> {
+    for (const page of this.retainedPages(hit)) {
+      const lease = this.borrows.borrow(page);
+      try {
+        yield lease;
+      } finally {
+        lease.release();
+      }
+    }
+  }
   protected retained(
     stroke: bigint,
     revision: bigint,
@@ -48,14 +68,14 @@ export class PreparedStore {
         entries.splice(i, 1);
         continue;
       }
-      if (
-        entry.detail >= detail &&
-        (!entry.token ||
-          (frame
-            ? frames.coverage(this.state(), entry.token, frame)
-            : preparation.coverage(this.state(), entry.token)))
-      )
-        hit = entry;
+      if (entry.detail < detail) continue;
+      const covered =
+        !entry.token ||
+        (frame
+          ? frames.coverage(this.state(), entry.token, frame)
+          : preparation.coverage(this.state(), entry.token));
+      if (covered) hit = entry;
+      else metrics.preparedCoverageMisses++;
     }
     return hit;
   }

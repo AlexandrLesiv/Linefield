@@ -1,6 +1,8 @@
 import { geometryMetrics as m } from "./geometry-metrics.ts";
 import { preparationHeap } from "./preparation-loader.ts";
 import type { StateValue } from "./bridge.ts";
+import { wasmBytes } from "./loader.ts";
+import { diagnostic } from "./diagnostics.ts";
 type Geometry = { bytes: number; pages: number; streamOnly: boolean };
 let highWater = 0;
 let aboveTarget = false;
@@ -53,6 +55,24 @@ export function observeResources(
 }
 // One overwritten metadata snapshot, not a per-frame/per-sample log or document quota.
 export const resourceSnapshot = () => (current ? { ...current } : undefined);
+
+export function reportResources(
+  s: StateValue,
+  geometry?: Geometry,
+  dimensions?: { width: number; height: number },
+) {
+  const { width = 0, height = 0 } = dimensions ?? {};
+  if (
+    observeResources(
+      s,
+      geometry ?? { bytes: 0, pages: 0, streamOnly: false },
+      wasmBytes(),
+      width,
+      height,
+    )
+  )
+    diagnostic("display", "soft-target", s.session);
+}
 
 export function sumGeometry(a: Geometry, b?: Geometry): Geometry {
   return {

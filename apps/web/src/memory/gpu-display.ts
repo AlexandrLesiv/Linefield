@@ -1,4 +1,6 @@
 import { frames } from "./frame-bridge.ts";
+import { runObservedCommand } from "./command-timing.ts";
+import type { CommandTiming } from "./command-timing.ts";
 import { editorHealthy } from "./editor-health.ts";
 import { acknowledgementObservation, submissionObservation } from "./performance-observation.ts";
 import { diagnostic } from "./diagnostics.ts";
@@ -8,8 +10,7 @@ import { GpuRenderer } from "./gpu-renderer.ts";
 import { ProgressiveScene } from "./progressive-scene.ts";
 import { attachInput } from "./input.ts";
 import { attachEditorControls } from "./editor-controls.ts";
-import { observeResources } from "./resource-monitor.ts";
-import { wasmBytes } from "./loader.ts";
+import { reportResources } from "./resource-monitor.ts";
 export function attachGpuDisplay(
   view: MemoryView,
   api: Bridge,
@@ -36,15 +37,17 @@ export function attachGpuDisplay(
   const valid = () => !stopped && alive();
   const commands = {
     read: () => state,
-    run(action: (s: ReplyValue) => ReplyValue) {
+    run(action: (s: ReplyValue) => ReplyValue, timing?: CommandTiming) {
       if (!valid() || lost || failed) return undefined;
       try {
-        const result = action(state);
-        accept(result);
-        controls?.sync();
-        input?.sync();
-        schedule();
-        return result;
+        return runObservedCommand(
+          () => action(state),
+          accept,
+          () => controls?.sync(),
+          () => input?.sync(),
+          schedule,
+          timing,
+        );
       } catch (error) {
         fatal();
         failDisplay(error);
@@ -60,11 +63,7 @@ export function attachGpuDisplay(
   let input: ReturnType<typeof attachInput> | undefined;
   let controls: ReturnType<typeof attachEditorControls> | undefined;
   const report = () => {
-    if (!alive()) return;
-    const geometry = cache?.resources() ?? { bytes: 0, pages: 0, streamOnly: false };
-    const { width = 0, height = 0 } = renderer ?? {};
-    if (observeResources(api.read(state.owner), geometry, wasmBytes(), width, height))
-      diagnostic("display", "soft-target", state.session);
+    if (alive()) reportResources(api.read(state.owner), cache?.resources(), renderer);
   };
   function schedule() {
     if (valid() && !lost && !failed && !frame) frame = requestAnimationFrame(render);

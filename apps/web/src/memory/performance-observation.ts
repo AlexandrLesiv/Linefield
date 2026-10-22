@@ -1,8 +1,9 @@
 import { geometryMetrics as metrics } from "./geometry-metrics.ts";
 import type { GpuRenderer } from "./gpu-renderer.ts";
 import type { ReplyValue } from "./bridge.ts";
+import type { CommandTiming } from "./command-timing.ts";
 type RecordValue = Readonly<Record<string, string | number | boolean>>;
-type Snapshot = { records: RecordValue[]; dropped: number };
+type Snapshot = { records: RecordValue[]; dropped: number; geometry: typeof metrics };
 declare global {
   interface Window {
     __linefieldPerfRead?: () => Snapshot;
@@ -10,6 +11,7 @@ declare global {
 }
 const limit = 2048;
 const ring: RecordValue[] = [];
+const strokeCounts = new Map<string, string>();
 let head = 0,
   dropped = 0,
   sequence = 0;
@@ -37,7 +39,7 @@ if (import.meta.env.MODE === "performance-e2e") {
       const records = [...ring.slice(head), ...ring.slice(0, head)].map((record) => ({
         ...record,
       }));
-      const value = { records, dropped };
+      const value = { records, dropped, geometry: { ...metrics } };
       ring.length = 0;
       head = 0;
       dropped = 0;
@@ -55,6 +57,40 @@ export function inputObservation(s: ReplyValue, command: string) {
       ...identity(s),
       time: performance.now(),
     });
+}
+export function commandPhaseObservation(s: ReplyValue, timing: CommandTiming) {
+  if (import.meta.env.MODE === "performance-e2e")
+    append({
+      kind: "command-phase",
+      request: sequence,
+      ...identity(s),
+      ...timing,
+      callbackEnd: performance.now(),
+    });
+}
+export function strokeCountObservation(
+  s: ReplyValue,
+  stroke: bigint,
+  count: bigint,
+  active: boolean,
+) {
+  if (import.meta.env.MODE !== "performance-e2e") return;
+  const key = `${s.owner}:${s.session}:${stroke}`,
+    value = `${count}:${active}`;
+  if (strokeCounts.get(key) === value) return;
+  strokeCounts.delete(key);
+  strokeCounts.set(key, value);
+  if (strokeCounts.size > 256) strokeCounts.delete(strokeCounts.keys().next().value ?? "");
+  append({
+    kind: "stroke-count",
+    owner: `${s.owner}`,
+    session: `${s.session}`,
+    stroke: `${stroke}`,
+    revision: `${count}`,
+    count: `${count}`,
+    active,
+    time: performance.now(),
+  });
 }
 export function submissionObservation(
   s: ReplyValue,

@@ -1,8 +1,9 @@
 import type { ReplyValue, MappingValue } from "./bridge.ts";
+import type { CommandTiming } from "./command-timing.ts";
 import { edit } from "./edit-bridge.ts";
 export interface Commands {
   read(): ReplyValue;
-  run(action: (state: ReplyValue) => ReplyValue): ReplyValue | undefined;
+  run(action: (state: ReplyValue) => ReplyValue, timing?: CommandTiming): ReplyValue | undefined;
   view(): MappingValue;
   fail(): void;
 }

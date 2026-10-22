@@ -1,4 +1,6 @@
 import { edit } from "./edit-bridge.ts";
+import { startCommandTiming } from "./command-timing.ts";
+import { commandPhaseObservation } from "./performance-observation.ts";
 import { localPoint } from "./input-state.ts";
 import type { Commands, contactState } from "./input-state.ts";
 export function inputBatch(
@@ -8,6 +10,7 @@ export function inputBatch(
 ) {
   return function append(events: readonly PointerEvent[], release = false) {
     for (let offset = 0; offset < events.length; offset += 256) {
+      const timing = startCommandTiming();
       const contact = owner.current;
       if (!contact) return;
       const part = events.slice(offset, offset + 256),
@@ -27,13 +30,19 @@ export function inputBatch(
         contact.y = event.clientY;
         if (!release) contact.pressure = p[i] ?? 0;
       }
-      const result = commands.run(() => edit.append(contact.token, contact.next, x, y, p, flags));
+      if (timing) timing.acquisitionEnd = performance.now();
+      const result = commands.run(
+        () => edit.append(contact.token, contact.next, x, y, p, flags),
+        timing,
+      );
       if (result?.code !== "ok") {
         owner.release();
+        if (timing && result) commandPhaseObservation(result, timing);
         return;
       }
       contact.token = result;
       contact.next += BigInt(part.length);
+      if (timing) commandPhaseObservation(result, timing);
     }
   };
 }

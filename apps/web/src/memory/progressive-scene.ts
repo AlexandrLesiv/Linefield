@@ -131,6 +131,7 @@ export class ProgressiveScene {
       pass,
       after,
       detail,
+      this.prepared,
       this.live,
     );
     this.inputComplete =
