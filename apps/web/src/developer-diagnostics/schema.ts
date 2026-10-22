@@ -61,19 +61,20 @@ export interface DiagnosticEvent {
   readonly command?: (typeof commands)[number];
   readonly failure?: (typeof failures)[number];
   readonly pointer?: (typeof pointers)[number];
-  readonly session?: number;
-  readonly interaction?: number;
-  readonly request?: number;
-  readonly operation?: number;
-  readonly stroke?: number;
-  readonly revision?: number;
-  readonly frame?: number;
-  readonly generation?: number;
+  readonly session?: string;
+  readonly interaction?: string;
+  readonly request?: string;
+  readonly operation?: string;
+  readonly stroke?: string;
+  readonly revision?: string;
+  readonly frame?: string;
+  readonly generation?: string;
   readonly count?: number;
   readonly bytes?: number;
   readonly durationMs?: number;
 }
-const numericKeys = [
+const numericKeys = ["count", "bytes", "durationMs"] as const;
+const identityKeys = [
   "session",
   "interaction",
   "request",
@@ -82,10 +83,24 @@ const numericKeys = [
   "revision",
   "frame",
   "generation",
-  "count",
-  "bytes",
-  "durationMs",
 ] as const;
+const u64Max = "18446744073709551615";
+/** Opaque shared identities stay lossless; no Number conversion or alias cache. */
+export function canonicalIdentity(value: string): boolean {
+  return (
+    typeof value === "string" &&
+    value.length > 0 &&
+    value.length <= 20 &&
+    !/[^0-9]/.test(value) &&
+    (value === "0" || value[0] !== "0") &&
+    (value.length < 20 || value <= u64Max)
+  );
+}
+export function diagnosticIdentity(value: bigint): string | undefined {
+  if (typeof value !== "bigint" || value < 0n || value > 18446744073709551615n) return;
+  const text = value.toString(10);
+  return canonicalIdentity(text) ? text : undefined;
+}
 const enums = {
   origin: origins,
   outcome: outcomes,
@@ -99,15 +114,23 @@ export interface SafeRecord {
 }
 /** Explicit copying is the privacy boundary; caller objects and unknown properties are never retained. */
 export function safeRecord(input: DiagnosticEvent): SafeRecord | undefined {
+  const event = input.event;
+  const atMs = input.atMs;
   if (
-    !eventNames.includes(input.event) ||
-    !Number.isFinite(input.atMs) ||
-    input.atMs < 0 ||
-    input.atMs > Number.MAX_SAFE_INTEGER
+    !eventNames.includes(event) ||
+    !Number.isFinite(atMs) ||
+    atMs < 0 ||
+    atMs > Number.MAX_SAFE_INTEGER
   )
     return;
-  const value: DiagnosticEvent = { event: input.event, atMs: input.atMs };
-  const fields: Record<string, string | number> = { event: input.event, atMs: input.atMs };
+  const value: DiagnosticEvent = { event, atMs };
+  const fields: Record<string, string | number> = { event, atMs };
+  for (const key of identityKeys) {
+    const item = input[key];
+    if (item === undefined) continue;
+    if (typeof item !== "string" || !canonicalIdentity(item)) return;
+    fields[key] = item;
+  }
   for (const key of numericKeys) {
     const item = input[key];
     if (item === undefined) continue;
@@ -126,7 +149,7 @@ export function safeRecord(input: DiagnosticEvent): SafeRecord | undefined {
     if (!(enums[key] as readonly string[]).includes(item)) return;
     fields[key] = item;
   }
-  // All strings are ASCII enums; this is exact compact JSON size without serializing on input.
+  // Strings are ASCII enums/decimal IDs: exact compact JSON size without input serialization.
   let bytes = 2;
   for (const [key, item] of Object.entries(fields))
     bytes += key.length + 4 + (typeof item === "string" ? item.length + 2 : String(item).length);
@@ -137,6 +160,12 @@ export interface BuildIdentity {
   readonly engine: string;
 }
 export function safeBuild(build: BuildIdentity): Readonly<BuildIdentity> {
-  const clean = (value: string) => (/^[a-zA-Z0-9_-]{1,96}$/.test(value) ? value : "unavailable");
+  const clean = (value: string) =>
+    typeof value === "string" &&
+    value.length > 0 &&
+    value.length <= 96 &&
+    !/[^a-zA-Z0-9_-]/.test(value)
+      ? value
+      : "unavailable";
   return Object.freeze({ app: clean(build.app), engine: clean(build.engine) });
 }

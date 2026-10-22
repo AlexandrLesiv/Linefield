@@ -55,14 +55,15 @@ export class DiagnosticsStore {
     return () => this.#listeners.delete(listener);
   }
   record(event: DiagnosticEvent, detailed = false): void {
+    if (detailed && !this.#capture) return;
     try {
-      detailed ||= event.event === "frame.trace" || event.command === "append";
-      if (detailed && !this.#capture) return;
       const record = safeRecord(event);
       if (!record) {
         this.#drop("invalid");
         return;
       }
+      detailed ||= record.value.event === "frame.trace" || record.value.command === "append";
+      if (detailed && !this.#capture) return;
       if (!detailed) this.#baseline.push(record);
       if (this.#capture) {
         if (performance.now() - this.#capture.startedMs >= captureLimits.durationMs)
