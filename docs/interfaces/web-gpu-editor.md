@@ -360,6 +360,9 @@ coarser sufficient detail only after250ms without a view change. Restart that de
 navigation; pan alone must not reprepare view-independent geometry. Rust continues to enforce
 minimum detail/coverage. Disposable alternatives remain within existing cache limits and may
 be retired under pressure. Coarsening never reduces the accepted precision guarantee.
+The concrete M03 host policy follows [retained geometry and disposal](web-geometry-retention.md):
+smallest sufficient detail, strict captured-pass residency, complete streaming, bounded idle
+LRU adaptation and charged old-generation cleanup. Its checks are separate from visibility.
 
 Host controls may cache locale formatters and skip unchanged presentation updates. Shared input
 admission and contact/sequence state still update synchronously; no actual samples or capability
