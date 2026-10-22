@@ -73,6 +73,9 @@ Record exact build and actual outcomes in the task; this mapping alone is not a 
 | MIG-WORKER-21 / history-display.observation.spec.ts | Hold the replacement's real worker reply after Undo of B from A+B; sample every submitted default-framebuffer display to retain unaffected A, draw fresh C immediately, then publish A+C and remove C with one Undo |
 | MIG-WORKER-23 / history-display.observation.spec.ts | Held historical base follows Rust-certified pan and Escape without a current receipt acknowledgement or complete-overlay claim |
 | MIG-WORKER-24 / history-display.observation.spec.ts | Cancel fresh C while history is held; repeated Undo/Redo and latest-target Undo, context loss/restore, late held replies and Back preserve exact completed history without C or B resurrection |
+| MIG-WORKER-25 / cold-admission.observation.spec.ts | Actual rotation over8,193 source samples from bounded synthetic coalesced setup: positively held first worker replies create no group-only batch; release one useful page, observe original-age admission without current ack, finish and compare exact reset pixels. Source setup is not physical pen evidence; forced reply hold is not latency acceptance |
+| MIG-WORKER-26 / cold-admission.observation.spec.ts and MIG-WORKER-11 | Empty/small terminal and warmed history paths bypass cold timers; forty-source warm queue reaches capacity and bypasses coalescing, preserving exact pixels and existing queue/submission caps |
+| MIG-WORKER-27–28 / cold-lifecycle.observation.spec.ts | Confirmed group-only or useful partial cold queue → Back/context loss: stop wakes the gate, timer/subscription bounds hold, cancelled receipt never publishes, recovery preserves exact source and one Undo |
 | MIG-CONTROL-01 / control-focus.spec.ts and MIG-LIVE-04 | Actual Tab/Shift+Tab leaves disabled idle history and held-recovery view controls; activation/value-changing keys remain blocked without queuing commands |
 | MIG-LIVE-02 / pressure.observation.spec.ts |1/2/3/127/128/129 accepted pen points, normal and packed targets: exact live, completed and rebuilt pixels agree; trusted browser pen events do not certify physical Wacom |
 | MIG-LIVE-03 / active-display.observation.spec.ts |493px width,5% zoom,−180° rotation and large DPR2 backing: every sampled submitted display retains previously visible accepted regions; positive visible-point/source-count controls and advancing front/stable generations during continuous input; readback is functional evidence only |
@@ -95,6 +98,14 @@ The bounded observation snapshot includes copied aggregate cache-role/upload cou
 records reuse existing Rust query results, deduplicate at most256 identities, and carry no raw
 coordinates. Nonzero ring drops invalidate pairing. Release assets exclude observation sinks,
 phase/count strings and hooks; inspect the actual frozen entry chunk, not stale output siblings.
+Cold admission observations aggregate one row per gate exit. A pure group marker waits without
+a deadline timer until useful work, completion or cancellation; it never creates a fence solely
+to meet a stale deadline. Partial useful work coalesces only while its producer is actually
+pending. Full queues, producer task-budget exits and terminal/synchronous work bypass the delay.
+The original queue age is not reset by replies. Timer/subscription counts describe the gate,
+not physical GPU execution. Artificial held-reply age/overshoot is functional fault evidence.
+Functional setup drains assert zero drops before consuming the bounded observation ring;
+these drains do not change the separately frozen performance workload or its pacing.
 
 Historical display uses only the existing validated base allocation and a separately named Rust
 display transform. The generated-API `Run historical display boundary` fixture rejects wrong

@@ -1,3 +1,6 @@
+import { FrameWake } from "./frame-wake.ts";
+import { admitFrame } from "./frame-admission.ts";
+import type { FillReason } from "./frame-admission.ts";
 import { scene } from "./scene-bridge.ts";
 import { ReadyPreparation } from "./ready-preparation.ts";
 import type { ReplyValue } from "./bridge.ts";
@@ -20,7 +23,9 @@ export class FrameCommands {
   private pages: ReadyPreparation | undefined;
   private pending: Promise<void> | undefined;
   private error: unknown;
-  private waiters: (() => void)[] = [];
+  private wake = new FrameWake();
+  private oldest = 0;
+  private reason: FillReason = "ready";
   private completion: Promise<void>;
   private state: () => ReplyValue;
   private prepared: PreparedCache;
@@ -44,20 +49,24 @@ export class FrameCommands {
         this.error = error;
         this.done = true;
       })
-      .finally(() => this.wake());
+      .finally(() => this.wake.signal());
   }
-  private wake() {
-    const waiters = this.waiters;
-    this.waiters = [];
-    for (const waiter of waiters) waiter();
-  }
-  private change() {
-    return new Promise<void>((resolve) => this.waiters.push(resolve));
+  private push(command: FrameCommand) {
+    if (!this.queue.length) this.oldest = performance.now();
+    this.queue.push(command);
   }
   snapshot() {
-    return { queued: this.queue.length, bytes: this.bytes };
+    return {
+      queued: this.queue.length,
+      bytes: this.bytes,
+      oldest: this.oldest,
+      useful: this.queue.some((command) => command.kind !== "group"),
+      done: this.done,
+      stopped: this.stopped,
+      reason: this.reason,
+    };
   }
-  fill(budget: FillBudget, limit = 32): "ready" | "pending" | "budget" | "done" {
+  fill(budget: FillBudget, limit = 32): FillReason {
     this.pending = undefined;
     while (
       !this.stopped &&
@@ -65,12 +74,13 @@ export class FrameCommands {
       this.queue.length < limit &&
       this.bytes <= 1024 ** 2 - 24576
     ) {
-      if (budget.remaining-- <= 0 || performance.now() >= budget.deadline) return "budget";
+      if (budget.remaining-- <= 0 || performance.now() >= budget.deadline)
+        return (this.reason = "budget");
       if (this.pages && this.stroke) {
         const next = this.pages.poll();
         if (next.kind === "pending") {
           this.pending = next.wait;
-          return "pending";
+          return (this.reason = "pending");
         }
         if (next.kind === "progress") continue;
         if (next.kind === "page") {
@@ -79,13 +89,13 @@ export class FrameCommands {
             page.release?.();
             throw Error("geometry-page-size");
           }
-          this.queue.push({ kind: "page", page, stroke: this.stroke.id, color: this.stroke.color });
+          this.push({ kind: "page", page, stroke: this.stroke.id, color: this.stroke.color });
           this.bytes += page.data.byteLength;
           continue;
         }
         this.pages = undefined;
         this.stroke = undefined;
-        this.queue.push({ kind: "composite" });
+        this.push({ kind: "composite" });
         continue;
       }
       if (!this.ids.length) {
@@ -115,43 +125,50 @@ export class FrameCommands {
             yield prepared.reader(id, stroke.count, detail, frame, chunk);
         })(),
       );
-      this.queue.push({ kind: "group" });
+      this.push({ kind: "group" });
     }
-    return this.queue.length ? "ready" : "done";
+    return (this.reason = this.queue.length ? "ready" : "done");
   }
   private async produce() {
     let budget = { deadline: performance.now() + 2, remaining: 1024 };
     while (!this.done && !this.stopped) {
       const reason = this.fill(budget);
-      this.wake();
+      this.wake.signal();
       if (reason === "pending") await this.pending;
       else if (reason === "budget") {
         await commandTurn();
         budget = { deadline: performance.now() + 2, remaining: 1024 };
-      } else if (!this.done) await this.change();
+      } else if (!this.done) await this.wake.wait();
     }
   }
-  async ready() {
-    while (!this.queue.length && !this.done && !this.stopped) await this.change();
-    if (this.error) throw this.error;
-    return this.queue.length > 0;
+  ready() {
+    return admitFrame(
+      () => {
+        if (this.error) throw this.error;
+        return this.snapshot();
+      },
+      this.wake,
+      this.state(),
+      this.frame,
+    );
   }
   take() {
     const command = this.queue.shift();
     if (command?.kind === "page") this.bytes -= command.page.data.byteLength;
-    this.wake();
+    if (!this.queue.length) this.oldest = 0;
+    this.wake.signal();
     return command;
   }
   stop() {
     this.stopped = true;
-    this.wake();
+    this.wake.signal();
   }
   async dispose() {
     this.stop();
     for (const command of this.queue) if (command.kind === "page") command.page.release?.();
     this.queue = [];
     this.bytes = 0;
-    this.wake();
+    this.wake.signal();
     await this.completion;
     await this.pages?.dispose();
     this.pages = undefined;

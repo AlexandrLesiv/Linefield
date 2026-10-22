@@ -44,7 +44,12 @@ test("MIG-WORKER-12 navigation disposes confirmed pending frame prefetch and Res
   await clear(page);
   await page.mouse.move(260, 300);
   await page.mouse.down();
-  await page.mouse.move(800, 450, { steps: 384 });
+  for (let part = 1; part <= 6; part++) {
+    await page.mouse.move(260 + (540 * part) / 6, 300 + (150 * part) / 6, { steps: 64 });
+    // Functional setup only: drain bounded observations without changing the 384 samples.
+    const observed = await page.evaluate(() => window["__linefieldPerfRead"]?.());
+    expect(observed?.dropped).toBe(0);
+  }
   await page.mouse.up();
   await complete(page);
   const artwork = await page.screenshot({ clip });
