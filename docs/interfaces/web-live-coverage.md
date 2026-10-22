@@ -152,6 +152,12 @@ pretend S is unchanged or replay that group: ambiguous failure discards candidat
 preserving usable B, or uses existing recovery. A merely pending fence is not permission to replay.
 Ordinary Append/End cannot restart useful completed candidate work indefinitely.
 
+Retention applies to recoverable pre-issue relevance/admission failures. Fatal, context and
+global resource failures still follow existing recovery, which may dispose retained S/R; this
+does not create a silent retry loop. Validate the in-flight successor as well as the installed
+predecessor. Undo that removes only N's group must abort N's pending worker/queue wait promptly,
+even when R remains valid; do not wait for an obsolete reply or watchdog before rebuilding.
+
 Global installation requires validated S at the latest completed cutoff, exact content/view/
 mapping/metrics and no view gesture. Swap B/S and transfer its Prefix, retaining active E's
 physical coverage. Draw E once afterward. Active input still forbids presented/ready acknowledgement.
