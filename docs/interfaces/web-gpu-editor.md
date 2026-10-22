@@ -267,6 +267,100 @@ Count drops and invalidate affected measurements. Production builds exclude the 
 sink and hooks. Record the instrumented build separately and distinguish submission, validation
 and physical display; GL fences alone cannot prove that the latest accepted artwork was shown.
 
+### M03 repair refinements
+
+The owner resumed M03 repairs on2026-10-22. These refinements preserve the selected ownership,
+numerical guarantees and resource limits; they do not reopen the paused M01–M09 automation.
+
+Legacy full-source geometry pages may center their local origin over the collected endpoint
+bounds. Keep every coordinate within the existing signed coordinate-magnitude limit and retain
+the original per-capsule subdivision/difference bound. At most1024 capsules use a fallibly
+reserved48KiB f64 packing scratch before the checked f32 copy; count overlapping scratch/output
+capacity. Preserve all geometry, exact endpoint order and each pending boundary pair exactly once.
+This is packing reuse, not clipping, lower detail or a larger arithmetic-error allowance.
+
+A candidate whose source prefix or metrics Rust rejects must cancel promptly rather than wait
+for the worker watchdog. Mark its host lifetime cancelled before terminating its exclusive
+preparation executor. Captured readers retain that executor/generation; cancelled readers cannot
+retry, adopt or store results, and cancellation does not consume a renderer recovery attempt.
+Wake the producer, join its readers and retire queued borrows/tickets before clearing the
+candidate and lazily starting a replacement executor. Retain eligible completed cache entries.
+An acquired GPU reservation still follows its fence/finally retirement path if cancellation
+arrived while acquisition was pending. Ordinary valid pan/appends do not cancel useful work.
+This relies on the existing sole-candidate executor ownership; it is not a new worker protocol.
+
+An unexpected editor-Wasm boundary exception permanently invalidates that editor instance.
+Typed rejection outcomes do not invalidate it. Fence command calls, returned-value reads and
+destructors together: after a trap, no further editor export, including release/free, may run.
+Later user commands reject explicitly; terminal disposal may report an already-disposed outcome.
+Host queues, workers, leases and GPU resources still drain without calling the invalid editor.
+Back/Retry cannot reset this fence or recreate canonical work as if recovery succeeded. The
+independent pure preparation instance retains its own failure lifetime. Verify a confirmed
+pending candidate followed by a fatal exception, late completion and Back, with a positive
+export spy covering getters/destructors as well as commands.
+If a returned wrapper's getter traps before explicit disposal, retain that one terminal wrapper
+strongly until page teardown so its registered finalizer cannot call the poisoned instance.
+This bounded terminal reference is not a reusable cache or a raw-pointer ownership workaround.
+
+Completed provisional overlays may borrow already prepared complete chunks after Rust validates
+source/revision/detail/coverage. Retain the same page identity and pin its lease through all
+consumers; release exactly once after submission or cancellation. Explicit misses/incomplete
+chunks use bounded preparation, never a false complete-group result. Active terminal geometry
+keeps its immediate path. Shared reuse must not introduce a second owner of canonical samples.
+
+Refine detail immediately when required. Retain useful finer pages during navigation, and request
+coarser sufficient detail only after250ms without a view change. Restart that delay on renewed
+navigation; pan alone must not reprepare view-independent geometry. Rust continues to enforce
+minimum detail/coverage. Disposable alternatives remain within existing cache limits and may
+be retired under pressure. Coarsening never reduces the accepted precision guarantee.
+
+Host controls may cache locale formatters and skip unchanged presentation updates. Shared input
+admission and contact/sequence state still update synchronously; no actual samples or capability
+changes may wait for deferred UI work. Diagnostic phase timing remains compile-time test-only,
+bounded and content-free, and cannot justify a production per-sample log.
+
+### M03 indexed visibility amendment
+
+Rust owns an optional ordered AABB hierarchy over completed strokes and their128-interval
+chunks. Bounds use checked regional axes and conservative curve/thick-support hulls; never
+flatten far positions into global f32 coordinates. Traverse left before right to preserve paint
+order. Unknown, partially built or overflowing bounds cannot certify invisibility: descend or
+resume a complete conservative scan. Camera-dependent worker planning remains excluded.
+
+Named `memoryFrameVisibility(owner,session,scene,frame,cursor)` returns a generated snapshot
+with code, equal-length strokes/chunks/revisions arrays of at most128 entries, an opaque next
+cursor and done. Zero starts a query. Each call visits at most512 nodes and constructs at most
+four missing chunk hulls; empty progress is valid. Include this CPU work in the host's existing
+cumulative2ms/1024-transition budget and yield an actual task. Read captured source positions
+directly rather than repeatedly scanning the beginning of the document for every page.
+
+At most two cursors, each at most8KiB including its bounded traversal stack, bind the captured
+frame prefix/view/metrics and index generation. Index generations/node identities never reuse
+an exhausted identifier. Certified nodes identify immutable source intervals and curve/style
+revisions. Valid later appends or camera movement do not invalidate the captured receipt;
+rejected source-prefix/metrics changes do. Frame release/cancellation retires cursor pins.
+Use at most128 stack entries if a combined source/chunk traversal cannot prove a64-entry bound.
+
+Optional index storage is at most8MiB actual allocated capacity across all live generations,
+incomplete construction and scratch, separately counted from the existing8MiB worker budget.
+Report cursor and reply capacities in derived memory too. Live queries pin referenced node
+identities; eviction cannot replace them with unrelated nodes. Pressure may evict unpinned
+least-recently-used index data. If admission fails, continue an ordered bounded scan from the
+exact unconsumed source/chunk without omissions or duplicate output. Cursor allocation failure
+returns capacity and allows the existing complete host traversal. No index allocation/rebuild
+belongs in the actual-sample callback or becomes a canonical drawing quota.
+If fallback cannot preserve the exact remaining position after output has been consumed,
+abandon that staging candidate and restart from empty under its valid receipt; never append a
+full traversal to partial output. A query page may end inside one stroke: keep its MAX group
+open across pages/empty progress and composite once at the next visible stroke or final done.
+
+Verify cold/warm/evicted equivalence, many offscreen short strokes and long-stroke chunks,
+rotated/thick crossings, far regions, coordinate overflow, partial construction, pinned pressure,
+continuation/cancel and paint order. Measure visited nodes/hulls, preparation counts and complete
+frame time separately; a warm index cannot turn cold construction into an inherited pass.
+Exercise capacity failure after at least one emitted page, including a split stroke and ordered
+overlapping groups, to prove the fallback cannot double-composite or omit output.
+
 Direct WebGL2 analytic capsules. MAX coverage unions each logical stroke/source-union group;
 source-over composites groups once in layer/paint order. Pencil remains nonopaque at opacity1.
 No cached image may change order, overlap, union identity or source appearance. Geometry cache
