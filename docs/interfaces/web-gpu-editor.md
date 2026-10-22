@@ -470,12 +470,31 @@ flatten far positions into global f32 coordinates. Traverse left before right to
 order. Unknown, partially built or overflowing bounds cannot certify invisibility: descend or
 resume a complete conservative scan. Camera-dependent worker planning remains excluded.
 
-Named `memoryFrameVisibility(owner,session,scene,frame,cursor)` returns a generated snapshot
+Named `memoryFrameVisibility(owner,session,scene,frame,predecessor,cursor)` returns a generated snapshot
 with code, equal-length strokes/chunks/revisions arrays of at most128 entries, an opaque next
 cursor and done. Zero starts a query. Each call visits at most512 nodes and constructs at most
 four missing chunk hulls; empty progress is valid. Include this CPU work in the host's existing
 cumulative2ms/1024-transition budget and yield an actual task. Read captured source positions
 directly rather than repeatedly scanning the beginning of the document for every page.
+
+Predecessor zero requests the full captured Prefix. For an R→N extension, a nonzero predecessor
+names R and frame names N. Rust checks both current Prefix proofs, equal captured view/metrics,
+and N.count = R.count +1 with the exact next immutable source before starting at R.count.
+The host cannot supply a source ordinal, arbitrary skip range or DisplayOnly/LiveSource authority.
+Cursor continuation repeats the exact frame/predecessor tuple; the start ordinal is immutable
+cursor state, not a change to N's full-Prefix authority. Releasing either named receipt retires
+its cursor. No additional receipt is allocated. The scene argument validates the current request
+against the editor's latest scene; it does not bind traversal to a volatile camera scene. Later
+valid appends/camera changes may continue an otherwise valid captured query using the new current
+scene. Changed source prefix or metrics still reject it. Host extension publication independently
+requires its existing validated R pixels; a query is never a GPU-pixel certificate.
+
+Successful done returns next cursor zero and releases its stack/pins immediately, including when
+the final reply contains entries. Rejected continuation never allocates or advances a cursor;
+wrong ownership or a mismatched tuple cannot destroy an unrelated valid cursor. After validated
+ownership, a permanently invalid bound prefix/metrics retires that cursor. Cancellation releases
+one of its named receipts, and session teardown releases every cursor. Failed start returns no
+cursor and leaves no partial reservation. Copied reply capacity remains separately accounted.
 
 At most two cursors, each at most8KiB including its bounded traversal stack, bind the captured
 frame prefix/view/metrics and index generation. Index generations/node identities never reuse
