@@ -1,9 +1,10 @@
 # P05-DIAG01 — Bounded developer diagnostics and local export
 
-Status: authorized by decision243. Independent storage/presentation work may start against a
-frozen committed M03 checkpoint; final runtime hooks and acceptance wait for the coordinated
-M03 integration handoff. No overlapping memory/renderer/engine implementation ownership.
-Position: integrate after P05-M03, before M04 integration. One branch/PR stacked on the verified
+Status: authorized by decision243. The reviewed storage/presentation foundation proceeds to
+host integration on frozen M03 tail checkpoint479b8312. Final runtime reconciliation and
+acceptance follow M03 completion. No overlapping implementation ownership.
+Position: prepare in parallel with M03 cold scheduling; integrate after P05-M03 and before M04.
+One branch/PR stacked on the verified
 frozen M03 source; owner alone merges. The lead settles remaining decisions within the renewed
 autonomous window, ending on return or 2026-10-23 07:13:55 UTC.
 
@@ -32,6 +33,23 @@ memory/input/render/Rust sources, drawing-shell integration and shared tests rem
 until the lead explicitly transfers those hooks on a frozen checkpoint. Static validation may
 run independently; browser/GPU runs are serialized. This partial work is not a usable preview
 or accepted diagnostics implementation by itself.
+
+The coordinated integration reservation extends DIAG01 ownership to drawing-shell.ts,
+memory/document.ts, view.ts, diagnostics.ts, bridge.ts, edit-bridge.ts, input-state.ts,
+input.ts, input-batch.ts, input-keyboard.ts, editor-controls.ts, command-timing.ts and
+gpu-display.ts; its actual-app diagnostics E2E and bounded fixture hook; and Vite build-identity
+integration. M03 cold work owns frame commands/building, readiness, scheduling observations and
+its tests. DIAG01 does not edit live/progressive-scene, GPU allocation, resource accounting,
+preparation cache or executor until a second explicit hook handoff. Reconcile those on the final
+M03 base before adoption. No extra Wasm reads, worker protocol, mutable editor or universal bus.
+
+Use narrow named copied-metadata callbacks for command outcomes, existing accepted state,
+submission/publication and cached resource samples. Availability comes from normal state and
+host lifecycle updates; terminal inspection is host-only. Existing replies supply lossless
+canonical decimal u64 correlations. Unknown metadata is discarded; invalid allowed values are
+rejected. The pending sample metric is Unavailable without compatible authoritative watermarks.
+No detail tracing is inferred from queue/page counts. Browser/GPU verification is serialized
+with M03; isolated output directories preserve its frozen previews and comparison builds.
 
 ## Concrete edge cases and evidence ownership
 

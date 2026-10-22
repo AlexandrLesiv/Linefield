@@ -70,7 +70,8 @@ pointer/focus interception. Approval of the plan is not current implementation/e
 
 Copy only finite bounded numeric values, fixed enums and checked build/ephemeral identifiers;
 never retain editor snapshots, mutable foreign wrappers or arbitrary metadata/error objects.
-Wrong types/unknown keys/content canaries reject before retention. Correlation is diagnostic
+Discard unknown fields without retaining the caller object; reject invalid allowlisted values
+before retention. Content canaries must not survive copying or export. Correlation is diagnostic
 metadata, never permission to mutate or certify a frame. Terminal state forbids new Wasm queries.
 An idle failed editor may inspect/export/clear an existing host-only report. New capture is
 disabled; terminal transition freezes an existing capture as partial. Diagnostic availability
