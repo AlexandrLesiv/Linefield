@@ -58,9 +58,29 @@ Test distinct sampler/write textures, partial allocation cleanup and stale callb
 Cancel/End/pan/resize/restore/fatal. Healthy release disposes child descriptors; terminal-fatal
 host cleanup must never call the poisoned editor, including through wrapper finalizers.
 
-Decision243 also authorizes P05-DIAG01's bounded opt-in diagnostic UI/export. Its schema uses
+## Bounded developer diagnostics
+
+Decision243 authorizes P05-DIAG01's bounded opt-in diagnostic UI/export (CT-06/07,
+SEC-02/03/09/13). Its schema uses
 allowlisted temporary correlations, counts and clock domains, without artwork, raw input,
 names, paths, credentials or automatic network transfer. Detailed capture and export buffers
 are separately bounded and measured; overload/sink failure cannot fail an edit. Test privacy
 canaries, user-action-only export, callback overhead, explicit partial/dropped state and no
 pointer/focus interception. Approval of the plan is not current implementation/evidence.
+
+Copy only finite bounded numeric values, fixed enums and checked build/ephemeral identifiers;
+never retain editor snapshots, mutable foreign wrappers or arbitrary metadata/error objects.
+Wrong types/unknown keys/content canaries reject before retention. Correlation is diagnostic
+metadata, never permission to mutate or certify a frame. Terminal state forbids new Wasm queries.
+
+Capture-limit and failure notifications cannot synchronously invoke subscribers/layout from
+input callbacks. Freeze the bounded store immediately, then coalesce presentation off the input
+path. Export prepares bounded chunks with host-task yields; interaction-epoch changes, Clear,
+capture replacement and departure fence completion. A stale async result cannot initiate a
+download. Fresh explicit idle action is required; failed download preserves the report for
+retry, and temporary URLs/buffers have bounded release. No recursive fault logging or retry loop.
+
+Actual-app DIAG-01–06 must test malformed/canary input, overload, exact boundaries, export
+failure/races, hidden/accepted versus rejected departure, terminal cleanup, stale metrics,
+overlay fit and input/focus priority. Review off/on performance separately from software event
+traces; accounted/logical bytes do not establish physical JS or driver residency.

@@ -33,6 +33,27 @@ until the lead explicitly transfers those hooks on a frozen checkpoint. Static v
 run independently; browser/GPU runs are serialized. This partial work is not a usable preview
 or accepted diagnostics implementation by itself.
 
+## Concrete edge cases and evidence ownership
+
+The sole DIAG01 writer owns these actual-app browser E2E cases and their production-hook
+exclusion checks; the independent reviewer audits negative controls and the designer reviews
+panel/overlay/focus variants. The rendering specialist reviews serialized capture-off/on timing.
+No phase-A static check substitutes for these integrated outcomes.
+
+| Scenario / priority | Initial state and event order | Required outcome |
+| --- | --- | --- |
+| DIAG-01 / high | Begin/Append/End → pending preparation → Undo/rebranch → late result | Stable ephemeral correlation distinguishes accepted, cancelled, stale and published work; no false current-frame event or retained editor object. |
+| DIAG-02 / high | Active input callback reaches capture count/byte limit or rejects malformed metadata | Store freezes synchronously, but notification/layout/export waits for a host task; artwork/input remains unaffected and drops are visible. |
+| DIAG-02/06 / high | Narrow canvas/free-space area; pin metrics; draw/pan beneath overlay; change text scale | Overlay fits the supplied free region or hides with a panel explanation; no hit interception, chrome overlap, canvas remap or focus theft. |
+| DIAG-03 / high | Idle Download starts yielded preparation → a gesture begins and ends → preparation completes | Changed interaction epoch prevents delayed download; retain the report and require a fresh explicit idle action. Clear/replacement/departure invalidates old callbacks. |
+| DIAG-02/03 / high | Capturing → tab hidden or accepted departure; also attempt rejected navigation | Accepted lifecycle departure freezes a truthful partial report; rejected navigation does not invent departure or corrupt capture; Resume never starts capture or steals focus. |
+| DIAG-05 / high | Idle canvas → rebuild without input → completed publication → hidden/idle | Activity-fed rates distinguish submissions from validated output; stale/unavailable values are labeled; no idle animation loop or Wasm access after terminal failure. |
+| DIAG-04 / high | Content/path/error canaries, extra fields, invalid numerics and oversized metadata reach the diagnostic adapter | Only fixed allowlisted values survive; rejected metadata cannot enter rings/export or fail an edit. No network or persistent identifier appears. |
+| DIAG-03/05 / high | Exact duration/count/byte boundary, event overload, serialization/Blob/URL/download failure | Bounded partial/drop/failure state, one retained report, bounded export lifetime and safe explicit retry; no retry loop, source loss or allocation claim exceeding measured evidence. |
+| DIAG-06 / medium | English/Ukrainian compact and enlarged text, field/IME Escape/Undo, panel Close/Back | Native field priority and identity-based focus remain; all app-owned messages are localized; automatic completion never opens or focuses UI. |
+
+Threat delta: [bounded developer diagnostics](../docs/security/web-gpu-editor.md#bounded-developer-diagnostics).
+
 Baseline maximum: 1024 events and 1 MiB logical payload. Detailed capture ends at the first of
 30 seconds, 4096 events or 2 MiB, including its baseline prelude. One retained capture per tab;
 account actual allocations/export buffers separately. Measure and refine within these bounds
