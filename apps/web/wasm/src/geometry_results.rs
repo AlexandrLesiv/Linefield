@@ -3,6 +3,10 @@ use wasm_bindgen::prelude::*;
 #[wasm_bindgen]
 impl StrokeSnapshot {
     #[wasm_bindgen(getter)]
+    pub fn active(&self) -> bool {
+        self.0.0.stroke_active.get()
+    }
+    #[wasm_bindgen(getter)]
     pub fn count(&self) -> u64 {
         self.0.0.count.get()
     }

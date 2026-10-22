@@ -90,3 +90,53 @@ mock-drawing motion and departure presentation after editor detachment. Animatio
 cannot reclaim focus or change the accepted mapping. Real window/DPR remapping and genuine
 focus loss retain their shared cancellation rules. MIG-UI-01/03 must cover normal-motion
 first-ready drawing without a settling delay, as well as reduced-motion behavior.
+
+## M03 asynchronous geometry presentation
+
+Designer specification review,2026-10-21, against M02 runtime1157aeba; adopted by the lead
+under decision242. Actual M03 build review remains required. No new controls/screens.
+
+Pending geometry is not an unfinished tool interaction. After ending A, accept B immediately
+and restore normal history/tool availability without a spinner, flashing colors or repeated
+loading announcements. Base, completed-pending and active overlays compose each logical group
+exactly once in order. Promotion into the base cannot brighten, darken, disappear, duplicate or
+jump. Test intermediate frames, not only final artwork. MIG-E01/E06/E07 and MIG-UI-03 apply.
+
+Pan transforms only Rust-certified coherent coverage, keeping every overlay aligned. Replacement
+must not snap; newly revealed content must meet the existing completion-time gates and never
+receive a complete-frame acknowledgement while absent. Rapid zoom must not regress detail;
+Escape restores the pre-drag view, and late results cannot restore the cancelled view.
+MIG-E03/E06, MIG-X03 and MIG-UI-04 apply.
+
+Undo/rebranch immediately invalidates affected content's semantic currentness and obsolete
+overlays. The M03 continuity repair retains one already validated historical base as display-only
+presentation until a valid current frame swaps atomically; it must not clear unaffected artwork
+to white while rebuilding. Historical pixels cannot acknowledge currentness, drive hit tests or
+enter the new branch. This explicitly supersedes the earlier requirement to remove affected
+base pixels before the next presentation. History still changes immediately in Rust and retains
+its completion-time limits. No spinner, fade, focus change or disabled controls is introduced.
+Fresh accepted strokes absent from that raster appear immediately once, with bounded base
+reconstruction progress. Rust transforms historical pixels and current overlays consistently
+during pan/zoom; newly revealed coverage remains incomplete until actually rendered. Repeated
+history targets the latest valid state, without cycling obsolete replacements onto the display.
+Cancel removes only current unfinished overlays; context loss cannot retain invalid GPU pixels.
+A late result cannot resurrect obsolete content after replacement. Worker-only loss is transparent when bounded
+fallback can maintain usable output; no error overlay solely for worker failure. Mandatory
+display loss follows existing recovery: cancel only unfinished interaction, retain completed
+work/history, one reduced rebuild then Retry/Back, truthful readiness. MIG-E04/E05/E06,
+MIG-X02/X05 and MIG-UI-08 apply.
+
+Back/Resume, blur and resize discard obsolete presentation results without stealing focus,
+reopening routes or restoring cancelled previews. Keep localized unsaved disclosure, stable
+layout, field/IME priority, browser-owned touch and equal normal/reduced-motion semantics.
+MIG-E02/E04/E11 and MIG-UI-01/09 apply. Physical-device and accessibility evidence remain
+separate from synthetic input, source review and eventual final-frame parity.
+
+Scoped designer recheck on2026-10-22 used production B9GGOEeT / editor QxntagEX. The Ukrainian
+320px dark presentation at200% text now keeps the focused Width control and numeric value visible.
+Normal-motion first-ready drawing, immediate A→B, pan alignment/Escape restoration, Back/Resume
+and focus passed the reviewed behavior. Active-pan captures showed rougher stroke edges than
+the stationary frame; transient visual fidelity remains unresolved and is not a pass.
+This does not certify subsequent scheduling builds, complete M03 performance,
+physical Wacom input, assistive technology or Ukrainian linguistic quality. Final changed-build
+review and the remaining resource/failure acceptance still apply.

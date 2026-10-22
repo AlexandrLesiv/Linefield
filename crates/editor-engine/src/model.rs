@@ -72,6 +72,7 @@ pub struct Projection {
     pub phase: Phase,
     pub metrics: Option<Metrics>,
     pub presented: bool,
+    pub display_usable: bool,
     pub cpu_charge: usize,
     pub resources: crate::Resources,
     pub style: crate::document::Style,
@@ -84,6 +85,10 @@ pub struct Projection {
 }
 #[derive(Default)]
 pub struct Engine {
+    pub(crate) frames: Vec<crate::FrameReceipt>,
+    pub(crate) frame_counter: u64,
+    pub(crate) preparations: Vec<crate::preparation::Ticket>,
+    pub(crate) preparation_counter: u64,
     pub(crate) pages: Vec<crate::scene::Descriptor>,
     pub(crate) page_counter: u64,
     pub(crate) continuation: Option<crate::geometry_cursor::Continuation>,
@@ -117,6 +122,7 @@ impl Engine {
             phase: Phase::Gallery,
             metrics: None,
             presented: false,
+            display_usable: false,
             cpu_charge: 0,
             resources: crate::Resources::default(),
             style: self.document.style,

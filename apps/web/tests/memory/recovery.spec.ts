@@ -18,12 +18,17 @@ test("MIG-RECOVERY-02 repeated GPU failure latches after one reduced retry; expl
     const gl = node.getContext("webgl2");
     if (!gl) throw Error("WebGL2");
     const getError = gl.getError.bind(gl),
-      createTexture = gl.createTexture.bind(gl);
-    const state = { fail: true, allocations: 0 };
+      createTexture = gl.createTexture.bind(gl),
+      createVertexArray = gl.createVertexArray.bind(gl);
+    const state = { fail: true, allocations: 0, attempts: 0 };
     gl.getError = () => (state.fail ? gl.OUT_OF_MEMORY : getError());
     gl.createTexture = () => {
       state.allocations++;
       return createTexture();
+    };
+    gl.createVertexArray = () => {
+      state.attempts++;
+      return createVertexArray();
     };
     return state;
   });
@@ -32,7 +37,9 @@ test("MIG-RECOVERY-02 repeated GPU failure latches after one reduced retry; expl
   await page.mouse.move(550, 550, { steps: 8 });
   await expect(canvas).toHaveAttribute("data-state", "resourceUnavailable");
   await page.mouse.up();
-  await expect.poll(() => fault.evaluate((s) => s.allocations)).toBe(1);
+  await expect.poll(() => fault.evaluate((s) => s.attempts)).toBe(1);
+  // One renderer attempt tries the optional R8 target, then the complete RGBA fallback.
+  expect(await fault.evaluate((s) => s.allocations)).toBe(2);
   for (let i = 0; i < 3; i++)
     await page.getByRole("button", { name: "Zoom in", exact: true }).click();
   await page.evaluate(() => window.dispatchEvent(new Event("resize")));
@@ -42,9 +49,11 @@ test("MIG-RECOVERY-02 repeated GPU failure latches after one reduced retry; expl
         requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
       ),
   );
-  expect(await fault.evaluate((s) => s.allocations)).toBe(1);
+  expect(await fault.evaluate((s) => s.attempts)).toBe(1);
+  expect(await fault.evaluate((s) => s.allocations)).toBe(2);
   await page.getByRole("button", { name: "Retry display", exact: true }).click();
-  await expect.poll(() => fault.evaluate((s) => s.allocations)).toBe(3);
+  await expect.poll(() => fault.evaluate((s) => s.attempts)).toBe(3);
+  expect(await fault.evaluate((s) => s.allocations)).toBe(6);
   await expect(canvas).toHaveAttribute("data-state", "resourceUnavailable");
   await fault.evaluate((s) => {
     s.fail = false;

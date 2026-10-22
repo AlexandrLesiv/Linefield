@@ -1,2 +1,3 @@
 // Explicit contexts do not inherit Playwright's configured baseURL.
-export const testOrigin = `http://127.0.0.1:${process.env.LINEFIELD_TEST_PORT ?? "65161"}`;
+import { testPort } from "../test-ports.ts";
+export const testOrigin = `http://127.0.0.1:${testPort}`;

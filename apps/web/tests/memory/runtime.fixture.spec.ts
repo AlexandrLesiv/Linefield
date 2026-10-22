@@ -7,11 +7,13 @@ for (const label of [
   "Run GPU contract",
   "Run terminal reserve",
   "Run GPU numerics",
+  "Run page joins",
   "Run GPU edges",
   "Run GPU taper",
   "Run resource lifetimes",
   "Run bounded calibration",
   "Run cleanup failure",
+  "Run historical display boundary",
 ]) {
   test(`WMR-03/04/06 isolated browser evidence: ${label}`, async ({ page, browser }, info) => {
     const errors: string[] = [];

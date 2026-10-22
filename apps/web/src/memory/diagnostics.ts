@@ -1,3 +1,4 @@
+import { geometryMetrics } from "./geometry-metrics.ts";
 import { resourceSnapshot } from "./resource-monitor.ts";
 interface Event {
   event: "memory-command";
@@ -73,5 +74,10 @@ export function diagnostic(command: string, outcome: string, session = 0n): void
 }
 // Copied bounded metadata for isolated browser evidence; no global or production sink.
 export function diagnosticSnapshot() {
-  return { records: records.map((item) => ({ ...item })), dropped, resources: resourceSnapshot() };
+  return {
+    records: records.map((item) => ({ ...item })),
+    dropped,
+    resources: resourceSnapshot(),
+    geometry: { ...geometryMetrics },
+  };
 }

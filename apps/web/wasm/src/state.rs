@@ -34,7 +34,10 @@ impl State {
     #[wasm_bindgen(getter, js_name = canBeginInk)]
     pub fn can_begin_ink(&self) -> bool {
         let value = self.0.0.value.get();
-        value.phase == Phase::Ready && value.metrics.is_some() && value.interaction == 0
+        value.phase == Phase::Ready
+            && value.metrics.is_some()
+            && value.display_usable
+            && value.interaction == 0
     }
     #[wasm_bindgen(getter, js_name = strokeCount)]
     pub fn stroke_count(&self) -> u64 {

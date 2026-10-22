@@ -13,8 +13,13 @@ pub struct Data {
     _reserved: Vec<u8>,
     pub ids: RefCell<Vec<u64>>,
     pub count: Cell<u64>,
+    pub stroke_active: Cell<bool>,
+    pub frame_id: Cell<u64>,
+    pub frame_content: Cell<u64>,
+    pub frame_mapping: Cell<u64>,
     pub style: Cell<linefield_editor_engine::Style>,
     pub page: RefCell<Option<linefield_editor_engine::Page>>,
+    pub preparation: RefCell<Option<linefield_editor_engine::PreparationInput>>,
     pub placement: Cell<linefield_editor_engine::Placement>,
 }
 impl Drop for Data {
@@ -81,8 +86,13 @@ where
         _reserved: reserved,
         ids: RefCell::new(Vec::new()),
         count: Cell::new(0),
+        stroke_active: Cell::new(false),
+        frame_id: Cell::new(0),
+        frame_content: Cell::new(0),
+        frame_mapping: Cell::new(0),
         style: Cell::new(Default::default()),
         page: RefCell::new(None),
+        preparation: RefCell::new(None),
         placement: Cell::new(Default::default()),
     });
     LIVE.set(true);

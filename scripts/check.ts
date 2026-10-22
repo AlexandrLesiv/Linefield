@@ -101,6 +101,7 @@ try {
   await checkSourceSize(join(root, "apps/web/src"));
   await checkSourceSize(join(root, "apps/web/tests"));
   await checkSourceSize(join(root, "apps/web/wasm/src"));
+  await checkSourceSize(join(root, "apps/web/preparation-wasm/src"));
   await checkSourceSize(join(root, "crates/editor-engine/src"));
   await checkSourceSize(join(root, "crates/editor-geometry/src"));
   console.log(JSON.stringify({ check: "script-source-size", status: "passed" }));

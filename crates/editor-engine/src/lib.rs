@@ -5,6 +5,7 @@ mod document;
 #[cfg(feature = "e2e-fixtures")]
 mod fixtures;
 mod geometry_cursor;
+mod geometry_packing;
 mod geometry_page;
 mod geometry_precision;
 mod history;
@@ -20,3 +21,21 @@ pub use ink::Input;
 pub use model::{Code, Engine, Metrics, Phase, Projection};
 pub use resources::Resources;
 pub use scene::{Page, Placement};
+
+mod preparation;
+mod preparation_adopt;
+pub use preparation::PreparationInput;
+
+mod preparation_relevance;
+
+mod display_readiness;
+mod frame;
+pub use frame::FrameReceipt;
+
+mod coverage;
+mod live_preparation;
+mod preparation_view;
+
+mod preparation_range;
+
+mod source_proof;

@@ -56,6 +56,7 @@ impl Engine {
                 if let Some(value) = self.current.as_mut() {
                     value.phase = Phase::Suspended;
                     value.metrics = None;
+                    value.display_usable = false;
                 }
             }
             return Code::Exhausted;
@@ -66,6 +67,7 @@ impl Engine {
         if let Some(value) = self.current.as_mut() {
             value.phase = Phase::Ready;
             value.metrics = Some(metrics);
+            value.display_usable = false;
         }
         Code::Ok
     }
@@ -82,6 +84,7 @@ impl Engine {
         if let Some(value) = self.current.as_mut() {
             value.phase = Phase::Suspended;
             value.metrics = None;
+            value.display_usable = false;
         }
         Code::Ok
     }

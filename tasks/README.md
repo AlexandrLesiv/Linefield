@@ -1,5 +1,17 @@
 ## Current priority — full vector migration (2026-10-21)
 
+Current owner renewal on 2026-10-22: [decision243](../docs/decisions.md) authorizes autonomous
+M03–M09 and all required scoped technical/design decisions until the owner's return or
+2026-10-23 07:13:55 UTC. [P05-DIAG01](P05-DIAG01.md) implements the approved bounded logging
+and development mode after the M03 runtime contract freezes. The existing continuation is active
+every 20 minutes; the previous paused/deadline statements below describe the earlier window.
+No merges; preserve current previews and reference5207. Quality requirements remain unchanged.
+
+Current2026-10-22: the owner resumed M03 directly after the scheduled window, authorizing its
+fixture/performance repairs, checks/reviews and updates to [draft PR18](https://github.com/AlexandrLesiv/Linefield/pull/18).
+Keep live previews available; no merge. The expired deadline below describes the earlier
+autonomous M01–M09 window, not this renewed M03 request. The automation remains paused.
+
 Decision242 authorizes autonomous [M01](P05-M01.md) → [M02](P05-M02.md) → [M03](P05-M03.md) →
 [M04](P05-M04.md) → [M05](P05-M05.md) → [M06](P05-M06.md) → [M07](P05-M07.md) →
 [M08](P05-M08.md) → [M09](P05-M09.md) through2026-10-22 06:21:48UTC. Contracts/design are

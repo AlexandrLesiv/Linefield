@@ -1,3 +1,4 @@
+import { queryReady } from "./query-readiness.ts";
 import * as api from "#memory-bindings";
 import { bridge } from "../../../src/memory/bridge.ts";
 import { edit, take, copyReply } from "../../../src/memory/edit-bridge.ts";
@@ -11,7 +12,7 @@ export function gpuEdges(canvas: HTMLCanvasElement) {
     maximumCoverageError = 0,
     maximumEndpointError = 0;
   let largestIntermediate = 0;
-  for (const region of [0n, 9223372036854775800n])
+  for (const region of [0n, 9223372036854775800n, -9223372036854775800n])
     for (const angle of [
       -Math.PI / 2 - 1e-10,
       -Math.PI / 2 + 1e-10,
@@ -25,6 +26,7 @@ export function gpuEdges(canvas: HTMLCanvasElement) {
       let s = bridge.create();
       s = bridge.enter(s.owner);
       s = bridge.metrics(s, 1n, 512, 512, 4);
+      s = queryReady(s);
       s = edit.view(s, 0.05, 256, 256, false);
       s = edit.style(s, 512, [0, 0, 0]);
       s = edit.begin(s, 1, 70, 256, 0, true);
@@ -80,6 +82,7 @@ export function gpuEdges(canvas: HTMLCanvasElement) {
       }
       renderer.composite();
       renderer.publish();
+      renderer.gl.bindFramebuffer(renderer.gl.READ_FRAMEBUFFER, null);
       // The terminal round cap is outside the preceding curved source support.
       // Compare actual GPU coverage against its analytical f64 circular edge.
       const radius = 512 * 0.5 * 0.05 * 16 * 4;

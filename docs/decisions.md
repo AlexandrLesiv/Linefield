@@ -3643,3 +3643,25 @@ web first-slice restrictions. Preserve320MiB CPU soft target and performance pro
 One task/branch/PR and owner-only merging remain. Frozen stacked parents allow continued work
 while the owner is absent; verify integration before parent-first merge. Preserve current
 previews and unrelated work. M10–M14 worker experiments and native/storage work are excluded.
+
+## Decision243 — renewed autonomous M03–M09 and developer diagnostics
+
+On 2026-10-22 the owner explicitly renewed autonomous M03–M09 implementation and delegated
+all necessary technical/design decisions for the next 10–12 hours. The continuation ends on
+the owner's return or 2026-10-23 07:13:55 UTC (10:13:55 Europe/Kyiv), whichever is first.
+The owner also approved retaining logging and adding development mode according to the
+proposed WEB-DIAG-D1 direction in docs/logging.md. The lead records concrete contracts and
+design refinements with configured specialists without further owner approval in this window.
+
+Complete the active M03 repairs and verification, then bounded diagnostic task P05-DIAG01
+and M04–M09 in dependency order. Each leaf still has one writer, branch and PR; frozen stacked
+parents permit continued work while awaiting owner merges. E2E-only behavioral tests, static
+and build checks, designer and fresh independent review, performance/correctness thresholds,
+source privacy and preservation rules remain. No merge, release or automatic evidence acceptance.
+The live reference application at http://127.0.0.1:5207/ may be compared read-only; it is not
+permission to change the reference repository or inherit its test/performance claims.
+
+Reuse the existing thread continuation every 20 minutes, report meaningful outcomes only and
+pause it with a completed/remaining handoff at return, completion or deadline. Preserve65177
+and existing previews; show new reviewed builds separately. M10–M14 experiments, native hosts,
+persistence and unrelated features remain outside this authorization.

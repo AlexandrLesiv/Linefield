@@ -2,6 +2,7 @@ import { diagnostic, diagnosticSnapshot } from "../../../src/memory/diagnostics.
 import * as api from "#memory-bindings";
 import { bridge } from "../../../src/memory/bridge.ts";
 import type { ReplyValue } from "../../../src/memory/bridge.ts";
+import { queryReady } from "./query-readiness.ts";
 function check(condition: boolean, label: string): void {
   if (!condition) throw Error(label);
 }
@@ -86,9 +87,10 @@ export function boundaryMatrix() {
   check(bridge.read(owner).mapping === before.mapping && accessors === 0, "atomic invalid metrics");
   state = bridge.metrics(state, 1n, 1024, 768, 1);
   check(
-    state.code === "ok" && bridge.read(owner).canBeginInk,
-    "ink does not wait for presentation",
+    state.code === "ok" && !bridge.read(owner).canBeginInk,
+    "initial input waits for shared display readiness",
   );
+  state = queryReady(state);
   const old = state;
   check(
     bridge.presented(state).code === "ok" && bridge.read(owner).canBeginInk,
@@ -99,9 +101,10 @@ export function boundaryMatrix() {
   state = bridge.metrics(state, 3n, 1024, 768, 1);
   check(state.presentation !== old.presentation, "same-size token fresh");
   check(
-    bridge.presented(old).code !== "ok" && bridge.read(owner).canBeginInk,
+    bridge.presented(old).code !== "ok" && !bridge.read(owner).canBeginInk,
     "old frame rejected",
   );
+  state = queryReady(state);
   check(bridge.presented(state).code === "ok", "new frame accepted");
   cases.push("same-size-suspend-old-frame-new-frame");
   const page = api.memorySceneIds(owner, state.session, state.scene, 0n);

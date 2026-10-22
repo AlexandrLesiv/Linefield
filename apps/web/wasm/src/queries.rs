@@ -13,9 +13,10 @@ pub fn stroke(
 ) -> Result<JsValue, JsValue> {
     execute_data::<StrokeSnapshot>(|e, d| {
         match (|| e.stroke_info(id(owner)?, id(session)?, id(scene)?, id(stroke)?))() {
-            Ok((count, style)) => {
+            Ok((count, style, active)) => {
                 d.count.set(count);
                 d.style.set(style);
+                d.stroke_active.set(active);
                 Code::Ok
             }
             Err(c) => c,

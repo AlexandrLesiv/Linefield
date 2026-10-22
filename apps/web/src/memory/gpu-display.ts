@@ -1,13 +1,16 @@
+import { frames } from "./frame-bridge.ts";
+import { runObservedCommand } from "./command-timing.ts";
+import type { CommandTiming } from "./command-timing.ts";
+import { editorHealthy } from "./editor-health.ts";
+import { acknowledgementObservation, submissionObservation } from "./performance-observation.ts";
 import { diagnostic } from "./diagnostics.ts";
 import type { Bridge, ReplyValue } from "./bridge.ts";
 import type { MemoryView } from "./view.ts";
 import { GpuRenderer } from "./gpu-renderer.ts";
-import { GeometryPages } from "./geometry-pages.ts";
-import { scene } from "./scene-bridge.ts";
+import { ProgressiveScene } from "./progressive-scene.ts";
 import { attachInput } from "./input.ts";
 import { attachEditorControls } from "./editor-controls.ts";
-import { observeResources } from "./resource-monitor.ts";
-import { wasmBytes } from "./loader.ts";
+import { reportResources } from "./resource-monitor.ts";
 export function attachGpuDisplay(
   view: MemoryView,
   api: Bridge,
@@ -30,40 +33,37 @@ export function attachGpuDisplay(
     update(next);
     return next.code === "ok" || next.code === "noop";
   };
-  const cache = new GeometryPages(() => state);
+  let cache: ProgressiveScene | undefined;
   const valid = () => !stopped && alive();
   const commands = {
     read: () => state,
-    run(action: (s: ReplyValue) => ReplyValue) {
+    run(action: (s: ReplyValue) => ReplyValue, timing?: CommandTiming) {
       if (!valid() || lost || failed) return undefined;
       try {
-        const result = action(state);
-        accept(result);
-        controls?.sync();
-        input?.sync();
-        schedule();
-        return result;
-      } catch {
+        return runObservedCommand(
+          () => action(state),
+          accept,
+          () => controls?.sync(),
+          () => input?.sync(),
+          schedule,
+          timing,
+        );
+      } catch (error) {
         fatal();
+        failDisplay(error);
         return undefined;
       }
     },
     view: () => api.mapping(state.owner, state.session),
-    fail: fatal,
+    fail: () => {
+      fatal();
+      failDisplay(Error("editor-fatal"));
+    },
   };
   let input: ReturnType<typeof attachInput> | undefined;
   let controls: ReturnType<typeof attachEditorControls> | undefined;
   const report = () => {
-    if (
-      observeResources(
-        api.read(state.owner),
-        cache.resources(),
-        wasmBytes(),
-        renderer?.width ?? 0,
-        renderer?.height ?? 0,
-      )
-    )
-      diagnostic("display", "soft-target", state.session);
+    if (alive()) reportResources(api.read(state.owner), cache?.resources(), renderer);
   };
   function schedule() {
     if (valid() && !lost && !failed && !frame) frame = requestAnimationFrame(render);
@@ -78,7 +78,8 @@ export function attachGpuDisplay(
       const dimensions = `${width}:${height}:${backing}`;
       if (dimensions !== size || !renderer) {
         input?.cancel();
-        cache.dispose();
+        cache?.dispose();
+        cache = undefined;
         renderer?.dispose();
         renderer = undefined;
         if (
@@ -98,55 +99,51 @@ export function attachGpuDisplay(
           Math.ceil(width * backing),
           Math.ceil(height * backing),
         );
+        cache = new ProgressiveScene(() => state, renderer, schedule, failDisplay);
         size = dimensions;
+      }
+      if (!renderer.available()) {
+        schedule();
+        return;
       }
       const mapping = api.mapping(state.owner, state.session);
       const detail = 2 ** Math.ceil(Math.log2(mapping.zoom * backing));
-      cache.begin();
-      renderer.begin();
-      let after = 0n;
-      for (;;) {
-        const ids = scene.ids(state, after);
-        if (ids.code !== "ok") throw Error(ids.code);
-        for (const id of ids.ids) {
-          const stroke = scene.stroke(state, id);
-          if (stroke.code !== "ok") throw Error(stroke.code);
-          renderer.group();
-          for (const page of cache.read(id, stroke.count, detail)) {
-            const placement = scene.placement(state, id, page.page);
-            if (placement.code !== "ok") throw Error(placement.code);
-            if (placement.available) renderer.draw(page.data, placement.matrix, stroke.color);
-          }
-          renderer.composite();
-          after = id;
-        }
-        if (ids.done) break;
-      }
-      renderer.publish();
-      cache.finish();
+      cache?.render(detail);
+      const serial = renderer.check();
+      cache?.submitted(serial);
+      submissionObservation(state, renderer.epoch, serial, cache?.inputComplete ?? false);
+      if (!cache?.ready) return;
       report();
-      accept(api.presented(state));
+      const receipt = cache?.acknowledgement;
+      if (receipt && accept(frames.ready(state, receipt)) && accept(api.presented(state)))
+        acknowledgementObservation(state, renderer.epoch, receipt, serial);
       view.status("ready");
       automaticRetry = 0;
       controls?.sync();
       input?.sync();
     } catch (error) {
-      diagnostic("display", error instanceof Error ? error.message : "failed", state.session);
-      input?.cancel();
-      renderer?.dispose();
-      renderer = undefined;
-      try {
-        cache.reduce();
-        accept(api.suspend(state, nextSequence()));
-      } catch {
-        fatal();
-        return;
-      }
-      view.status("resourceUnavailable");
-      report();
-      if (automaticRetry++ === 0) schedule();
-      else failed = true;
+      failDisplay(error);
     }
+  }
+  function failDisplay(error: unknown) {
+    diagnostic("display", error instanceof Error ? error.message : "failed", state.session);
+    if (!editorHealthy()) fatal();
+    input?.cancel();
+    renderer?.dispose();
+    renderer = undefined;
+    try {
+      cache?.dispose();
+      cache = undefined;
+      if (!valid()) return;
+      accept(api.suspend(state, nextSequence()));
+    } catch {
+      fatal();
+      return;
+    }
+    view.status("resourceUnavailable");
+    report();
+    if (automaticRetry++ === 0) schedule();
+    else failed = true;
   }
   input = attachInput(view.canvas, commands);
   controls = attachEditorControls(view.canvas, commands, api);
@@ -160,7 +157,8 @@ export function attachGpuDisplay(
     cancelAnimationFrame(frame);
     frame = 0;
     try {
-      cache.dispose();
+      cache?.dispose();
+      cache = undefined;
       accept(api.suspend(state, nextSequence()));
     } catch {
       fatal();
@@ -183,7 +181,8 @@ export function attachGpuDisplay(
     input?.dispose();
     controls?.dispose();
     try {
-      cache.dispose();
+      cache?.dispose();
+      cache = undefined;
     } catch {
       /* Session may already have left; derived descriptors retire with it. */
     }

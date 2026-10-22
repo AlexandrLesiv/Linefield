@@ -31,7 +31,12 @@ export function program(
     for (const s of shaders) gl.deleteShader(s);
   }
 }
-export function target(gl: WebGL2RenderingContext, width: number, height: number) {
+export function target(
+  gl: WebGL2RenderingContext,
+  width: number,
+  height: number,
+  format: number = gl.RGBA8,
+) {
   const texture = gl.createTexture(),
     framebuffer = gl.createFramebuffer();
   if (!texture || !framebuffer) {
@@ -45,7 +50,7 @@ export function target(gl: WebGL2RenderingContext, width: number, height: number
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA8, width, height);
+    gl.texStorage2D(gl.TEXTURE_2D, 1, format, width, height);
     gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
     if (

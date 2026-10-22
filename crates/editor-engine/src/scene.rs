@@ -21,6 +21,7 @@ pub(crate) struct Descriptor {
     pub bounds: [f64; 4],
     pub centers: [f64; 4],
     pub origin: [Axis; 2],
+    pub proof: crate::source_proof::SourceProof,
 }
 impl Engine {
     pub fn scene_list(
@@ -52,14 +53,20 @@ impl Engine {
         session: u64,
         scene: u64,
         id: u64,
-    ) -> Result<(u64, Style), Code> {
+    ) -> Result<(u64, Style, bool), Code> {
         self.session(owner, session)?;
         if self.current.is_none_or(|v| v.scene != scene) {
             return Err(Code::StaleScene);
         }
         self.document
             .stroke(id)
-            .map(|s| (s.samples.len as u64, s.style))
+            .map(|s| {
+                (
+                    s.samples.len as u64,
+                    s.style,
+                    self.document.active.as_ref().is_some_and(|a| a.id == id),
+                )
+            })
             .ok_or(Code::StaleScene)
     }
     pub fn placement(
@@ -71,20 +78,33 @@ impl Engine {
         page: u64,
     ) -> Result<Placement, Code> {
         self.mapping(owner, session, mapping)?;
-        let descriptor = self
-            .pages
-            .iter()
-            .find(|p| p.id == page && p.key.stroke == stroke)
-            .ok_or(Code::StaleScene)?;
-        let source = self.document.stroke(stroke).ok_or(Code::StaleScene)?;
-        let chunk_end = descriptor.key.chunk.saturating_mul(128).saturating_add(129);
-        if (source.samples.len as u64).min(chunk_end) != descriptor.key.revision {
-            return Err(Code::StaleScene);
-        }
         let Some(m) = self.current.and_then(|v| v.metrics) else {
             return Err(Code::Unavailable);
         };
         let v = self.document.view;
+        self.project_page(stroke, page, v, m)
+    }
+    pub(crate) fn project_page(
+        &self,
+        stroke: u64,
+        page: u64,
+        v: crate::numerics::Viewport,
+        m: crate::Metrics,
+    ) -> Result<Placement, Code> {
+        let descriptor = self
+            .pages
+            .binary_search_by_key(&page, |p| p.id)
+            .ok()
+            .and_then(|i| self.pages.get(i))
+            .filter(|p| p.key.stroke == stroke)
+            .ok_or(Code::StaleScene)?;
+        let source = self.document.stroke(stroke).ok_or(Code::StaleScene)?;
+        if !descriptor
+            .proof
+            .current(source.samples.len as u64, descriptor.key)
+        {
+            return Err(Code::StaleScene);
+        }
         if descriptor.key.detail < v.zoom * m.backing {
             return Err(Code::StaleScene);
         }

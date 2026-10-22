@@ -7,9 +7,12 @@ export default defineConfig(({ mode }) => {
   const fixtures = mode === "memory-e2e";
   const generated = new URL(`.build-cache/web-memory/${fixtures ? "e2e" : "production"}/`, root);
   return {
+    worker: { format: "es" },
     plugins: [vanillaExtractPlugin(), productionPolicy(fixtures ? "e2e" : "production")],
     resolve: {
       alias: {
+        "#preparation-bindings": fileURLToPath(new URL("linefield_web_preparation.js", generated)),
+        "#preparation-wasm": fileURLToPath(new URL("linefield_web_preparation_bg.wasm", generated)),
         "#memory-bindings": fileURLToPath(new URL("linefield_web_memory.js", generated)),
         "#memory-wasm": fileURLToPath(new URL("linefield_web_memory_bg.wasm", generated)),
       },

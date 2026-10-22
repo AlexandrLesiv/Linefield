@@ -1,8 +1,8 @@
 import { defineConfig } from "@playwright/test";
-const port = Number(process.env.LINEFIELD_TEST_PORT ?? "65161");
+import { testPort as port } from "./test-ports.ts";
 export default defineConfig({
   testDir: "./tests",
-  testIgnore: "**/*.fixture.spec.ts",
+  testIgnore: ["**/*.fixture.spec.ts", "**/*.observation.spec.ts"],
   fullyParallel: false,
   workers: 1,
   use: {

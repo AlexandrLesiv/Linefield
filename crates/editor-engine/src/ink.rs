@@ -25,7 +25,7 @@ impl Engine {
         self.mapping(owner, session, mapping)?;
         if self
             .current
-            .is_none_or(|v| v.phase != Phase::Ready || v.metrics.is_none())
+            .is_none_or(|v| v.phase != Phase::Ready || v.metrics.is_none() || !v.display_usable)
         {
             return Err(Code::Unavailable);
         }

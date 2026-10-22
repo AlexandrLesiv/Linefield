@@ -1,14 +1,11 @@
+import { inputObservation } from "./performance-observation.ts";
+import { editorSnapshot } from "./editor-health.ts";
 import { diagnostic } from "./diagnostics.ts";
 import * as api from "#memory-bindings";
 import type { Reply } from "#memory-bindings";
 import type { ReplyValue } from "./bridge.ts";
 export function take<T extends Reply, R>(action: () => T, copy: (value: T) => R): R {
-  const value = action();
-  try {
-    return copy(value);
-  } finally {
-    value.free();
-  }
+  return editorSnapshot(action, copy);
 }
 export const copyReply = (v: Reply): ReplyValue => ({
   code: v.code,
@@ -23,6 +20,7 @@ export const copyReply = (v: Reply): ReplyValue => ({
 });
 const command = (action: () => Reply, name = "") => {
   const result = take(action, copyReply);
+  inputObservation(result, name || "update");
   if (name) diagnostic(name, result.code, result.session);
   return result;
 };

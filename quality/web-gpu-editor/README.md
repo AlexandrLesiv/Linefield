@@ -53,6 +53,72 @@ Stop on decisive correctness/absolute timing failure and repair the bottleneck. 
 full p95 acceptance pass. M03/M04 add bounded warm/cold/evicted comparisons; M09 full profile.
 No threshold relaxation to obtain green. Missing/flaky/skipped/stale evidence is not pass.
 
+## M03 browser scheduling and lifetime checks
+
+The implementation writer owns these actual-route tests under `apps/web/tests/memory`;
+CT-02/03/06/07/08, INV-01–05/08 and SU-03/04/13/14/16/20 apply. Observation files run only
+against a separately identified `performance-e2e` build. Their hooks are excluded from production.
+Record exact build and actual outcomes in the task; this mapping alone is not a pass record.
+
+| Case / source | Concrete trigger and expected invariant |
+| --- | --- |
+| MIG-WORKER-11 / promotion.observation.spec.ts and scheduling.observation.spec.ts | End→pan before promotion preserves exact Rust-issued receipt identity; forty completed strokes → warmed Undo/Redo preserves ordered exact pixels with bounded32-command/1MiB ready queue, up to256 commands per2ms submission slice; observe successful refill beyond32 without claiming timing acceptance |
+| MIG-WORKER-12 / prefetch.observation.spec.ts | At least two confirmed delayed worker starts during frame rebuild → Back before results → Resume: worker terminated, no late resurrection, exact source and Undo retained |
+| MIG-WORKER-13 / traversal.observation.spec.ts |65,537 expected source samples using synthetic coalesced stress setup → wholly offscreen frame: observe≥512 culled Rust preparation queries across actual task turns, then exact acknowledgement and recoverable history; synthetic setup is not physical input evidence |
+| MIG-WORKER-14 / pan-fidelity.observation.spec.ts | Settled committed receipt → integer pan while geometry worker starts are held → same-camera rebuilt receipt → release: compare exact shifted interior pixels across provisional/accurate/ended states |
+| MIG-WORKER-15 / cancellation.observation.spec.ts | Confirmed withheld real worker reply → Undo → matching current receipt acknowledgement within500ms; joined candidate has zero queue/job/copy charges; deliver obsolete reply, then fresh rebranch/Undo/Redo and repeat without resurrecting artwork |
+| MIG-WORKER-16 / pending-fatal.fixture.spec.ts | Confirmed pending candidate → real metrics trap or explicitly injected command/getter/destructor exception → immediate worker teardown, Back, late reply, forced GC and Resume: no subsequent canonical-editor export, fatal tombstone retained; positive export/call controls prevent vacuous proof |
+| MIG-WORKER-17 / control-work.observation.spec.ts | Begin/End positively change toolbar availability; unchanged accepted append batches issue zero toolbar mutations. Paired phase records preserve request/source identity and monotonic acquisition/Rust-return/state/control/contact times; these measure the batch body or command wrapper, not whole browser dispatch or physical latency |
+| MIG-WORKER-18 / shared-pages.observation.spec.ts and shared-coverage.observation.spec.ts | Completed secondary chunks reuse prepared page IDs through warm Undo/Redo with zero new immediate preparation/uploads and exact pixels; broad clipped source → camera beyond retained coverage → Redo requires fresh preparation, then reset-view pixels agree. Active source remains on its exact path |
+| MIG-WORKER-21 / history-display.observation.spec.ts | Hold the replacement's real worker reply after Undo of B from A+B; sample every submitted default-framebuffer display to retain unaffected A, draw fresh C immediately, then publish A+C and remove C with one Undo |
+| MIG-WORKER-23 / history-display.observation.spec.ts | Held historical base follows Rust-certified pan and Escape without a current receipt acknowledgement or complete-overlay claim |
+| MIG-WORKER-24 / history-display.observation.spec.ts | Cancel fresh C while history is held; repeated Undo/Redo and latest-target Undo, context loss/restore, late held replies and Back preserve exact completed history without C or B resurrection |
+| MIG-LIVE-02 / pressure.observation.spec.ts |127/128/129 accepted pen points across chunk boundary: live, completed and rebuilt pixels agree; trusted browser pen events do not certify physical Wacom |
+| MIG-WORKER-04 / gpu-budget.spec.ts | Maximum8,388,608 backing pixels, optional and packed formats → resize → Back: mandatory target payload≤64MiB and released owned targets; requested payload is not physical driver residency |
+| MIG-WORKER-07 / worker-failure.spec.ts | Confirmed malformed worker reply during actual camera rebuild: reject geometry and preserve completed artwork/history |
+| MIG-RECOVERY-02 / recovery.spec.ts | Persistent allocation error: exactly one automatic renderer retry and two attempts after explicit Retry; count renderer attempts separately from optional-format/RGBA allocation attempts, then prove restored source/history |
+
+Scene-only source-prefix rejection must abort the candidate, terminate its exclusive worker and
+join preparation retirement before rebuilding. Ordinary pan/append preserves a useful receipt.
+MIG-WORKER-15 tests withheld actual replies separately from whole-view disposal.
+Cold-history latency, secondary immediate geometry uploads, active-pan fidelity, spatial index,
+delayed coarsening, contiguous draw batching and complete recency behavior require their own
+successful evidence before M03 completion. A warm-refill functional pass does not close them.
+The bounded observation snapshot includes copied aggregate cache-role/upload counters. Stroke-count
+records reuse existing Rust query results, deduplicate at most256 identities, and carry no raw
+coordinates. Nonzero ring drops invalidate pairing. Release assets exclude observation sinks,
+phase/count strings and hooks; inspect the actual frozen entry chunk, not stale output siblings.
+
+Historical display uses only the existing validated base allocation and a separately named Rust
+display transform. The generated-API `Run historical display boundary` fixture rejects wrong
+owner/session/mapping, unknown/released receipts, changed metrics and departed sessions; strict
+frame transforms, preparation and readiness still reject the obsolete content prefix. This is
+synthetic browser boundary evidence, not an actual-route or native E2E claim.
+
+MIG-WORKER-22 remains open: the existing immediate-page path can retain the earliest768 pages
+and fail to show the latest accepted ink while a historical replacement is held. A98,816-move
+actual-handler diagnostic reproduced this after observing Rust's98,817-sample active source;
+the final marker stayed invisible. The65,536-move diagnostic is below this capacity boundary
+and cannot close it. Preserve that failure when evaluating a bounded whole-group continuation
+repair; neither the ordinary Undo continuity checks nor the scoped preview accepts this gap.
+
+The isolated memory fixture lane requires fatal engine trap→Back/Resume without later engine
+calls, finite complete GPU-contract traversal, and the independent f64 edge/taper expectations.
+Fatal observation covers all canonical-editor exports, including generated getters/destructors.
+A copy-failed wrapper stays strongly reachable for the terminal module lifetime to prevent its
+FinalizationRegistry from calling poisoned Wasm; one outstanding wrapper bounds this retention.
+Preparation-module and host/GPU cleanup remain independent. Injected JavaScript boundary faults
+are labeled separately from the actual Rust trap; neither is production fault injection.
+Read displayed color from the default read framebuffer: publication leaves an internal overlay
+mask bound for subsequent work. Preserve all sample positions and coverage tolerances.
+Centered page packing keeps each coordinate within the existing signed extent, collects at most
+1024 capsules in48KiB fallibly allocated f64 scratch, then packs once into at most24KiB f32.
+The scratch and output overlap during packing. Raw samples, per-capsule subdivision and the
+quarter-pixel error budget are unchanged. `Run page joins` checks first/last endpoints and every
+capsule/page transition with negative coordinates and positive/negative far regions; require a
+nonempty multipage control. The1,000,000-page/30-second traversal bound remains unchanged.
+These fixture checks do not establish indexed visibility or production latency acceptance.
+
 Numerical boundary corpus includes min/max width/scale/zoom/DPR, far regions/crossings,
 large radii/clipping and pressure extrema. Validate total painted-edge error, not only centerline.
 Queue/resource tests include repeated Back/Resume, resize, context recovery, cache eviction,

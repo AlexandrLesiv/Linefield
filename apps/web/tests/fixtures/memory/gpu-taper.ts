@@ -81,6 +81,7 @@ export function gpuTaper(canvas: HTMLCanvasElement) {
       renderer.draw(data, matrix, [0, 0, 0, 1]);
       renderer.composite();
       renderer.publish();
+      renderer.gl.bindFramebuffer(renderer.gl.READ_FRAMEBUFFER, null);
       const pixels = new Uint8Array(9 * 9 * 4);
       renderer.gl.readPixels(252, 251, 9, 9, renderer.gl.RGBA, renderer.gl.UNSIGNED_BYTE, pixels);
       for (let y = 0; y < 9; y++)

@@ -1,5 +1,6 @@
+import { targets } from "./gpu-targets.ts";
 import { vertex, fragment, screenVertex, screenFragment } from "./gpu-shaders.ts";
-import { program, target } from "./gpu-resources.ts";
+import { program } from "./gpu-resources.ts";
 export function allocateGpu(gl: WebGL2RenderingContext, width: number, height: number) {
   const cleanup: (() => void)[] = [];
   const dispose = () => {
@@ -23,14 +24,10 @@ export function allocateGpu(gl: WebGL2RenderingContext, width: number, height: n
       gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
       gl.bufferData(gl.ARRAY_BUFFER, 4096 * 32, gl.DYNAMIC_DRAW);
     }
-    const mask = target(gl, width, height);
-    cleanup.push(mask.dispose);
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    const staging = target(gl, width, height);
-    cleanup.push(staging.dispose);
+    const surfaces = targets(gl, width, height);
+    cleanup.push(surfaces.dispose);
     if (gl.isContextLost() || gl.getError() !== gl.NO_ERROR) throw Error("gpu-resource");
-    return { ink, copy, vao, buffers, mask, staging, dispose };
+    return { ink, copy, vao, buffers, ...surfaces, dispose };
   } catch (error) {
     dispose();
     throw error;

@@ -51,11 +51,11 @@ void main(){
   }
  }
  if(l<0.000001){vec2 q=pos-mix(pa.xy,pb.xy,t);float tent=max(0.0,1.0-abs(q.x))*max(0.0,1.0-abs(q.y));float area=min(1.0,3.14159265359*radius*radius*tent);coverage=mix(area,coverage,smoothstep(0.5,1.0,radius));}
- float alpha=coverage*color.a;if(alpha<=0.0)discard;outColor=vec4(color.rgb*alpha,alpha);
+ float alpha=coverage*color.a;if(alpha<=0.0)discard;outColor=vec4(alpha);
 }`;
 export const screenVertex = `#version 300 es
-precision highp float;out vec2 uv;
-void main(){vec2 p=vec2((gl_VertexID<<1)&2,gl_VertexID&2);uv=p;gl_Position=vec4(p*2.0-1.0,0,1);}`;
+precision highp float;out vec2 uv;uniform vec2 viewport;uniform mat3 transform;
+void main(){vec2 corners[6]=vec2[6](vec2(0,0),vec2(1,0),vec2(0,1),vec2(0,1),vec2(1,0),vec2(1,1));vec2 p=corners[gl_VertexID];uv=vec2(p.x,1.0-p.y);vec2 screen=(transform*vec3(p*viewport,1)).xy;gl_Position=vec4(screen/viewport*vec2(2,-2)+vec2(-1,1),0,1);}`;
 export const screenFragment = `#version 300 es
-precision highp float;in vec2 uv;uniform sampler2D image;out vec4 outColor;
-void main(){outColor=texture(image,uv);}`;
+precision highp float;in vec2 uv;uniform sampler2D image;uniform sampler2D secondImage;uniform bool combine;uniform bool coverage;uniform bool alphaOnly;uniform bool packedMask;uniform vec4 groupColor;out vec4 outColor;
+void main(){vec4 value=texture(image,uv);float a=packedMask?value.a:value.r;if(combine){vec4 other=texture(secondImage,uv);a=max(a,packedMask?other.a:other.r);}outColor=alphaOnly?vec4(a):coverage?vec4(groupColor.rgb*a,a):vec4(value.rgb,1);}`;

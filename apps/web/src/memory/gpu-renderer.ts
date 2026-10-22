@@ -1,14 +1,19 @@
+import { LiveGpu } from "./live-gpu.ts";
+import { GpuSubmission } from "./gpu-submission.ts";
 import { allocateGpu } from "./gpu-allocation.ts";
-import { emptyBounds, pageBounds, union, scissor } from "./gpu-scissor.ts";
+import { GpuArena } from "./gpu-arena.ts";
+import { GpuPass, blit } from "./gpu-pass.ts";
+let resourceEpoch = 0;
 export class GpuRenderer {
+  readonly epoch = ++resourceEpoch;
   readonly gl: WebGL2RenderingContext;
   readonly resources: ReturnType<typeof allocateGpu>;
-  private groupBounds = emptyBounds();
-  private previousBounds = emptyBounds();
-  private stream = 0;
   readonly canvas: HTMLCanvasElement;
   readonly width: number;
   readonly height: number;
+  private arena: GpuArena;
+  private pass: GpuPass;
+  private submissions: GpuSubmission;
   constructor(canvas: HTMLCanvasElement, width: number, height: number) {
     this.canvas = canvas;
     this.width = width;
@@ -22,98 +27,125 @@ export class GpuRenderer {
     });
     if (!gl) throw Error("gpu-unavailable");
     for (const stage of [gl.VERTEX_SHADER, gl.FRAGMENT_SHADER]) {
-      const precision = gl.getShaderPrecisionFormat(stage, gl.HIGH_FLOAT);
-      if (!precision || precision.precision < 23 || precision.rangeMax < 127)
-        throw Error("gpu-unavailable");
+      const p = gl.getShaderPrecisionFormat(stage, gl.HIGH_FLOAT);
+      if (!p || p.precision < 23 || p.rangeMax < 127) throw Error("gpu-unavailable");
     }
     this.gl = gl;
+    this.submissions = new GpuSubmission(gl);
     canvas.width = width;
     canvas.height = height;
     this.resources = allocateGpu(gl, width, height);
+    const scratch = this.resources.buffers[0];
+    if (!scratch) throw Error("gpu-buffer");
+    this.arena = new GpuArena(gl, scratch);
+    this.pass = new GpuPass(
+      gl,
+      this.resources,
+      this.resources.mask,
+      this.resources.staging.framebuffer,
+      width,
+      height,
+      this.arena,
+    );
     try {
       gl.viewport(0, 0, width, height);
-      this.check();
-    } catch (error) {
+      if (gl.isContextLost() || gl.getError() !== gl.NO_ERROR) throw Error("gpu-resource");
+    } catch (e) {
       this.resources.dispose();
-      throw error;
+      throw e;
     }
   }
   begin() {
     const gl = this.gl;
+    this.arena.begin();
+    this.pass = new GpuPass(
+      gl,
+      this.resources,
+      this.resources.mask,
+      this.resources.staging.framebuffer,
+      this.width,
+      this.height,
+      this.arena,
+    );
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.resources.staging.framebuffer);
     gl.disable(gl.SCISSOR_TEST);
+    gl.colorMask(true, true, true, !this.resources.packed);
     gl.clearColor(1, 1, 1, 1);
     gl.clear(gl.COLOR_BUFFER_BIT);
   }
   group() {
-    const gl = this.gl;
-    gl.bindFramebuffer(gl.FRAMEBUFFER, this.resources.mask.framebuffer);
-    scissor(gl, this.previousBounds, this.width, this.height);
-    this.groupBounds = emptyBounds();
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.enable(gl.BLEND);
-    gl.blendEquation(gl.MAX);
-    gl.blendFunc(gl.ONE, gl.ONE);
+    this.pass.group();
   }
-  draw(data: Float32Array, m: Float32Array, color: readonly number[]) {
-    const gl = this.gl;
-    gl.useProgram(this.resources.ink);
-    gl.bindVertexArray(this.resources.vao);
-    const bounds = pageBounds(data, m);
-    union(this.groupBounds, bounds);
-    scissor(gl, bounds, this.width, this.height);
-    const buffer = this.resources.buffers[this.stream++ % 2];
-    if (!buffer) throw Error("gpu-buffer");
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    for (let i = 0; i < 2; i++) {
-      gl.enableVertexAttribArray(i);
-      gl.vertexAttribPointer(i, 3, gl.FLOAT, false, 24, i * 12);
-      gl.vertexAttribDivisor(i, 1);
-    }
-    gl.bufferSubData(gl.ARRAY_BUFFER, 0, data);
-    gl.uniform2f(gl.getUniformLocation(this.resources.ink, "viewport"), this.width, this.height);
-    gl.uniform4fv(gl.getUniformLocation(this.resources.ink, "color"), color);
-    gl.uniformMatrix3fv(
-      gl.getUniformLocation(this.resources.ink, "placement"),
-      false,
-      new Float32Array([m[0] ?? 0, m[1] ?? 0, 0, m[2] ?? 0, m[3] ?? 0, 0, m[4] ?? 0, m[5] ?? 0, 1]),
-    );
-    gl.drawArraysInstanced(gl.TRIANGLES, 0, 6, data.length / 6);
+  draw(data: Float32Array, matrix: Float32Array, color: readonly number[], page = 0n) {
+    this.pass.draw(data, matrix, color, page);
   }
   composite() {
-    const gl = this.gl;
-    this.previousBounds = this.groupBounds;
-    scissor(gl, this.groupBounds, this.width, this.height);
-    gl.bindFramebuffer(gl.FRAMEBUFFER, this.resources.staging.framebuffer);
-    gl.enable(gl.BLEND);
-    gl.blendEquation(gl.FUNC_ADD);
-    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    this.blit(this.resources.mask.texture);
+    this.pass.composite();
   }
-  publish() {
+  promote() {
+    const old = this.resources.base;
+    this.resources.base = this.resources.staging;
+    this.resources.staging = old;
+    if (this.resources.packed) {
+      this.resources.mask = this.resources.staging;
+      this.resources.overlayMask = this.resources.base;
+    }
+  }
+  live() {
+    return new LiveGpu(this.gl, this.resources, this.width, this.height, this.arena);
+  }
+  overlay(matrix?: Float32Array, base = true, clearMask = true) {
     const gl = this.gl;
-    this.check();
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.disable(gl.SCISSOR_TEST);
     gl.disable(gl.BLEND);
-    this.blit(this.resources.staging.texture);
+    gl.colorMask(true, true, true, true);
+    gl.clearColor(1, 1, 1, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    if (base)
+      blit(
+        gl,
+        this.resources,
+        this.resources.base.texture,
+        this.width,
+        this.height,
+        undefined,
+        matrix,
+      );
+    return new GpuPass(
+      gl,
+      this.resources,
+      this.resources.overlayMask,
+      null,
+      this.width,
+      this.height,
+      this.arena,
+      clearMask,
+    );
+  }
+  publish() {
+    this.check();
+    this.promote();
+    this.overlay();
     this.check();
   }
-  private blit(texture: WebGLTexture) {
-    const gl = this.gl;
-    gl.useProgram(this.resources.copy);
-    gl.bindVertexArray(null);
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.uniform1i(gl.getUniformLocation(this.resources.copy, "image"), 0);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  available() {
+    const ready = this.submissions.acquire();
+    if (ready && this.submissions.idle) this.arena.maintain();
+    return ready;
   }
-  private check() {
-    if (this.gl.isContextLost() || this.gl.getError() !== this.gl.NO_ERROR)
-      throw Error("gpu-resource");
+  async slot() {
+    while (!this.available()) await this.submissions.turn();
+  }
+  check() {
+    return this.submissions.submit();
+  }
+  validated(serial: number) {
+    return this.submissions.wait(serial);
   }
   dispose() {
+    this.submissions.dispose();
+    this.arena.dispose();
     this.resources.dispose();
   }
 }
