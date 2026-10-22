@@ -446,6 +446,14 @@ than resurrecting its old terminal pixels. Clear obsolete front before covers/pr
 claim completeness; final promotion uses canonical stable only. A failed replacement keeps the
 previous valid front; cancelled/incompatible owner cleanup removes its entire contribution.
 
+When the live owner C ends, retire only its hidden back construction, retain its visible front
+and finish canonical stable C. Any following independent group D uses the now-free dedicated
+back target as scratch, preserving source-over group order. Never clear C's front for D or MAX
+their independent coverage together. Shared single-interaction admission excludes simultaneous
+C back construction and D scratch use. Test partial back at End followed by immediate D,
+translucent overlap and camera/cancellation in both format paths. D's existing immediate-cache
+capacity limitation remains separate; this refinement does not certify oversized D progress.
+
 After End, retained displayed coverage stays in its fixed anchor and follows Rust camera
 transforms until canonical promotion. Finer detail or newly exposed coverage remains provisional
 until the strict replacement path covers it. Context/metrics/fatal failures retain existing

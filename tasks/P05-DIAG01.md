@@ -7,7 +7,7 @@ autonomous window, ending on return or 2026-10-23 07:13:55 UTC.
 
 ## Outcome and boundary
 
-Implement WEB-DIAG-D1 in docs/logging.md: correlated bounded command/stroke/history/render/worker
+Implement [WEB-DIAG-D1.1](../docs/design/developer-diagnostics.md) and docs/logging.md: correlated bounded command/stroke/history/render/worker
 summaries; opt-in detailed 30-second capture; settings panel, optional noninteractive metrics
 overlay and explicit JSON download. Preserve drawing latency, input, focus, navigation, themes
 and English/Ukrainian. No artwork or raw input/content in logs, network telemetry, durable
@@ -30,7 +30,7 @@ under delegated authority; never weaken drawing correctness or performance targe
 
 ## Acceptance
 
-CT-02/03/04/06/07/08/09; INV-01/04/05/08/09/11; SU-03/04/13/14/16/20; SEC-03/09/13.
+CT-02/03/04/06/07/08/09; INV-01/04/05/08/09/11; SU-03/04/13/14/15/16/20; SEC-03/09/13.
 
 | ID | Required observable result |
 | --- | --- |
