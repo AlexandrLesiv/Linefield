@@ -412,7 +412,7 @@ The checked generated entry points are:
 
 | Entry point (all take owner/session) | Result and authority |
 | --- | --- |
-| memoryTailDisplayCapture(scene,stroke,anchorFrame,from,detail) | Rust freezes source N; returns code,id,stroke,count,from,empty,anchorFrame. Host cannot choose N or source values. Reject invalid anchor/detail/start or exhausted receipt capacity without altering existing owners. |
+| memoryTailDisplayCapture(scene,stroke,anchorFrame,from,detail) | Rust freezes source N; returns code,id,stroke,count,from,complete,exactSource,anchorFrame. Empty is derived from from=count. Host cannot choose N or source values. Reject invalid anchor/detail/start or exhausted receipt capacity without altering existing owners. |
 | memoryTailDisplayPreparation(mapping,tailID) | Next bounded copied range, through and token using the existing PreparationSnapshot shape; one pending ticket. Culled output advances one range, not the entire tail implicitly. |
 | memoryTailDisplayAdopt(tailID,token,ordinal,data,origin) | Validate parent, order, finite bounded geometry and frozen-source hull; return a display-only page. |
 | memoryTailDisplayPlacement(mapping,tailID,page) | Validate exact parent/source/metrics and return placement in the shared captured raster anchor. |

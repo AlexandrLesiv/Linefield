@@ -1,8 +1,10 @@
 # P05-DIAG01 — Bounded developer diagnostics and local export
 
-Status: authorized by decision243; waiting for the frozen M03 contract/runtime. No writer yet.
-Position: after P05-M03, before M04 integration. One branch/PR stacked on the verified frozen
-M03 source; owner alone merges. The lead settles remaining decisions within the renewed
+Status: authorized by decision243. Independent storage/presentation work may start against a
+frozen committed M03 checkpoint; final runtime hooks and acceptance wait for the coordinated
+M03 integration handoff. No overlapping memory/renderer/engine implementation ownership.
+Position: integrate after P05-M03, before M04 integration. One branch/PR stacked on the verified
+frozen M03 source; owner alone merges. The lead settles remaining decisions within the renewed
 autonomous window, ending on return or 2026-10-23 07:13:55 UTC.
 
 ## Outcome and boundary
@@ -22,6 +24,14 @@ One implementation writer owns runtime, generated boundary, UI/locales and featu
 lead owns contract/task/security prose. Designer reviews panel/overlay behavior, rendering
 specialist checks capture overhead, and fresh reviewer audits source, privacy and evidence.
 Implementation must coordinate the frozen M03 fields before changing shared paths.
+
+Initial parallel scope owns new apps/web/src/developer-diagnostics modules and additive
+English/Ukrainian catalogue entries only. It defines a narrow typed host adapter for supplied
+safe metadata and availability; it cannot query/mutate the editor independently. Existing
+memory/input/render/Rust sources, drawing-shell integration and shared tests remain with M03
+until the lead explicitly transfers those hooks on a frozen checkpoint. Static validation may
+run independently; browser/GPU runs are serialized. This partial work is not a usable preview
+or accepted diagnostics implementation by itself.
 
 Baseline maximum: 1024 events and 1 MiB logical payload. Detailed capture ends at the first of
 30 seconds, 4096 events or 2 MiB, including its baseline prelude. One retained capture per tab;
