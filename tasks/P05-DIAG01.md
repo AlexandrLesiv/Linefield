@@ -37,10 +37,14 @@ or accepted diagnostics implementation by itself.
 The coordinated integration reservation extends DIAG01 ownership to drawing-shell.ts,
 memory/document.ts, view.ts, diagnostics.ts, bridge.ts, edit-bridge.ts, input-state.ts,
 input.ts, input-batch.ts, input-keyboard.ts, editor-controls.ts, command-timing.ts and
-gpu-display.ts; its actual-app diagnostics E2E and bounded fixture hook; and Vite build-identity
+the small gpu-display.ts observation adapter; its actual-app diagnostics E2E and bounded fixture hook; and Vite build-identity
 integration. M03 cold work owns frame commands/building, readiness, scheduling observations and
-its tests. DIAG01 does not edit live/progressive-scene, GPU allocation, resource accounting,
-preparation cache or executor until a second explicit hook handoff. Reconcile those on the final
+its tests. The gpu-display adapter is now frozen and that module returned to M03 capacity
+ownership. The second serialized handoff reserves preparation-executor.ts and prepared-cache.ts
+for DIAG01's additive named job start/finish/reject/stale-adoption observations, without changing
+their APIs, worker protocol, source ownership or cache policy. M03 coordinates any later edit.
+DIAG01 does not edit live/progressive-scene, GPU allocation, resource accounting or the new
+current-coverage query until another explicit handoff. Reconcile these hooks on the final
 M03 base before adoption. No extra Wasm reads, worker protocol, mutable editor or universal bus.
 
 Use narrow named copied-metadata callbacks for command outcomes, existing accepted state,
@@ -50,6 +54,11 @@ canonical decimal u64 correlations. Unknown metadata is discarded; invalid allow
 rejected. The pending sample metric is Unavailable without compatible authoritative watermarks.
 No detail tracing is inferred from queue/page counts. Browser/GPU verification is serialized
 with M03; isolated output directories preserve its frozen previews and comparison builds.
+Worker detail uses existing immutable ticket metadata and the main host clock; never retain
+sample arrays or raw error objects. Per-job/page events are capture-only, with bounded baseline
+summaries/failures. Editing commands already correlate session/interaction/request/content;
+source IDs appear only when a normal authoritative read supplies them, never from stroke counts
+or an extra query. Missing source/sample watermarks remain explicitly unavailable.
 
 ## Concrete edge cases and evidence ownership
 
