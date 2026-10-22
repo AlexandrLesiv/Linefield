@@ -73,6 +73,13 @@ Start/New, Download and Clear are unavailable; Stop (when idle), Pin and Close r
 Without a retained report, Download/Clear are unavailable. Automatic expiry is independent of
 gesture state and never interrupts input. Availability changes must not flash the tools rail.
 
+An idle, visible failed editor may still open diagnostics and inspect/download/clear retained
+host-only data. New capture requires a usable nonterminal editor. Terminal failure freezes an
+active capture as Partial; metrics observation and all Wasm getters remain off. An already
+running capture may continue through nonterminal recovery using safe host events/aggregates.
+The host reports idle after acquisition is detached; never query a poisoned editor to decide
+diagnostic availability. Diagnostic inspection does not make drawing usable again.
+
 | Trigger | Behavior |
 | --- | --- |
 | Capture for 30 seconds | Start atomically, close panel, focus ready canvas. Capture does not automatically pin metrics. |
@@ -81,6 +88,7 @@ gesture state and never interrupts input. Availability changes must not flash th
 | Duration expires | Ready if no loss; no focus change, reopened panel or interrupted gesture. |
 | Event/byte limit | Exclude the overflowing record, freeze Partial with exact reason/count/time. Include bounded metadata and baseline prelude within the cap. |
 | Hidden tab or accepted editor departure | Freeze Partial with reason; no navigation guard or automatic restart. Rejected departure does not stop capture. |
+| Terminal editor failure | Freeze Partial with the terminal reason; preserve report inspection/export through host-only state. No new capture or editor queries. |
 | Dropped/rejected record or sink failure | Expose partial/loss counters, freeze if continuation is unsafe; never fail an edit or recursively log the failure. |
 | Download JSON, idle frozen report | Serialize bounded immutable data off input callbacks. Disable duplicate export/replacement/clear while preparing, but keep editing/close/pin available. |
 | Drawing begins during export preparation | Drawing proceeds. Do not initiate a download during a gesture. If activation cannot be retained, show Ready to download and require another explicit idle Download action. No queued post-stroke native prompt. |
@@ -88,6 +96,10 @@ gesture state and never interrupts input. Availability changes must not flash th
 | Export failure | Safe-category inline failure with Retry; preserve frozen report. |
 | Clear | Release detailed report/export bytes, not drawing/history or the ongoing baseline ring. |
 | Reload/tab close | Report is lost; no durability promise or new unload guard. |
+
+Hidden/departure/terminal transitions, Clear and report replacement fence any export preparation
+generation. Resume or another user activation cannot revive a stale automatic download, even if
+the interaction epoch did not change. Require a fresh explicit idle Download action.
 
 Use baseline1024events/1MiB; detailed30s/4096events/2MiB first limit including prelude/metadata.
 Keep one report per tab, with actual object/export allocations independently bounded. Baseline

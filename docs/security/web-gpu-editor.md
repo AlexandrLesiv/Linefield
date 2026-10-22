@@ -72,11 +72,15 @@ Copy only finite bounded numeric values, fixed enums and checked build/ephemeral
 never retain editor snapshots, mutable foreign wrappers or arbitrary metadata/error objects.
 Wrong types/unknown keys/content canaries reject before retention. Correlation is diagnostic
 metadata, never permission to mutate or certify a frame. Terminal state forbids new Wasm queries.
+An idle failed editor may inspect/export/clear an existing host-only report. New capture is
+disabled; terminal transition freezes an existing capture as partial. Diagnostic availability
+never authorizes drawing or recreates an editor owner.
 
 Capture-limit and failure notifications cannot synchronously invoke subscribers/layout from
 input callbacks. Freeze the bounded store immediately, then coalesce presentation off the input
 path. Export prepares bounded chunks with host-task yields; interaction-epoch changes, Clear,
-capture replacement and departure fence completion. A stale async result cannot initiate a
+capture replacement, hidden/departure and terminal transitions fence completion, even without
+an interaction-epoch change. A stale async result cannot initiate a
 download. Fresh explicit idle action is required; failed download preserves the report for
 retry, and temporary URLs/buffers have bounded release. No recursive fault logging or retry loop.
 
