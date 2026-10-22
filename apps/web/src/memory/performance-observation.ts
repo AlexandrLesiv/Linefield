@@ -112,6 +112,21 @@ export function cancelledPublication(receipt: bigint) {
   if (import.meta.env.MODE === "performance-e2e")
     append({ kind: "receipt-cancel", receipt: `${receipt}`, time: performance.now() });
 }
+export function retirementObservation(s: ReplyValue, receipt: bigint, cancelled: boolean) {
+  if (import.meta.env.MODE === "performance-e2e")
+    append({
+      kind: "frame-retired",
+      ...identity(s),
+      receipt: `${receipt}`,
+      cancelled,
+      queue: metrics.queue,
+      active: metrics.active,
+      readyBytes: metrics.readyBytes,
+      preparationCopies: metrics.preparationCopies,
+      failures: metrics.failures,
+      time: performance.now(),
+    });
+}
 export function liveOwnerObservation(s: ReplyValue, stroke: bigint) {
   if (import.meta.env.MODE === "performance-e2e")
     append({ kind: "live-owner", ...identity(s), stroke: `${stroke}`, time: performance.now() });

@@ -1,4 +1,5 @@
 import { frames } from "./frame-bridge.ts";
+import { editorHealthy } from "./editor-health.ts";
 import { acknowledgementObservation, submissionObservation } from "./performance-observation.ts";
 import { diagnostic } from "./diagnostics.ts";
 import type { Bridge, ReplyValue } from "./bridge.ts";
@@ -44,27 +45,25 @@ export function attachGpuDisplay(
         input?.sync();
         schedule();
         return result;
-      } catch {
+      } catch (error) {
         fatal();
+        failDisplay(error);
         return undefined;
       }
     },
     view: () => api.mapping(state.owner, state.session),
-    fail: fatal,
+    fail: () => {
+      fatal();
+      failDisplay(Error("editor-fatal"));
+    },
   };
   let input: ReturnType<typeof attachInput> | undefined;
   let controls: ReturnType<typeof attachEditorControls> | undefined;
   const report = () => {
     if (!alive()) return;
-    if (
-      observeResources(
-        api.read(state.owner),
-        cache?.resources() ?? { bytes: 0, pages: 0, streamOnly: false },
-        wasmBytes(),
-        renderer?.width ?? 0,
-        renderer?.height ?? 0,
-      )
-    )
+    const geometry = cache?.resources() ?? { bytes: 0, pages: 0, streamOnly: false };
+    const { width = 0, height = 0 } = renderer ?? {};
+    if (observeResources(api.read(state.owner), geometry, wasmBytes(), width, height))
       diagnostic("display", "soft-target", state.session);
   };
   function schedule() {
@@ -129,12 +128,14 @@ export function attachGpuDisplay(
   }
   function failDisplay(error: unknown) {
     diagnostic("display", error instanceof Error ? error.message : "failed", state.session);
+    if (!editorHealthy()) fatal();
     input?.cancel();
     renderer?.dispose();
     renderer = undefined;
     try {
       cache?.dispose();
       cache = undefined;
+      if (!valid()) return;
       accept(api.suspend(state, nextSequence()));
     } catch {
       fatal();

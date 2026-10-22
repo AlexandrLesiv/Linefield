@@ -11,9 +11,14 @@ export async function buildFrame(
   receipt: { id: bigint; through: bigint },
   detail: number,
   alive: () => boolean,
+  signal: AbortSignal,
 ) {
+  if (!alive()) return false;
   prepared.begin();
   const commands = new FrameCommands(state, prepared, receipt.through, detail, receipt.id);
+  const cancel = () => commands.stop();
+  signal.addEventListener("abort", cancel, { once: true });
+  if (signal.aborted) cancel();
   let initialized = false,
     serial = 0;
   try {
@@ -31,6 +36,7 @@ export async function buildFrame(
         readyBytes = 0,
         reason = "cap";
       try {
+        if (!alive()) return false;
         if (!initialized) {
           renderer.begin();
           initialized = true;
@@ -88,12 +94,17 @@ export async function buildFrame(
     if (!alive()) return false;
     if (!initialized) {
       await renderer.slot();
-      renderer.begin();
-      serial = renderer.check();
+      try {
+        if (!alive()) return false;
+        renderer.begin();
+      } finally {
+        serial = renderer.check();
+      }
     }
     await renderer.validated(serial);
     return alive() && frames.transform(state(), receipt.id).code === "ok";
   } finally {
+    signal.removeEventListener("abort", cancel);
     await commands.dispose();
   }
 }

@@ -66,19 +66,27 @@ Record exact build and actual outcomes in the task; this mapping alone is not a 
 | MIG-WORKER-12 / prefetch.observation.spec.ts | At least two confirmed delayed worker starts during frame rebuild → Back before results → Resume: worker terminated, no late resurrection, exact source and Undo retained |
 | MIG-WORKER-13 / traversal.observation.spec.ts |65,537 expected source samples using synthetic coalesced stress setup → wholly offscreen frame: observe≥512 culled Rust preparation queries across actual task turns, then exact acknowledgement and recoverable history; synthetic setup is not physical input evidence |
 | MIG-WORKER-14 / pan-fidelity.observation.spec.ts | Settled committed receipt → integer pan while geometry worker starts are held → same-camera rebuilt receipt → release: compare exact shifted interior pixels across provisional/accurate/ended states |
+| MIG-WORKER-15 / cancellation.observation.spec.ts | Confirmed withheld real worker reply → Undo → matching current receipt acknowledgement within500ms; joined candidate has zero queue/job/copy charges; deliver obsolete reply, then fresh rebranch/Undo/Redo and repeat without resurrecting artwork |
+| MIG-WORKER-16 / pending-fatal.fixture.spec.ts | Confirmed pending candidate → real metrics trap or explicitly injected command/getter/destructor exception → immediate worker teardown, Back, late reply, forced GC and Resume: no subsequent canonical-editor export, fatal tombstone retained; positive export/call controls prevent vacuous proof |
 | MIG-LIVE-02 / pressure.observation.spec.ts |127/128/129 accepted pen points across chunk boundary: live, completed and rebuilt pixels agree; trusted browser pen events do not certify physical Wacom |
 | MIG-WORKER-04 / gpu-budget.spec.ts | Maximum8,388,608 backing pixels, optional and packed formats → resize → Back: mandatory target payload≤64MiB and released owned targets; requested payload is not physical driver residency |
 | MIG-WORKER-07 / worker-failure.spec.ts | Confirmed malformed worker reply during actual camera rebuild: reject geometry and preserve completed artwork/history |
 | MIG-RECOVERY-02 / recovery.spec.ts | Persistent allocation error: exactly one automatic renderer retry and two attempts after explicit Retry; count renderer attempts separately from optional-format/RGBA allocation attempts, then prove restored source/history |
 
-Current known limits remain explicit: scene-only Undo during a truly stalled worker may retain
-the candidate until the bounded worker watchdog; whole-view disposal is a separate case.
+Scene-only source-prefix rejection must abort the candidate, terminate its exclusive worker and
+join preparation retirement before rebuilding. Ordinary pan/append preserves a useful receipt.
+MIG-WORKER-15 tests withheld actual replies separately from whole-view disposal.
 Cold-history latency, secondary immediate geometry uploads, active-pan fidelity, spatial index,
 delayed coarsening, contiguous draw batching and complete recency behavior require their own
 successful evidence before M03 completion. A warm-refill functional pass does not close them.
 
 The isolated memory fixture lane requires fatal engine trap→Back/Resume without later engine
 calls, finite complete GPU-contract traversal, and the independent f64 edge/taper expectations.
+Fatal observation covers all canonical-editor exports, including generated getters/destructors.
+A copy-failed wrapper stays strongly reachable for the terminal module lifetime to prevent its
+FinalizationRegistry from calling poisoned Wasm; one outstanding wrapper bounds this retention.
+Preparation-module and host/GPU cleanup remain independent. Injected JavaScript boundary faults
+are labeled separately from the actual Rust trap; neither is production fault injection.
 Read displayed color from the default read framebuffer: publication leaves an internal overlay
 mask bound for subsequent work. Preserve all sample positions and coverage tolerances.
 Centered page packing keeps each coordinate within the existing signed extent, collects at most

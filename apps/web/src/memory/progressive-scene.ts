@@ -1,7 +1,7 @@
 import { sumGeometry } from "./resource-monitor.ts";
 import { pendingCoverage } from "./pending-coverage.ts";
 import { publicationObservation } from "./performance-observation.ts";
-import { buildFrame } from "./frame-builder.ts";
+import { FrameCandidate, reconstructFrame } from "./frame-reconstruction.ts";
 import { LiveCoverage } from "./live-coverage.ts";
 import { live } from "./live-bridge.ts";
 import type { prepareBegin } from "#preparation-bindings";
@@ -23,7 +23,7 @@ export class ProgressiveScene {
   private live: LiveCoverage | undefined;
   private promotion: FramePromotion;
   private base: Receipt | undefined;
-  private candidate: Receipt | undefined;
+  private candidate: FrameCandidate | undefined;
   private stopped = false;
   private state: () => ReplyValue;
   private renderer: GpuRenderer;
@@ -61,6 +61,7 @@ export class ProgressiveScene {
     this.inputComplete = false;
     const s = this.state(),
       key = `${s.content}:${s.mapping}`;
+    this.candidate?.validate(s, this.prepared);
     let transform = this.base ? frames.transform(s, this.base.id) : undefined;
     if (transform && transform.code !== "ok") {
       if (this.base) frames.release(s, this.base.id);
@@ -96,9 +97,7 @@ export class ProgressiveScene {
       );
     }
     if (!this.candidate && !this.live && this.base?.key !== key) {
-      const captured = frames.capture(s);
-      if (captured.code !== "ok") throw Error(captured.code);
-      const receipt = { id: captured.id, through: captured.through, key: captured.key };
+      const receipt = new FrameCandidate(s);
       this.candidate = receipt;
       metrics.pendingFrames = 1;
       void this.build(receipt, detail).catch((error) => {
@@ -138,35 +137,18 @@ export class ProgressiveScene {
       covered && pendingComplete && this.base.key.split(":")[1] === `${s.mapping}`;
     if (this.immediate.pending) this.changed();
   }
-  private async build(receipt: Receipt, detail: number) {
-    let published = false;
+  private async build(receipt: FrameCandidate, detail: number) {
     try {
-      this.prepare ??= await loadPreparation();
-      this.immediate ??= new ActivePages(this.state, this.prepare);
-      if (this.stopped) return;
-      if (
-        !(await buildFrame(
-          this.state,
-          this.prepared,
-          this.renderer,
-          receipt,
-          detail,
-          () => !this.stopped && !this.live,
-        ))
-      )
-        return;
-      this.renderer.promote();
-      this.publish(receipt);
-      published = true;
-    } catch (error) {
-      if (
-        error instanceof Error &&
-        ["stale-scene", "stale-mapping", "disposed"].includes(error.message)
-      )
-        metrics.stale++;
-      else throw error;
+      await reconstructFrame(this.state, this.prepared, this.renderer, receipt, detail, {
+        initialize: async () => {
+          this.prepare ??= await loadPreparation();
+          if (!this.stopped && !receipt.lifetime.signal.aborted)
+            this.immediate ??= new ActivePages(this.state, this.prepare);
+        },
+        alive: () => !this.stopped && !this.live,
+        publish: (next) => this.publish(next),
+      });
     } finally {
-      if (!published) frames.release(this.state(), receipt.id);
       this.candidate = undefined;
       metrics.pendingFrames = 0;
       if (!this.stopped) this.changed();
@@ -190,6 +172,7 @@ export class ProgressiveScene {
   resources = () => sumGeometry(this.prepared.resources(), this.immediate?.resources());
   dispose() {
     this.stopped = true;
+    this.candidate?.cancel(this.prepared);
     this.promotion.cancel();
     this.prepared.dispose();
     this.immediate?.dispose();

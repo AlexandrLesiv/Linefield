@@ -61,8 +61,10 @@ export class PreparationExecutor {
     this.worker?.terminate();
     this.worker = undefined;
     this.ready = false;
-    this.failures++;
-    metrics.failures++;
+    if (!this.disposed) {
+      this.failures++;
+      metrics.failures++;
+    }
     for (const waiter of this.waiting.values()) {
       clearTimeout(waiter.timer);
       waiter.reject();
@@ -98,7 +100,8 @@ export class PreparationExecutor {
     });
   }
   async *pages(input: Input, urgent = false): AsyncGenerator<Page> {
-    if (this.disposed || this.queued >= 256) throw Error("capacity");
+    if (this.disposed) throw Error("disposed");
+    if (this.queued >= 256) throw Error("capacity");
     this.queued++;
     metrics.queue = this.queued;
     metrics.preparationCopies = (this.queued + this.active.size) * 8192;
@@ -113,6 +116,7 @@ export class PreparationExecutor {
     }
     this.queued--;
     metrics.queue = this.queued;
+    metrics.preparationCopies = (this.queued + this.active.size) * 8192;
     if (this.disposed) throw Error("disposed");
     const id = ++this.serial;
     metrics.jobs++;
@@ -127,6 +131,7 @@ export class PreparationExecutor {
     let first = true;
     try {
       for (;;) {
+        if (this.disposed) throw Error("disposed");
         let value: Page;
         if (worker) {
           try {
@@ -138,8 +143,10 @@ export class PreparationExecutor {
           }
         } else {
           local ??= await loadPreparation();
+          if (this.disposed) throw Error("disposed");
           fallback ??= local(input.points, input.parameters);
           await turn();
+          if (this.disposed) throw Error("disposed");
           const start = performance.now(),
             result = fallback.nextPage();
           try {
@@ -171,6 +178,7 @@ export class PreparationExecutor {
       fallback?.free();
       this.active.delete(id);
       metrics.active = this.active.size;
+      metrics.preparationCopies = (this.queued + this.active.size) * 8192;
       if (worker && this.worker) this.worker.postMessage({ kind: "cancel", request: id });
     }
   }

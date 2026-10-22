@@ -1,6 +1,7 @@
 import * as api from "#memory-bindings";
 import type { Reply, State, Mapping } from "#memory-bindings";
 import { diagnostic } from "./diagnostics.ts";
+import { editorSnapshot } from "./editor-health.ts";
 export type ReplyValue = Readonly<
   Pick<
     Reply,
@@ -64,14 +65,11 @@ function reply(value: Reply): ReplyValue {
   };
 }
 function consume<T extends Reply, R>(command: string, action: () => T, copy: (value: T) => R): R {
-  const snapshot = action();
-  try {
+  return editorSnapshot(action, (snapshot) => {
     const value = copy(snapshot);
     diagnostic(command, snapshot.code, snapshot.session);
     return value;
-  } finally {
-    snapshot.free();
-  }
+  });
 }
 export const bridge = {
   create: () => consume("create", api.memoryCreate, reply),

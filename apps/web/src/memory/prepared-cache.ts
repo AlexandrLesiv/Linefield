@@ -7,7 +7,8 @@ import { PreparedStore } from "./prepared-store.ts";
 import type { PreparedPage } from "./prepared-store.ts";
 export type { PreparedPage } from "./prepared-store.ts";
 export class PreparedCache extends PreparedStore {
-  private executor = new PreparationExecutor();
+  private executor: PreparationExecutor | undefined;
+  private generation = 0;
   private pendingPages = 0;
   private pendingBytes = 0;
   private stopped = false;
@@ -38,6 +39,8 @@ export class PreparedCache extends PreparedStore {
     chunk: bigint,
   ): AsyncGenerator<PreparedPage> {
     if (this.stopped) return;
+    const generation = this.generation;
+    const current = () => !this.stopped && generation === this.generation;
     const revision = count < (chunk + 1n) * 128n + 1n ? count : (chunk + 1n) * 128n + 1n;
     const key = `${stroke}:${chunk}`,
       entries = this.entries.get(key) ?? [];
@@ -47,7 +50,9 @@ export class PreparedCache extends PreparedStore {
       return;
     }
     let attempt = 0;
+    const executor = (this.executor ??= new PreparationExecutor());
     for (;;) {
+      if (!current()) throw Error("disposed");
       this.trim(0, 0, true);
       const input = frame
         ? frames.preparation(this.state(), stroke, chunk, revision, detail, frame)
@@ -62,8 +67,8 @@ export class PreparedCache extends PreparedStore {
         streaming = false;
       const clipped = input.parameters[3] === 1;
       try {
-        for await (const result of this.executor.pages(input, urgent || attempt > 0)) {
-          if (this.stopped || preparation.current(this.state(), input.token) !== "ok")
+        for await (const result of executor.pages(input, urgent || attempt > 0)) {
+          if (!current() || preparation.current(this.state(), input.token) !== "ok")
             throw Error("stale-scene");
           if (result.data.length) {
             this.trim(bytes + result.data.byteLength, pages.length + 1);
@@ -106,6 +111,7 @@ export class PreparedCache extends PreparedStore {
             complete = true;
           }
         }
+        if (!current()) throw Error("disposed");
         if (
           complete &&
           !streaming &&
@@ -134,6 +140,7 @@ export class PreparedCache extends PreparedStore {
         } else preparation.release(this.state(), input.token);
         break;
       } catch (error) {
+        if (!current()) throw Error("disposed", { cause: error });
         if (attempt++ === 0 && error instanceof Error && error.message === "worker-unavailable")
           continue;
         throw error;
@@ -157,7 +164,12 @@ export class PreparedCache extends PreparedStore {
   }
   dispose() {
     this.stopped = true;
-    this.executor.dispose();
+    this.cancel();
     this.clearStore();
+  }
+  cancel() {
+    this.generation++;
+    this.executor?.dispose();
+    this.executor = undefined;
   }
 }

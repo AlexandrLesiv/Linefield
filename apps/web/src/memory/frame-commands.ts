@@ -142,8 +142,12 @@ export class FrameCommands {
     this.wake();
     return command;
   }
-  async dispose() {
+  stop() {
     this.stopped = true;
+    this.wake();
+  }
+  async dispose() {
+    this.stop();
     for (const command of this.queue) if (command.kind === "page") command.page.release?.();
     this.queue = [];
     this.bytes = 0;

@@ -1,4 +1,5 @@
 import * as api from "#memory-bindings";
+import { editorHealthy } from "./editor-health.ts";
 import type { ReplyValue } from "./bridge.ts";
 import { take } from "./edit-bridge.ts";
 export const scene = {
@@ -36,8 +37,10 @@ export const scene = {
       (v) => ({ code: v.code, available: v.available, matrix: v.matrix }),
     ),
   release: (s: ReplyValue, page: bigint) =>
-    take(
-      () => api.memoryReleasePage(s.owner, s.session, page),
-      (v) => v.code,
-    ),
+    editorHealthy()
+      ? take(
+          () => api.memoryReleasePage(s.owner, s.session, page),
+          (v) => v.code,
+        )
+      : "disposed",
 };

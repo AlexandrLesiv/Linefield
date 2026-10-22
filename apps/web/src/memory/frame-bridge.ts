@@ -1,4 +1,5 @@
 import * as api from "#memory-bindings";
+import { editorHealthy } from "./editor-health.ts";
 import { copyReply, take } from "./edit-bridge.ts";
 import type { ReplyValue } from "./bridge.ts";
 export const frames = {
@@ -20,10 +21,12 @@ export const frames = {
       (v) => ({ code: v.code, matrix: v.matrix, available: v.available }),
     ),
   release: (s: ReplyValue, id: bigint) =>
-    take(
-      () => api.memoryFrameRelease(s.owner, s.session, id),
-      (v) => v.code,
-    ),
+    editorHealthy()
+      ? take(
+          () => api.memoryFrameRelease(s.owner, s.session, id),
+          (v) => v.code,
+        )
+      : "disposed",
   preparation: (
     s: ReplyValue,
     stroke: bigint,
