@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/editor-engine", "crates/editor-geometry", "apps/web/wasm"]
+members = ["crates/editor-engine", "crates/editor-geometry", "apps/web/wasm", "apps/web/preparation-wasm"]
 resolver = "3"
 
 [profile.release]

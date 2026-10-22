@@ -28,3 +28,13 @@ export type Code = "ok" | "noop" | "invalid" | "stale-owner" | "stale-session"
   | "disposed" | "exhausted" | "capacity" | "coordinate-overflow" | "numerical-capacity" | "stale-interaction";
 export type Phase = "gallery" | "ready" | "suspended";
 "#;
+
+mod preparation;
+
+mod preparation_status;
+
+mod display_readiness;
+mod frame;
+mod frame_preparation;
+mod live_preparation;
+mod stable_preparation;

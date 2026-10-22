@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import type { Plugin } from "vite";
 export const policy =
-  "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'";
+  "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'";
 export function productionPolicy(mode: "production" | "e2e"): Plugin {
   return {
     name: "linefield-production-policy",

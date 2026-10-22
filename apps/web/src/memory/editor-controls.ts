@@ -1,3 +1,4 @@
+import { revealLabel } from "./control-visibility.ts";
 import { drawingIcon } from "../drawing-icons.ts";
 import { button, element } from "../dom.ts";
 import { drawingTool } from "../drawing-controls.css.ts";
@@ -96,6 +97,7 @@ export function attachEditorControls(canvas: HTMLCanvasElement, commands: Comman
   footer.append(panel);
   if (width) {
     width.disabled = false;
+    width.addEventListener("focus", () => revealLabel(width), options);
     width.addEventListener(
       "input",
       () => {

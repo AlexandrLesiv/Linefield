@@ -27,7 +27,9 @@ extern "C" {
     fn array_length(value: &JsValue, kind: &str) -> Result<f64, JsValue>;
     #[wasm_bindgen(catch, js_name = memoryArrayCopy)]
     fn copy_numbers(destination: &mut [f64], source: &JsValue) -> Result<(), JsValue>;
-    #[wasm_bindgen(catch, js_name = memoryArrayCopy)]
+    #[wasm_bindgen(catch, js_name=memoryArrayCopy)]
+    fn copy_floats(destination: &mut [f32], source: &JsValue) -> Result<(), JsValue>;
+    #[wasm_bindgen(catch, js_name=memoryArrayCopy)]
     fn copy_flags(destination: &mut [u8], source: &JsValue) -> Result<(), JsValue>;
 }
 pub fn inputs(
@@ -74,4 +76,29 @@ pub fn inputs(
         });
     }
     Ok(result)
+}
+pub fn geometry(value: JsValue) -> Result<Vec<f32>, Code> {
+    let n = array_length(&value, "Float32Array").map_err(|_| Code::Invalid)?;
+    if !n.is_finite()
+        || n.fract() != 0.0
+        || !(6.0..=6144.0).contains(&n)
+        || !(n as usize).is_multiple_of(6)
+    {
+        return Err(Code::Invalid);
+    }
+    let mut result = Vec::new();
+    result
+        .try_reserve_exact(n as usize)
+        .map_err(|_| Code::Capacity)?;
+    result.resize(n as usize, 0.0);
+    copy_floats(&mut result, &value).map_err(|_| Code::Invalid)?;
+    Ok(result)
+}
+pub fn origin(value: JsValue) -> Result<[f64; 2], Code> {
+    if array_length(&value, "Float64Array").map_err(|_| Code::Invalid)? != 2.0 {
+        return Err(Code::Invalid);
+    }
+    let mut out = [0.0; 2];
+    copy_numbers(&mut out, &value).map_err(|_| Code::Invalid)?;
+    Ok(out)
 }

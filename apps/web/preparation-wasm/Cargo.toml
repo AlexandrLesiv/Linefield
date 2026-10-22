@@ -1,0 +1,10 @@
+[package]
+name = "linefield-web-preparation"
+version = "0.1.0"
+edition = "2024"
+publish = false
+[lib]
+crate-type = ["cdylib", "rlib"]
+[dependencies]
+linefield-editor-geometry = { path = "../../../crates/editor-geometry" }
+wasm-bindgen = "=0.2.129"

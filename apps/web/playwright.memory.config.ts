@@ -1,5 +1,5 @@
 import { defineConfig } from "@playwright/test";
-const port = Number(process.env.LINEFIELD_FIXTURE_PORT ?? "65162");
+import { fixturePort as port } from "./test-ports.ts";
 export default defineConfig({
   testDir: "./tests/memory",
   testMatch: "**/*.fixture.spec.ts",

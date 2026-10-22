@@ -33,6 +33,7 @@ impl Engine {
             value.session = self.session_counter;
             value.phase = Phase::Suspended;
             value.metrics = None;
+            value.display_usable = false;
         }
         Code::Ok
     }
@@ -42,6 +43,8 @@ impl Engine {
         }
         self.cancel_current(Code::Ok);
         self.pages.clear();
+        self.preparations.clear();
+        self.frames.clear();
         self.continuation = None;
         // Enter/update admission reserves this generation; cleanup cannot consume it early.
         self.advance();
@@ -49,6 +52,7 @@ impl Engine {
             value.session = 0;
             value.phase = Phase::Gallery;
             value.metrics = None;
+            value.display_usable = false;
         }
         self.sequence = 0;
         Code::Ok
@@ -60,6 +64,8 @@ impl Engine {
         self.current = None;
         self.document = Default::default();
         self.pages.clear();
+        self.preparations.clear();
+        self.frames.clear();
         self.continuation = None;
         self.disposed = owner;
         self.sequence = 0;

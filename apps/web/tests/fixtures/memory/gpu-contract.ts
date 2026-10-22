@@ -1,3 +1,4 @@
+import { queryReady } from "./query-readiness.ts";
 import { bridge } from "../../../src/memory/bridge.ts";
 import { edit } from "../../../src/memory/edit-bridge.ts";
 import { scene } from "../../../src/memory/scene-bridge.ts";
@@ -9,6 +10,7 @@ export function gpuContract() {
   check(s.code === "ok", "create");
   s = bridge.enter(s.owner);
   s = bridge.metrics(s, 1n, 512, 512, 4);
+  s = queryReady(s);
   check(s.code === "ok", "metrics");
   s = edit.view(s, 16, 640, 450, false);
   s = edit.style(s, 512, [0.1, 0.3, 0.7]);

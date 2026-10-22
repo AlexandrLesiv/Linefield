@@ -30,19 +30,19 @@ test("MIG-INK-01 actual mouse renders, immediate next stroke and session history
   const second = await shot(page);
   expect(second.equals(first)).toBe(false);
   await page.getByRole("button", { name: "Undo last action", exact: true }).click();
-  expect((await shot(page)).equals(first)).toBe(true);
+  await expect.poll(async () => (await shot(page)).equals(first)).toBe(true);
   await page.getByRole("button", { name: "Redo last action", exact: true }).click();
-  expect((await shot(page)).equals(second)).toBe(true);
+  await expect.poll(async () => (await shot(page)).equals(second)).toBe(true);
   for (let i = 0; i < 3; i++) {
     await page.getByRole("button", { name: "Undo last action", exact: true }).click();
-    expect((await shot(page)).equals(first)).toBe(true);
+    await expect.poll(async () => (await shot(page)).equals(first)).toBe(true);
     await page.getByRole("button", { name: "Redo last action", exact: true }).click();
-    expect((await shot(page)).equals(second)).toBe(true);
+    await expect.poll(async () => (await shot(page)).equals(second)).toBe(true);
   }
   await page.locator(".back").click();
   await page.locator(".new-tile").click();
   await expect(page.locator("canvas")).toHaveAttribute("data-state", "ready");
-  expect((await shot(page)).equals(second)).toBe(true);
+  await expect.poll(async () => (await shot(page)).equals(second)).toBe(true);
   await page.screenshot({ path: info.outputPath("two-strokes-retained.png") });
 });
 test("MIG-VIEW-01 pan updates before release, Escape restores view, rotation aligns and resets", async ({
@@ -60,11 +60,11 @@ test("MIG-VIEW-01 pan updates before release, Escape restores view, rotation ali
   await page.keyboard.press("Escape");
   await page.mouse.up();
   await page.keyboard.up("Space");
-  expect((await shot(page)).equals(original)).toBe(true);
+  await expect.poll(async () => (await shot(page)).equals(original)).toBe(true);
   await page.getByRole("button", { name: "Rotate canvas right 15°", exact: true }).click();
   expect((await shot(page)).equals(original)).toBe(false);
   await page.getByRole("button", { name: "Reset canvas rotation", exact: true }).click();
-  expect((await shot(page)).equals(original)).toBe(true);
+  await expect.poll(async () => (await shot(page)).equals(original)).toBe(true);
   await page.getByRole("button", { name: "Pan canvas", exact: true }).focus();
   await page.keyboard.press("Space");
   await expect(page.getByRole("button", { name: "Pan canvas", exact: true })).toHaveAttribute(

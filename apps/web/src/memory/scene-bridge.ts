@@ -10,7 +10,12 @@ export const scene = {
   stroke: (s: ReplyValue, id: bigint) =>
     take(
       () => api.memoryStroke(s.owner, s.session, s.scene, id),
-      (v) => ({ code: v.code, count: v.count, color: [v.red, v.green, v.blue, v.opacity] }),
+      (v) => ({
+        code: v.code,
+        count: v.count,
+        active: v.active,
+        color: [v.red, v.green, v.blue, v.opacity],
+      }),
     ),
   page: (
     s: ReplyValue,

@@ -1,3 +1,4 @@
+import { queryReady } from "./query-readiness.ts";
 import * as api from "#memory-bindings";
 import { bridge } from "../../../src/memory/bridge.ts";
 import { edit, take, copyReply } from "../../../src/memory/edit-bridge.ts";
@@ -8,6 +9,7 @@ export function terminalReserve() {
   let s = bridge.create();
   s = bridge.enter(s.owner);
   s = bridge.metrics(s, 1n, 1024, 768, 1);
+  s = queryReady(s);
   s = edit.panBegin(s, 3, 200, 200, false);
   check(s.code === "ok", "pan begins");
   s = edit.panUpdate(s, 1n, 240, 260, false);

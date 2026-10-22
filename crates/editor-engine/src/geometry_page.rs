@@ -130,6 +130,7 @@ impl Engine {
             let id = self.page_counter.checked_add(1).ok_or(Code::Exhausted)?;
             self.pages.try_reserve(1).map_err(|_| Code::Capacity)?;
             self.pages.push(Descriptor {
+                proof: crate::source_proof::SourceProof::Chunk,
                 id,
                 key,
                 origin,

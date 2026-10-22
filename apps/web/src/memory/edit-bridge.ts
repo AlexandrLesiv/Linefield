@@ -1,3 +1,4 @@
+import { inputObservation } from "./performance-observation.ts";
 import { diagnostic } from "./diagnostics.ts";
 import * as api from "#memory-bindings";
 import type { Reply } from "#memory-bindings";
@@ -23,6 +24,7 @@ export const copyReply = (v: Reply): ReplyValue => ({
 });
 const command = (action: () => Reply, name = "") => {
   const result = take(action, copyReply);
+  inputObservation(result, name || "update");
   if (name) diagnostic(name, result.code, result.session);
   return result;
 };

@@ -108,6 +108,165 @@ scheduled outside input callbacks. Camera-dependent worker planning is not inclu
 
 ## Rendering and resources
 
+### M03 preparation and frame receipts
+
+The lead adopted this concrete amendment under decision242 on2026-10-21. Main Rust issues
+`memoryPreparation(owner,session,scene,stroke,chunk,revision,detail,mapping)`: an immutable
+snapshot of at most132 local f64[x,y,radius] points, source interval, opaque source anchor,
+token and conservative coverage certificate. The pure preparation Wasm exposes only
+prepareBegin/prepareNext/prepareDispose, sharing its implementation with the bounded fallback.
+Each next step performs at most4096 subdivision steps and emits at most1024 capsules; it may
+yield progress without a page. A step count is not an elapsed-time guarantee. Never replay a
+prefix, truncate output or do an entire cold scene synchronously from an input callback.
+
+Ordinary chunk results are view-independent. Main Rust may issue a conservative source-local
+clip for pathological broad chunks; the worker applies immutable geometry filtering, not camera
+planning. Clip against conservative curve control hulls plus thick support/AA margins, preserving
+fragment endpoints. Rust certifies complete prepared coverage and validates whether it still
+covers the current needed view. A mapping change alone must not discard still-useful coverage
+and starve a continuous pan. Newly revealed coverage needs fresh preparation; a clipped result
+cannot be presented as complete outside its certificate. This is not M12 worker planning.
+
+`memoryAdoptPreparation(owner,session,token,ordinal,capsules,metadata)` validates exact source,
+chunk revision, detail, coverage-certificate consistency, progress/order and fixed finite array shapes before
+issuing a stable page lease. Capsules contain at most6144 f32 values and metadata at most10 f64
+values for relative origin/bounds/centers. The canonical anchor remains Rust-owned. Invalid or
+stale data cannot change source/history or certify incomplete coverage. Explicit token/page
+release and all worker heaps, copied arrays, reservations and ready data count toward the
+existing job/queue/8MiB limits. A10-second watchdog, one worker restart and bounded pure fallback
+prevent unbounded stalled jobs; normal cache misses never force a full synchronous rebuild.
+
+A Rust-issued immutable frame receipt identifies an exact committed prefix and its view.
+Capture/append return Rust-issued frameContent and frameMapping, rather than allowing the host
+to label an older receipt with current state. Append preserves the receipt's captured mapping;
+frameContent=0 explicitly denotes a strict prefix without a full-document content certificate.
+Only full current identity plus exact view/metrics can satisfy readiness or complete acknowledgement.
+Named memoryFrameTransform(owner,session,receipt,currentMapping) returns a certified device
+affine and content validity. Host presentation may transform this coherent base and composite
+accepted pending/active groups in order, without duplicating Rust camera arithmetic. Undo or
+history rebranch invalidates affected base content immediately; never show undone pixels as
+current. Replacement publishes atomically with matching source/view/resource identity, removing
+overlays only when their content is included exactly once. Preserve identical union/blending.
+No new stroke waits for normal cold-history preparation. Actual context loss has no surviving
+GPU base: keep honest unavailable/recovery state until coherent reconstruction completes.
+
+Prepared results may be retained when source/detail/sequence are valid even if the current view
+has moved outside their coverage. A separate Rust coverage query determines which areas they
+can satisfy; schedule missing coverage without throwing away useful completed work. Frame
+completion still requires the complete current needed coverage, not merely some valid pages.
+Receipts contain whole union groups. An unfinished stroke cannot be split into independently
+source-over-composited base and tail portions. Undo reconstruction must make bounded progress
+for unaffected committed groups during continued input; measure history-to-correct-frame time.
+
+GPU geometry uses actual-capacity retention within128MiB including256KiB streaming reserve,
+with bounded4MiB growth slabs, reusable allocations and coalesced free ranges. Optional retention
+failure streams complete output; context loss invalidates GPU leases without erasing raw data.
+Keep staging/mask/base/overlay capacity within the composite budget. Measure cold work, uploaded
+bytes, combined UI frame and visible reveal; transformed old pixels alone are not a reveal pass.
+
+M03 format amendment: two R8 masks store scalar MAX coverage separately for paused candidate
+reconstruction and immediate active overlays; RGB8 stores fully opaque paper-composited
+base/staging color. Preserve8-bit channel precision and ordered coverage;
+this does not permit discarding alpha from future transparent layer intermediates. At the
+maximum8,388,608 pixels these four targets request64MiB of texture payload, consuming the64MiB
+composite allowance. Optional caches then have no remaining capacity unless eligible targets
+are safely released/reused; at smaller sizes they share the remaining allowance. Driver padding
+and internal formats may consume more; report them separately and never claim64MiB physical
+residency. Include simultaneous resize/rebuild generations.
+Check framebuffer completeness. Unsupported RGB8 uses two RGBA8 targets: RGB holds opaque color,
+alpha holds scalar coverage. Copy a mask to a distinct texture before compositing into its
+original RGB target; never sample an attached write target. Serialize or restore any other live
+mask before overwriting its alpha. This retains8-bit precision and8bytes/pixel, with extra copies;
+preserve accepted ink/admission and order, do not downsample. Measure this fallback honestly.
+Same-build pixel parity, paused-mask overlap and context restoration
+are required before claiming the format amendment works.
+
+### M03 live-prefix and deferred validation amendment
+
+The lead adopted these refinements after the bounded early checkpoint identified a64.6ms
+getError call inside a66.6ms rendering callback. This is measured driver-call CPU blocking,
+not evidence of equivalent geometry cost. The checkpoint stopped before completing its long
+stroke; no performance gate is weakened by changing validation scheduling.
+
+Named memoryStablePreparation(owner/session/stroke/fromSourceIndex/detail) exposes at most128
+immutable source intervals plus their bounded neighbors, a Rust-issued through index and
+minimum-source proof. Active intervals exclude the neighbor-dependent terminal portion;
+completed strokes include their terminal interval. Stable-page placement validates source/style,
+the certified immutable prefix and captured mapping. Ordinary chunk revision fences stay exact.
+During active input the view is fixed by existing admission rules; resize cancels the interaction.
+The host may accumulate stable coverage once in a persistent MAX mask and release applied
+geometry, while rebuilding only the changing tail in a separate mask. Composite their MAX
+coverage once per logical group. Mask capacity cannot become a stroke/sample quota.
+
+If a bounded immutable active-prefix snapshot is required for streaming, keep at most current
+and building snapshots per interaction/view, sharing immutable blocks and copying only a bounded
+tail. Its receipt is explicitly provisional, never a committed-complete acknowledgement. Cancel
+invalidates it immediately; continued appends cannot force unbounded restart of useful work.
+Base reconstruction and mask roles must make bounded progress without corrupting each other.
+Ending A and starting B must preserve independent group order and immediate input admission,
+including oversized/pending A; a single-active-stroke demonstration is insufficient evidence.
+Rust stroke information exposes whether the requested stroke is the current active interaction.
+Create a stable live-prefix accumulator only for that active stroke; its existing accumulator may
+continue through End until promotion. Historical completed groups, including Redo or a group that
+finished before obtaining a live accumulator, use retained completed preparation/GPU pages through
+ordered frame reconstruction. Do not replay completed history through a new active-tail budget.
+
+GPU validation uses at most two submitted in-flight fences. Poll with zero flags/zero timeout
+outside input callbacks; retain the latest pending render intent and every accepted Rust sample.
+Do not submit indefinitely behind a busy GPU. Drain all outstanding fences before bounded
+getError validation, with no new GL work between the idle check and validation; checking only
+an earlier fence can still synchronize later commands. Initial setup/allocation checks remain;
+later allocation validation uses an idle boundary or reserved complete-streaming resources.
+No gl.finish, blocking GPU wait or spin loop. Source-complete/submitted, GPU-validated and
+physical display are distinct states/measurements. First/recovery readiness requires validated
+coherent output. Keep a validated completed base while a candidate remains in staging; publish
+only a matching validated receipt. Active overlays over that base may be provisional.
+
+Shared display usability is separate from exact-content acknowledgement. Projection.display_usable
+starts false on entry, metrics remap, suspension and render recovery. Named memoryDisplayReady
+(owner,session,mapping,receipt) accepts only a full current committed-source/order/content receipt
+at the exact current view/metrics; equal stroke count alone is insufficient. The host calls it
+after coherent GPU validation. Shared fresh-input admission requires usability. Ordinary commits,
+history and camera previews retain usability over a surviving validated base, so subsequent ink
+does not wait for reconstruction. memoryPresented still acknowledges only a matching complete
+validated content/mapping receipt, never merely an available old base or provisional overlay.
+
+Bounded host submission batches may cross page and group boundaries: prepare an ordered queue
+of at most32 ready begin/page/composite commands and1MiB payload independently of GL. Borrowed
+geometry remains pinned until consumed or cancelled. Wait for ready work before acquiring a
+GPU slot; never hold an unsubmitted reservation across worker/preparation awaits. Submit ready
+commands for at most2ms or256 commands, then fence once at the yield/publication boundary.
+The queue still holds at most32 commands/1MiB at any instant. A submission slice may consume
+explicitly ready cached/resolved refills through a bounded producer handoff, but must fence
+before waiting for actual worker/preparation work. No microtask polling or unbounded refill loop.
+Include producer/refill/adoption CPU within the slice deadline. Yield an actual host task after
+each nonterminal slice with no GPU reservation held; immediately resolved promises alone do not
+provide input fairness. The ordered reader must distinguish synchronous retained/resolved pages
+from pending preparation and retain head-of-order blocking even if later jobs finish sooner.
+An independent bounded producer advances ready preparation while the consumer waits for GPU
+admission, including across small group boundaries. It shares one serialized cursor with ready
+refill, sleeps on pending-head or capacity changes, and obeys cumulative work/task-yield limits.
+Consumer polling alone must not pace cold worker preparation at the animation-frame cadence.
+An individual GL call cannot be preempted; measure overruns rather than claiming a hard2ms bound.
+Paused group masks survive batches and final publication still requires a complete validated
+receipt. Cancellation/failure drains ready payloads, borrowed leases and pending queue reads.
+This is backend scheduling, not a new FFI command protocol or per-page animation-frame pacing.
+
+Null fences, WAIT_FAILED, context loss or a10-second no-progress watchdog enter the existing
+bounded renderer recovery path, retaining canonical/history and canceling only unfinished work.
+This watchdog is a failure safeguard, not an acceptable latency budget. Fence/lease retirement
+is bounded and accounted, including queued/running/retiring jobs. Report renderer-generation
+errors without guessing which draw caused a shared GL error. Fresh CPU and complete-validation
+timings, failure E2E and mask/prefix parity are required before declaring this amendment effective.
+
+The performance-E2E build may observe final active-overlay submission and matching validated
+receipt publication through a bounded metadata ring. Records include timing, monotonic submission
+sequence, accepted input revision and scene/mapping/resource identities; no raw samples, artwork
+or coordinates. External draining must not call observers synchronously from the render path.
+Count drops and invalidate affected measurements. Production builds exclude the observation
+sink and hooks. Record the instrumented build separately and distinguish submission, validation
+and physical display; GL fences alone cannot prove that the latest accepted artwork was shown.
+
 Direct WebGL2 analytic capsules. MAX coverage unions each logical stroke/source-union group;
 source-over composites groups once in layer/paint order. Pencil remains nonopaque at opacity1.
 No cached image may change order, overlap, union identity or source appearance. Geometry cache

@@ -53,6 +53,30 @@ Stop on decisive correctness/absolute timing failure and repair the bottleneck. 
 full p95 acceptance pass. M03/M04 add bounded warm/cold/evicted comparisons; M09 full profile.
 No threshold relaxation to obtain green. Missing/flaky/skipped/stale evidence is not pass.
 
+## M03 browser scheduling and lifetime checks
+
+The implementation writer owns these actual-route tests under `apps/web/tests/memory`;
+CT-02/03/06/07/08, INV-01–05/08 and SU-03/04/13/14/16/20 apply. Observation files run only
+against a separately identified `performance-e2e` build. Their hooks are excluded from production.
+Record exact build and actual outcomes in the task; this mapping alone is not a pass record.
+
+| Case / source | Concrete trigger and expected invariant |
+| --- | --- |
+| MIG-WORKER-11 / promotion.observation.spec.ts and scheduling.observation.spec.ts | End→pan before promotion preserves exact Rust-issued receipt identity; forty completed strokes → warmed Undo/Redo preserves ordered exact pixels with bounded32-command/1MiB ready queue, up to256 commands per2ms submission slice; observe successful refill beyond32 without claiming timing acceptance |
+| MIG-WORKER-12 / prefetch.observation.spec.ts | At least two confirmed delayed worker starts during frame rebuild → Back before results → Resume: worker terminated, no late resurrection, exact source and Undo retained |
+| MIG-WORKER-13 / traversal.observation.spec.ts |65,537 expected source samples using synthetic coalesced stress setup → wholly offscreen frame: observe≥512 culled Rust preparation queries across actual task turns, then exact acknowledgement and recoverable history; synthetic setup is not physical input evidence |
+| MIG-WORKER-14 / pan-fidelity.observation.spec.ts | Settled committed receipt → integer pan while geometry worker starts are held → same-camera rebuilt receipt → release: compare exact shifted interior pixels across provisional/accurate/ended states |
+| MIG-LIVE-02 / pressure.observation.spec.ts |127/128/129 accepted pen points across chunk boundary: live, completed and rebuilt pixels agree; trusted browser pen events do not certify physical Wacom |
+| MIG-WORKER-04 / gpu-budget.spec.ts | Maximum8,388,608 backing pixels, optional and packed formats → resize → Back: mandatory target payload≤64MiB and released owned targets; requested payload is not physical driver residency |
+| MIG-WORKER-07 / worker-failure.spec.ts | Confirmed malformed worker reply during actual camera rebuild: reject geometry and preserve completed artwork/history |
+| MIG-RECOVERY-02 / recovery.spec.ts | Persistent allocation error: exactly one automatic renderer retry and two attempts after explicit Retry; count renderer attempts separately from optional-format/RGBA allocation attempts, then prove restored source/history |
+
+Current known limits remain explicit: scene-only Undo during a truly stalled worker may retain
+the candidate until the bounded worker watchdog; whole-view disposal is a separate case.
+Cold-history latency, secondary immediate geometry uploads, active-pan fidelity, spatial index,
+delayed coarsening, contiguous draw batching and complete recency behavior require their own
+successful evidence before M03 completion. A warm-refill functional pass does not close them.
+
 Numerical boundary corpus includes min/max width/scale/zoom/DPR, far regions/crossings,
 large radii/clipping and pressure extrema. Validate total painted-edge error, not only centerline.
 Queue/resource tests include repeated Back/Resume, resize, context recovery, cache eviction,

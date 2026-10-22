@@ -62,3 +62,23 @@ The conditional eight-step radius search has an exact-arithmetic coverage loss b
 floating-point error and RGBA8 quantization are separately checked, not geometric tolerances.
 The bounded GPU reference uses independent f64 maximization and includes equal-radius,
 cap-inactive and reversed-taper controls. CPU/GPU corpora do not prove every GLSL implementation.
+
+## M03 — pure preparation and retained geometry
+
+The same complete5207 manifest and owner-directed transfer apply. The retained allocator
+selectively adapts the bounded shared-buffer idea from src/gpu-arena.ts (hash above),
+replacing donor ownership with checked Rust page identities, counted slab capacity, explicit
+coalescing/compaction and disposable streaming fallback. No new third-party source is copied.
+
+New Rust editor-geometry preparation retains the donor-derived Hermite/corner/radius semantics
+and M02 stable capsule AA, while adding conservative control-hull clipping, resumable work
+and bounded cross-segment compaction. Raw regional samples remain canonical and untouched;
+source/detail/coverage/adoption policy stays in the editor owner. A separate generated Wasm
+module depends only on pure geometry and exposes no mutable editor/history API. The host
+worker handles scheduling/copied values; the same pure function serves the local live path.
+
+Coherent frame receipts, scalar coverage masks, opaque RGB8 staging, packed RGBA8 fallback
+and bounded retained GPU allocation are newly authored Linefield integration. Current
+MIG-WORKER browser checks cover delayed stale results, worker failure/local fallback and
+normal/packed-format artwork parity. Numerical/capacity/recovery/performance qualification
+remains task-scoped and must complete before adoption; donor tests do not certify this work.

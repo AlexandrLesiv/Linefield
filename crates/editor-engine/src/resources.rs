@@ -22,7 +22,9 @@ impl Engine {
         Resources {
             canonical: self.document.charge() - history,
             history,
-            derived: self.pages.capacity() * size_of::<crate::scene::Descriptor>(),
+            derived: self.pages.capacity() * size_of::<crate::scene::Descriptor>()
+                + self.preparations.capacity() * size_of::<crate::preparation::Ticket>()
+                + self.frames.capacity() * size_of::<crate::FrameReceipt>(),
             overhead: size_of::<Self>(),
         }
     }
