@@ -85,6 +85,9 @@ pub struct Projection {
 }
 #[derive(Default)]
 pub struct Engine {
+    pub(crate) visibility: [Option<crate::visibility_cursor::Cursor>; 2],
+    pub(crate) visibility_counter: u64,
+    pub(crate) visibility_cache: crate::visibility_cache::Cache,
     pub(crate) tails: [Option<crate::tail_display::TailDisplay>; 2],
     pub(crate) tail_counter: u64,
     pub(crate) frames: [Option<crate::FrameReceipt>; 8],

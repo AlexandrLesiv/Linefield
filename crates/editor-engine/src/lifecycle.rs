@@ -43,6 +43,7 @@ impl Engine {
         }
         self.cancel_current(Code::Ok);
         self.clear_tail_displays();
+        self.release_visibility(None);
         self.pages.clear();
         self.preparations.clear();
         self.frames = [None; 8];
@@ -63,6 +64,8 @@ impl Engine {
             return code;
         }
         self.current = None;
+        self.release_visibility(None);
+        self.visibility_cache.clear();
         self.clear_tail_displays();
         self.document = Default::default();
         self.pages.clear();

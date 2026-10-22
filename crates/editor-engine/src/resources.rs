@@ -23,7 +23,14 @@ impl Engine {
             canonical: self.document.charge() - history,
             history,
             derived: self.pages.capacity() * size_of::<crate::scene::Descriptor>()
-                + self.preparations.capacity() * size_of::<crate::preparation::Ticket>(),
+                + self.preparations.capacity() * size_of::<crate::preparation::Ticket>()
+                + self.visibility_cache.bytes()
+                + self
+                    .visibility
+                    .iter()
+                    .flatten()
+                    .map(|v| v.bytes())
+                    .sum::<usize>(),
             overhead: size_of::<Self>(),
         }
     }

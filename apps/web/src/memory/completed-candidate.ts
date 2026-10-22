@@ -76,7 +76,13 @@ export class CompletedCandidate {
         detail,
         alive,
         this.abort.signal,
-        predecessor ? { after: predecessor.through, issuing: () => (issued = true) } : undefined,
+        predecessor
+          ? {
+              after: predecessor.through,
+              predecessor: predecessor.id,
+              issuing: () => (issued = true),
+            }
+          : undefined,
       );
       accepted = accepted && alive();
       if (accepted) {

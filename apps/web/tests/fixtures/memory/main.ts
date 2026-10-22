@@ -1,4 +1,11 @@
 import { tailComposite } from "./tail-composite.ts";
+import { visibilityPressure } from "./visibility-pressure.ts";
+import { visibilityLifetime } from "./visibility-lifetime.ts";
+import { visibilityYield } from "./visibility-yield.ts";
+import { visibilityNumerics } from "./visibility-numerics.ts";
+import { visibilityGetters } from "./visibility-getters.ts";
+import { visibilityPins } from "./visibility-pins.ts";
+import { visibilityComposite } from "./visibility-composite.ts";
 import { coverageBoundary } from "./current-coverage.ts";
 import { coverageLifetime } from "./coverage-lifetime.ts";
 import { tailCapacity } from "./tail-capacity.ts";
@@ -52,6 +59,34 @@ function action(name: string, run: () => Promise<unknown>): void {
 action("Run boundary matrix", async () => {
   await loadEngine();
   return boundaryMatrix();
+});
+action("Run visibility pressure", async () => {
+  await loadEngine();
+  return visibilityPressure();
+});
+action("Run visibility lifetime", async () => {
+  await loadEngine();
+  return visibilityLifetime();
+});
+action("Run visibility cold yield", async () => {
+  await loadEngine();
+  return visibilityYield(canvas);
+});
+action("Run visibility numerics", async () => {
+  await loadEngine();
+  return visibilityNumerics();
+});
+action("Run visibility getters", async () => {
+  await loadEngine();
+  return visibilityGetters();
+});
+action("Run visibility pins", async () => {
+  await loadEngine();
+  return visibilityPins();
+});
+action("Run visibility composite", async () => {
+  await loadEngine();
+  return visibilityComposite(canvas);
 });
 action("Run resource lifetimes", async () => {
   await loadEngine();

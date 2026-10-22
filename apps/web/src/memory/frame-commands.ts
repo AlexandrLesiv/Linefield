@@ -2,6 +2,7 @@ import { FrameWake } from "./frame-wake.ts";
 import { admitFrame } from "./frame-admission.ts";
 import type { FillReason } from "./frame-admission.ts";
 import { scene } from "./scene-bridge.ts";
+import { FrameVisibility } from "./frame-visibility.ts";
 import { ReadyPreparation } from "./ready-preparation.ts";
 import type { ReplyValue } from "./bridge.ts";
 import type { PreparedCache, PreparedPage } from "./prepared-cache.ts";
@@ -16,9 +17,7 @@ export class FrameCommands {
   private bytes = 0;
   private stopped = false;
   private done = false;
-  private ids: bigint[] = [];
-  private idsDone = false;
-  private after = 0n;
+  private visibility: FrameVisibility;
   private stroke: { id: bigint; color: readonly number[] } | undefined;
   private pages: ReadyPreparation | undefined;
   private pending: Promise<void> | undefined;
@@ -29,7 +28,6 @@ export class FrameCommands {
   private completion: Promise<void>;
   private state: () => ReplyValue;
   private prepared: PreparedCache;
-  private through: bigint;
   private detail: number;
   private frame: bigint;
   constructor(
@@ -39,13 +37,13 @@ export class FrameCommands {
     detail: number,
     frame: bigint,
     after = 0n,
+    predecessor = 0n,
   ) {
     this.state = state;
     this.prepared = prepared;
-    this.through = through;
     this.detail = detail;
     this.frame = frame;
-    this.after = after;
+    this.visibility = new FrameVisibility(state, frame, predecessor, through, after);
     this.completion = this.produce()
       .catch((error: unknown) => {
         this.error = error;
@@ -96,38 +94,32 @@ export class FrameCommands {
           continue;
         }
         this.pages = undefined;
+        continue;
+      }
+      // A source transition may enqueue both the previous composite and next group.
+      if (this.queue.length > limit - 2) return (this.reason = "ready");
+      const next = this.visibility.next();
+      if (next.kind === "progress") continue;
+      if (next.kind === "done") {
+        if (this.stroke) this.push({ kind: "composite" });
         this.stroke = undefined;
-        this.push({ kind: "composite" });
-        continue;
-      }
-      if (!this.ids.length) {
-        if (this.idsDone || this.after >= this.through) {
-          this.done = true;
-          break;
-        }
-        const ids = scene.ids(this.state(), this.after);
-        if (ids.code !== "ok") throw Error(ids.code);
-        this.ids = [...ids.ids];
-        this.idsDone = ids.done;
-        continue;
-      }
-      const id = this.ids.shift();
-      if (id === undefined || id > this.through) {
         this.done = true;
         break;
       }
-      const stroke = scene.stroke(this.state(), id);
-      if (stroke.code !== "ok") throw Error(stroke.code);
-      this.after = id;
-      this.stroke = { id, color: stroke.color };
+      const { stroke: id, count, chunks } = next;
+      if (this.stroke?.id !== id) {
+        if (this.stroke) this.push({ kind: "composite" });
+        const stroke = scene.stroke(this.state(), id);
+        if (stroke.code !== "ok") throw Error(stroke.code);
+        this.stroke = { id, color: stroke.color };
+        this.push({ kind: "group" });
+      }
       const { prepared, detail, frame } = this;
       this.pages = new ReadyPreparation(
         (function* () {
-          for (let chunk = 0n; chunk < (stroke.count + 127n) / 128n; chunk++)
-            yield prepared.reader(id, stroke.count, detail, frame, chunk);
+          for (const chunk of chunks) yield prepared.reader(id, count, detail, frame, chunk);
         })(),
       );
-      this.push({ kind: "group" });
     }
     return (this.reason = this.queue.length ? "ready" : "done");
   }
@@ -174,5 +166,6 @@ export class FrameCommands {
     await this.completion;
     await this.pages?.dispose();
     this.pages = undefined;
+    this.visibility.dispose();
   }
 }

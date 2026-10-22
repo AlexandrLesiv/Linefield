@@ -12,7 +12,7 @@ export async function buildFrame(
   detail: number,
   alive: () => boolean,
   signal: AbortSignal,
-  extension?: { after: bigint; issuing: () => void },
+  extension?: { after: bigint; predecessor: bigint; issuing: () => void },
 ) {
   if (!alive()) return false;
   prepared.begin();
@@ -23,6 +23,7 @@ export async function buildFrame(
     detail,
     receipt.id,
     extension?.after,
+    extension?.predecessor,
   );
   const cancel = () => commands.stop();
   signal.addEventListener("abort", cancel, { once: true });

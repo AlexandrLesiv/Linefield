@@ -42,13 +42,20 @@ function totals(
     worker: m.workerHeap,
     mainPreparation: preparationHeap(),
     preparationCopies: m.preparationCopies + m.readyBytes,
+    visibilityCopies: m.visibilityBytes,
     material: 0,
     // Driver/default framebuffer estimates are separate from owned GL allocations.
     driverFramebufferEstimate: pixels * 4,
     driverFormatPaddingEstimate: pixels * 8,
     // Linear memory already contains Rust allocations; never add those charges twice.
     ownedCpu:
-      wasm + geometry.bytes + m.workerHeap + preparationHeap() + m.preparationCopies + m.readyBytes,
+      wasm +
+      geometry.bytes +
+      m.workerHeap +
+      preparationHeap() +
+      m.preparationCopies +
+      m.readyBytes +
+      m.visibilityBytes,
     ownedGpu: pixels ? pixels * (packed ? 16 : 13) + buffers + m.gpuAllocated : retiringGpuBytes(),
   };
 }

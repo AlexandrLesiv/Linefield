@@ -55,6 +55,7 @@ snapshot!(TailDisplaySnapshot);
 snapshot!(CurrentCoverageSnapshot);
 snapshot!(LiveFrameSnapshot);
 snapshot!(DisplayFrameSnapshot);
+snapshot!(VisibilitySnapshot);
 snapshot!(Reply);
 snapshot!(State);
 snapshot!(Mapping);

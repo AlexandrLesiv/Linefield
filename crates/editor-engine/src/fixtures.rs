@@ -1,5 +1,19 @@
 use crate::{Code, Engine};
 impl Engine {
+    /// Optional-cache pressure only; canonical samples and cursor positions are unchanged.
+    pub fn fixture_visibility_limit(&mut self, limit: usize, clear: bool) -> Code {
+        if limit > 32768 {
+            return Code::Invalid;
+        }
+        if clear && self.visibility.iter().any(Option::is_some) {
+            return Code::Active;
+        }
+        if clear {
+            self.visibility_cache.clear();
+        }
+        self.visibility_cache.limit = limit;
+        Code::Ok
+    }
     pub fn fixture_near_exhaustion() -> Self {
         Self {
             mapping_counter: u64::MAX - 4,

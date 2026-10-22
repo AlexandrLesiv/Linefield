@@ -24,6 +24,8 @@ pub struct Data {
     pub tail: Cell<linefield_editor_engine::TailStatus>,
     pub coverage: Cell<linefield_editor_engine::CurrentCoverage>,
     pub capture: Cell<linefield_editor_engine::FrameCapture>,
+    pub visibility: RefCell<Option<linefield_editor_engine::VisibilityPage>>,
+    pub visibility_consumed: Cell<u8>,
 }
 impl Drop for Data {
     fn drop(&mut self) {
@@ -123,6 +125,8 @@ where
         tail: Cell::new(Default::default()),
         coverage: Cell::new(Default::default()),
         capture: Cell::new(Default::default()),
+        visibility: RefCell::new(None),
+        visibility_consumed: Cell::new(0),
     });
     LIVE.set(true);
     let result = S::from(Slot(Rc::clone(&data))).into();

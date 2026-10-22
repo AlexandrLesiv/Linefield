@@ -152,6 +152,7 @@ impl Engine {
         if let Err(c) = self.session(owner, session) {
             return c;
         }
+        self.release_visibility(Some(id));
         for slot in &mut self.frames {
             if slot.is_some_and(|f| f.id == id) {
                 *slot = None;
