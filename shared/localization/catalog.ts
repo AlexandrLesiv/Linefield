@@ -3,6 +3,336 @@ export const catalog = {
   version: 1,
   sourceLanguage: "en",
   messages: {
+    "diagnostics.reasonTerminal": {
+      kind: "plain",
+      context: "Capture stopped on terminal editor failure; retained diagnostics remain readable",
+      arguments: {},
+    },
+    "diagnostics.age": {
+      kind: "plain",
+      context: "Diagnostic measurement age and window",
+      arguments: {},
+    },
+    "diagnostics.inputCount": {
+      kind: "plain",
+      context: "Diagnostic measurement age and window",
+      arguments: {},
+    },
+    "diagnostics.inputWindow": {
+      kind: "plain",
+      context: "Diagnostic measurement age and window",
+      arguments: {},
+    },
+    "diagnostics.title": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.back": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.close": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.disclosure": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.capture": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.newCapture": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.stop": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.download": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.clear": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.pin": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.retention": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.empty": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.capturing": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.ready": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.partial": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.preparing": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.readyDownload": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.requested": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.exportFailed": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.captureFailed": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.hidden": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.render": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.worker": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.memory": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.integrity": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.unavailable": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.idle": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.window": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.submitted": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.validated": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.pending": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.inputP95": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.inputMax": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.scheduling": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.queued": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.active": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.readyBytes": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.hits": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.misses": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.upload": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.gpuLive": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.gpuAllocated": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.cpu": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.wasm": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.baseline": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.overwritten": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.dropped": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.failures": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.appBuild": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.engineBuild": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.state": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.current": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.rebuilding": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.pendingState": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.reasonManual": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.reasonDuration": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.reasonEvents": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.reasonBytes": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.reasonHidden": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.reasonDeparture": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.reasonInvalid": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.reasonSink": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
     "canvas.color": { kind: "plain", context: "Ink color", arguments: {} },
     "memory.pan": { kind: "plain", context: "Canvas pan tool", arguments: {} },
     "memory.rotate": { kind: "plain", context: "Canvas rotate tool", arguments: {} },
