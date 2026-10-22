@@ -13,6 +13,7 @@ for (const label of [
   "Run resource lifetimes",
   "Run bounded calibration",
   "Run cleanup failure",
+  "Run historical display boundary",
 ]) {
   test(`WMR-03/04/06 isolated browser evidence: ${label}`, async ({ page, browser }, info) => {
     const errors: string[] = [];

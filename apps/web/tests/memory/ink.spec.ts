@@ -146,5 +146,5 @@ test("MIG-MOTION-01 normal opening admits first ready stroke without animation r
   );
   const stroke = await shot(page);
   await page.getByRole("button", { name: "Undo last action", exact: true }).click();
-  expect((await shot(page)).equals(stroke)).toBe(false);
+  await expect.poll(async () => (await shot(page)).equals(stroke), { timeout: 500 }).toBe(false);
 });

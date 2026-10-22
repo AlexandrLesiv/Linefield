@@ -50,6 +50,24 @@ pub fn release(
         (|| Ok(e.release_frame(id(owner)?, id(session)?, id(receipt)?)))().unwrap_or_else(|c| c)
     })
 }
+#[wasm_bindgen(js_name=memoryFrameDisplayTransform,unchecked_return_type="PlacementSnapshot")]
+pub fn display_transform(
+    #[wasm_bindgen(unchecked_param_type = "bigint")] owner: JsValue,
+    #[wasm_bindgen(unchecked_param_type = "bigint")] session: JsValue,
+    #[wasm_bindgen(unchecked_param_type = "bigint")] mapping: JsValue,
+    #[wasm_bindgen(unchecked_param_type = "bigint")] receipt: JsValue,
+) -> Result<JsValue, JsValue> {
+    execute_data::<PlacementSnapshot>(|e, d| {
+        match (|| e.frame_display_transform(id(owner)?, id(session)?, id(mapping)?, id(receipt)?))()
+        {
+            Ok(value) => {
+                d.placement.set(value);
+                Code::Ok
+            }
+            Err(c) => c,
+        }
+    })
+}
 #[wasm_bindgen]
 impl PreparationSnapshot {
     #[wasm_bindgen(getter,js_name=frameContent)]

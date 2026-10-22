@@ -20,6 +20,11 @@ export const frames = {
       () => api.memoryFrameTransform(s.owner, s.session, s.mapping, id),
       (v) => ({ code: v.code, matrix: v.matrix, available: v.available }),
     ),
+  displayTransform: (s: ReplyValue, id: bigint) =>
+    take(
+      () => api.memoryFrameDisplayTransform(s.owner, s.session, s.mapping, id),
+      (v) => ({ code: v.code, matrix: v.matrix, available: v.available }),
+    ),
   release: (s: ReplyValue, id: bigint) =>
     editorHealthy()
       ? take(

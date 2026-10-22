@@ -66,7 +66,7 @@ test("MIG-WORKER-03 worker loss recovers through bounded local preparation", asy
   const drawn = await shot(page);
   expect(drawn.equals(blank)).toBe(false);
   await page.getByRole("button", { name: "Undo last action", exact: true }).click();
-  expect((await shot(page)).equals(blank)).toBe(true);
+  await expect.poll(async () => (await shot(page)).equals(blank), { timeout: 500 }).toBe(true);
   await page.getByRole("button", { name: "Redo last action", exact: true }).click();
   await expect.poll(async () => (await shot(page)).equals(drawn)).toBe(true);
   await page.getByRole("button", { name: "Rotate canvas right 15°", exact: true }).click();

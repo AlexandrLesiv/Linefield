@@ -51,17 +51,22 @@ impl Engine {
         mapping: u64,
         id: u64,
     ) -> Result<Placement, Code> {
+        self.frame_receipt(owner, session, id)?;
+        self.frame_display_transform(owner, session, mapping, id)
+    }
+    pub fn frame_display_transform(
+        &self,
+        owner: u64,
+        session: u64,
+        mapping: u64,
+        id: u64,
+    ) -> Result<Placement, Code> {
         self.mapping(owner, session, mapping)?;
         let f = self
             .frames
             .iter()
             .find(|f| f.id == id)
             .ok_or(Code::StaleScene)?;
-        if self.document.visible < f.count
-            || (f.count > 0 && self.document.strokes[f.count - 1].id != f.through)
-        {
-            return Err(Code::StaleScene);
-        }
         let m = self
             .current
             .and_then(|s| s.metrics)

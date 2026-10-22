@@ -82,3 +82,8 @@ and bounded retained GPU allocation are newly authored Linefield integration. Cu
 MIG-WORKER browser checks cover delayed stale results, worker failure/local fallback and
 normal/packed-format artwork parity. Numerical/capacity/recovery/performance qualification
 remains task-scoped and must complete before adoption; donor tests do not certify this work.
+
+The scoped Undo continuity repair adds a newly authored Rust historical-display transform and
+retains the existing validated GPU base through asynchronous replacement. It copies no additional
+reference source and changes no curve/material semantics. Current content certification remains
+separate; the long pending-stroke capacity gap is tracked in the M03 quality mapping.

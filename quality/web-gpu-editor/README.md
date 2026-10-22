@@ -70,6 +70,9 @@ Record exact build and actual outcomes in the task; this mapping alone is not a 
 | MIG-WORKER-16 / pending-fatal.fixture.spec.ts | Confirmed pending candidate → real metrics trap or explicitly injected command/getter/destructor exception → immediate worker teardown, Back, late reply, forced GC and Resume: no subsequent canonical-editor export, fatal tombstone retained; positive export/call controls prevent vacuous proof |
 | MIG-WORKER-17 / control-work.observation.spec.ts | Begin/End positively change toolbar availability; unchanged accepted append batches issue zero toolbar mutations. Paired phase records preserve request/source identity and monotonic acquisition/Rust-return/state/control/contact times; these measure the batch body or command wrapper, not whole browser dispatch or physical latency |
 | MIG-WORKER-18 / shared-pages.observation.spec.ts and shared-coverage.observation.spec.ts | Completed secondary chunks reuse prepared page IDs through warm Undo/Redo with zero new immediate preparation/uploads and exact pixels; broad clipped source → camera beyond retained coverage → Redo requires fresh preparation, then reset-view pixels agree. Active source remains on its exact path |
+| MIG-WORKER-21 / history-display.observation.spec.ts | Hold the replacement's real worker reply after Undo of B from A+B; sample every submitted default-framebuffer display to retain unaffected A, draw fresh C immediately, then publish A+C and remove C with one Undo |
+| MIG-WORKER-23 / history-display.observation.spec.ts | Held historical base follows Rust-certified pan and Escape without a current receipt acknowledgement or complete-overlay claim |
+| MIG-WORKER-24 / history-display.observation.spec.ts | Cancel fresh C while history is held; repeated Undo/Redo and latest-target Undo, context loss/restore, late held replies and Back preserve exact completed history without C or B resurrection |
 | MIG-LIVE-02 / pressure.observation.spec.ts |127/128/129 accepted pen points across chunk boundary: live, completed and rebuilt pixels agree; trusted browser pen events do not certify physical Wacom |
 | MIG-WORKER-04 / gpu-budget.spec.ts | Maximum8,388,608 backing pixels, optional and packed formats → resize → Back: mandatory target payload≤64MiB and released owned targets; requested payload is not physical driver residency |
 | MIG-WORKER-07 / worker-failure.spec.ts | Confirmed malformed worker reply during actual camera rebuild: reject geometry and preserve completed artwork/history |
@@ -85,6 +88,19 @@ The bounded observation snapshot includes copied aggregate cache-role/upload cou
 records reuse existing Rust query results, deduplicate at most256 identities, and carry no raw
 coordinates. Nonzero ring drops invalidate pairing. Release assets exclude observation sinks,
 phase/count strings and hooks; inspect the actual frozen entry chunk, not stale output siblings.
+
+Historical display uses only the existing validated base allocation and a separately named Rust
+display transform. The generated-API `Run historical display boundary` fixture rejects wrong
+owner/session/mapping, unknown/released receipts, changed metrics and departed sessions; strict
+frame transforms, preparation and readiness still reject the obsolete content prefix. This is
+synthetic browser boundary evidence, not an actual-route or native E2E claim.
+
+MIG-WORKER-22 remains open: the existing immediate-page path can retain the earliest768 pages
+and fail to show the latest accepted ink while a historical replacement is held. A98,816-move
+actual-handler diagnostic reproduced this after observing Rust's98,817-sample active source;
+the final marker stayed invisible. The65,536-move diagnostic is below this capacity boundary
+and cannot close it. Preserve that failure when evaluating a bounded whole-group continuation
+repair; neither the ordinary Undo continuity checks nor the scoped preview accepts this gap.
 
 The isolated memory fixture lane requires fatal engine trap→Back/Resume without later engine
 calls, finite complete GPU-contract traversal, and the independent f64 edge/taper expectations.

@@ -23,6 +23,7 @@ export class ProgressiveScene {
   private live: LiveCoverage | undefined;
   private promotion: FramePromotion;
   private base: Receipt | undefined;
+  private historical = false;
   private candidate: FrameCandidate | undefined;
   private stopped = false;
   private state: () => ReplyValue;
@@ -63,12 +64,17 @@ export class ProgressiveScene {
       key = `${s.content}:${s.mapping}`;
     this.candidate?.validate(s, this.prepared);
     let transform = this.base ? frames.transform(s, this.base.id) : undefined;
+    if (this.base && (this.historical || transform?.code === "stale-scene")) {
+      this.historical = true;
+      transform = frames.displayTransform(s, this.base.id);
+    }
     if (transform && transform.code !== "ok") {
       if (this.base) frames.release(s, this.base.id);
       this.base = undefined;
+      this.historical = false;
       transform = undefined;
     }
-    if (!this.base && this.live) {
+    if ((!this.base || this.historical) && this.live) {
       this.promotion.cancel();
       this.live.dispose();
       this.live = undefined;
@@ -81,6 +87,7 @@ export class ProgressiveScene {
     }
     if (
       !this.candidate &&
+      !this.historical &&
       !this.live &&
       first !== undefined &&
       scene.stroke(s, first).active &&
@@ -135,7 +142,10 @@ export class ProgressiveScene {
       this.live,
     );
     this.inputComplete =
-      covered && pendingComplete && this.base.key.split(":")[1] === `${s.mapping}`;
+      !this.historical &&
+      covered &&
+      pendingComplete &&
+      this.base.key.split(":")[1] === `${s.mapping}`;
     if (this.immediate.pending) this.changed();
   }
   private async build(receipt: FrameCandidate, detail: number) {
@@ -158,12 +168,13 @@ export class ProgressiveScene {
   private publish(receipt: Receipt) {
     if (this.base) frames.release(this.state(), this.base.id);
     this.base = receipt;
+    this.historical = false;
     metrics.completeFrames++;
     publicationObservation(this.state(), this.renderer, receipt);
   }
   get acknowledgement() {
     const s = this.state();
-    return !s.interaction && this.base?.key === `${s.content}:${s.mapping}`
+    return !this.historical && !s.interaction && this.base?.key === `${s.content}:${s.mapping}`
       ? this.base.id
       : undefined;
   }

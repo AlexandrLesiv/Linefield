@@ -1,4 +1,5 @@
 import { gpuNumerics } from "./gpu-numerics.ts";
+import { historyDisplayBoundary } from "./history-display.ts";
 import { pageJoins } from "./page-joins.ts";
 import { gpuEdges } from "./gpu-edges.ts";
 import { gpuTaper } from "./gpu-taper.ts";
@@ -76,3 +77,7 @@ action("Run GPU edges", async () => {
   return gpuEdges(canvas);
 });
 action("Run GPU taper", async () => gpuTaper(canvas));
+action("Run historical display boundary", async () => {
+  await loadEngine();
+  return historyDisplayBoundary();
+});

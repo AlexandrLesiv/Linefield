@@ -30,7 +30,7 @@ test("MIG-INPUT-01 rapid mouse release and next contact retain each complete str
     "aria-disabled",
     "true",
   );
-  expect((await shot(page)).equals(blank)).toBe(true);
+  await expect.poll(async () => (await shot(page)).equals(blank), { timeout: 500 }).toBe(true);
 });
 test("MIG-INPUT-02 CDP pen pressure and rapid lifted endpoint preserve stroke; physical Wacom remains manual", async ({
   page,
@@ -75,7 +75,7 @@ test("MIG-INPUT-02 CDP pen pressure and rapid lifted endpoint preserve stroke; p
   expect((await shot(page)).equals(blank)).toBe(false);
   await page.screenshot({ path: info.outputPath("synthetic-pen.png") });
   await page.getByRole("button", { name: "Undo last action", exact: true }).click();
-  expect((await shot(page)).equals(blank)).toBe(true);
+  await expect.poll(async () => (await shot(page)).equals(blank), { timeout: 500 }).toBe(true);
   await cdp.detach();
 });
 test("MIG-RECOVERY-01 context loss cancels unfinished contact and restores completed artwork/history", async ({
@@ -131,5 +131,5 @@ test("MIG-VIEW-02 rapid two-point stroke at five percent completes and remains d
   await expect(page.locator("canvas")).toHaveAttribute("data-state", "ready");
   expect((await shot(page)).equals(blank)).toBe(false);
   await page.getByRole("button", { name: "Undo last action", exact: true }).click();
-  expect((await shot(page)).equals(blank)).toBe(true);
+  await expect.poll(async () => (await shot(page)).equals(blank), { timeout: 500 }).toBe(true);
 });
