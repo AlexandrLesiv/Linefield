@@ -52,7 +52,7 @@ The host retains one front and one building tail, with one latest scalar request
 ticket and one transient page. Publish by synchronous whole-mask replacement; empty replacement
 also clears old support. Captured CPU completeness is not current source, GPU validation or
 physical presentation. Frozen-source progress must continue under new input without allowing
-old content to acknowledge the newest frame. Resource accounting uses actual 9P/12P target
+old content to acknowledge the newest frame. Resource accounting uses the current target
 payload and residual geometry within the same 192 MiB aggregate, including retiring generations.
 Test distinct sampler/write textures, partial allocation cleanup and stale callbacks after
 Cancel/End/pan/resize/restore/fatal. Healthy release disposes child descriptors; terminal-fatal
