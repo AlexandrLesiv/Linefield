@@ -39,3 +39,28 @@ M03 cold-admission scheduling adds one bounded waiter/deadline timer before GPU 
 worker reply; no timer, borrowed payload or abandoned reservation may survive teardown. Test
 reply/deadline/cancel ordering, group-only stalls and context failure. Existing source relevance,
 queue/byte/fence limits and complete-frame validation remain unchanged (SEC-03/13).
+
+M03 transactional tails add explicitly display-only source snapshots (SEC-03/09/13,
+CT-03/04/06). Their generated named APIs validate owner/session/mapping, fixed raster anchor,
+source incarnation, captured-neighbor bound, parent ticket/page and sequence. Ordinary current
+geometry, canonical page-cache reuse and readiness queries must reject their proof kind even
+when the captured count happens to match. Cancel/history/lifecycle invalidation is permanent;
+Undo followed by Redo cannot revive a handle. Test both allocation orders against the combined
+eight frame/tail receipt cap and the fixed two-tail-slot/1 KiB metadata bound.
+
+The host retains one front and one building tail, with one latest scalar request, one pending
+ticket and one transient page. Publish by synchronous whole-mask replacement; empty replacement
+also clears old support. Captured CPU completeness is not current source, GPU validation or
+physical presentation. Frozen-source progress must continue under new input without allowing
+old content to acknowledge the newest frame. Resource accounting uses actual 9P/12P target
+payload and residual geometry within the same 192 MiB aggregate, including retiring generations.
+Test distinct sampler/write textures, partial allocation cleanup and stale callbacks after
+Cancel/End/pan/resize/restore/fatal. Healthy release disposes child descriptors; terminal-fatal
+host cleanup must never call the poisoned editor, including through wrapper finalizers.
+
+Decision243 also authorizes P05-DIAG01's bounded opt-in diagnostic UI/export. Its schema uses
+allowlisted temporary correlations, counts and clock domains, without artwork, raw input,
+names, paths, credentials or automatic network transfer. Detailed capture and export buffers
+are separately bounded and measured; overload/sink failure cannot fail an edit. Test privacy
+canaries, user-action-only export, callback overhead, explicit partial/dropped state and no
+pointer/focus interception. Approval of the plan is not current implementation/evidence.

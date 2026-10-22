@@ -1,7 +1,64 @@
 # Structured diagnostics plan
 
-Status: required architecture direction; concrete event schema, sink libraries and numeric
-budgets are reviewed in S02. No implementation exists. This expands CT-07 and INV-09.
+Status: required architecture direction with partial web instrumentation. The current web
+editor has a bounded command ring and aggregate resource/geometry counters; it does not yet
+provide the complete correlated incident capture or an owner-facing export. Native sinks and
+their concrete schemas remain subject to S02. This expands CT-07 and INV-09.
+
+## Current web coverage and proposed developer diagnostics
+
+The M03 audit found a100-event memory-command ring with request/session, command, outcome and
+monotonic timestamp, plus a dropped-event counter. It records several lifecycle and editing
+commands. It does not consistently record action origin, pointer type, stroke identity,
+content revision or worker/frame correlation. Some style/view actions lack a command label.
+Aggregate geometry and resource counters exist; their values are accounted allocations or
+estimates, not measured process memory or physical GPU residency. Detailed input/render traces
+use a separate2048-event compile-time test ring, absent from the ordinary production preview. There is
+no user-facing diagnostic capture, dashboard or download in the current drawing screen.
+
+The owner approved WEB-DIAG-D1 on 2026-10-22 under decision243, with remaining concrete
+technical/design decisions delegated to the lead. P05-DIAG01 implements this direction after
+the M03 runtime contract freezes. The following is an approved plan, not an implemented UI:
+
+- Keep a small always-on ring of lifecycle summaries: input gesture begin/end/cancel, central
+  command result, stroke/history revision, preparation operation, frame publication/rejection,
+  context loss/recovery and resource failure. Use ephemeral correlation IDs and allowlisted
+  error categories. No production per-sample or per-frame trace.
+- Add Developer diagnostics to drawing settings. A nonmodal panel opens only when no canvas
+  interaction is active; it does not cancel an interaction, move the canvas or queue itself.
+  Provide Capture30seconds, Stop, Download JSON, Clear and Close. Starting capture returns
+  focus to the canvas; completion never steals focus. Retain normal field/IME shortcuts.
+- Offer an optional noninteractive metrics overlay, refreshed at most twice per second,
+  without layout changes or a continuous render loop while idle. Show render submissions and
+  validated complete updates per second separately; label browser frame intervals as scheduling
+  data, not delivered FPS or physical pen-to-screen latency. Show aggregate input callback p95/max,
+  source/render progress, worker queue/jobs, cache bytes/hits/misses, upload bytes and failures.
+  Distinguish accounted CPU/GPU/Wasm memory, unavailable measurements and stale snapshots.
+- Propose a baseline cap of1024 events and1MiB logical payload, and detailed capture ending at
+  the first of30seconds,4096 events or2MiB including its baseline prelude. Keep one report per
+  tab, freeze on Stop/limit/departure/hidden tab, and report partial capture, drops and sink
+  failures. Account actual buffers and export allocation separately. Final caps and measured
+  overhead must be checked before adoption; these are not storage or editor limits.
+- Include exact build identifiers, schema version, monotonic clock domain and correlated
+  temporary operation IDs. Exclude artwork, raw coordinates/pressure samples, document names,
+  paths, raw URLs/errors, credentials and persistent user/device IDs. No telemetry or automatic
+  upload. Explicitly review any proposed reproduction settings before adding them to the
+  allowlist. A diagnostic mode must not become a content dump.
+- Drain/serialize off input callbacks; download only by explicit idle user action. Capture or
+  export failure cannot fail an edit. Keep a frozen report available for retry, and label the
+  browser action Download requested rather than claiming a file was saved.
+
+Rust owns authoritative command outcomes and source/revision validity; hosts own input origin,
+render/cache/worker events and presentation. Correlation must pass through the checked boundary
+without creating another editor owner. Detailed capture may affect timing and must disclose that
+fact. Establish separate checks with capture off/on; diagnostic traces are not release benchmarks.
+
+Required acceptance before adoption: real drawing and history correlated through publication;
+stale/rejected/cancelled worker work distinguishable; controlled overload and export failure;
+content-redaction canaries; no interruption or pointer interception while drawing; bounded
+memory and callback overhead; English/Ukrainian, compact layout, keyboard/focus and theme checks.
+The delegated lead will record the identified panel/overlay design and specialist review. These diagnostics do not
+block fixing the independently reproduced active-tail publication defect.
 
 ## What to record
 

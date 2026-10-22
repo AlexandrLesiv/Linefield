@@ -165,22 +165,31 @@ failure streams complete output; context loss invalidates GPU leases without era
 Keep staging/mask/base/overlay capacity within the composite budget. Measure cold work, uploaded
 bytes, combined UI frame and visible reveal; transformed old pixels alone are not a reveal pass.
 
-M03 format amendment: two R8 masks store scalar MAX coverage separately for paused candidate
-reconstruction and immediate active overlays; RGB8 stores fully opaque paper-composited
-base/staging color. Preserve8-bit channel precision and ordered coverage;
-this does not permit discarding alpha from future transparent layer intermediates. At the
-maximum8,388,608 pixels these four targets request64MiB of texture payload, consuming the64MiB
-composite allowance. Optional caches then have no remaining capacity unless eligible targets
-are safely released/reused; at smaller sizes they share the remaining allowance. Driver padding
-and internal formats may consume more; report them separately and never claim64MiB physical
-residency. Include simultaneous resize/rebuild generations.
-Check framebuffer completeness. Unsupported RGB8 uses two RGBA8 targets: RGB holds opaque color,
-alpha holds scalar coverage. Copy a mask to a distinct texture before compositing into its
-original RGB target; never sample an attached write target. Serialize or restore any other live
-mask before overwriting its alpha. This retains8-bit precision and8bytes/pixel, with extra copies;
-preserve accepted ink/admission and order, do not downsample. Measure this fallback honestly.
-Same-build pixel parity, paused-mask overlap and context restoration
-are required before claiming the format amendment works.
+M03 format amendment with transactional tail replacement: three R8 masks store scalar MAX
+coverage for live stable, visible tail and hidden replacement tail; two RGB8 targets hold
+opaque base/staging color. Candidate reconstruction remains mutually exclusive with the live
+accumulator in this narrow repair. Preserve 8-bit precision and ordered group coverage; future
+transparent layer intermediates still require alpha. For P backing pixels (at most 8,388,608),
+target payload is 9P bytes, at most 72 MiB. When RGB8/R8 fails, dispose the complete partial
+attempt before the three-RGBA8 fallback: existing color targets retain stable/front alpha,
+and a dedicated third alpha plane holds the hidden replacement. This uses 12P, at most 96 MiB.
+Check framebuffer completeness and failure cleanup for both paths.
+
+Keep requested owned target and geometry allocations together within 192 MiB. Geometry,
+including the 256 KiB streaming reserve, is limited to min(128 MiB,192 MiB−target payload):
+120 MiB at maximum normal backing, 96 MiB for packed fallback. Count unique allocations,
+unused slab capacity and retiring generations; optional pixel caches consume this same total.
+Retire old submitted work asynchronously before replacing a full generation, or subtract its
+still-charged capacity before growth. No blocking GPU wait on input callbacks. Context loss
+invalidates ownership but does not prove physical driver reclamation. Driver/default framebuffer
+and format padding remain separate estimates, not a physical-residency guarantee.
+
+Physical stable/front targets stay fixed for their live owner. Copy completed back coverage
+into front, never sample an attached write texture, even when read/write channels differ.
+Normal copies red; packed copies alpha and preserves RGB. Both sampler bindings must be safe.
+Final promotion uses only complete canonical stable coverage after front/back retirement.
+No extra per-stroke allocation, downsampling, source quota or precision change. Verify exact
+normal/packed output, live/End/Redo agreement, allocation failures and context restoration.
 
 ### M03 live-prefix and deferred validation amendment
 
@@ -376,6 +385,79 @@ fresh short and long ink/rebranch, repeated history, pan/zoom/Escape, cancellati
 groups and lifecycle retirement. Compare final current pixels and receipt identities; historical
 continuity alone cannot pass the correctness or timing gate.
 
+### M03 transactional live-tail repair
+
+Under decision243, the lead adopts this reviewed refinement of the bounded provisional
+snapshot direction above. Keep canonical 128-interval stable grouping, existing compaction and
+exact live/End/Redo expectations. A changing tail is built in a hidden coverage target while
+the prior complete tail remains visible. New input updates one latest-request scalar; it does
+not restart the captured construction. At most one front and one building generation exist.
+
+Rust owns two fixed TailDisplayReceipt slots, together at most 1 KiB metadata (each checked
+against 512 bytes), included in actual derived allocation accounting. Frame and tail receipts
+together stay within the existing eight-receipt cap at every allocator, including append-frame.
+Descriptors refer to the append-only canonical stroke prefix without cloning or retaining raw
+blocks. Store a nonreused ID, session/stroke incarnation, captured count N, start S, style/curve,
+detail, fixed view/metrics, completed cursor and at most one pending preparation token.
+
+Every front/back uses the same LiveCoverage anchor frame as stable coverage, including after
+End followed by camera movement. Rust rejects an incompatible simultaneous anchor. S is a
+canonical 128-interval boundary no greater than the capture's stable limit; S=N is allowed for
+a completed empty tail. Ranges cover [cursor,min(cursor+128,N)); copied neighbors are capped at
+N even if the source has since grown. Never read a newly appended neighbor into the captured
+terminal curve. Copy at most 132 points/8 KiB per preparation; retain at most one transient
+adopted page and one pure preparation executor for the back generation.
+
+The checked generated entry points are:
+
+| Entry point (all take owner/session) | Result and authority |
+| --- | --- |
+| memoryTailDisplayCapture(scene,stroke,anchorFrame,from,detail) | Rust freezes source N; returns code,id,stroke,count,from,empty,anchorFrame. Host cannot choose N or source values. Reject invalid anchor/detail/start or exhausted receipt capacity without altering existing owners. |
+| memoryTailDisplayPreparation(mapping,tailID) | Next bounded copied range, through and token using the existing PreparationSnapshot shape; one pending ticket. Culled output advances one range, not the entire tail implicitly. |
+| memoryTailDisplayAdopt(tailID,token,ordinal,data,origin) | Validate parent, order, finite bounded geometry and frozen-source hull; return a display-only page. |
+| memoryTailDisplayPlacement(mapping,tailID,page) | Validate exact parent/source/metrics and return placement in the shared captured raster anchor. |
+| memoryTailDisplayCompletePreparation(tailID,token,ordinal) | Complete exactly the pending range and advance its cursor; wrong/duplicate sequence rejects. |
+| memoryTailDisplayStatus(mapping,tailID) | code,count,from,complete,exactSource; complete certifies CPU construction provenance, never GPU validation or frame readiness. exactSource requires the same still-visible/active incarnation and current count/style equal to captured N/style. |
+| memoryTailDisplayTransform(mapping,tailID) | Checked Rust affine from the captured raster to current view; display authority only, unchanged metrics required. |
+| memoryTailDisplayRelease(tailID) | Idempotent cleanup of descriptor and all child tickets/pages after host executor/callback retirement. No editor export after terminal failure. |
+
+DisplayTail is a distinct proof kind. Ordinary current/coverage/adoption/scene/frame/live
+placement and canonical PageKey cache lookup reject it even when N equals the current count.
+Only the dedicated entry points admit the frozen terminal curve. Cancel, Undo/Redo, rebranch,
+metrics change, suspension, Leave/dispose and fatal invalidation permanently expire applicable
+handles; Redo of the same stroke cannot revive them. Append and End preserve a descriptor only
+while that same source remains valid. Source removal releases it without keeping raw blocks alive.
+
+Stable and back construction alternate first service when both are pending, sharing the
+existing total 2 ms live-work budget and bounded page units. Count actual overruns; do not
+increase the declared budget. Empty/culled ranges also consume bounded progress units. Finish
+captured N despite new appends; verify front generations advance during continuous input.
+After a slot await, recheck source/descriptor/GPU epoch. In one synchronous no-await transaction,
+clear front, copy the whole completed back scalar mask and install its metadata. An empty
+replacement still clears obsolete support. New input may make this complete captured image
+provisional: when N is older it cannot satisfy input-complete/current-frame acknowledgement.
+Complete active coverage requires a complete front with exactSource, stableThrough at least S,
+and all existing current mapping/detail/coverage/submission checks. Equality of counts alone
+does not authorize currentness, and CPU completion alone does not authorize GPU validation.
+
+Composite MAX(stable,front) once per stroke, preserving group opacity. Stable may advance while
+back keeps its original S. Once stable covers a front/back N, discard that generation rather
+than resurrecting its old terminal pixels. Clear obsolete front before covers/promotion can
+claim completeness; final promotion uses canonical stable only. A failed replacement keeps the
+previous valid front; cancelled/incompatible owner cleanup removes its entire contribution.
+
+After End, retained displayed coverage stays in its fixed anchor and follows Rust camera
+transforms until canonical promotion. Finer detail or newly exposed coverage remains provisional
+until the strict replacement path covers it. Context/metrics/fatal failures retain existing
+recovery and cancellation behavior. Candidate/live exclusion is unchanged: this narrow fix does
+not close the separate historical replacement plus oversized new-stroke cache-capacity issue.
+
+MIG-WORKER-33 requires the actual large-backing, 5%/wide-pen reproduction, meaningful intermediate
+pixels, exact pressure parity, continuous-input generation advancement, captured-neighbor tests,
+empty/overtaken/ended/cancelled tails, End→pan, normal/packed output and allocation/lifetime
+failures. Cross-cap allocation orders and ordinary-query rejection of display pages are required.
+Synthetic yields are supplemental fault evidence, not latency or real-device input evidence.
+
 ### M03 indexed visibility amendment
 
 Rust owns an optional ordered AABB hierarchy over completed strokes and their128-interval
@@ -439,8 +521,10 @@ conformance establishes evidence for the tested implementation, not every confor
 Soft monitoring targets:320MiB owned CPU,384MiB owned GPU. Exceeding targets alone never rejects
 input or sets document capacity. Report canonical/history/Wasm high-water/derived/worker/GPU
 capacity/masks/composites/material separately; driver/default framebuffer estimates are distinct.
-Geometry working cache128MiB includes256KiB streaming reserve (two4096×32-byte buffers).
-Composite allowance64MiB includes optional16MiB tiles. Count shared allocations once.
+Geometry working cache is at most128MiB including256KiB streaming reserve (two4096×32-byte
+buffers), reduced by the current target payload as specified in the M03 format amendment.
+Targets, geometry and optional pixel caches share192MiB; optional tiles remain at most16MiB
+within that sum. Count shared allocations once and include retiring generations.
 Evict spare/offscreen detail and optional pixel caches first. Stream uncached pages through
 reserved buffers while preserving complete per-group coverage before ordered compositing.
 Staging output publishes only coherent scene/view/resource generations. Bounded fallback may
