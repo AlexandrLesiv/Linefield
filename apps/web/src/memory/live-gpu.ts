@@ -4,6 +4,7 @@ import { GpuPass, blit } from "./gpu-pass.ts";
 export class LiveGpu {
   readonly stable: GpuPass;
   tail: GpuPass;
+  back: GpuPass;
   private gl: WebGL2RenderingContext;
   private r: ReturnType<typeof allocateGpu>;
   private width: number;
@@ -23,8 +24,9 @@ export class LiveGpu {
     this.arena = arena;
     this.stable = new GpuPass(gl, r, r.mask, null, width, height, arena);
     this.tail = new GpuPass(gl, r, r.overlayMask, null, width, height, arena);
+    this.back = new GpuPass(gl, r, r.backMask, null, width, height, arena);
   }
-  resetTail() {
+  clearFront() {
     this.tail = new GpuPass(
       this.gl,
       this.r,
@@ -34,6 +36,26 @@ export class LiveGpu {
       this.height,
       this.arena,
     );
+  }
+  resetBack() {
+    this.back = new GpuPass(
+      this.gl,
+      this.r,
+      this.r.backMask,
+      null,
+      this.width,
+      this.height,
+      this.arena,
+    );
+  }
+  publishBack() {
+    this.clearFront();
+    const gl = this.gl;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this.r.overlayMask.framebuffer);
+    gl.disable(gl.SCISSOR_TEST);
+    gl.colorMask(!this.r.packed, !this.r.packed, !this.r.packed, true);
+    gl.disable(gl.BLEND);
+    blit(gl, this.r, this.r.backMask.texture, this.width, this.height, undefined, undefined, true);
   }
   display(color: readonly number[], matrix?: Float32Array, combine = true) {
     const gl = this.gl;

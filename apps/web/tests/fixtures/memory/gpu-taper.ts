@@ -1,4 +1,5 @@
 import { GpuRenderer } from "../../../src/memory/gpu-renderer.ts";
+import { retireRenderer } from "./retire-renderer.ts";
 type Disc = readonly [number, number, number];
 function coverage(p: readonly number[], a: Disc, b: Disc) {
   const sample = (t: number) => {
@@ -20,7 +21,7 @@ function coverage(p: readonly number[], a: Disc, b: Disc) {
   }
   return Math.min(1, Math.max(0, sample(0), sample(1), sample((left + right) / 2)));
 }
-export function gpuTaper(canvas: HTMLCanvasElement) {
+export async function gpuTaper(canvas: HTMLCanvasElement) {
   let cases = 0,
     maximumError = 0;
   let worst: unknown;
@@ -95,7 +96,7 @@ export function gpuTaper(canvas: HTMLCanvasElement) {
           }
           cases++;
         }
-      renderer.dispose();
+      await retireRenderer(renderer);
     }
   // Coverage-value gate is separate from the geometric quarter-device-pixel budget.
   // 8-step search + bounded host float allowance + RGBA8 readback quantization.

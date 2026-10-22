@@ -1,27 +1,19 @@
 import type { prepareBegin } from "#preparation-bindings";
 import { live } from "./live-bridge.ts";
-import { preparation } from "./preparation-bridge.ts";
-import { scene } from "./scene-bridge.ts";
 import type { ReplyValue } from "./bridge.ts";
 import type { LiveGpu } from "./live-gpu.ts";
-import type { GpuPass } from "./gpu-pass.ts";
-import { geometryMetrics as metrics } from "./geometry-metrics.ts";
 import { liveOwnerObservation } from "./performance-observation.ts";
-type Job = {
-  token: bigint;
-  ordinal: bigint;
-  through: bigint;
-  source: ReturnType<typeof prepareBegin>;
-};
+import { LiveJob } from "./live-job.ts";
+import { LiveTail } from "./live-tail.ts";
+import { tailObservation } from "./tail-observation.ts";
 export class LiveCoverage {
   readonly stroke: bigint;
   readonly frame: bigint;
   readonly gpu: LiveGpu;
   through = 0n;
-  private stable: Job | undefined;
-  private tail: Job | undefined;
-  private tailKey = "";
-  private tailThrough = 0n;
+  private stable: LiveJob | undefined;
+  private tail: LiveTail;
+  private tailFirst = false;
   private state: () => ReplyValue;
   private prepare: typeof prepareBegin;
   private detail: number;
@@ -39,116 +31,69 @@ export class LiveCoverage {
     this.gpu = gpu;
     this.state = state;
     this.prepare = prepare;
+    this.tail = new LiveTail(state, gpu, prepare, frame, stroke, detail);
     if (import.meta.env.MODE === "performance-e2e") liveOwnerObservation(state(), stroke);
   }
-  private release(job: Job | undefined) {
-    if (!job) return;
-    job.source.free();
-    preparation.release(this.state(), job.token);
-  }
-  private issue(from: bigint, tail: boolean) {
-    const input = (tail ? live.tail : live.stable)(
-      this.state(),
-      this.stroke,
-      from,
-      this.detail,
-      this.frame,
-    );
-    if (input.code !== "ok") throw Error(input.code);
-    if (!input.token) return { through: input.through, job: undefined };
-    return {
-      through: from,
-      job: {
-        token: input.token,
-        ordinal: 0n,
-        through: input.through,
-        source: this.prepare(input.points, input.parameters),
-      },
-    };
-  }
-  private step(job: Job, pass: GpuPass, color: readonly number[]) {
-    const start = performance.now(),
-      result = job.source.nextPage();
-    try {
-      const data = result.data;
-      if (data.length) {
-        const adopted = preparation.adopt(
-          this.state(),
-          job.token,
-          job.ordinal++,
-          data,
-          result.origin,
-        );
-        if (adopted.code !== "ok") throw Error(adopted.code);
-        try {
-          const p = live.placement(this.state(), this.frame, this.stroke, adopted.page);
-          if (p.code !== "ok") throw Error(p.code);
-          if (p.available) pass.draw(data, p.matrix, color);
-        } finally {
-          scene.release(this.state(), adopted.page);
-        }
-      }
-      if (result.done) {
-        const code = preparation.complete(this.state(), job.token, job.ordinal);
-        if (code !== "ok") throw Error(code);
-      }
-      return result.done;
-    } finally {
-      result.free();
-      metrics.frameMilliseconds += performance.now() - start;
-      metrics.fallbackPages++;
-    }
-  }
-  advance(count: bigint, color: readonly number[]) {
-    const start = performance.now();
-    while (performance.now() - start < 1.5) {
+  private advanceStable(color: readonly number[], deadline: number) {
+    while (performance.now() < deadline) {
       if (!this.stable) {
-        const next = this.issue(this.through, false);
-        if (!next.job) {
+        const input = live.stable(this.state(), this.stroke, this.through, this.detail, this.frame);
+        if (input.code !== "ok") throw Error(input.code);
+        if (!input.token) {
           const previous = this.through;
-          this.through = next.through;
+          this.through = input.through;
           if (previous === this.through) break;
           continue;
         }
-        this.stable = next.job;
+        this.stable = new LiveJob(input, this.prepare, this.state, this.frame, this.stroke);
       }
-      if (!this.step(this.stable, this.gpu.stable, color)) continue;
+      if (!this.stable.step(this.gpu.stable, color)) continue;
       this.through = this.stable.through;
-      this.release(this.stable);
+      this.stable.dispose();
       this.stable = undefined;
     }
-    const key = `${count}:${this.through}`;
-    if (key !== this.tailKey) {
-      this.release(this.tail);
-      this.tail = undefined;
-      this.tailKey = key;
-      this.tailThrough = this.through;
-      this.gpu.resetTail();
+  }
+  advance(count: bigint, color: readonly number[], active: boolean) {
+    const start = performance.now();
+    const before = this.through;
+    this.tailFirst = !this.tailFirst;
+    if (!active) {
+      this.tail.stopBack();
+      this.advanceStable(color, start + 2);
+    } else if (this.tailFirst) {
+      this.tail.advance(count, this.through, color, start + 0.5);
+      this.advanceStable(color, start + 2);
+    } else {
+      this.advanceStable(color, start + 1.5);
+      this.tail.advance(count, this.through, color, start + 2);
     }
-    while (this.tailThrough < count && performance.now() - start < 2) {
-      if (!this.tail) {
-        const next = this.issue(this.tailThrough, true);
-        this.tailThrough = next.through;
-        this.tail = next.job;
-        if (!this.tail) continue;
-      }
-      if (!this.step(this.tail, this.gpu.tail, color)) continue;
-      this.tailThrough = this.tail.through;
-      this.release(this.tail);
-      this.tail = undefined;
-    }
+    this.tail.retire(this.through);
+    if (import.meta.env.MODE === "performance-e2e" && !active)
+      tailObservation(
+        this.state(),
+        "ended",
+        this.stroke,
+        count,
+        this.through,
+        this.through === count,
+      );
+    if (import.meta.env.MODE === "performance-e2e" && before !== this.through)
+      tailObservation(
+        this.state(),
+        "stable",
+        this.stroke,
+        count,
+        this.through,
+        this.through === count,
+      );
     return this.through === count && !this.stable;
   }
   covers(count: bigint) {
-    return this.through === count || this.tailThrough === count;
-  }
-  invalidateTail() {
-    this.tailKey = "";
+    return this.through === count || this.tail.covers(count);
   }
   dispose() {
-    this.release(this.stable);
-    this.release(this.tail);
+    this.stable?.dispose();
     this.stable = undefined;
-    this.tail = undefined;
+    this.tail.dispose();
   }
 }

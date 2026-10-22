@@ -34,11 +34,12 @@ impl Engine {
     }
     pub fn cancel_current(&mut self, code: Code) -> Code {
         if let Some(g) = self.document.gesture.take() {
-            if self.document.active.take().is_none() {
+            if let Some(stroke) = self.document.active.take() {
+                self.clear_stroke_tail_displays(stroke.id);
+                self.scene_changed(false);
+            } else {
                 self.document.view = g.base;
                 self.advance();
-            } else {
-                self.scene_changed(false);
             }
             self.active_cancelled = true;
         }
@@ -77,6 +78,7 @@ impl Engine {
             }
             self.document.visible -= 1;
         }
+        self.clear_tail_displays();
         self.scene_changed(true);
         Code::Ok
     }

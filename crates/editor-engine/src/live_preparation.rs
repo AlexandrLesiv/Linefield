@@ -134,7 +134,7 @@ impl Engine {
         if f.count >= self.document.visible || self.document.strokes[f.count].id != stroke {
             return Err(Code::StaleScene);
         }
-        if self.frames.len() >= 8 {
+        if self.receipt_count() >= 8 {
             return Err(Code::Capacity);
         }
         let id = self.frame_counter.checked_add(1).ok_or(Code::Exhausted)?;

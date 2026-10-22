@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 test("MIG-WORKER-07 malformed worker geometry cannot replace completed artwork", async ({
   page,
-}) => {
+}, info) => {
   await page.addInitScript(() => {
     const Original = Worker;
     let injected = false;
@@ -54,12 +54,20 @@ test("MIG-WORKER-07 malformed worker geometry cannot replace completed artwork",
   await page.mouse.move(650, 450, { steps: 32 });
   await page.mouse.up();
   const artwork = await page.screenshot({ clip });
+  await info.attach("completed-baseline", { body: artwork, contentType: "image/png" });
   expect(artwork.equals(blank)).toBe(false);
   await page.getByRole("button", { name: "Rotate canvas right 15°", exact: true }).click();
   await expect(page.locator("html")).toHaveAttribute("data-worker-malformed", "true");
   await expect(page.locator("canvas")).toHaveAttribute("data-state", "ready");
   await page.getByRole("button", { name: "Reset canvas rotation", exact: true }).click();
-  await expect.poll(async () => (await page.screenshot({ clip })).equals(artwork)).toBe(true);
+  try {
+    await expect.poll(async () => (await page.screenshot({ clip })).equals(artwork)).toBe(true);
+  } finally {
+    await info.attach("reset-output", {
+      body: await page.screenshot({ clip }),
+      contentType: "image/png",
+    });
+  }
   await page.getByRole("button", { name: "Undo last action", exact: true }).click();
   await expect.poll(async () => (await page.screenshot({ clip })).equals(blank)).toBe(true);
 });

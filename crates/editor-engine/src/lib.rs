@@ -39,3 +39,7 @@ mod preparation_view;
 mod preparation_range;
 
 mod source_proof;
+mod tail_display;
+mod tail_placement;
+mod tail_preparation;
+pub use tail_display::TailStatus;

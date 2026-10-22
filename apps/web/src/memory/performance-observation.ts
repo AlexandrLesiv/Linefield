@@ -15,7 +15,7 @@ const strokeCounts = new Map<string, string>();
 let head = 0,
   dropped = 0,
   sequence = 0;
-function append(record: RecordValue) {
+export function append(record: RecordValue) {
   if (ring.length < limit) ring.push(record);
   else {
     ring[head] = record;

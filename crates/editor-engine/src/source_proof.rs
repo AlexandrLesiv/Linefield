@@ -5,6 +5,10 @@ pub(crate) enum SourceProof {
     Chunk,
     Prefix(u64),
     Exact(u64),
+    DisplayTail {
+        id: u64,
+        count: u64,
+    },
 }
 impl SourceProof {
     pub fn current(self, len: u64, key: PageKey) -> bool {
@@ -14,6 +18,7 @@ impl SourceProof {
             }
             Self::Prefix(required) => len >= required,
             Self::Exact(required) => len == required,
+            Self::DisplayTail { .. } => false,
         }
     }
 }

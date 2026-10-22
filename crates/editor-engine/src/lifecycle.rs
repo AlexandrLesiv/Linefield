@@ -42,6 +42,7 @@ impl Engine {
             return code;
         }
         self.cancel_current(Code::Ok);
+        self.clear_tail_displays();
         self.pages.clear();
         self.preparations.clear();
         self.frames.clear();
@@ -62,6 +63,7 @@ impl Engine {
             return code;
         }
         self.current = None;
+        self.clear_tail_displays();
         self.document = Default::default();
         self.pages.clear();
         self.preparations.clear();

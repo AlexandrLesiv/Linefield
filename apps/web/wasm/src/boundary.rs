@@ -21,6 +21,7 @@ pub struct Data {
     pub page: RefCell<Option<linefield_editor_engine::Page>>,
     pub preparation: RefCell<Option<linefield_editor_engine::PreparationInput>>,
     pub placement: Cell<linefield_editor_engine::Placement>,
+    pub tail: Cell<linefield_editor_engine::TailStatus>,
 }
 impl Drop for Data {
     fn drop(&mut self) {
@@ -94,6 +95,7 @@ where
         page: RefCell::new(None),
         preparation: RefCell::new(None),
         placement: Cell::new(Default::default()),
+        tail: Cell::new(Default::default()),
     });
     LIVE.set(true);
     let result = S::from(Slot(Rc::clone(&data))).into();

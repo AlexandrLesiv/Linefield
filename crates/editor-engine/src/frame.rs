@@ -17,7 +17,7 @@ impl Engine {
         mapping: u64,
     ) -> Result<FrameReceipt, Code> {
         self.mapping(owner, session, mapping)?;
-        if self.frames.len() >= 8 {
+        if self.receipt_count() >= 8 {
             return Err(Code::Capacity);
         }
         let metrics = self
@@ -74,11 +74,18 @@ impl Engine {
         if m != f.metrics {
             return Err(Code::StaleMapping);
         }
+        self.display_transform(f.view, m)
+    }
+    pub(crate) fn display_transform(
+        &self,
+        captured: Viewport,
+        m: Metrics,
+    ) -> Result<Placement, Code> {
         let v = self.document.view;
-        let (s, c) = (v.angle - f.view.angle).sin_cos();
-        let scale = v.zoom / f.view.zoom;
-        let dx = f.view.center[0].relative(v.center[0])?;
-        let dy = f.view.center[1].relative(v.center[1])?;
+        let (s, c) = (v.angle - captured.angle).sin_cos();
+        let scale = v.zoom / captured.zoom;
+        let dx = captured.center[0].relative(v.center[0])?;
+        let dy = captured.center[1].relative(v.center[1])?;
         let (vs, vc) = v.angle.sin_cos();
         let x = m.width * m.backing / 2.0;
         let y = m.height * m.backing / 2.0;

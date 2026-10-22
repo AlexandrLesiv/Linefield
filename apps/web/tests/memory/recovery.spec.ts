@@ -40,8 +40,12 @@ test("MIG-RECOVERY-02 repeated GPU failure latches after one reduced retry; expl
   await expect.poll(() => fault.evaluate((s) => s.attempts)).toBe(1);
   // One renderer attempt tries the optional R8 target, then the complete RGBA fallback.
   expect(await fault.evaluate((s) => s.allocations)).toBe(2);
+  const zoom = page.getByRole("button", { name: "Zoom in", exact: true });
+  await expect(zoom).toHaveAttribute("aria-disabled", "true");
+  const bounds = await zoom.boundingBox();
+  if (!bounds) throw Error("zoom-control");
   for (let i = 0; i < 3; i++)
-    await page.getByRole("button", { name: "Zoom in", exact: true }).click();
+    await page.mouse.click(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
   await page.evaluate(() => window.dispatchEvent(new Event("resize")));
   await page.evaluate(
     () =>

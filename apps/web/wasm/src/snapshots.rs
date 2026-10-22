@@ -51,6 +51,7 @@ macro_rules! snapshot {
     };
 }
 snapshot!(PreparationSnapshot);
+snapshot!(TailDisplaySnapshot);
 snapshot!(Reply);
 snapshot!(State);
 snapshot!(Mapping);

@@ -10,6 +10,15 @@ impl Engine {
         origin: [f64; 2],
     ) -> Result<u64, Code> {
         self.preparation_current(owner, session, token)?;
+        self.adopt_preparation_data(token, ordinal, data, origin)
+    }
+    pub(crate) fn adopt_preparation_data(
+        &mut self,
+        token: u64,
+        ordinal: u64,
+        data: &[f32],
+        origin: [f64; 2],
+    ) -> Result<u64, Code> {
         let index = self
             .preparations
             .iter()

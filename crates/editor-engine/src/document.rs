@@ -2,7 +2,7 @@ use crate::{
     Code,
     numerics::{Axis, Viewport},
 };
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Style {
     pub width: f64,
     pub rgb: [f64; 3],

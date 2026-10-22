@@ -85,6 +85,8 @@ pub struct Projection {
 }
 #[derive(Default)]
 pub struct Engine {
+    pub(crate) tails: [Option<crate::tail_display::TailDisplay>; 2],
+    pub(crate) tail_counter: u64,
     pub(crate) frames: Vec<crate::FrameReceipt>,
     pub(crate) frame_counter: u64,
     pub(crate) preparations: Vec<crate::preparation::Ticket>,
@@ -186,15 +188,6 @@ impl Engine {
             value.presentation = self.presentation_counter;
             value.scene = self.scene_counter;
             value.presented = false;
-        }
-    }
-    #[cfg(feature = "e2e-fixtures")]
-    pub fn fixture_near_exhaustion() -> Self {
-        Self {
-            mapping_counter: u64::MAX - 4,
-            presentation_counter: u64::MAX - 4,
-            scene_counter: u64::MAX - 4,
-            ..Self::default()
         }
     }
 }

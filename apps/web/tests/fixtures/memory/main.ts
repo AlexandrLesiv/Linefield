@@ -1,4 +1,7 @@
+import { tailComposite } from "./tail-composite.ts";
 import { gpuNumerics } from "./gpu-numerics.ts";
+import { livePrefixBoundary } from "./live-prefix.ts";
+import { tailBoundary } from "./tail-boundary.ts";
 import { historyDisplayBoundary } from "./history-display.ts";
 import { pageJoins } from "./page-joins.ts";
 import { gpuEdges } from "./gpu-edges.ts";
@@ -81,3 +84,13 @@ action("Run historical display boundary", async () => {
   await loadEngine();
   return historyDisplayBoundary();
 });
+action("Run live prefix boundary", async () => {
+  await loadEngine();
+  return livePrefixBoundary();
+});
+action("Run captured tail boundary", async () => {
+  await loadEngine();
+  return tailBoundary();
+});
+
+action("Run tail composite", async () => tailComposite(canvas));

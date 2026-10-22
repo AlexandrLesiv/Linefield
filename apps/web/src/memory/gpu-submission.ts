@@ -7,6 +7,7 @@ export class GpuSubmission {
   private reserved = 0;
   private validated = 0;
   private disposed = false;
+  private retiring = false;
   private lifetime = new AbortController();
   private observed = performance.now();
   private gl: WebGL2RenderingContext;
@@ -16,7 +17,7 @@ export class GpuSubmission {
   get idle() {
     return this.pending.length === 0 && this.reserved === 1;
   }
-  ready() {
+  ready(validate = true) {
     if (this.disposed || this.gl.isContextLost()) throw Error("gpu-resource");
     const now = performance.now(),
       resumed = now - this.observed > 1000;
@@ -35,26 +36,32 @@ export class GpuSubmission {
     // getError a possible driver wait even if the first fence had already signaled.
     if (all && this.pending.length && this.reserved === 0) {
       const last = this.pending[this.pending.length - 1];
-      if (this.gl.getError() !== this.gl.NO_ERROR) throw Error("gpu-resource");
+      let error = this.gl.getError();
+      if (validate && error !== this.gl.NO_ERROR) throw Error("gpu-resource");
+      if (!validate)
+        for (let i = 0; error !== this.gl.NO_ERROR && i < 8; i++) error = this.gl.getError();
       for (const item of this.pending) this.gl.deleteSync(item.sync);
       this.pending = [];
-      this.validated = last?.serial ?? this.validated;
-      metrics.validatedSubmissions = this.validated;
-      metrics.validatedTime = performance.now();
+      if (validate) {
+        this.validated = last?.serial ?? this.validated;
+        metrics.validatedSubmissions = this.validated;
+        metrics.validatedTime = performance.now();
+      }
     }
     metrics.gpuInFlight = this.pending.length;
     return this.pending.length + this.reserved < 2;
   }
   acquire() {
+    if (this.retiring) throw Error("disposed");
     if (!this.ready()) return false;
     this.reserved++;
     return true;
   }
   submit() {
-    if (this.reserved) this.reserved--;
     if (this.pending.length >= 2) throw Error("gpu-queue");
     const sync = this.gl.fenceSync(this.gl.SYNC_GPU_COMMANDS_COMPLETE, 0);
     if (!sync) throw Error("gpu-resource");
+    if (this.reserved) this.reserved--;
     const serial = ++this.issued;
     this.pending.push({ sync, serial, started: performance.now() });
     this.gl.flush();
@@ -71,6 +78,17 @@ export class GpuSubmission {
   }
   turn() {
     return gpuTurn(this.lifetime.signal);
+  }
+  retire() {
+    this.retiring = true;
+    this.lifetime.abort();
+    // A failed render may have recorded work in its reserved slot without submitting it.
+    if (this.reserved && !this.gl.isContextLost()) this.submit();
+  }
+  drained() {
+    if (this.gl.isContextLost()) return true;
+    this.ready(false);
+    return this.pending.length === 0;
   }
   dispose() {
     this.lifetime.abort();

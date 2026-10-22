@@ -87,3 +87,11 @@ The scoped Undo continuity repair adds a newly authored Rust historical-display 
 retains the existing validated GPU base through asynchronous replacement. It copies no additional
 reference source and changes no curve/material semantics. Current content certification remains
 separate; the long pending-stroke capacity gap is tracked in the M03 quality mapping.
+
+The transactional tail repair is newly authored Linefield code: separate captured display-only
+Rust descriptors, bounded front/back coverage construction, fair live-work service and explicit
+GPU generation retirement. Canonical128 curve preparation and exact live/End/Redo parity remain;
+no additional donor code, sample simplification or cross-interval compaction change is imported.
+MIG-LIVE-02–07, the generated-API captured-tail fixture and the MIG-LIVE-08 renderer-boundary
+overlap fixture cover the scoped correctness contract;
+they do not certify the remaining historical-capacity or performance work.

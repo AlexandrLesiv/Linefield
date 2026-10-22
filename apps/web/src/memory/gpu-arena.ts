@@ -9,7 +9,6 @@ export type Allocation = {
   slab: Slab;
   used: number;
 };
-const budget = 128 * 1024 ** 2 - 256 * 1024;
 export class GpuArena {
   private slabs: Slab[] = [];
   private values = new Map<bigint, Allocation>();
@@ -20,13 +19,18 @@ export class GpuArena {
   private gl: WebGL2RenderingContext;
   private scratch: WebGLBuffer;
   private moves = 0;
-  constructor(gl: WebGL2RenderingContext, scratch: WebGLBuffer) {
+  private budget: number;
+  constructor(gl: WebGL2RenderingContext, scratch: WebGLBuffer, targets: number) {
     this.scratch = scratch;
     this.gl = gl;
+    this.budget = Math.min(128 * 1024 ** 2, 192 * 1024 ** 2 - targets) - 256 * 1024;
   }
   begin() {
     this.frame++;
     this.moves = 0;
+  }
+  get bytes() {
+    return this.capacity;
   }
   private snapshot() {
     metrics.gpuAllocated = this.capacity;
@@ -116,7 +120,7 @@ export class GpuArena {
     if (this.disabled || !this.growth) return;
     this.growth = false;
     const next = Math.min(4 * 1024 ** 2, Math.max(64 * 1024, this.capacity));
-    if (this.capacity + next > budget) {
+    if (this.capacity + next > this.budget) {
       this.snapshot();
       return;
     }

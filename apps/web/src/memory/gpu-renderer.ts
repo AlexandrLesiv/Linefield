@@ -3,6 +3,7 @@ import { GpuSubmission } from "./gpu-submission.ts";
 import { allocateGpu } from "./gpu-allocation.ts";
 import { GpuArena } from "./gpu-arena.ts";
 import { GpuPass, blit } from "./gpu-pass.ts";
+import { gpuAdmission, retireGpu } from "./gpu-retirement.ts";
 let resourceEpoch = 0;
 export class GpuRenderer {
   readonly epoch = ++resourceEpoch;
@@ -14,7 +15,11 @@ export class GpuRenderer {
   private arena: GpuArena;
   private pass: GpuPass;
   private submissions: GpuSubmission;
-  constructor(canvas: HTMLCanvasElement, width: number, height: number) {
+  private disposed = false;
+  constructor(canvas: HTMLCanvasElement, width: number, height: number, backing = 1) {
+    if (!gpuAdmission()) throw Error("gpu-retirement");
+    width = Math.ceil(width * backing);
+    height = Math.ceil(height * backing);
     this.canvas = canvas;
     this.width = width;
     this.height = height;
@@ -37,7 +42,7 @@ export class GpuRenderer {
     this.resources = allocateGpu(gl, width, height);
     const scratch = this.resources.buffers[0];
     if (!scratch) throw Error("gpu-buffer");
-    this.arena = new GpuArena(gl, scratch);
+    this.arena = new GpuArena(gl, scratch, this.resources.bytes);
     this.pass = new GpuPass(
       gl,
       this.resources,
@@ -115,7 +120,7 @@ export class GpuRenderer {
     return new GpuPass(
       gl,
       this.resources,
-      this.resources.overlayMask,
+      clearMask ? this.resources.overlayMask : this.resources.backMask,
       null,
       this.width,
       this.height,
@@ -144,8 +149,25 @@ export class GpuRenderer {
     return this.submissions.wait(serial);
   }
   dispose() {
-    this.submissions.dispose();
-    this.arena.dispose();
-    this.resources.dispose();
+    if (this.disposed) return;
+    this.disposed = true;
+    let started = false;
+    retireGpu({
+      bytes: this.resources.bytes + 256 * 1024 + this.arena.bytes,
+      context: this.gl,
+      drained: () => {
+        if (this.gl.isContextLost()) return true;
+        if (!started) {
+          this.submissions.retire();
+          started = true;
+        }
+        return this.submissions.drained();
+      },
+      release: () => {
+        this.submissions.dispose();
+        this.arena.dispose();
+        this.resources.dispose();
+      },
+    });
   }
 }

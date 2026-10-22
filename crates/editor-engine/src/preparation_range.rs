@@ -22,7 +22,11 @@ impl Engine {
         let anchor = source.samples.get(start).ok_or(Code::Invalid)?.position;
         let mut points = Vec::new();
         points.try_reserve_exact(132).map_err(|_| Code::Capacity)?;
-        for i in base..(end + 1).min(source.samples.len) {
+        let limit = match proof {
+            crate::source_proof::SourceProof::DisplayTail { count, .. } => count as usize,
+            _ => source.samples.len,
+        };
+        for i in base..(end + 1).min(limit) {
             let p = source.samples.get(i).ok_or(Code::Invalid)?;
             points.push([
                 p.position[0].relative(anchor[0])?,

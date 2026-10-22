@@ -1,3 +1,4 @@
+import { disposeDepartedScene } from "./departed-scene.ts";
 import { frames } from "./frame-bridge.ts";
 import { runObservedCommand } from "./command-timing.ts";
 import type { CommandTiming } from "./command-timing.ts";
@@ -11,6 +12,7 @@ import { ProgressiveScene } from "./progressive-scene.ts";
 import { attachInput } from "./input.ts";
 import { attachEditorControls } from "./editor-controls.ts";
 import { reportResources } from "./resource-monitor.ts";
+import { gpuAdmission, retryGpuRetirement } from "./gpu-retirement.ts";
 export function attachGpuDisplay(
   view: MemoryView,
   api: Bridge,
@@ -20,6 +22,7 @@ export function attachGpuDisplay(
   update: (state: ReplyValue) => void,
   fatal: () => void,
 ) {
+  retryGpuRetirement();
   let state = initial,
     frame = 0,
     stopped = false,
@@ -62,9 +65,12 @@ export function attachGpuDisplay(
   };
   let input: ReturnType<typeof attachInput> | undefined;
   let controls: ReturnType<typeof attachEditorControls> | undefined;
-  const report = () => {
-    if (alive()) reportResources(api.read(state.owner), cache?.resources(), renderer);
+  const sync = () => {
+    controls?.sync();
+    input?.sync();
   };
+  const report = () =>
+    alive() && reportResources(api.read(state.owner), cache?.resources(), renderer);
   function schedule() {
     if (valid() && !lost && !failed && !frame) frame = requestAnimationFrame(render);
   }
@@ -72,9 +78,9 @@ export function attachGpuDisplay(
     frame = 0;
     if (!valid() || lost || failed) return;
     try {
-      const width = view.canvas.clientWidth,
-        height = view.canvas.clientHeight,
-        backing = devicePixelRatio;
+      if (!gpuAdmission()) return schedule();
+      const { clientWidth: width, clientHeight: height } = view.canvas;
+      const backing = devicePixelRatio;
       const dimensions = `${width}:${height}:${backing}`;
       if (dimensions !== size || !renderer) {
         input?.cancel();
@@ -90,22 +96,20 @@ export function attachGpuDisplay(
           accept(api.suspend(state, nextSequence()));
           view.status("sizeUnavailable");
           report();
-          controls?.sync();
-          input?.sync();
+          sync();
           return;
         }
-        renderer = new GpuRenderer(
-          view.canvas,
-          Math.ceil(width * backing),
-          Math.ceil(height * backing),
-        );
+        if (!gpuAdmission()) {
+          report();
+          sync();
+          return schedule();
+        }
+        sync();
+        renderer = new GpuRenderer(view.canvas, width, height, backing);
         cache = new ProgressiveScene(() => state, renderer, schedule, failDisplay);
         size = dimensions;
       }
-      if (!renderer.available()) {
-        schedule();
-        return;
-      }
+      if (!renderer.available()) return schedule();
       const mapping = api.mapping(state.owner, state.session);
       const detail = 2 ** Math.ceil(Math.log2(mapping.zoom * backing));
       cache?.render(detail);
@@ -119,8 +123,7 @@ export function attachGpuDisplay(
         acknowledgementObservation(state, renderer.epoch, receipt, serial);
       view.status("ready");
       automaticRetry = 0;
-      controls?.sync();
-      input?.sync();
+      sync();
     } catch (error) {
       failDisplay(error);
     }
@@ -136,6 +139,7 @@ export function attachGpuDisplay(
       cache = undefined;
       if (!valid()) return;
       accept(api.suspend(state, nextSequence()));
+      sync();
     } catch {
       fatal();
       return;
@@ -160,6 +164,7 @@ export function attachGpuDisplay(
       cache?.dispose();
       cache = undefined;
       accept(api.suspend(state, nextSequence()));
+      sync();
     } catch {
       fatal();
     }
@@ -180,12 +185,8 @@ export function attachGpuDisplay(
   return () => {
     input?.dispose();
     controls?.dispose();
-    try {
-      cache?.dispose();
-      cache = undefined;
-    } catch {
-      /* Session may already have left; derived descriptors retire with it. */
-    }
+    disposeDepartedScene(cache);
+    cache = undefined;
     stopped = true;
     observer.disconnect();
     cancelAnimationFrame(frame);

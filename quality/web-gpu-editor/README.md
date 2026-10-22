@@ -73,8 +73,15 @@ Record exact build and actual outcomes in the task; this mapping alone is not a 
 | MIG-WORKER-21 / history-display.observation.spec.ts | Hold the replacement's real worker reply after Undo of B from A+B; sample every submitted default-framebuffer display to retain unaffected A, draw fresh C immediately, then publish A+C and remove C with one Undo |
 | MIG-WORKER-23 / history-display.observation.spec.ts | Held historical base follows Rust-certified pan and Escape without a current receipt acknowledgement or complete-overlay claim |
 | MIG-WORKER-24 / history-display.observation.spec.ts | Cancel fresh C while history is held; repeated Undo/Redo and latest-target Undo, context loss/restore, late held replies and Back preserve exact completed history without C or B resurrection |
-| MIG-LIVE-02 / pressure.observation.spec.ts |127/128/129 accepted pen points across chunk boundary: live, completed and rebuilt pixels agree; trusted browser pen events do not certify physical Wacom |
-| MIG-WORKER-04 / gpu-budget.spec.ts | Maximum8,388,608 backing pixels, optional and packed formats → resize → Back: mandatory target payload≤64MiB and released owned targets; requested payload is not physical driver residency |
+| MIG-CONTROL-01 / control-focus.spec.ts and MIG-LIVE-04 | Actual Tab/Shift+Tab leaves disabled idle history and held-recovery view controls; activation/value-changing keys remain blocked without queuing commands |
+| MIG-LIVE-02 / pressure.observation.spec.ts |1/2/3/127/128/129 accepted pen points, normal and packed targets: exact live, completed and rebuilt pixels agree; trusted browser pen events do not certify physical Wacom |
+| MIG-LIVE-03 / active-display.observation.spec.ts |493px width,5% zoom,−180° rotation and large DPR2 backing: every sampled submitted display retains previously visible accepted regions; positive visible-point/source-count controls and advancing front/stable generations during continuous input; readback is functional evidence only |
+| MIG-LIVE-04 / retirement.observation.spec.ts | Hold unsignalled retiring GPU work → resize → trusted fresh Begin: no new target allocation or old-target deletion, no accepted stale-mapping input; view Reset remains disabled and a trusted click is not queued; release fences → current replacement, fresh Reset and input succeed, normal and packed |
+| MIG-LIVE-05 / tail-handoff.observation.spec.ts | Positively observed incomplete back tail → EndC → immediate D → Escape, then pan/Escape and Undo/Redo: D cancellation preserves C, secondary scratch never clears C front, exact completed reconstruction; normal and packed |
+| MIG-LIVE-06 / retirement-failure.observation.spec.ts | Render records work then throws, terminal fence creation fails: generation remains charged and polling stops; explicit Retry must create a successful completion fence before deletion/replacement, preserving completed artwork |
+| MIG-LIVE-07 / tail-pan.observation.spec.ts | Bounded injected live-work budget exhaustion after exact frontN33 → appendN34/End → trusted pan/Escape before canonical promotion: fixed-anchor shifted/restored pixels, positive unfinished-source control and no complete/ack; release fault then exact settled/Redo parity, normal and packed. Functional fault evidence only, not natural multipage timing |
+| MIG-LIVE-08 / tail-composite.fixture.spec.ts | Synthetic renderer-boundary RGBA groups in normal/packed targets: retained stable/front self-union, separate translucent D source-over at overlap, D removal preserves C, common pan/cancel alignment and exact canonical source-order pixels. No opacity UI or command-lifecycle claim |
+| MIG-WORKER-04 / gpu-budget.spec.ts | Maximum8,388,608 backing pixels → resize → Back: normal9B/pixel targets≤72MiB or packed12B/pixel≤96MiB; geometry including256KiB stream reserve is capped by min(128MiB,192MiB−target payload), and retiring generations block replacement allocation; requested payload is not physical driver residency |
 | MIG-WORKER-07 / worker-failure.spec.ts | Confirmed malformed worker reply during actual camera rebuild: reject geometry and preserve completed artwork/history |
 | MIG-RECOVERY-02 / recovery.spec.ts | Persistent allocation error: exactly one automatic renderer retry and two attempts after explicit Retry; count renderer attempts separately from optional-format/RGBA allocation attempts, then prove restored source/history |
 
@@ -94,6 +101,25 @@ display transform. The generated-API `Run historical display boundary` fixture r
 owner/session/mapping, unknown/released receipts, changed metrics and departed sessions; strict
 frame transforms, preparation and readiness still reject the obsolete content prefix. This is
 synthetic browser boundary evidence, not an actual-route or native E2E claim.
+
+View controls use the existing Rust `canBeginInk` value only because M03 view and ink admission share the same ready/display-usable/idle predicate. M06 layer eligibility must introduce a separate view capability before those predicates diverge. Suspension and mapping transitions synchronize this presentation before awaiting replacement; ordinary usable historical/rebuilding displays remain eligible. MIG-WORKER-07 retains exact reset pixels, and MIG-LIVE-04 proves held unavailable Reset is not queued.
+
+Captured tails use a separate Rust display-only proof. `Run captured tail boundary` covers the
+combined8 frame/tail receipt cap in both allocation orders, the fixed2 tail slots, pending-ticket
+parent/sequence checks, append before captured terminal issuance, canonical adoption/coverage/
+placement/cache rejection, fixed-anchor camera transforms, C End→D Cancel, permanent Undo/Redo
+invalidation, released handles, empty completion and metrics invalidation. `Run live prefix
+boundary` preserves the canonical128 stable limit and its pending-append proof at1/2/3/127/128/129.
+These generated-API browser fixtures are boundary evidence; actual input and pixels remain the
+MIG-LIVE cases above. A captured older tail may finish while input continues, but cannot acknowledge
+current content. Front replacement is atomic only after all bounded ranges complete; final live
+promotion uses canonical stable coverage. No source simplification or parity tolerance changed.
+
+GPU retirement preserves its completion reservation if fence creation fails. Unknown completion
+cannot release capacity; a terminal retirement error stops polling and retains its charge until
+explicit retry or context loss proves safe retirement. A fully drained discarded frame clears old
+GL errors but never advances the validated-output watermark. Normal source reports include the
+fixed tail descriptors in Engine overhead and retiring GPU bytes until completion.
 
 MIG-WORKER-22 remains open: the existing immediate-page path can retain the earliest768 pages
 and fail to show the latest accepted ink while a historical replacement is held. A98,816-move

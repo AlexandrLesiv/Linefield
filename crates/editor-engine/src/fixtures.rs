@@ -1,5 +1,13 @@
 use crate::{Code, Engine};
 impl Engine {
+    pub fn fixture_near_exhaustion() -> Self {
+        Self {
+            mapping_counter: u64::MAX - 4,
+            presentation_counter: u64::MAX - 4,
+            scene_counter: u64::MAX - 4,
+            ..Self::default()
+        }
+    }
     /// Fault setup only: preserve an active interaction while exhausting its counters.
     pub fn fixture_terminal_reserve(&mut self) -> Code {
         if !self.document.busy() {

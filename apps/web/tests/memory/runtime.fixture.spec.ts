@@ -14,6 +14,8 @@ for (const label of [
   "Run bounded calibration",
   "Run cleanup failure",
   "Run historical display boundary",
+  "Run live prefix boundary",
+  "Run captured tail boundary",
 ]) {
   test(`WMR-03/04/06 isolated browser evidence: ${label}`, async ({ page, browser }, info) => {
     const errors: string[] = [];

@@ -51,6 +51,7 @@ impl Engine {
         if !self.room(3 + u64::from(self.document.busy())) {
             // Cancellation, suspension and departure each retain their terminal generation.
             self.cancel_current(Code::Ok);
+            self.clear_tail_displays();
             if self.current.is_some_and(|v| v.phase != Phase::Suspended) {
                 self.advance();
                 if let Some(value) = self.current.as_mut() {
@@ -62,6 +63,7 @@ impl Engine {
             return Code::Exhausted;
         }
         self.cancel_current(Code::Ok);
+        self.clear_tail_displays();
         self.advance();
         self.sequence = sequence;
         if let Some(value) = self.current.as_mut() {
@@ -80,6 +82,7 @@ impl Engine {
             return Code::Noop;
         }
         self.cancel_current(Code::Ok);
+        self.clear_tail_displays();
         self.advance();
         if let Some(value) = self.current.as_mut() {
             value.phase = Phase::Suspended;

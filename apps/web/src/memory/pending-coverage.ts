@@ -18,7 +18,7 @@ export function pendingCoverage(
     const ids = scene.ids(state(), after);
     if (ids.code !== "ok") throw Error(ids.code);
     for (const id of ids.ids) {
-      if (!secondary && live) live.gpu.resetTail();
+      if (!secondary && live) live.gpu.resetBack();
       secondary = true;
       const stroke = scene.stroke(state(), id);
       if (stroke.code !== "ok") throw Error(stroke.code);
@@ -39,7 +39,6 @@ export function pendingCoverage(
       }
       pass.composite();
       after = id;
-      live?.invalidateTail();
     }
     if (ids.done) break;
   }

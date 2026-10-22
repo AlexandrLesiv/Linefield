@@ -3,11 +3,19 @@ import { preparationHeap } from "./preparation-loader.ts";
 import type { StateValue } from "./bridge.ts";
 import { wasmBytes } from "./loader.ts";
 import { diagnostic } from "./diagnostics.ts";
+import { retiringGpuBytes } from "./gpu-retirement.ts";
 type Geometry = { bytes: number; pages: number; streamOnly: boolean };
 let highWater = 0;
 let aboveTarget = false;
 let current: ReturnType<typeof totals> | undefined;
-function totals(s: StateValue, geometry: Geometry, wasm: number, width: number, height: number) {
+function totals(
+  s: StateValue,
+  geometry: Geometry,
+  wasm: number,
+  width: number,
+  height: number,
+  packed = false,
+) {
   highWater = Math.max(highWater, wasm);
   const pixels = width * height;
   const buffers = pixels ? 2 * 4096 * 32 : 0;
@@ -21,9 +29,12 @@ function totals(s: StateValue, geometry: Geometry, wasm: number, width: number, 
     geometryPages: geometry.pages,
     streamOnly: geometry.streamOnly,
     gpuStreamingBuffers: buffers,
-    gpuMask: pixels * 2,
-    gpuStaging: pixels * 3,
-    gpuBase: pixels * 3,
+    gpuMask: pixels * (packed ? 4 : 3),
+    gpuStaging: pixels * (packed ? 4 : 3),
+    gpuBase: pixels * (packed ? 4 : 3),
+    gpuTargetBytes: pixels * (packed ? 12 : 9),
+    gpuRetiring: retiringGpuBytes(),
+    gpuGeometryLimit: Math.min(128 * 1024 ** 2, 192 * 1024 ** 2 - pixels * (packed ? 12 : 9)),
     gpuGeometryCapacity: m.gpuAllocated,
     gpuGeometryLive: m.gpuLive,
     gpuGeometryFree: m.gpuFree,
@@ -37,7 +48,7 @@ function totals(s: StateValue, geometry: Geometry, wasm: number, width: number, 
     // Linear memory already contains Rust allocations; never add those charges twice.
     ownedCpu:
       wasm + geometry.bytes + m.workerHeap + preparationHeap() + m.preparationCopies + m.readyBytes,
-    ownedGpu: pixels * 8 + buffers + m.gpuAllocated,
+    ownedGpu: pixels ? pixels * (packed ? 12 : 9) + buffers + m.gpuAllocated : retiringGpuBytes(),
   };
 }
 export function observeResources(
@@ -46,8 +57,9 @@ export function observeResources(
   wasm: number,
   width: number,
   height: number,
+  packed = false,
 ) {
-  current = totals(state, geometry, wasm, width, height);
+  current = totals(state, geometry, wasm, width, height, packed);
   const above = current.ownedCpu > 320 * 1024 ** 2 || current.ownedGpu > 384 * 1024 ** 2;
   const crossed = above && !aboveTarget;
   aboveTarget = above;
@@ -59,7 +71,7 @@ export const resourceSnapshot = () => (current ? { ...current } : undefined);
 export function reportResources(
   s: StateValue,
   geometry?: Geometry,
-  dimensions?: { width: number; height: number },
+  dimensions?: { width: number; height: number; resources?: { packed: boolean } },
 ) {
   const { width = 0, height = 0 } = dimensions ?? {};
   if (
@@ -69,6 +81,7 @@ export function reportResources(
       wasmBytes(),
       width,
       height,
+      dimensions?.resources?.packed,
     )
   )
     diagnostic("display", "soft-target", s.session);

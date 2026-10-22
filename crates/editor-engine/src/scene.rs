@@ -105,6 +105,15 @@ impl Engine {
         {
             return Err(Code::StaleScene);
         }
+        self.project_descriptor(descriptor, v, m, source.style.width)
+    }
+    pub(crate) fn project_descriptor(
+        &self,
+        descriptor: &Descriptor,
+        v: crate::numerics::Viewport,
+        m: crate::Metrics,
+        width: f64,
+    ) -> Result<Placement, Code> {
         if descriptor.key.detail < v.zoom * m.backing {
             return Err(Code::StaleScene);
         }
@@ -133,7 +142,7 @@ impl Engine {
         let matrix = crate::geometry_precision::placement(
             [c * scale, s * scale, -s * scale, c * scale, tx, ty],
             descriptor.centers,
-            source.style.width * 0.5,
+            width * 0.5,
             scale,
             m.width.max(m.height) * m.backing,
         )?;

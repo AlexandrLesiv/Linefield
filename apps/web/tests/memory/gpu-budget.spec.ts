@@ -53,15 +53,25 @@ for (const packed of [false, true]) {
       return { width: c.width, height: c.height };
     });
     expect(size.width * size.height).toBe(8_388_608);
-    await expect(page.locator("html")).toHaveAttribute("data-texture-live", `${64 * 1024 ** 2}`);
+    const bytesPerPixel = packed ? 12 : 9;
+    await expect(page.locator("html")).toHaveAttribute(
+      "data-texture-live",
+      `${8_388_608 * bytesPerPixel}`,
+    );
     await page.mouse.move(300, 300);
     await page.mouse.down();
     await page.mouse.move(900, 500, { steps: 24 });
     await page.mouse.up();
     await page.setViewportSize({ width: 1280, height: 900 });
     await expect(page.locator("canvas")).toHaveAttribute("data-state", "ready");
-    await expect(page.locator("html")).toHaveAttribute("data-texture-live", `${1280 * 900 * 8}`);
-    await expect(page.locator("html")).toHaveAttribute("data-texture-peak", `${64 * 1024 ** 2}`);
+    await expect(page.locator("html")).toHaveAttribute(
+      "data-texture-live",
+      `${1280 * 900 * bytesPerPixel}`,
+    );
+    await expect(page.locator("html")).toHaveAttribute(
+      "data-texture-peak",
+      `${8_388_608 * bytesPerPixel}`,
+    );
     await page.locator(".back").click();
     await expect(page.locator("html")).toHaveAttribute("data-texture-live", "0");
     // These are requested texture payloads, not physical driver allocation or total GPU use.

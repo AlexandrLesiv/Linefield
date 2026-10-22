@@ -25,6 +25,7 @@ export function controlPresentation(width: HTMLInputElement | null) {
         s.interaction !== 0n,
         s.canUndo,
         s.canRedo,
+        s.canBeginInk,
         v.zoom,
         v.angle,
         tool,
@@ -34,4 +35,16 @@ export function controlPresentation(width: HTMLInputElement | null) {
       return true;
     },
   };
+}
+
+export function disabledActivation(event: Event) {
+  if (!(event.target instanceof Element) || !event.target.closest("[aria-disabled=true]"))
+    return false;
+  if (!(event instanceof KeyboardEvent)) return true;
+  if (event.key === "Enter" || event.key === " ") return true;
+  return (
+    event.target instanceof HTMLInputElement &&
+    event.target.type === "range" &&
+    /^(Arrow(Left|Right|Up|Down)|Home|End|PageUp|PageDown)$/.test(event.key)
+  );
 }

@@ -119,7 +119,8 @@ export class ProgressiveScene {
     if (this.live) {
       const stroke = scene.stroke(this.state(), this.live.stroke);
       if (stroke.code !== "ok") throw Error(stroke.code);
-      const complete = this.promotion.busy || this.live.advance(stroke.count, stroke.color);
+      const complete =
+        this.promotion.busy || this.live.advance(stroke.count, stroke.color, stroke.active);
       covered = this.promotion.busy || this.live.covers(stroke.count);
       this.live.gpu.display(stroke.color, transform?.matrix, !this.promotion.busy);
       after = this.live.stroke;

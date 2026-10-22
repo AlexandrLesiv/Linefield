@@ -4,7 +4,8 @@ import { bridge } from "../../../src/memory/bridge.ts";
 import { edit, take, copyReply } from "../../../src/memory/edit-bridge.ts";
 import { scene } from "../../../src/memory/scene-bridge.ts";
 import { GpuRenderer } from "../../../src/memory/gpu-renderer.ts";
-export function gpuEdges(canvas: HTMLCanvasElement) {
+import { retireRenderer } from "./retire-renderer.ts";
+export async function gpuEdges(canvas: HTMLCanvasElement) {
   const seed: unknown = Reflect.get(api, "fixtureFarView");
   if (typeof seed !== "function") throw Error("fixture missing");
   let cases = 0,
@@ -107,7 +108,7 @@ export function gpuEdges(canvas: HTMLCanvasElement) {
         maximumCoverageError = Math.max(maximumCoverageError, error);
         cases++;
       }
-      renderer.dispose();
+      await retireRenderer(renderer);
       bridge.leave(s);
       bridge.dispose(s.owner);
     }

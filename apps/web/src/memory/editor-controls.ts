@@ -1,5 +1,5 @@
 import { revealLabel } from "./control-visibility.ts";
-import { controlPresentation } from "./control-presentation.ts";
+import { controlPresentation, disabledActivation } from "./control-presentation.ts";
 import { drawingIcon } from "../drawing-icons.ts";
 import { button, element } from "../dom.ts";
 import { drawingTool } from "../drawing-controls.css.ts";
@@ -126,11 +126,7 @@ export function attachEditorControls(canvas: HTMLCanvasElement, commands: Comman
     root.addEventListener(
       type,
       (e) => {
-        if (
-          commands.read().interaction &&
-          e.target instanceof Element &&
-          e.target.closest("[aria-disabled=true]")
-        ) {
+        if (disabledActivation(e)) {
           e.preventDefault();
           e.stopImmediatePropagation();
         }
@@ -159,8 +155,10 @@ export function attachEditorControls(canvas: HTMLCanvasElement, commands: Comman
       .join("")}`;
     for (const control of [color, pen, minus, plus, left, right, reset, resetView]) {
       if (!control) continue;
-      control.setAttribute("aria-disabled", String(busy));
-      control.classList.toggle(locked, busy);
+      // M03 view and ink admission share Rust ready + idle; separate before M06 layer gating.
+      const unavailable = panel.contains(control) ? !s.canBeginInk : busy;
+      control.setAttribute("aria-disabled", String(unavailable));
+      control.classList.toggle(locked, unavailable);
     }
     for (const [b, available] of [
       [undo, s.canUndo],

@@ -77,25 +77,28 @@ impl Engine {
             normalize(continuation.anchor[1], o[1], 0.0, 1.0, 1_048_576)?,
         ];
         let style = stroke.style;
-        let page = if let Some(p) = self.pages.iter().find(|p| p.key == key) {
-            p.id
-        } else {
-            if self.pages.len() >= 4096 {
-                return Err(Code::Capacity);
-            }
-            let id = self.page_counter.checked_add(1).ok_or(Code::Exhausted)?;
-            self.pages.try_reserve(1).map_err(|_| Code::Capacity)?;
-            self.pages.push(Descriptor {
-                proof: crate::source_proof::SourceProof::Chunk,
-                id,
-                key,
-                origin,
-                bounds: packed.bounds,
-                centers: packed.centers,
-            });
-            self.page_counter = id;
-            id
-        };
+        let page =
+            if let Some(p) = self.pages.iter().find(|p| {
+                p.key == key && matches!(p.proof, crate::source_proof::SourceProof::Chunk)
+            }) {
+                p.id
+            } else {
+                if self.pages.len() >= 4096 {
+                    return Err(Code::Capacity);
+                }
+                let id = self.page_counter.checked_add(1).ok_or(Code::Exhausted)?;
+                self.pages.try_reserve(1).map_err(|_| Code::Capacity)?;
+                self.pages.push(Descriptor {
+                    proof: crate::source_proof::SourceProof::Chunk,
+                    id,
+                    key,
+                    origin,
+                    bounds: packed.bounds,
+                    centers: packed.centers,
+                });
+                self.page_counter = id;
+                id
+            };
         let next = if packed.done {
             self.continuation = None;
             0
