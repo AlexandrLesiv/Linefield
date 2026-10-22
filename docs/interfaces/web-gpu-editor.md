@@ -1,7 +1,7 @@
 # MIG-C1 — shared vector editor and direct WebGL contract
 
-Current contract, 2026-10-21. P05-M01. Decision242 delegates remaining M01–M09
-technical/design choices to the harness for the owner's ten-hour authorization window.
+Current contract, 2026-10-22. P05-M01 establishes the migration contract. Decision243 renews
+delegated M03–M09 technical/design choices until return or2026-10-23 07:13:55UTC.
 This version records specialist recommendations adopted by the lead; it is not a claim
 that the owner personally reviewed this new text. Supersedes WMP-C2 only where explicit
 below. Storage/native applications and post-M09 worker experiments remain separate.

@@ -1,24 +1,22 @@
-## Current priority — full vector migration (2026-10-21)
+## Current priority — full vector migration (2026-10-22)
 
 Current owner renewal on 2026-10-22: [decision243](../docs/decisions.md) authorizes autonomous
 M03–M09 and all required scoped technical/design decisions until the owner's return or
 2026-10-23 07:13:55 UTC. [P05-DIAG01](P05-DIAG01.md) implements the approved bounded logging
 and development mode after the M03 runtime contract freezes. The existing continuation is active
-every 20 minutes; the previous paused/deadline statements below describe the earlier window.
+every 20 minutes until that deadline or the owner's return.
 No merges; preserve current previews and reference5207. Quality requirements remain unchanged.
 
-Current2026-10-22: the owner resumed M03 directly after the scheduled window, authorizing its
-fixture/performance repairs, checks/reviews and updates to [draft PR18](https://github.com/AlexandrLesiv/Linefield/pull/18).
-Keep live previews available; no merge. The expired deadline below describes the earlier
-autonomous M01–M09 window, not this renewed M03 request. The automation remains paused.
-
-Decision242 authorizes autonomous [M01](P05-M01.md) → [M02](P05-M02.md) → [M03](P05-M03.md) →
+The migration sequence is [M01](P05-M01.md) → [M02](P05-M02.md) → [M03](P05-M03.md) →
 [M04](P05-M04.md) → [M05](P05-M05.md) → [M06](P05-M06.md) → [M07](P05-M07.md) →
-[M08](P05-M08.md) → [M09](P05-M09.md) through2026-10-22 06:21:48UTC. Contracts/design are
+[M08](P05-M08.md) → [M09](P05-M09.md). Contracts/design are
 [MIG-C1](../docs/interfaces/web-gpu-editor.md)/[MIG-D1](../docs/design/web-gpu-editor.md).
 M01 is frozen at9e92c63 in [PR16](https://github.com/AlexandrLesiv/Linefield/pull/16).
 M02 runtime is frozen at1157aeba in draft [PR17](https://github.com/AlexandrLesiv/Linefield/pull/17).
-M03 is active on that frozen runtime; later tasks await frozen predecessors, not repeated permission. M05 material asset preparation is independently complete
+M03 is active in [draft PR18](https://github.com/AlexandrLesiv/Linefield/pull/18) on that frozen
+runtime; its Undo-continuity preview remains available on port65177. Active-stroke continuity,
+remaining capacity/performance work and exact-build checks are pending. Later tasks await
+frozen predecessors, not repeated permission. M05 material asset preparation is independently complete
 atd3d20e8 on its unpublished branch; M05 runtime integration still depends on M04.
 PR10 is verified merged at3eaaff8c07c3e15bdcbbbdb97c74031426fbe454. Older status statements
 below are historical. One task/branch/PR, parent-first stacked review, owner-only merges.
