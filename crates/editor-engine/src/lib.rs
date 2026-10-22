@@ -5,6 +5,7 @@ mod document;
 #[cfg(feature = "e2e-fixtures")]
 mod fixtures;
 mod geometry_cursor;
+mod geometry_packing;
 mod geometry_page;
 mod geometry_precision;
 mod history;

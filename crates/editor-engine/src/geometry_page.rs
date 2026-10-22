@@ -41,8 +41,6 @@ impl Engine {
         if revision != actual {
             return Err(Code::StaleScene);
         }
-        let mut data = Vec::new();
-        data.try_reserve_exact(6144).map_err(|_| Code::Capacity)?;
         let mut continuation = if cursor == 0 {
             Continuation {
                 key: PageKey {
@@ -72,50 +70,8 @@ impl Engine {
             self.continuation.take().ok_or(Code::Invalid)?
         };
         let key = continuation.key;
-        let mut origin = None;
-        let mut bounds = [
-            f64::INFINITY,
-            f64::INFINITY,
-            f64::NEG_INFINITY,
-            f64::NEG_INFINITY,
-        ];
-        let mut done = true;
-        let mut centers = bounds;
-        while let Some(pair) = continuation.next(stroke)? {
-            let o = *origin.get_or_insert([pair[0][0], pair[0][1]]);
-            if data.len() == 6144
-                || pair.iter().any(|p| {
-                    (p[0] - o[0]).abs() > crate::geometry_precision::page_extent(detail)
-                        || (p[1] - o[1]).abs() > crate::geometry_precision::page_extent(detail)
-                })
-            {
-                continuation.pending = Some(pair);
-                done = false;
-                break;
-            }
-            for p in pair {
-                let values = [p[0] - o[0], p[1] - o[1], p[2]];
-                centers[0] = centers[0].min(values[0]);
-                centers[1] = centers[1].min(values[1]);
-                centers[2] = centers[2].max(values[0]);
-                centers[3] = centers[3].max(values[1]);
-                bounds[0] = bounds[0].min(values[0] - values[2]);
-                bounds[1] = bounds[1].min(values[1] - values[2]);
-                bounds[2] = bounds[2].max(values[0] + values[2]);
-                bounds[3] = bounds[3].max(values[1] + values[2]);
-                for v in values {
-                    let f = v as f32;
-                    if !f.is_finite() || (v - f as f64).abs() * detail > 0.01 {
-                        return Err(Code::NumericalCapacity);
-                    }
-                    data.push(f);
-                }
-            }
-        }
-        if data.is_empty() {
-            return Err(Code::Invalid);
-        }
-        let o = origin.ok_or(Code::Invalid)?;
+        let packed = crate::geometry_packing::pack(&mut continuation, stroke, detail)?;
+        let o = packed.origin;
         let origin = [
             normalize(continuation.anchor[0], o[0], 0.0, 1.0, 1_048_576)?,
             normalize(continuation.anchor[1], o[1], 0.0, 1.0, 1_048_576)?,
@@ -134,13 +90,13 @@ impl Engine {
                 id,
                 key,
                 origin,
-                bounds,
-                centers,
+                bounds: packed.bounds,
+                centers: packed.centers,
             });
             self.page_counter = id;
             id
         };
-        let next = if done {
+        let next = if packed.done {
             self.continuation = None;
             0
         } else {
@@ -155,10 +111,10 @@ impl Engine {
             token
         };
         Ok(Page {
-            data,
+            data: packed.data,
             origin,
             next,
-            done,
+            done: packed.done,
             page,
             revision,
             style,

@@ -81,6 +81,7 @@ export function gpuContract() {
   let cursor = 0n,
     pages = 0,
     capsules = 0;
+  let maximumSpan = 0;
   const start = performance.now();
   for (;;) {
     const p = scene.page(s, stroke, 128n, 0n, 64, cursor);
@@ -88,13 +89,19 @@ export function gpuContract() {
     check(p.data.length <= 6144, "bounded output");
     pages++;
     capsules += p.data.length / 6;
+    for (let i = 0; i < p.data.length; i += 6)
+      maximumSpan = Math.max(
+        maximumSpan,
+        Math.abs((p.data[i + 3] ?? 0) - (p.data[i] ?? 0)),
+        Math.abs((p.data[i + 4] ?? 0) - (p.data[i + 1] ?? 0)),
+      );
     scene.release(s, p.page);
     if (p.done) break;
     check(p.next !== cursor && p.next !== 0n, "progress");
     cursor = p.next;
     check(
       pages < 1000000 && performance.now() - start < 30000,
-      `bounded fixture work: pages=${pages}, capsules=${capsules}, elapsedMs=${performance.now() - start}, next=${cursor}`,
+      `bounded fixture work: pages=${pages}, capsules=${capsules}, span=${maximumSpan}, elapsedMs=${performance.now() - start}, next=${cursor}`,
     );
   }
   check(pages > 1, "multi-page exercised");
@@ -110,6 +117,7 @@ export function gpuContract() {
     cases: 11,
     pages,
     capsules,
+    maximumSpan,
     durationMs: duration,
     evidence: "synthetic checked-boundary exploration; not physical Wacom or UI latency",
   };

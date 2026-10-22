@@ -12,7 +12,7 @@ export function gpuEdges(canvas: HTMLCanvasElement) {
     maximumCoverageError = 0,
     maximumEndpointError = 0;
   let largestIntermediate = 0;
-  for (const region of [0n, 9223372036854775800n])
+  for (const region of [0n, 9223372036854775800n, -9223372036854775800n])
     for (const angle of [
       -Math.PI / 2 - 1e-10,
       -Math.PI / 2 + 1e-10,
@@ -82,6 +82,7 @@ export function gpuEdges(canvas: HTMLCanvasElement) {
       }
       renderer.composite();
       renderer.publish();
+      renderer.gl.bindFramebuffer(renderer.gl.READ_FRAMEBUFFER, null);
       // The terminal round cap is outside the preceding curved source support.
       // Compare actual GPU coverage against its analytical f64 circular edge.
       const radius = 512 * 0.5 * 0.05 * 16 * 4;

@@ -1,4 +1,5 @@
 import { gpuNumerics } from "./gpu-numerics.ts";
+import { pageJoins } from "./page-joins.ts";
 import { gpuEdges } from "./gpu-edges.ts";
 import { gpuTaper } from "./gpu-taper.ts";
 import { terminalReserve } from "./gpu-terminal.ts";
@@ -65,6 +66,10 @@ action("Run terminal reserve", async () => {
 action("Run GPU numerics", async () => {
   await loadEngine();
   return gpuNumerics();
+});
+action("Run page joins", async () => {
+  await loadEngine();
+  return pageJoins();
 });
 action("Run GPU edges", async () => {
   await loadEngine();

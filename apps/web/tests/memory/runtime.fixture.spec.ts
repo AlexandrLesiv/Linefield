@@ -7,6 +7,7 @@ for (const label of [
   "Run GPU contract",
   "Run terminal reserve",
   "Run GPU numerics",
+  "Run page joins",
   "Run GPU edges",
   "Run GPU taper",
   "Run resource lifetimes",

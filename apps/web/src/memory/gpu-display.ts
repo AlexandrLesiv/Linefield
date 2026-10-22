@@ -55,6 +55,7 @@ export function attachGpuDisplay(
   let input: ReturnType<typeof attachInput> | undefined;
   let controls: ReturnType<typeof attachEditorControls> | undefined;
   const report = () => {
+    if (!alive()) return;
     if (
       observeResources(
         api.read(state.owner),
