@@ -76,6 +76,18 @@ claimed after ambiguous GPU issue; use bounded recovery, never duplicate group s
 Test accepted/rejected gesture folds, late completions, equivalent-prefix negative controls,
 terminal no-more-exports and incomplete offscreen reveal without false exact acknowledgement.
 
+## Optional sparse coverage
+
+M04's [first-stage contract](../interfaces/web-sparse-coverage.md) retains SEC-03/09/13:
+checked fixed integer routes, bounded work/storage and two independent bank/allocation loans.
+Both eviction and compaction honor loans through final validated readers, including cancellation
+after upload but before draw. Count live and retiring route bytes before geometry admission;
+an optional failure selects complete fallback rather than a document quota or per-frame retry.
+Unknown bounds cannot certify invisibility. Before S is touched, discard uncomposited G and
+replay the exact group once; after any possible S write use existing ambiguous-composite recovery.
+Test stale generations, sentinel/range/work overflows, two-fence retirement, packed alpha,
+before/after-composite failures and warm zero-upload reuse. Current timing/AA gates remain.
+
 ## Bounded developer diagnostics
 
 Decision243 authorizes P05-DIAG01's bounded opt-in diagnostic UI/export (CT-06/07,

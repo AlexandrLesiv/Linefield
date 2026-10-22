@@ -509,6 +509,12 @@ source-over composites groups once in layer/paint order. Pencil remains nonopaqu
 No cached image may change order, overlap, union identity or source appearance. Geometry cache
 misses cannot hide accepted strokes. Input acceptance never waits for a completed frame.
 
+M04's first optional backend stage follows [bounded sparse coverage](web-sparse-coverage.md):
+existing G/S, fixed route banks and two geometry loans, conservative integer tile quads,
+complete-group fallback before composition and bounded retirement. Numerical/GPU parity and
+same-host benefit are required before adoption into the normal path. Pixel-copy/lattice and
+archive work have their own later proof; this routing contract does not certify exact pan reuse.
+
 M02 thin-taper AA refinement: evaluate the continuous envelope of the source discs' antialiased
 coverage, rather than applying the tiny-radius cap only to a numerically selected nearest disc.
 The reference nearest-disc choice can flip at near-containment and cause a large coverage pop.
