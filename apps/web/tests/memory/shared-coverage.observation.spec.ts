@@ -46,7 +46,8 @@ test("MIG-WORKER-18 broad completed pages reject insufficient current-view cover
   await complete(page, true);
   const after = await page.evaluate(() => window["__linefieldPerfRead"]?.().geometry);
   expect(after?.preparedCoverageMisses).toBeGreaterThan(before?.preparedCoverageMisses ?? 0);
-  expect(after?.immediatePreparations).toBeGreaterThan(before?.immediatePreparations ?? 0);
+  expect(after?.jobs).toBeGreaterThan(before?.jobs ?? 0);
+  expect(after?.workerPages).toBeGreaterThan(before?.workerPages ?? 0);
   await clear(page);
   await page.getByRole("button", { name: "Reset view", exact: true }).click();
   await complete(page);

@@ -69,7 +69,7 @@ export async function tailBoundary() {
   check(tail.transform(s, a.id).code === "ok", "ended capture uses Rust camera transform");
   check(
     JSON.stringify([...tail.transform(s, a.id).matrix]) ===
-      JSON.stringify([...frames.transform(s, f.frame).matrix]),
+      JSON.stringify([...frames.displayTransform(s, f.frame).matrix]),
     "all masks share fixed anchor",
   );
   s = edit.cancel(s, "escape");
@@ -99,7 +99,7 @@ export async function tailBoundary() {
     check(frames.capture(state).code === "capacity", "ninth capture rejected");
     state = edit.end(state, 1n);
     check(
-      live.append(state, c.frame, c.stroke).code === "capacity",
+      live.append(state, ids[1]!, c.stroke).code === "capacity",
       "ninth append receipt rejected",
     );
     tail.release(state, tails[0]!.id);

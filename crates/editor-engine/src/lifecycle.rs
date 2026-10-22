@@ -45,7 +45,7 @@ impl Engine {
         self.clear_tail_displays();
         self.pages.clear();
         self.preparations.clear();
-        self.frames.clear();
+        self.frames = [None; 8];
         self.continuation = None;
         // Enter/update admission reserves this generation; cleanup cannot consume it early.
         self.advance();
@@ -67,7 +67,7 @@ impl Engine {
         self.document = Default::default();
         self.pages.clear();
         self.preparations.clear();
-        self.frames.clear();
+        self.frames = [None; 8];
         self.continuation = None;
         self.disposed = owner;
         self.sequence = 0;

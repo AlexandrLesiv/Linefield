@@ -24,7 +24,7 @@ pub struct TailStatus {
 }
 impl Engine {
     pub(crate) fn receipt_count(&self) -> usize {
-        self.frames.len() + self.tails.iter().flatten().count()
+        self.frames.iter().flatten().count() + self.tails.iter().flatten().count()
     }
     #[expect(
         clippy::too_many_arguments,
@@ -41,7 +41,7 @@ impl Engine {
         detail: f64,
     ) -> Result<TailStatus, Code> {
         let (count, style, active) = self.stroke_info(owner, session, scene, stroke)?;
-        let f = self.frame_receipt(owner, session, anchor)?;
+        let f = self.live_frame_receipt(owner, session, anchor, stroke)?;
         let m = self
             .current
             .and_then(|v| v.metrics)
@@ -119,6 +119,7 @@ impl Engine {
         if current.metrics != Some(t.anchor.metrics) {
             return Err(Code::StaleMapping);
         }
+        self.live_frame_receipt(owner, session, t.anchor.id, t.stroke)?;
         let source = self.document.stroke(t.stroke).ok_or(Code::StaleScene)?;
         if source.samples.len < t.count as usize || source.style != t.style {
             return Err(Code::StaleScene);
@@ -146,6 +147,7 @@ impl Engine {
         })
     }
     pub(crate) fn clear_tail_displays(&mut self) {
+        self.invalidate_live_frames(None);
         self.tails = [None; 2];
         self.preparations
             .retain(|t| !matches!(t.proof, SourceProof::DisplayTail { .. }));
@@ -153,6 +155,7 @@ impl Engine {
             .retain(|p| !matches!(p.proof, SourceProof::DisplayTail { .. }));
     }
     pub(crate) fn clear_stroke_tail_displays(&mut self, stroke: u64) {
+        self.invalidate_live_frames(Some(stroke));
         let ids = self
             .tails
             .map(|t| t.filter(|t| t.stroke == stroke).map(|t| t.id));

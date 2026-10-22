@@ -1,4 +1,8 @@
 import { tailComposite } from "./tail-composite.ts";
+import { coverageBoundary } from "./current-coverage.ts";
+import { coverageLifetime } from "./coverage-lifetime.ts";
+import { tailCapacity } from "./tail-capacity.ts";
+import { candidateFailure } from "./candidate-failure.ts";
 import { gpuNumerics } from "./gpu-numerics.ts";
 import { livePrefixBoundary } from "./live-prefix.ts";
 import { tailBoundary } from "./tail-boundary.ts";
@@ -94,3 +98,20 @@ action("Run captured tail boundary", async () => {
 });
 
 action("Run tail composite", async () => tailComposite(canvas));
+action("Run current coverage", async () => {
+  await loadEngine();
+  return coverageBoundary();
+});
+action("Run coverage lifetime", async () => {
+  await loadEngine();
+  return coverageLifetime();
+});
+action("Run tail capacity", async () => {
+  await loadEngine();
+  return tailCapacity(canvas);
+});
+for (const afterIssue of [false, true])
+  action(`Run candidate failure ${afterIssue ? "after" : "before"} composite`, async () => {
+    await loadEngine();
+    return candidateFailure(canvas, afterIssue);
+  });

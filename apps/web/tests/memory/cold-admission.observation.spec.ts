@@ -6,6 +6,7 @@ import {
   holdColdReplies,
   readCold,
   releaseCold,
+  resumeCold,
 } from "./cold-observation.ts";
 import type { ColdRecord } from "./cold-observation.ts";
 test("MIG-WORKER-25 held cold partial replies age before GPU admission and preserve exact output", async ({
@@ -28,15 +29,20 @@ test("MIG-WORKER-25 held cold partial replies age before GPU admission and prese
   const clip = { x: 200, y: 220, width: 700, height: 400 };
   const original = await page.screenshot({ clip });
   await clear(page);
-  await page.evaluate(() => {
-    document.documentElement.dataset.coldHold = "true";
-  });
-  await page.getByRole("button", { name: "Rotate canvas right 15°", exact: true }).click();
+  await resumeCold(page);
   await expect
     .poll(async () => Number(await page.locator("html").getAttribute("data-cold-held")))
     .toBe(8);
   const records: ColdRecord[] = await readCold(page);
-  const input = records.findLast((r) => r.kind === "input" && r.outcome === "ok");
+  // Lifecycle identity belongs to the resumed candidate, not an input latency sample.
+  const resumed = records.findLast((r) => r.kind === "overlay-submit");
+  const previous = source.findLast((r) => r.kind === "input" && r.command === "end");
+  expect(resumed).toBeDefined();
+  expect(previous).toBeDefined();
+  expect(resumed?.owner).toBe(previous?.owner);
+  expect(resumed?.content).toBe(previous?.content);
+  expect(resumed?.session).not.toBe(previous?.session);
+  const input = resumed;
   expect(input).toBeDefined();
   expect(records.filter((r) => r.kind === "frame-batch")).toHaveLength(0);
   await releaseCold(page, 1);
@@ -52,7 +58,7 @@ test("MIG-WORKER-25 held cold partial replies age before GPU admission and prese
   checkAdmissions(records);
   expect(records.some((r) => r.kind === "frame-admission" && r.reason === "done")).toBe(true);
   await clear(page);
-  await page.getByRole("button", { name: "Reset canvas rotation", exact: true }).click();
+  await page.getByRole("button", { name: "Reset view", exact: true }).click();
   await complete(page);
   await expect.poll(async () => (await page.screenshot({ clip })).equals(original)).toBe(true);
   await info.attach("cold-admission", {

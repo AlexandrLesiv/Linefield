@@ -53,7 +53,7 @@ for (const packed of [false, true]) {
       return { width: c.width, height: c.height };
     });
     expect(size.width * size.height).toBe(8_388_608);
-    const bytesPerPixel = packed ? 12 : 9;
+    const bytesPerPixel = packed ? 16 : 13;
     await expect(page.locator("html")).toHaveAttribute(
       "data-texture-live",
       `${8_388_608 * bytesPerPixel}`,

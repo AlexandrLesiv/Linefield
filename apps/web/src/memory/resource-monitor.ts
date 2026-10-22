@@ -29,12 +29,13 @@ function totals(
     geometryPages: geometry.pages,
     streamOnly: geometry.streamOnly,
     gpuStreamingBuffers: buffers,
-    gpuMask: pixels * (packed ? 4 : 3),
+    gpuMask: pixels * 4,
+    gpuScratch: pixels * (packed ? 4 : 3),
     gpuStaging: pixels * (packed ? 4 : 3),
     gpuBase: pixels * (packed ? 4 : 3),
-    gpuTargetBytes: pixels * (packed ? 12 : 9),
+    gpuTargetBytes: pixels * (packed ? 16 : 13),
     gpuRetiring: retiringGpuBytes(),
-    gpuGeometryLimit: Math.min(128 * 1024 ** 2, 192 * 1024 ** 2 - pixels * (packed ? 12 : 9)),
+    gpuGeometryLimit: Math.min(128 * 1024 ** 2, 192 * 1024 ** 2 - pixels * (packed ? 16 : 13)),
     gpuGeometryCapacity: m.gpuAllocated,
     gpuGeometryLive: m.gpuLive,
     gpuGeometryFree: m.gpuFree,
@@ -48,7 +49,7 @@ function totals(
     // Linear memory already contains Rust allocations; never add those charges twice.
     ownedCpu:
       wasm + geometry.bytes + m.workerHeap + preparationHeap() + m.preparationCopies + m.readyBytes,
-    ownedGpu: pixels ? pixels * (packed ? 12 : 9) + buffers + m.gpuAllocated : retiringGpuBytes(),
+    ownedGpu: pixels ? pixels * (packed ? 16 : 13) + buffers + m.gpuAllocated : retiringGpuBytes(),
   };
 }
 export function observeResources(
@@ -85,12 +86,4 @@ export function reportResources(
     )
   )
     diagnostic("display", "soft-target", s.session);
-}
-
-export function sumGeometry(a: Geometry, b?: Geometry): Geometry {
-  return {
-    bytes: a.bytes + (b?.bytes ?? 0),
-    pages: a.pages + (b?.pages ?? 0),
-    streamOnly: a.streamOnly || !!b?.streamOnly,
-  };
 }

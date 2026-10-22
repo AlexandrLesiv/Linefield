@@ -131,3 +131,13 @@ export async function coldSource(page: Page, count = 8192) {
   await page.mouse.up();
   return records;
 }
+
+export async function resumeCold(page: Page) {
+  await page.locator(".back").click();
+  await expect(page.locator("canvas")).toHaveCount(0);
+  await readCold(page);
+  await page.evaluate(() => {
+    document.documentElement.dataset.coldHold = "true";
+  });
+  await page.getByRole("button", { name: "Resume temporary drawing", exact: true }).click();
+}

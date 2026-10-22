@@ -36,7 +36,7 @@ impl Engine {
         detail: f64,
         frame: u64,
     ) -> Result<PreparationInput, Code> {
-        let f = self.frame_receipt(owner, session, frame)?;
+        let f = self.live_frame_receipt(owner, session, frame, stroke)?;
         self.live_range(
             owner, session, scene, stroke, from, detail, f.view, f.metrics, false,
         )
@@ -52,7 +52,7 @@ impl Engine {
         detail: f64,
         frame: u64,
     ) -> Result<PreparationInput, Code> {
-        let f = self.frame_receipt(owner, session, frame)?;
+        let f = self.live_frame_receipt(owner, session, frame, stroke)?;
         self.live_range(
             owner, session, scene, stroke, from, detail, f.view, f.metrics, true,
         )
@@ -120,7 +120,7 @@ impl Engine {
         stroke: u64,
         page: u64,
     ) -> Result<crate::Placement, Code> {
-        let f = self.frame_receipt(owner, session, frame)?;
+        let f = self.live_frame_receipt(owner, session, frame, stroke)?;
         self.project_page(stroke, page, f.view, f.metrics)
     }
     pub fn append_frame(
@@ -138,7 +138,6 @@ impl Engine {
             return Err(Code::Capacity);
         }
         let id = self.frame_counter.checked_add(1).ok_or(Code::Exhausted)?;
-        self.frames.try_reserve(1).map_err(|_| Code::Capacity)?;
         let next = crate::FrameReceipt {
             id,
             through: stroke,
@@ -150,8 +149,6 @@ impl Engine {
             },
             ..f
         };
-        self.frames.push(next);
-        self.frame_counter = id;
-        Ok(next)
+        self.insert_frame(next)
     }
 }

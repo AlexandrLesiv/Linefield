@@ -24,11 +24,15 @@ export async function observeHistoryDisplay(page: Page, observePixels = true) {
         });
       }
     };
-    document.addEventListener("release-history", () => {
+    const release = (keepHolding: boolean) => {
       document.documentElement.dataset.holdHistory = "false";
       for (const { worker, data } of held.splice(0))
         worker.dispatchEvent(new MessageEvent("message", { data }));
-    });
+      document.documentElement.dataset.historyReplies = "0";
+      document.documentElement.dataset.holdHistory = `${keepHolding}`;
+    };
+    document.addEventListener("release-history", () => release(false));
+    document.addEventListener("release-history-current", () => release(true));
     if (!capturePixels) return;
     const clear = WebGL2RenderingContext.prototype.clear;
     const flush = WebGL2RenderingContext.prototype.flush;

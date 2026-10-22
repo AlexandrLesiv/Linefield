@@ -1,5 +1,6 @@
 import { bridge } from "../../../src/memory/bridge.ts";
 import { edit } from "../../../src/memory/edit-bridge.ts";
+import { captureLive } from "../../../src/memory/current-coverage.ts";
 import { frames } from "../../../src/memory/frame-bridge.ts";
 import { live } from "../../../src/memory/live-bridge.ts";
 import { preparation } from "../../../src/memory/preparation-bridge.ts";
@@ -15,8 +16,6 @@ export function livePrefixBoundary() {
   for (const count of [1, 2, 3, 127, 128, 129]) {
     let s = bridge.create();
     s = queryReady(bridge.metrics(bridge.enter(s.owner), 1n, 1024, 768, 1));
-    const frame = frames.capture(s);
-    check(frame.code === "ok", "frame");
     s = edit.begin(s, 1, 300, 300, 0.5, true);
     if (count > 1)
       s = edit.append(
@@ -30,6 +29,8 @@ export function livePrefixBoundary() {
     check(s.code === "ok", "source");
     const id = scene.ids(s, 0n).ids[0];
     if (id === undefined) throw Error("stroke");
+    const frame = captureLive(s, id);
+    check(frame.code === "ok", "live anchor");
     const stable = live.stable(s, id, 0n, 1, frame.id);
     const tail = live.tail(s, id, stable.through, 1, frame.id);
     const limit = BigInt(Math.floor((count - 1) / 128) * 128);

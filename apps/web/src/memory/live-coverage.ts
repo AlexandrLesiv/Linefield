@@ -91,6 +91,9 @@ export class LiveCoverage {
   covers(count: bigint) {
     return this.through === count || this.tail.covers(count);
   }
+  stopBack() {
+    this.tail.stopBack();
+  }
   dispose() {
     this.stable?.dispose();
     this.stable = undefined;

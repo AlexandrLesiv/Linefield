@@ -2,14 +2,38 @@ import { test, expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
 import { holdPreparationReplies } from "./held-preparation.ts";
 import { clear, complete } from "./observed-frame.ts";
+import { drainCapacity } from "./capacity-setup.ts";
 
-async function stroke(page: Page, y: number) {
+async function stroke(page: Page, y: number, hold = false) {
   await clear(page);
   await page.mouse.move(300, y);
   await page.mouse.down();
   await page.mouse.move(750, y + 70, { steps: 32 });
+  if (hold)
+    await page.evaluate(() => {
+      document.documentElement.dataset.holdReplies = "true";
+    });
   await page.mouse.up();
-  await complete(page);
+  if (!hold) await complete(page);
+  else {
+    const rows: Readonly<Record<string, string | number | boolean>>[] = [];
+    await expect
+      .poll(async () => {
+        rows.push(...(await drainCapacity(page)));
+        const source = rows.find((r) => r.kind === "live-owner")?.stroke;
+        return (
+          !!source &&
+          rows.some(
+            (r) =>
+              r.kind === "stroke-count" && r.stroke === source && r.count === "33" && !r.active,
+          )
+        );
+      })
+      .toBe(true);
+    expect(rows.some((r) => r.kind === "input" && r.command === "end" && r.outcome === "ok")).toBe(
+      true,
+    );
+  }
 }
 async function rotation(page: Page, reset = false) {
   await clear(page);
@@ -38,10 +62,7 @@ test("MIG-WORKER-15 held worker Undo retires candidate before exact recovery and
     const baseline = await page.screenshot({ clip });
     await rotation(page, true);
     await complete(page);
-    await stroke(page, 450 + cycle * 40);
-    await page.evaluate(() => {
-      document.documentElement.dataset.holdReplies = "true";
-    });
+    await stroke(page, 450 + cycle * 40, true);
     await rotation(page);
     await expect
       .poll(async () => Number(await page.locator("html").getAttribute("data-held-replies")))

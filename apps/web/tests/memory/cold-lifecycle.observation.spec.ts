@@ -6,6 +6,7 @@ import {
   holdColdReplies,
   readCold,
   releaseCold,
+  resumeCold,
 } from "./cold-observation.ts";
 import type { ColdRecord } from "./cold-observation.ts";
 for (const interruption of ["Back", "context loss"] as const) {
@@ -31,14 +32,19 @@ for (const interruption of ["Back", "context loss"] as const) {
     const original = await page.screenshot({ clip });
     expect(original.equals(blank)).toBe(false);
     await clear(page);
-    await page.evaluate(() => {
-      document.documentElement.dataset.coldHold = "true";
-    });
-    await page.getByRole("button", { name: "Rotate canvas right 15°", exact: true }).click();
+    await resumeCold(page);
     await expect
       .poll(async () => Number(await page.locator("html").getAttribute("data-cold-held")))
       .toBe(8);
     const records: ColdRecord[] = await readCold(page);
+    // Lifecycle identity belongs to the resumed candidate, not an input latency sample.
+    const resumed = records.findLast((r) => r.kind === "overlay-submit");
+    const previous = source.findLast((r) => r.kind === "input" && r.command === "end");
+    expect(resumed).toBeDefined();
+    expect(previous).toBeDefined();
+    expect(resumed?.owner).toBe(previous?.owner);
+    expect(resumed?.content).toBe(previous?.content);
+    expect(resumed?.session).not.toBe(previous?.session);
     expect(records.filter((r) => r.kind === "frame-batch")).toHaveLength(0);
     if (interruption === "context loss") {
       await releaseCold(page, 1);
@@ -84,7 +90,7 @@ for (const interruption of ["Back", "context loss"] as const) {
       await page.getByRole("button", { name: "Resume temporary drawing", exact: true }).click();
     await expect(page.locator("canvas")).toHaveAttribute("data-state", "ready");
     await clear(page);
-    await page.getByRole("button", { name: "Reset canvas rotation", exact: true }).click();
+    await page.getByRole("button", { name: "Reset view", exact: true }).click();
     await complete(page, false, false, (rows) => records.push(...rows));
     expect(
       records.some((r) => r.kind === "receipt-publish" && r.receipt === stopped?.receipt),

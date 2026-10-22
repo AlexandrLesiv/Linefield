@@ -26,7 +26,10 @@ for (const label of [
     await expect(page.locator("#result")).toContainText('"status":"passed"');
     const result = await page.locator("#result").textContent();
     const build = await readFile("../../.build-cache/web-memory/e2e/build.json", "utf8");
-    const manifest = await readFile("../../.build-cache/web-memory/e2e-site/.vite/manifest.json");
+    const manifest = await readFile(
+      process.env.LINEFIELD_E2E_MANIFEST ??
+        "../../.build-cache/web-memory/e2e-site/.vite/manifest.json",
+    );
     await writeFile(
       info.outputPath("identity.json"),
       JSON.stringify(

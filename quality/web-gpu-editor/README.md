@@ -28,6 +28,11 @@ Use actual application input/control browser E2E. Test-only fault injection may 
 inside that journey but is not a substitute for normal input. Synthetic pen is not physical
 Wacom. Keep physical device, IME/assistive-tech and Ukrainian linguistic gaps explicit.
 Static types/lint/format/build/generated-boundary checks remain required. No unit suites.
+For isolated preview runs, set `LINEFIELD_TEST_PORT` (or `LINEFIELD_FIXTURE_PORT`) in the
+runner process before configuration loading, and derive both server and browser origins from
+`test-ports.ts`. Overriding only Playwright `use.baseURL` leaves explicit browser contexts on
+the default origin. Set `LINEFIELD_E2E_MANIFEST` to the served fixture manifest when using an
+isolated output directory; preserve setup failures separately from product results.
 
 ## Unchanged approved performance profile v1
 
@@ -63,19 +68,25 @@ Record exact build and actual outcomes in the task; this mapping alone is not a 
 | Case / source | Concrete trigger and expected invariant |
 | --- | --- |
 | MIG-WORKER-11 / promotion.observation.spec.ts and scheduling.observation.spec.ts | End→pan before promotion preserves exact Rust-issued receipt identity; forty completed strokes → warmed Undo/Redo preserves ordered exact pixels with bounded32-command/1MiB ready queue, up to256 commands per2ms submission slice; observe successful refill beyond32 without claiming timing acceptance |
-| MIG-WORKER-12 / prefetch.observation.spec.ts | At least two confirmed delayed worker starts during frame rebuild → Back before results → Resume: worker terminated, no late resurrection, exact source and Undo retained |
+| MIG-WORKER-12 / prefetch.observation.spec.ts | Same-view Back/Resume clears disposable warmth; at least two confirmed delayed worker starts in the new session → Back before results → Resume: worker terminated, no late resurrection, exact source and Undo retained |
 | MIG-WORKER-13 / traversal.observation.spec.ts |65,537 expected source samples using synthetic coalesced stress setup → wholly offscreen frame: observe≥512 culled Rust preparation queries across actual task turns, then exact acknowledgement and recoverable history; synthetic setup is not physical input evidence |
-| MIG-WORKER-14 / pan-fidelity.observation.spec.ts | Settled committed receipt → integer pan while geometry worker starts are held → same-camera rebuilt receipt → release: compare exact shifted interior pixels across provisional/accurate/ended states |
+| MIG-WORKER-14 / pan-fidelity.observation.spec.ts | Settled committed receipt → integer pan → positively validated sealed candidate without global acknowledgement → End with exact current receipt: compare exact shifted interior pixels across transformed (possibly already sealed), sealed and ended states |
 | MIG-WORKER-15 / cancellation.observation.spec.ts | Confirmed withheld real worker reply → Undo → matching current receipt acknowledgement within500ms; joined candidate has zero queue/job/copy charges; deliver obsolete reply, then fresh rebranch/Undo/Redo and repeat without resurrecting artwork |
 | MIG-WORKER-16 / pending-fatal.fixture.spec.ts | Confirmed pending candidate → real metrics trap or explicitly injected command/getter/destructor exception → immediate worker teardown, Back, late reply, forced GC and Resume: no subsequent canonical-editor export, fatal tombstone retained; positive export/call controls prevent vacuous proof |
 | MIG-WORKER-17 / control-work.observation.spec.ts | Begin/End positively change toolbar availability; unchanged accepted append batches issue zero toolbar mutations. Paired phase records preserve request/source identity and monotonic acquisition/Rust-return/state/control/contact times; these measure the batch body or command wrapper, not whole browser dispatch or physical latency |
-| MIG-WORKER-18 / shared-pages.observation.spec.ts and shared-coverage.observation.spec.ts | Completed secondary chunks reuse prepared page IDs through warm Undo/Redo with zero new immediate preparation/uploads and exact pixels; broad clipped source → camera beyond retained coverage → Redo requires fresh preparation, then reset-view pixels agree. Active source remains on its exact path |
+| MIG-WORKER-18 / shared-pages.observation.spec.ts and shared-coverage.observation.spec.ts | Completed secondary chunks reuse prepared page IDs through warm Undo/Redo with a positive validated completed-frame increase with zero new canonical jobs/worker pages/fallback pages/uploads and exact pixels; broad clipped source → camera beyond retained coverage → Redo requires a positive coverage miss and fresh worker jobs/pages, then reset-view pixels agree. Active source remains on its exact path |
 | MIG-WORKER-21 / history-display.observation.spec.ts | Hold the replacement's real worker reply after Undo of B from A+B; sample every submitted default-framebuffer display to retain unaffected A, draw fresh C immediately, then publish A+C and remove C with one Undo |
 | MIG-WORKER-23 / history-display.observation.spec.ts | Held historical base follows Rust-certified pan and Escape without a current receipt acknowledgement or complete-overlay claim |
 | MIG-WORKER-24 / history-display.observation.spec.ts | Cancel fresh C while history is held; repeated Undo/Redo and latest-target Undo, context loss/restore, late held replies and Back preserve exact completed history without C or B resurrection |
-| MIG-WORKER-25 / cold-admission.observation.spec.ts | Actual rotation over8,193 source samples from bounded synthetic coalesced setup: positively held first worker replies create no group-only batch; release one useful page, observe original-age admission without current ack, finish and compare exact reset pixels. Source setup is not physical pen evidence; forced reply hold is not latency acceptance |
+| MIG-WORKER-25 / cold-admission.observation.spec.ts | Same-view Back/Resume over8,193 source samples from bounded synthetic coalesced setup, with positive new-session/same-content identity: positively held first worker replies create no group-only batch; release one useful page, observe original-age admission without current ack, finish and compare exact same-camera pixels. Source setup is not physical pen evidence; forced reply hold is not latency acceptance |
 | MIG-WORKER-26 / cold-admission.observation.spec.ts and MIG-WORKER-11 | Empty/small terminal and warmed history paths bypass cold timers; forty-source warm queue reaches capacity and bypasses coalescing, preserving exact pixels and existing queue/submission caps |
 | MIG-WORKER-27–28 / cold-lifecycle.observation.spec.ts | Confirmed group-only or useful partial cold queue → Back/context loss: stop wakes the gate, timer/subscription bounds hold, cancelled receipt never publishes, recovery preserves exact source and one Undo |
+| MIG-WORKER-29 / capacity-long.observation.spec.ts | Held completed candidate after A+B→UndoB;98,817 accepted actual-handler samples in fresh C exceed the former768-chunk boundary, stable progress and latest distinct ink are positive before release; exact settled/Undo/Redo crop, normal and packed. Generated coalesced setup is not physical pen or timing evidence |
+| MIG-WORKER-30 / capacity-handoff.observation.spec.ts | Materialized C→End→D Begin/End→E Begin in one task before RAF: retain C, show E while candidate remains held, Escape removes E without C loss, ordered D reconstruction and exact Undo/Redo; normal and packed |
+| MIG-WORKER-31 / capacity-pan.observation.spec.ts | Positively observed sealed candidate during cancellable pan has no ack; Escape restores exact raster. Accepted pan→active E→sealed-prefix consumption positively takes RGB copyback without changing E, then exact canonical End; normal and packed |
+| MIG-WORKER-31 / capacity-sealed-end.observation.spec.ts | Positively sealed predecessor excludes C, then generated actual-handler Append/End occurs before the next RAF. Forced budget exhaustion retains C's old front without consume/ack; releasing it completes stable C with exact final/Redo and fresh D. Normal and packed; synthetic race/fault evidence, not latency |
+| MIG-WORKER-32 / current-coverage.fixture.spec.ts | Generated typed boundary distinguishes Prefix/LiveSource/DisplayOnly; owner/session/mapping/source and permanent lifetime fences, both combined eight-slot allocation orders and parent-first cleanup. Optional tail exhaustion preserves canonical input and front pixels; slot release permits progress without new input. Injected pre-composite failure retains valid R/S; issued-composite failure discards them and rebuilds without replay. Boundary fixtures, not actual-input or timing evidence |
+| MIG-WORKER-32 / capacity-successor.observation.spec.ts | Positively held successor N while predecessor R remains valid; trusted Undo invalidates only N and completes R within the existing 500ms bound without releasing N. Late reply cannot resurrect undone ink; fresh drawing and exact Undo/Redo remain usable. Normal and packed targets |
 | MIG-CONTROL-01 / control-focus.spec.ts and MIG-LIVE-04 | Actual Tab/Shift+Tab leaves disabled idle history and held-recovery view controls; activation/value-changing keys remain blocked without queuing commands |
 | MIG-LIVE-02 / pressure.observation.spec.ts |1/2/3/127/128/129 accepted pen points, normal and packed targets: exact live, completed and rebuilt pixels agree; trusted browser pen events do not certify physical Wacom |
 | MIG-LIVE-03 / active-display.observation.spec.ts |493px width,5% zoom,−180° rotation and large DPR2 backing: every sampled submitted display retains previously visible accepted regions; positive visible-point/source-count controls and advancing front/stable generations during continuous input; readback is functional evidence only |
@@ -84,7 +95,7 @@ Record exact build and actual outcomes in the task; this mapping alone is not a 
 | MIG-LIVE-06 / retirement-failure.observation.spec.ts | Render records work then throws, terminal fence creation fails: generation remains charged and polling stops; explicit Retry must create a successful completion fence before deletion/replacement, preserving completed artwork |
 | MIG-LIVE-07 / tail-pan.observation.spec.ts | Bounded injected live-work budget exhaustion after exact frontN33 → appendN34/End → trusted pan/Escape before canonical promotion: fixed-anchor shifted/restored pixels, positive unfinished-source control and no complete/ack; release fault then exact settled/Redo parity, normal and packed. Functional fault evidence only, not natural multipage timing |
 | MIG-LIVE-08 / tail-composite.fixture.spec.ts | Synthetic renderer-boundary RGBA groups in normal/packed targets: retained stable/front self-union, separate translucent D source-over at overlap, D removal preserves C, common pan/cancel alignment and exact canonical source-order pixels. No opacity UI or command-lifecycle claim |
-| MIG-WORKER-04 / gpu-budget.spec.ts | Maximum8,388,608 backing pixels → resize → Back: normal9B/pixel targets≤72MiB or packed12B/pixel≤96MiB; geometry including256KiB stream reserve is capped by min(128MiB,192MiB−target payload), and retiring generations block replacement allocation; requested payload is not physical driver residency |
+| MIG-WORKER-04 / gpu-budget.spec.ts | Maximum8,388,608 backing pixels → resize → Back: normal13B/pixel targets≤104MiB or packed16B/pixel≤128MiB; geometry including256KiB stream reserve is capped by min(128MiB,192MiB−target payload), and retiring generations block replacement allocation; requested payload is not physical driver residency |
 | MIG-WORKER-07 / worker-failure.spec.ts | Confirmed malformed worker reply during actual camera rebuild: reject geometry and preserve completed artwork/history |
 | MIG-RECOVERY-02 / recovery.spec.ts | Persistent allocation error: exactly one automatic renderer retry and two attempts after explicit Retry; count renderer attempts separately from optional-format/RGBA allocation attempts, then prove restored source/history |
 
@@ -104,6 +115,7 @@ to meet a stale deadline. Partial useful work coalesces only while its producer 
 pending. Full queues, producer task-budget exits and terminal/synchronous work bypass the delay.
 The original queue age is not reset by replies. Timer/subscription counts describe the gate,
 not physical GPU execution. Artificial held-reply age/overshoot is functional fault evidence.
+Rotation at unchanged sufficient detail may remain warm. Cold lifecycle cases clear disposable caches through actual Back/Resume, hold replies before re-entry, and correlate the new session/content/mapping from overlay observations; this lifecycle identity is not an input-latency sample. They retain exact same-camera pixel assertions without introducing finer-detail parity differences.
 Functional setup drains assert zero drops before consuming the bounded observation ring;
 these drains do not change the separately frozen performance workload or its pacing.
 
@@ -123,8 +135,8 @@ invalidation, released handles, empty completion and metrics invalidation. `Run 
 boundary` preserves the canonical128 stable limit and its pending-append proof at1/2/3/127/128/129.
 These generated-API browser fixtures are boundary evidence; actual input and pixels remain the
 MIG-LIVE cases above. A captured older tail may finish while input continues, but cannot acknowledge
-current content. Front replacement is atomic only after all bounded ranges complete; final live
-promotion uses canonical stable coverage. No source simplification or parity tolerance changed.
+current content. Front replacement is atomic only after all bounded ranges complete; candidate publication uses
+validated canonical completed-prefix coverage. No source simplification or parity tolerance changed.
 
 GPU retirement preserves its completion reservation if fence creation fails. Unknown completion
 cannot release capacity; a terminal retirement error stops polling and retains its charge until
@@ -132,12 +144,13 @@ explicit retry or context loss proves safe retirement. A fully drained discarded
 GL errors but never advances the validated-output watermark. Normal source reports include the
 fixed tail descriptors in Engine overhead and retiring GPU bytes until completion.
 
-MIG-WORKER-22 remains open: the existing immediate-page path can retain the earliest768 pages
-and fail to show the latest accepted ink while a historical replacement is held. A98,816-move
-actual-handler diagnostic reproduced this after observing Rust's98,817-sample active source;
-the final marker stayed invisible. The65,536-move diagnostic is below this capacity boundary
-and cannot close it. Preserve that failure when evaluating a bounded whole-group continuation
-repair; neither the ordinary Undo continuity checks nor the scoped preview accepts this gap.
+MIG-WORKER-22 acceptance remains open while the independent live-coverage checkpoint is reviewed.
+The superseded immediate-page path reproduced latest-ink starvation at98,817 accepted samples
+while history was held; retain that failure as the regression input. The candidate streams current
+LiveSource geometry into independent stable/front/back masks and no longer replays a768-page
+ActivePages cache. MIG-WORKER-29 positively checks stable progress beyond98,304 samples and a new
+visible terminal segment before releasing the completed candidate. Forced holds establish
+correctness only; natural progress, resource peaks, lifecycle faults and performance stay separate.
 
 The isolated memory fixture lane requires fatal engine trap→Back/Resume without later engine
 calls, finite complete GPU-contract traversal, and the independent f64 edge/taper expectations.

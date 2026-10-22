@@ -22,6 +22,14 @@ test("MIG-WORKER-13 all-culled source traversal yields actual tasks before compl
   await page.evaluate(() => {
     document.documentElement.dataset.holdGpu = "false";
   });
+  await complete(page);
+  // Warm pages may cover the new view. Re-enter there to exercise cold all-culled traversal.
+  await page.locator(".back").click();
+  await expect(page.locator("canvas")).toHaveCount(0);
+  await clear(page);
+  await page.getByRole("button", { name: "Resume temporary drawing", exact: true }).click();
+  await expect(page.locator("canvas")).toHaveAttribute("data-state", "ready");
+  await page.getByRole("button", { name: "Reset canvas rotation", exact: true }).click();
   const observations: Readonly<Record<string, string | number | boolean>>[] = [];
   try {
     await complete(page, false, false, (records) => observations.push(...records));

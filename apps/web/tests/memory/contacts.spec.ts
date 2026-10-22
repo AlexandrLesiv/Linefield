@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
+import { forcePackedTargets } from "./packed-targets.ts";
 async function open(page: Page) {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
@@ -110,26 +111,27 @@ test("MIG-RECOVERY-01 context loss cancels unfinished contact and restores compl
   await extension.dispose();
   await page.screenshot({ path: info.outputPath("context-restored-history.png") });
 });
-test("MIG-VIEW-02 rapid two-point stroke at five percent completes and remains drawable", async ({
-  page,
-}) => {
-  await open(page);
-  await page.mouse.move(640, 450);
-  await page.mouse.wheel(0, 100000);
-  await page.waitForFunction(() =>
-    document.querySelector(".canvas-footer")?.textContent?.includes("5%"),
-  );
-  const blank = await shot(page);
-  await page.mouse.move(200, 300);
-  await page.mouse.down();
-  await page.mouse.move(1000, 300);
-  await page.mouse.up();
-  await expect(page.getByRole("button", { name: "Undo last action", exact: true })).toHaveAttribute(
-    "aria-disabled",
-    "false",
-  );
-  await expect(page.locator("canvas")).toHaveAttribute("data-state", "ready");
-  expect((await shot(page)).equals(blank)).toBe(false);
-  await page.getByRole("button", { name: "Undo last action", exact: true }).click();
-  await expect.poll(async () => (await shot(page)).equals(blank), { timeout: 500 }).toBe(true);
-});
+for (const packed of [false, true])
+  test(`MIG-VIEW-02 rapid two-point stroke at five percent completes and remains drawable (${packed ? "packed" : "R8"})`, async ({
+    page,
+  }) => {
+    if (packed) await forcePackedTargets(page);
+    await open(page);
+    await page.mouse.move(640, 450);
+    await page.mouse.wheel(0, 100000);
+    await page.waitForFunction(() =>
+      document.querySelector(".canvas-footer")?.textContent?.includes("5%"),
+    );
+    const blank = await shot(page);
+    await page.mouse.move(200, 300);
+    await page.mouse.down();
+    await page.mouse.move(1000, 300);
+    await page.mouse.up();
+    await expect(
+      page.getByRole("button", { name: "Undo last action", exact: true }),
+    ).toHaveAttribute("aria-disabled", "false");
+    await expect(page.locator("canvas")).toHaveAttribute("data-state", "ready");
+    expect((await shot(page)).equals(blank)).toBe(false);
+    await page.getByRole("button", { name: "Undo last action", exact: true }).click();
+    await expect.poll(async () => (await shot(page)).equals(blank), { timeout: 500 }).toBe(true);
+  });

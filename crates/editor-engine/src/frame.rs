@@ -1,4 +1,10 @@
 use crate::{Code, Engine, Metrics, Placement, numerics::Viewport};
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum FrameAuthority {
+    Prefix,
+    LiveSource,
+    DisplayOnly,
+}
 #[derive(Clone, Copy)]
 pub struct FrameReceipt {
     pub id: u64,
@@ -6,6 +12,9 @@ pub struct FrameReceipt {
     pub count: usize,
     pub content: u64,
     pub mapping: u64,
+    pub authority: FrameAuthority,
+    pub source: u64,
+    pub ordinal: usize,
     pub(crate) view: Viewport,
     pub(crate) metrics: Metrics,
 }
@@ -30,19 +39,19 @@ impl Engine {
             .checked_sub(1)
             .and_then(|i| self.document.strokes.get(i))
             .map_or(0, |s| s.id);
-        self.frames.try_reserve(1).map_err(|_| Code::Capacity)?;
         let receipt = FrameReceipt {
             id,
             through,
             count,
             content: self.content_counter,
             mapping,
+            authority: FrameAuthority::Prefix,
+            source: 0,
+            ordinal: 0,
             view: self.document.view,
             metrics,
         };
-        self.frames.push(receipt);
-        self.frame_counter = id;
-        Ok(receipt)
+        self.insert_frame(receipt)
     }
     pub fn frame_transform(
         &self,
@@ -65,6 +74,7 @@ impl Engine {
         let f = self
             .frames
             .iter()
+            .flatten()
             .find(|f| f.id == id)
             .ok_or(Code::StaleScene)?;
         let m = self
@@ -113,11 +123,13 @@ impl Engine {
         let f = *self
             .frames
             .iter()
+            .flatten()
             .find(|f| f.id == id)
             .ok_or(Code::StaleScene)?;
-        if self.document.visible < f.count
-            || (f.count > 0 && self.document.strokes[f.count - 1].id != f.through)
-        {
+        if f.authority != FrameAuthority::Prefix {
+            return Err(Code::Invalid);
+        }
+        if !self.prefix_current(f) {
             return Err(Code::StaleScene);
         }
         Ok(f)
@@ -140,7 +152,11 @@ impl Engine {
         if let Err(c) = self.session(owner, session) {
             return c;
         }
-        self.frames.retain(|f| f.id != id);
+        for slot in &mut self.frames {
+            if slot.is_some_and(|f| f.id == id) {
+                *slot = None;
+            }
+        }
         Code::Ok
     }
 }

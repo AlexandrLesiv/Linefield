@@ -30,7 +30,12 @@ mod preparation_relevance;
 
 mod display_readiness;
 mod frame;
-pub use frame::FrameReceipt;
+pub use frame::{FrameAuthority, FrameReceipt};
+mod frame_capture;
+mod frame_registry;
+pub use frame_capture::FrameCapture;
+mod current_coverage;
+pub use current_coverage::{CurrentCoverage, LiveState};
 
 mod coverage;
 mod live_preparation;

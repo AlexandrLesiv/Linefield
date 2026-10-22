@@ -12,10 +12,18 @@ export async function buildFrame(
   detail: number,
   alive: () => boolean,
   signal: AbortSignal,
+  extension?: { after: bigint; issuing: () => void },
 ) {
   if (!alive()) return false;
   prepared.begin();
-  const commands = new FrameCommands(state, prepared, receipt.through, detail, receipt.id);
+  const commands = new FrameCommands(
+    state,
+    prepared,
+    receipt.through,
+    detail,
+    receipt.id,
+    extension?.after,
+  );
   const cancel = () => commands.stop();
   signal.addEventListener("abort", cancel, { once: true });
   if (signal.aborted) cancel();
@@ -38,7 +46,7 @@ export async function buildFrame(
       try {
         if (!alive()) return false;
         if (!initialized) {
-          renderer.begin();
+          renderer.begin(!extension);
           initialized = true;
         }
         for (; count < 256; count++) {
@@ -60,8 +68,10 @@ export async function buildFrame(
             break;
           }
           if (command.kind === "group") renderer.group();
-          else if (command.kind === "composite") renderer.composite();
-          else
+          else if (command.kind === "composite") {
+            extension?.issuing();
+            renderer.composite();
+          } else
             try {
               bytes += command.page.data.byteLength;
               const p = frames.placement(state(), receipt.id, command.stroke, command.page.page);
@@ -96,7 +106,7 @@ export async function buildFrame(
       await renderer.slot();
       try {
         if (!alive()) return false;
-        renderer.begin();
+        renderer.begin(!extension);
       } finally {
         serial = renderer.check();
       }

@@ -60,7 +60,7 @@ export class GpuRenderer {
       throw e;
     }
   }
-  begin() {
+  begin(clear = true) {
     const gl = this.gl;
     this.arena.begin();
     this.pass = new GpuPass(
@@ -72,6 +72,7 @@ export class GpuRenderer {
       this.height,
       this.arena,
     );
+    if (!clear) return;
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.resources.staging.framebuffer);
     gl.disable(gl.SCISSOR_TEST);
     gl.colorMask(true, true, true, !this.resources.packed);
@@ -91,10 +92,6 @@ export class GpuRenderer {
     const old = this.resources.base;
     this.resources.base = this.resources.staging;
     this.resources.staging = old;
-    if (this.resources.packed) {
-      this.resources.mask = this.resources.staging;
-      this.resources.overlayMask = this.resources.base;
-    }
   }
   live() {
     return new LiveGpu(this.gl, this.resources, this.width, this.height, this.arena);

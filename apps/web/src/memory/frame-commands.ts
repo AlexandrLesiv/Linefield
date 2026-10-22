@@ -38,12 +38,14 @@ export class FrameCommands {
     through: bigint,
     detail: number,
     frame: bigint,
+    after = 0n,
   ) {
     this.state = state;
     this.prepared = prepared;
     this.through = through;
     this.detail = detail;
     this.frame = frame;
+    this.after = after;
     this.completion = this.produce()
       .catch((error: unknown) => {
         this.error = error;
