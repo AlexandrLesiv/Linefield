@@ -108,8 +108,19 @@ receive a complete-frame acknowledgement while absent. Rapid zoom must not regre
 Escape restores the pre-drag view, and late results cannot restore the cancelled view.
 MIG-E03/E06, MIG-X03 and MIG-UI-04 apply.
 
-Undo/rebranch invalidates base and overlay content containing undone work before the next
-presentation. A late result cannot resurrect it. Worker-only loss is transparent when bounded
+Undo/rebranch immediately invalidates affected content's semantic currentness and obsolete
+overlays. The M03 continuity repair retains one already validated historical base as display-only
+presentation until a valid current frame swaps atomically; it must not clear unaffected artwork
+to white while rebuilding. Historical pixels cannot acknowledge currentness, drive hit tests or
+enter the new branch. This explicitly supersedes the earlier requirement to remove affected
+base pixels before the next presentation. History still changes immediately in Rust and retains
+its completion-time limits. No spinner, fade, focus change or disabled controls is introduced.
+Fresh accepted strokes absent from that raster appear immediately once, with bounded base
+reconstruction progress. Rust transforms historical pixels and current overlays consistently
+during pan/zoom; newly revealed coverage remains incomplete until actually rendered. Repeated
+history targets the latest valid state, without cycling obsolete replacements onto the display.
+Cancel removes only current unfinished overlays; context loss cannot retain invalid GPU pixels.
+A late result cannot resurrect obsolete content after replacement. Worker-only loss is transparent when bounded
 fallback can maintain usable output; no error overlay solely for worker failure. Mandatory
 display loss follows existing recovery: cancel only unfinished interaction, retain completed
 work/history, one reduced rebuild then Retry/Back, truthful readiness. MIG-E04/E05/E06,

@@ -144,8 +144,9 @@ Only full current identity plus exact view/metrics can satisfy readiness or comp
 Named memoryFrameTransform(owner,session,receipt,currentMapping) returns a certified device
 affine and content validity. Host presentation may transform this coherent base and composite
 accepted pending/active groups in order, without duplicating Rust camera arithmetic. Undo or
-history rebranch invalidates affected base content immediately; never show undone pixels as
-current. Replacement publishes atomically with matching source/view/resource identity, removing
+history rebranch invalidates affected base content immediately; never certify undone pixels as
+current. The bounded historical-display exception below preserves visual continuity until replacement.
+Replacement publishes atomically with matching source/view/resource identity, removing
 overlays only when their content is included exactly once. Preserve identical union/blending.
 No new stroke waits for normal cold-history preparation. Actual context loss has no surviving
 GPU base: keep honest unavailable/recovery state until coherent reconstruction completes.
@@ -252,6 +253,25 @@ Paused group masks survive batches and final publication still requires a comple
 receipt. Cancellation/failure drains ready payloads, borrowed leases and pending queue reads.
 This is backend scheduling, not a new FFI command protocol or per-page animation-frame pacing.
 
+M03 cold-admission refinement: before reserving a GPU slot, a genuinely pending ordered
+preparation head may coalesce useful partial ready work until capacity, terminal/error/cancel,
+or eight milliseconds from the queue's original empty-to-nonempty transition. Reset that age
+only when the queue becomes empty. Full command/byte capacity, terminal small groups, synchronous
+retained/resolved work and producer task-budget yields bypass this delay. Poll already settled
+work within the existing CPU budget before classifying a head as pending. A lone initial group
+marker with no drawable page/composite waits for actual producer progress without repeatedly
+submitting empty fences or scheduling an already-expired timer. Empty/all-culled documents still
+reach the existing validated empty-paper path. No worker await may hold a GPU reservation.
+
+Keep one admission waiter and at most one deadline timer; subscribe/recheck without lost wakes,
+clear both on every exit, and wake promptly on cancel/error. A timer serviced late is measured
+lateness, never grounds to restart the eight-millisecond allowance. Preserve queue32/1MiB,
+page24,576 bytes, producer2ms/1,024 transitions, submission2ms/256 commands, actual task yields
+and two fences. This is one measured scheduling candidate, not a relaxed latency gate. Record
+bounded test-only admission reason/age/overshoot and waiter/reservation high waters; no per-wake
+production logging. MIG-WORKER-25–28 cover cold bursts, warm/terminal bypass, stalled-marker
+cancellation, pressure/failure and late callbacks before same-host performance comparison.
+
 Null fences, WAIT_FAILED, context loss or a10-second no-progress watchdog enter the existing
 bounded renderer recovery path, retaining canonical/history and canceling only unfinished work.
 This watchdog is a failure safeguard, not an acceptable latency budget. Fence/lease retirement
@@ -318,6 +338,43 @@ Host controls may cache locale formatters and skip unchanged presentation update
 admission and contact/sequence state still update synchronously; no actual samples or capability
 changes may wait for deferred UI work. Diagnostic phase timing remains compile-time test-only,
 bounded and content-free, and cannot justify a production per-sample log.
+
+### M03 history display continuity repair
+
+The owner reported a white flash during Undo on the9ba39de preview and requested continuation.
+Under the authorized M03 repair scope, the lead adopts this reviewed presentation amendment.
+Undo/rebranch still changes Rust state and invalidates affected content certificates immediately.
+Keep at most one already validated base texture and its receipt as display-only history while
+the latest valid replacement builds. Never clear unaffected artwork to white merely because
+the old content certificate failed. This uses the existing base target and receipt allowance,
+not another full-resolution cache. It does not relax history completion-time limits.
+
+Named `memoryFrameDisplayTransform(owner,session,mapping,receipt)` provides only the checked
+captured-view to current-view transform for this retained raster. It validates editor/session,
+receipt lifetime, current mapping and identical metrics, but does not certify the source prefix.
+Strict frame transform, placement, preparation, input admission and acknowledgement retain their
+existing checks. The host marks a rejected base permanently display-only until replacement;
+even a later matching history state cannot silently promote that historical status to current.
+
+Historical pixels never acknowledge current content, establish first/recovery readiness, drive
+hit testing or supply geometry/history to a new branch. Live promotion cannot append to that
+base. Current accepted strokes absent from the historical raster remain visible in order using
+Rust source identities and current placement; do not re-composite surviving historical groups.
+Preserve immediate fresh ink and bounded reconstruction progress. No new spinner, flashing
+controls, queued history action or artificial input lock accompanies this transition.
+
+Pan/zoom/rotation transform retained pixels through Rust and keep fresh overlays aligned.
+Missing newly exposed coverage is still incomplete, never a successful complete acknowledgement.
+Replace the historical target atomically only with a validated relevant candidate; release its
+receipt then, and never restore it afterward. Repeated history/rebranch cancels obsolete candidates
+and current cancelled overlays, retaining only the single historical image until valid replacement.
+Context loss, metric/resource replacement, fatal teardown and Back dispose this fallback through
+existing lifetimes; it cannot cross sessions or conceal a mandatory-resource failure.
+
+MIG-WORKER-21–24 must cover held reconstruction with continuous unaffected pixels/no false ack,
+fresh short and long ink/rebranch, repeated history, pan/zoom/Escape, cancellation, overlapping
+groups and lifecycle retirement. Compare final current pixels and receipt identities; historical
+continuity alone cannot pass the correctness or timing gate.
 
 ### M03 indexed visibility amendment
 
