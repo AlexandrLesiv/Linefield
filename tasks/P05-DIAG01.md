@@ -26,7 +26,7 @@ specialist checks capture overhead, and fresh reviewer audits source, privacy an
 Implementation must coordinate the frozen M03 fields before changing shared paths.
 
 Initial parallel scope owns new apps/web/src/developer-diagnostics modules and additive
-English/Ukrainian catalogue entries only. It defines a narrow typed host adapter for supplied
+English/Ukrainian catalogue entries and their additive typed catalogue declarations only. It defines a narrow typed host adapter for supplied
 safe metadata and availability; it cannot query/mutate the editor independently. Existing
 memory/input/render/Rust sources, drawing-shell integration and shared tests remain with M03
 until the lead explicitly transfers those hooks on a frozen checkpoint. Static validation may
