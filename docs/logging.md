@@ -61,6 +61,16 @@ objects, and reject invalid allowed values. Capture/export acceptance includes b
 privacy canaries. An accepted-not-submitted sample metric remains Unavailable until compatible
 authoritative sample watermarks exist; page counts and a completion boolean cannot supply it.
 
+Preparation diagnostics associate each ticket with the executor's actual assigned request
+before dispatch/waiting for the first page. Capture-only `worker.admitted` records that join;
+`worker.started` requires successful dispatch. Pre-admission rejection has no fabricated request.
+Concurrent zero-page failure, timeout and cancellation must remain distinguishable. Use a
+per-job observation value, never an ambient asynchronous context or a guessed next counter.
+Frame identity describes the immutable preparation source. Current state captured at admission
+uses explicit admission-revision/scene/mapping fields; it cannot stand in for the frozen source's
+revision. Unavailable source provenance stays unavailable. These observations do not change
+worker messages, admission, editing authority or result relevance.
+
 Required acceptance before adoption: real drawing and history correlated through publication;
 stale/rejected/cancelled worker work distinguishable; controlled overload and export failure;
 content-redaction canaries; no interruption or pointer interception while drawing; bounded
