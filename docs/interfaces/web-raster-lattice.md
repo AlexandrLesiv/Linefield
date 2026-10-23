@@ -106,6 +106,28 @@ Actual browser evidence must compare worker/fallback and evicted/regenerated pag
 
 Copy checked integer overlap with texelFetch, clear paper outside it, preserve packed alpha, and prohibit source/write aliasing or writing sealed S. Use the existing source receipt lease; borrow it before issuing copy and retain it until every copy/reconstruction reader and cleanup operation completes. The copy serial participates in validation even if no dirty geometry is visible.
 
+The receipt lease does not pin mutable image bytes. At reuse admission capture the actual B
+target identity, renderer generation and a fixed monotonic B write/swap generation. After all
+preparation/slot awaits, revalidate those facts immediately before issuing the synchronous copy.
+Bind the immutable source receipt and recipe to the same certificate; target-pointer equality
+alone cannot detect reuse of the same allocation after intervening writes.
+Every B RGB write, fold and target promotion invalidates that generation; alpha-only packed-mask
+writes do not alter the copied RGB image. Exhaustion disables optional
+copy without wrapping. A mismatch abandons the candidate for its one canonical fallback rather
+than copying a changed image. Do not block new input or add a texture to keep B unchanged. Once
+issued, GPU command ordering and existing reader-retirement fences protect the copy from later
+writes/deletion; preserve those lifetimes through cleanup. Test held preparation followed by
+Begin/End/Begin and a base fold before copy admission.
+
+If issuing the copy succeeds but submission or validation fails, retain its source reader
+even when no submission serial was returned. Transfer that one known reader to the existing
+renderer retirement owner and return the rendering failure promptly so retirement can start.
+Release it only after confirmed GPU drain or context loss. CPU receipt reconciliation may await
+this explicitly transferred hold; it must not wait for arbitrary leaked leases or prevent GPU
+retirement from progressing. Keep failed releases owned and charged. No extra texture, generic
+retirement queue or blocking input wait is introduced. Include post-copy fence-creation failure
+in the browser fault cases, and charge the copy itself against the existing command budget.
+
 Late placement/provenance failure after copying or drawing invalidates the entire unacknowledged candidate. Drain its readers, retire its resources and receipt, and permit at most one canonical full retry for that candidate/request. Never mix per-page canonical fallback into anchored pixels. If the request is no longer current, discard it rather than rebuild an obsolete target. Keep the previous valid display and immediate next-pen admission; cleanup alone cannot acknowledge the target or block input. Context loss follows existing generation/recovery, not a new recovery path.
 
 The retry latch belongs to the existing target request identity and survives candidate recreation;
