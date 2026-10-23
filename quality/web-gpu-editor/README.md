@@ -310,6 +310,11 @@ manifest in docs/reuse-ledger.md identifies the reference; discarded experiments
 
 GPU wake experiment acceptance (CT-06; existing MIG-WORKER-05/15/16/24/27/28):
 
+Observe the visible non-preserved framebuffer synchronously in its rendering turn, before an
+await permits browser release. Separately inspect the validated retained target after completion.
+Both images require positive ink and paper controls and exact baseline equality. Attach bounded
+hash/mismatch evidence before assertions; blank-to-blank equality is not a passing image check.
+
 | Scenario / authored case | Required behavior and evidence limit |
 | --- | --- |
 | MIG-GPU-WAKE-01 / gpu-wake.fixture.spec.ts slots, reservation | Actual canonical source, worker preparation and GL rendering; simultaneous consumers share one 4→8→16→32ms task, two-reader cap and reserved slot retain all-reader validation, actual drain resets backoff; exact pixel parity and zero idle tasks |

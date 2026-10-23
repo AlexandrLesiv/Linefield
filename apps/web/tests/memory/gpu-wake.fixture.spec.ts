@@ -5,7 +5,6 @@ for (const name of ["slots", "reservation", "lifecycle", "deadline"])
     await page.getByRole("button", { name: `Run GPU wake ${name}`, exact: true }).click();
     await expect(page.locator("#result")).not.toHaveText("running", { timeout: 20000 });
     const result = await page.locator("#result").innerText();
-    expect(result).toContain('"status":"passed"');
     await info.attach("gpu-wake-controlled-boundary", {
       body: result,
       contentType: "application/json",
@@ -22,4 +21,5 @@ for (const name of ["slots", "reservation", "lifecycle", "deadline"])
       }),
       contentType: "application/json",
     });
+    expect(result).toContain('"status":"passed"');
   });
