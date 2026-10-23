@@ -14,16 +14,19 @@ The migration sequence is [M01](P05-M01.md) → [M02](P05-M02.md) → [M03](P05-
 M01 is frozen at9e92c63 in [PR16](https://github.com/AlexandrLesiv/Linefield/pull/16).
 M02 runtime is frozen at1157aeba in draft [PR17](https://github.com/AlexandrLesiv/Linefield/pull/17).
 M03 is active in [draft PR18](https://github.com/AlexandrLesiv/Linefield/pull/18) on that frozen
-runtime; its Undo-continuity preview remains available on port65177. The current retention build
-passes163 production,54 observation and54 fixture browser cases, static/build checks and scoped
-designer review. Latest frozen preview65197 preserves all earlier previews. The preceding matched
-performance checkpoint stopped on a final-control ink failure and showed no useful cold gain.
-Natural timing, remaining retention evidence and full performance acceptance remain open.
-Later tasks await frozen
-predecessors, not repeated permission. M05 pencil and paper-grain asset preparation is independently
-complete atd6b84a9, with reviewed contracts/screens at1b1c59b on its unpublished branch;
-M05 runtime integration still depends on M04. Its bounded CPU mapping experiment is diagnostic,
-not compiled shader or appearance acceptance.
+runtime; its Undo-continuity preview remains available on port65177. M03's current wake/retention
+checkpoint passes275 unique browser cases plus four affected fixture rechecks, static/build and
+scoped reviews; preview65206 preserves prior builds. DIAG01 is in draft
+[PR19](https://github.com/AlexandrLesiv/Linefield/pull/19), with bounded exportable diagnostics and
+development tools on65208. Capture overhead and remaining M03 timing/resource gates stay open.
+M04's first same-view prefix reuse checkpoint passes346 selected cases and scoped reviews;
+preview65220 is available. Its one bounded comparison reduced completed-frame acknowledgement
+from63.8/61.6ms controls to48.7ms; this is not panning or full-profile acceptance. Sparse coverage,
+regions and tiles remain in progress. First compiled raster arithmetic/layout proof is authorized;
+production pan-copy is gated. M05 settings/material controls are under source review on its
+separate branch; shaders and combined browser acceptance remain pending. M06/M07 have prepared
+contracts only; M08/M09 remain unimplemented. Later work needs frozen predecessors, not renewed
+permission. No source or model checkpoint is a compiled shader, appearance or performance pass.
 PR10 is verified merged at3eaaff8c07c3e15bdcbbbdb97c74031426fbe454. Older status statements
 below are historical. One task/branch/PR, parent-first stacked review, owner-only merges.
 
