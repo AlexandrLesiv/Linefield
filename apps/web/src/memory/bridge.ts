@@ -2,6 +2,7 @@ import * as api from "#memory-bindings";
 import type { Reply, State, Mapping } from "#memory-bindings";
 import { diagnostic } from "./diagnostics.ts";
 import { editorSnapshot } from "./editor-health.ts";
+import { observeReply, observeState } from "../developer-diagnostics/runtime-port.ts";
 export type ReplyValue = Readonly<
   Pick<
     Reply,
@@ -51,7 +52,7 @@ export type MappingValue = ReplyValue &
       | "angle"
     >
   >;
-function reply(value: Reply): ReplyValue {
+function reply(value: ReplyValue): ReplyValue {
   return {
     code: value.code,
     owner: value.owner,
@@ -64,9 +65,14 @@ function reply(value: Reply): ReplyValue {
     activeCancelled: value.activeCancelled,
   };
 }
-function consume<T extends Reply, R>(command: string, action: () => T, copy: (value: T) => R): R {
+function consume<T extends Reply, R extends ReplyValue>(
+  command: string,
+  action: () => T,
+  copy: (value: T) => R,
+): R {
   return editorSnapshot(action, (snapshot) => {
     const value = copy(snapshot);
+    observeReply(command, reply(value));
     diagnostic(command, snapshot.code, snapshot.session);
     return value;
   });
@@ -78,22 +84,26 @@ export const bridge = {
     consume(
       "read",
       () => api.memoryRead(owner),
-      (value) => ({
-        ...reply(value),
-        phase: value.phase,
-        width: value.width,
-        red: value.red,
-        green: value.green,
-        blue: value.blue,
-        canUndo: value.canUndo,
-        canRedo: value.canRedo,
-        canBeginInk: value.canBeginInk,
-        strokeCount: value.strokeCount,
-        cpuCharge: value.cpuCharge,
-        canonicalCharge: value.canonicalCharge,
-        historyCharge: value.historyCharge,
-        derivedCharge: value.derivedCharge,
-      }),
+      (value) => {
+        const state: StateValue = {
+          ...reply(value),
+          phase: value.phase,
+          width: value.width,
+          red: value.red,
+          green: value.green,
+          blue: value.blue,
+          canUndo: value.canUndo,
+          canRedo: value.canRedo,
+          canBeginInk: value.canBeginInk,
+          strokeCount: value.strokeCount,
+          cpuCharge: value.cpuCharge,
+          canonicalCharge: value.canonicalCharge,
+          historyCharge: value.historyCharge,
+          derivedCharge: value.derivedCharge,
+        };
+        observeState(state);
+        return state;
+      },
     ),
   mapping: (owner: bigint, session: bigint): MappingValue =>
     consume(

@@ -1,10 +1,31 @@
 # P05-DIAG01 — Bounded developer diagnostics and local export
 
-Status: authorized by decision243. The reviewed storage/presentation foundation proceeds to
-host integration on frozen M03 tail checkpoint479b8312. Final runtime reconciliation and
-acceptance follow M03 completion. No overlapping implementation ownership.
-Position: prepare in parallel with M03 cold scheduling; integrate after P05-M03 and before M04.
-One branch/PR stacked on the verified
+Status: active under decision243. The R8 diagnostics checkpoint integrates frozen M03
+00cb641f702f40cc4682d4bd116ca07b3529101c and passes174 production,54 observation and86 fixture
+browser cases on its exact combined build, each once with no retries, skips or flaky results. Resource generation,
+static/build and scoped source review pass. Current hooks report copied source coverage,
+validated Prefix publication separately from readiness, cache retention and typed cleanup
+outcomes. Corrected localization IDs retain the existing semantic-ID validation rule.
+Branch codex/p05-diag01-developer-diagnostics; one implementation writer owns the cohesive leaf.
+The normal dependency merge of reviewed M03 commit00cb641 had no conflicts; its runtime is
+fbaede9fc86bb7f7cd44bedaa4c76d6d76e16e65. Fresh R8 browser evidence covers this exact dependency
+delta. Source and all71 generated artifacts stayed unchanged through the three browser lanes.
+The lead may freeze an exact independently reviewed and functionally verified M03 dependency
+with clearly recorded open performance findings so DIAG01/M04 can address them. This is not
+M03 completion, a passing performance profile or relaxed acceptance. Final M09 adoption still
+requires the unresolved absolute/relative gates.
+The panel, pinned metrics and bounded local capture/export are implemented. Same-host overhead,
+current combined-build designer/fresh review and final acceptance remain open. Generated reports
+stay ignored. Preserve the existing older preview65185 and all drawing previews unchanged.
+
+The bounded older-base overhead comparison completed six modes without timed hard-stop errors,
+LongTasks or drops. Closed-panel warm Redo rendering reached10.9ms versus6.5/8.0ms baseline
+brackets, exceeding the existing relative investigation rule while remaining below16ms absolute.
+Cold pan missed250ms in every mode, including both baselines. DIAG-05 remains open. The current
+implementation removes redundant Wasm scalar reads and inactive opt-in submission bookkeeping;
+functional checks do not establish their timing effect. Recheck the final combined build against
+the same reviewed M03 control and unchanged thresholds before adopting the diagnostics overhead.
+Position: integrate after P05-M03, before M04 integration. One branch/PR stacked on the verified
 frozen M03 source; owner alone merges. The lead settles remaining decisions within the renewed
 autonomous window, ending on return or 2026-10-23 07:13:55 UTC.
 

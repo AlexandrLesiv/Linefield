@@ -1,3 +1,6 @@
+import * as observed from "../developer-diagnostics/preparation-completion.ts";
+import { preparationTicket } from "../developer-diagnostics/preparation-ticket.ts";
+import type { PreparationOutcome } from "../developer-diagnostics/preparation-completion.ts";
 import { PendingPreparation } from "./pending-preparation.ts";
 import { CleanupFailure } from "./cleanup-failure.ts";
 import { PreparationTicket } from "./preparation-ticket.ts";
@@ -63,7 +66,15 @@ export class PreparedCache extends PreparedStore {
         : preparation.begin(this.state(), stroke, chunk, revision, detail);
       if (input.code !== "ok") throw Error(input.code);
       if (!input.token) break;
+      const trace = preparationTicket(
+        this.state(),
+        input.token,
+        stroke,
+        executor.diagnosticGeneration,
+        frame,
+      );
       const pending = new PendingPreparation(this.pending, this.borrows);
+      let outcome: PreparationOutcome;
       let ordinal = 0n,
         complete = false,
         stored = false;
@@ -76,9 +87,11 @@ export class PreparedCache extends PreparedStore {
         this.state,
       );
       try {
-        for await (const result of executor.pages(input, urgent || attempt > 0)) {
-          if (!current() || preparation.current(this.state(), input.token) !== "ok")
+        for await (const result of executor.pages(input, urgent || attempt > 0, trace)) {
+          if (!current() || preparation.current(this.state(), input.token) !== "ok") {
+            trace?.cause(!current() ? "disposed" : "stale");
             throw Error("stale-scene");
+          }
           if (result.data.length) {
             if (!this.room(result.data.byteLength, 1) || this.pending.pages >= 128) {
               pending.streaming = true;
@@ -101,9 +114,9 @@ export class PreparedCache extends PreparedStore {
           }
           if (result.done) {
             if (preparation.complete(this.state(), input.token, ordinal) !== "ok")
-              throw Error("stale-scene");
+              throw observed.stalePreparation(trace, "stale-scene");
             if (frame && !frames.coverage(this.state(), input.token, frame))
-              throw Error("stale-mapping");
+              throw observed.stalePreparation(trace, "stale-mapping");
             complete = true;
           }
         }
@@ -141,19 +154,24 @@ export class PreparedCache extends PreparedStore {
           this.residency.refuse(pending.totalBytes, pending.totalPages, clipped ? 1 : 0, 3145728);
         }
         if (!stored || !clipped) ticket.release();
+        outcome = "completed";
         break;
       } catch (error) {
+        outcome = !current() ? "stale" : "rejected";
+        if (error instanceof CleanupFailure) trace?.cleanupFailure();
         if (!current() && !(error instanceof CleanupFailure))
           throw Error("disposed", { cause: error });
         if (attempt++ === 0 && error instanceof Error && error.message === "worker-unavailable")
           continue;
         throw error;
       } finally {
-        try {
-          pending.release();
-        } finally {
-          ticket.release();
-        }
+        observed.finishPreparation(trace, ordinal, outcome, () => {
+          try {
+            pending.release();
+          } finally {
+            ticket.release();
+          }
+        });
       }
     }
   }

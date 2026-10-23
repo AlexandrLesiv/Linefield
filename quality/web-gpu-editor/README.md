@@ -62,8 +62,8 @@ No threshold relaxation to obtain green. Missing/flaky/skipped/stale evidence is
 
 The retained-geometry follow-up implements the adopted
 [retention contract](../../docs/interfaces/web-geometry-retention.md). Its new
-`retention.fixture.spec.ts` cases are authored and initially unrun; browser passes must be
-recorded against the subsequent frozen build. CPU pressure uses actual canonical strokes,
+`retention.fixture.spec.ts` cases require exact-build browser evidence; the current combined
+functional checkpoint is recorded below. CPU pressure uses actual canonical strokes,
 worker preparation/adoption and checked placement until the existing payload/descriptor cap
 positively refuses retention. It then covers B streaming, a late A hit, actual LRU victim
 selection and later B reuse (MIG-WORKER-04/18). GPU cases exercise real WebGL allocations at
@@ -334,13 +334,46 @@ GPU wake experiment acceptance (CT-06; existing MIG-WORKER-05/15/16/24/27/28):
 | MIG-GPU-WAKE-02 / gpu-wake.fixture.spec.ts lifecycle | Controlled hide-before-fire and stale callbacks, repeated show, dormant owner abort and replacement identity; real CPU geometry held after GPU drain has no awaited wake tasks, then replacement renders visibly |
 | MIG-GPU-WAKE-03 / gpu-wake.fixture.spec.ts deadline | Controlled clock keeps observations below the existing one-second gap rebase; short hidden interval excluded while 10s of visible no-progress still fails without deleting uncertain readers |
 
-These new cases are authored controlled browser/render-boundary integration, initially unrun;
+These cases are controlled browser/render-boundary integration;
 they are not native background-tab timing or performance acceptance. Each attaches actual
 browser version/platform and fixture results. Listener disposal is source-reviewed, not
 directly counted by these fixtures. Existing actual-route cancellation, Back/Resume,
 worker failure, retirement, context-loss, normal/packed parity and reduced-motion lanes
 remain required; these boundary cases do not replace them. Production hook exclusion and
 matched same-host timing against32d00e6 remain separate build/evidence gates.
+
+## Developer diagnostics and current combined functional checkpoint
+
+P05-DIAG01 follows CT-02/03/04/06/07/08/09, INV-01/04/05/08/09/11,
+SU-03/04/13/14/15/16/20 and SEC-03/09/13. The sole implementation writer owns the
+following actual-app browser checks. Fault seams are fixture-only; direct injected
+boundary records are labeled adversarial integration evidence, not physical input.
+
+| Acceptance / test sources | Observable coverage |
+| --- | --- |
+| DIAG-01 / diagnostics.spec, diagnostics-worker/admission/epoch/terminal fixtures | Actual Begin/End/history and worker dispatch join session/request/interaction/ticket identities; before-first-page and between-page failures retain the correct worker generation and first cause. Missing source associations stay unavailable. |
+| DIAG-01/03 / diagnostics-cleanup-cause and diagnostics-retention fixtures | Worker failure or generator return followed by typed cleanup failure preserves the original cause, a separate cleanup incident and positive uncertain-ticket charge, with no completed ticket terminal. Held cleanup drains only on actual release; rejected cleanup remains charged. |
+| DIAG-01/05 / diagnostics-publication fixture | A completed prefix publishes during another active stroke without current readiness validation. Real copyback emits no publication. Accepted readiness validates both ok/noop exact receipts and is distinct from memoryPresented or physical presentation. |
+| DIAG-02/03/04 / diagnostics-boundary/lifecycle fixtures and diagnostics-export.spec | One-read validation, explicit allowlist/canonical u64 values, count/byte/duration bounds, deferred notifications, terminal host-only inspection, export failures and gesture/departure races preserve input and prevent delayed downloads. |
+| DIAG-05 / diagnostics-metrics.spec and diagnostics-retention-metrics fixture | Only command-bearing input callbacks contribute; inactive diagnostics does not mutate settings during steady input. Activity-fed metrics settle idle. Actual retained requests/hits/misses/finer hits match displayed totals; cached accounting and metadata estimates remain distinct from physical memory. |
+| DIAG-02/06 / diagnostics-layout.spec and diagnostics.spec | English/Ukrainian compact/enlarged controls, pinned pointer pass-through, footer clearance, focus and Back/Resume preserve the canvas. |
+
+The combined R8 build joins diagnostics checkpoint `a99c46b` with exact M03 dependency
+`00cb641` (GPU-wake runtime `fbaede9`). Its first sequential runs passed **174 production,
+54 observation and 86 fixture tests**, with one worker, no retries, skips or flaky results.
+Production entry `index-hsOOQzUH.js`, observation entry `index-CRqG8qjW.js` and fixture entry
+`app-CNenxiuP.js` were served with byte-verified Wasm artifacts. The source freeze before this
+quality-only amendment is `e0e7af82021893d98b217a49e113dfc8817e7992d47ca77d0112b73e87dd0006`;
+the 71-artifact freeze is `8984013aa40e2d8b18fe46c54258889c604ee79440b5ad76129167c335bf8201`.
+Execution used Chrome155.0.8059.86 on Apple M2 Pro/Darwin27 arm64 at1280×900, DPR1.
+Both origin environment variables were65203; the fixture manifest was explicitly bound.
+Private results, captures, original failures and per-lane served hashes remain ignored.
+
+This closes the listed combined functional lanes, not task adoption. **DIAG-05 overhead
+acceptance remains open**: compare the final diagnostics build to the matching M03 control
+with the unchanged absolute and relative gates. Functional observations do not prove latency
+budgets, physical Wacom behavior, native conformance, measured heap limits or exhaustive failure
+coverage. Current-build designer/fresh independent review and owner PR review remain required.
 
 Substitution is allowed only with equal observable behavior and documented measured rationale.
 A mechanism omitted because its evidence is unfinished remains pending, not silently adopted.

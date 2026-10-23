@@ -1,16 +1,15 @@
+import * as host from "./preparation-host.ts";
 import { response } from "./preparation-messages.ts";
-import type { PreparationResponse, PreparationRequest } from "./preparation-messages.ts";
-import { loadPreparation, preparationHeap } from "./preparation-loader.ts";
+import type { PreparationRequest } from "./preparation-messages.ts";
+import type { Input, Page, Waiter, JobObservation } from "./preparation-job.ts";
+import { loadPreparation } from "./preparation-loader.ts";
 import { geometryMetrics as metrics } from "./geometry-metrics.ts";
-type Input = { points: Float64Array; parameters: Float64Array };
-type Page = Extract<PreparationResponse, { kind: "page" }>;
-type Waiter = {
-  resolve: (value: Page) => void;
-  reject: () => void;
-  timer: ReturnType<typeof setTimeout>;
-};
-const turn = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
+import type { PreparationCause } from "../developer-diagnostics/preparation-causes.ts";
+import type { PreparationJob } from "../developer-diagnostics/preparation-observation.ts";
+import { PreparationObservation } from "../developer-diagnostics/preparation-observation.ts";
 export class PreparationExecutor {
+  private diagnostics = new PreparationObservation();
+  readonly diagnosticGeneration = this.diagnostics.generation;
   private worker: Worker | undefined;
   private ready = false;
   private disposed = false;
@@ -25,12 +24,10 @@ export class PreparationExecutor {
   private launch() {
     if (this.disposed || this.failures > 1) return;
     try {
-      this.worker = new Worker(new URL("./preparation-worker.ts", import.meta.url), {
-        type: "module",
-      });
+      this.worker = host.launchPreparation(this.diagnostics);
       this.worker.onmessage = ({ data }: MessageEvent<unknown>) => {
         if (!response(data)) {
-          this.fail();
+          this.fail("malformed-response");
           return;
         }
         if (data.kind === "ready") {
@@ -38,12 +35,15 @@ export class PreparationExecutor {
           return;
         }
         const waiter = this.waiting.get(data.request);
-        if (!waiter) return;
+        if (!waiter) {
+          this.diagnostics.late(data.request);
+          return;
+        }
         clearTimeout(waiter.timer);
         this.waiting.delete(data.request);
         if (data.kind === "failed") {
-          this.fail();
-          waiter.reject();
+          this.fail("worker-failed");
+          waiter.reject("worker-failed");
           return;
         }
         metrics.workerPages++;
@@ -51,23 +51,24 @@ export class PreparationExecutor {
         metrics.workerMilliseconds += data.duration;
         waiter.resolve(data);
       };
-      this.worker.onerror = () => this.fail();
-      this.worker.onmessageerror = () => this.fail();
+      this.worker.onerror = () => this.fail("worker-error");
+      this.worker.onmessageerror = () => this.fail("message-error");
     } catch {
-      this.fail();
+      this.fail("worker-error");
     }
   }
-  private fail() {
+  private fail(cause: PreparationCause) {
     this.worker?.terminate();
     this.worker = undefined;
     this.ready = false;
+    this.diagnostics.failure(cause, this.disposed);
     if (!this.disposed) {
       this.failures++;
       metrics.failures++;
     }
     for (const waiter of this.waiting.values()) {
       clearTimeout(waiter.timer);
-      waiter.reject();
+      waiter.reject(cause);
     }
     this.waiting.clear();
     this.active.clear();
@@ -76,32 +77,40 @@ export class PreparationExecutor {
     metrics.workerHeap = 0;
     if (!this.disposed && this.failures === 1) this.launch();
   }
-  private message(request: PreparationRequest) {
+  private message(request: PreparationRequest, job: PreparationJob | undefined) {
     return new Promise<Page>((resolve, reject) => {
       if (!this.worker || !this.ready) {
+        job?.fail("dispatch-unavailable");
         reject(Error("worker-unavailable"));
         return;
       }
-      const timer = setTimeout(() => this.fail(), 10000);
+      const timer = setTimeout(() => this.fail("timeout"), 10000);
       this.waiting.set(request.request, {
         resolve,
-        reject: () => reject(Error("worker-unavailable")),
+        reject: (cause) => {
+          job?.fail(cause);
+          reject(Error("worker-unavailable"));
+        },
         timer,
       });
-      // Copies remain local for bounded fallback; transfer only fresh immutable copies.
-      if (request.kind === "start") {
-        const points = request.points.slice(),
-          parameters = request.parameters.slice();
-        this.worker.postMessage({ ...request, points, parameters }, [
-          points.buffer,
-          parameters.buffer,
-        ]);
-      } else this.worker.postMessage(request);
+      try {
+        host.dispatchPreparation(this.worker, request, job, this.diagnostics.workerFailure);
+      } catch (error) {
+        job?.fail("dispatch-failed");
+        throw error;
+      }
     });
   }
-  async *pages(input: Input, urgent = false): AsyncGenerator<Page> {
-    if (this.disposed) throw Error("disposed");
-    if (this.queued >= 256) throw Error("capacity");
+  async *pages(input: Input, urgent = false, observation?: JobObservation) {
+    const job = this.diagnostics.job(observation);
+    if (this.disposed) {
+      job?.reject("disposed");
+      throw Error("disposed");
+    }
+    if (this.queued >= 256) {
+      job?.reject("capacity");
+      throw Error("capacity");
+    }
     this.queued++;
     metrics.queue = this.queued;
     metrics.preparationCopies = (this.queued + this.active.size) * 8192;
@@ -109,16 +118,20 @@ export class PreparationExecutor {
     while (!this.disposed && this.failures < 2 && (!this.ready || this.active.size >= 8)) {
       if (urgent) break;
       if (performance.now() - started > 10000) {
-        this.fail();
+        this.fail("timeout");
         break;
       }
-      await turn();
+      await host.preparationTurn();
     }
     this.queued--;
     metrics.queue = this.queued;
     metrics.preparationCopies = (this.queued + this.active.size) * 8192;
-    if (this.disposed) throw Error("disposed");
+    if (this.disposed) {
+      job?.reject("disposed");
+      throw Error("disposed");
+    }
     const id = ++this.serial;
+    job?.admitted(id);
     metrics.jobs++;
     let worker = this.ready && !urgent;
     if (worker) {
@@ -128,7 +141,8 @@ export class PreparationExecutor {
     }
     let local: Awaited<ReturnType<typeof loadPreparation>> | undefined;
     let fallback: ReturnType<Awaited<ReturnType<typeof loadPreparation>>> | undefined;
-    let first = true;
+    let first = true,
+      completed = false;
     try {
       for (;;) {
         if (this.disposed) throw Error("disposed");
@@ -137,6 +151,7 @@ export class PreparationExecutor {
           try {
             value = await this.message(
               first ? { kind: "start", request: id, ...input } : { kind: "next", request: id },
+              job,
             );
           } catch {
             throw Error("worker-unavailable");
@@ -144,24 +159,11 @@ export class PreparationExecutor {
         } else {
           local ??= await loadPreparation();
           if (this.disposed) throw Error("disposed");
+          if (first) job?.started(false);
           fallback ??= local(input.points, input.parameters);
-          await turn();
+          await host.preparationTurn();
           if (this.disposed) throw Error("disposed");
-          const start = performance.now(),
-            result = fallback.nextPage();
-          try {
-            value = {
-              kind: "page",
-              request: id,
-              data: result.data,
-              origin: result.origin,
-              done: result.done,
-              heap: preparationHeap(),
-              duration: performance.now() - start,
-            };
-          } finally {
-            result.free();
-          }
+          value = host.fallbackPage(fallback, id);
           metrics.fallbackPages++;
           metrics.fallbackHeap = value.heap;
         }
@@ -172,9 +174,16 @@ export class PreparationExecutor {
         } finally {
           metrics.readyBytes -= value.data.byteLength + value.origin.byteLength;
         }
-        if (value.done) break;
+        if (value.done) {
+          completed = true;
+          break;
+        }
       }
+    } catch (error) {
+      job?.fail(this.disposed ? "disposed" : "preparation-failed");
+      throw error;
     } finally {
+      job?.finish(completed, this.disposed ? "disposed" : "cancelled");
       fallback?.free();
       this.active.delete(id);
       metrics.active = this.active.size;
@@ -184,6 +193,6 @@ export class PreparationExecutor {
   }
   dispose() {
     this.disposed = true;
-    this.fail();
+    this.fail("disposed");
   }
 }
