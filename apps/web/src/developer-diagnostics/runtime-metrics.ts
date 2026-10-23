@@ -110,11 +110,26 @@ function snapshot(): MetricSnapshot {
       queued: g.queue,
       active: g.active,
       readyBytes: g.readyBytes,
-      hits: g.preparedHits + g.immediateHits,
+      hits: g.preparedHits,
+      requests: g.preparedRequests,
+      finerHits: g.preparedFinerHits,
       misses: g.preparedMisses,
       gpuLive: g.gpuLive,
       gpuAllocated: g.gpuAllocated,
-      ...(resources ? { cpu: resources.ownedCpu, wasm: resources.wasmHighWater } : {}),
+      ...(resources
+        ? {
+            cpu: resources.ownedCpu,
+            wasm: resources.wasmHighWater,
+            cpuMetadata: resources.hostMetadataEstimate,
+            cpuRetiring: resources.retiringHostGeometry,
+            gpuTotal: resources.ownedGpu,
+            gpuRetiring: resources.gpuRetiring,
+            uncertainPages:
+              resources.uncertainGeometryDescriptors + resources.retiringUncertainDescriptors,
+            uncertainTickets:
+              resources.uncertainGeometryTickets + resources.retiringUncertainTickets,
+          }
+        : {}),
     },
   };
 }

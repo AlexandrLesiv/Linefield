@@ -1,55 +1,12 @@
 import { preparation } from "./preparation-bridge.ts";
 import { frames } from "./frame-bridge.ts";
-import { PageBorrows } from "./page-borrows.ts";
+import { PreparedOwnership } from "./prepared-ownership.ts";
+import type { Entry, PreparedPage } from "./prepared-ownership.ts";
 import { geometryMetrics as metrics } from "./geometry-metrics.ts";
-import type { ReplyValue } from "./bridge.ts";
-export type PreparedPage = { page: bigint; data: Float32Array; release?: () => void };
-export type Entry = {
-  stroke: bigint;
-  revision: bigint;
-  detail: number;
-  token: bigint;
-  pages: PreparedPage[];
-  bytes: number;
-  used: number;
-  pins: number;
-};
-export class PreparedStore {
-  protected entries = new Map<string, Entry[]>();
-  protected bytes = 0;
-  protected pages = 0;
-  protected tickets = 0;
-  protected frame = 0;
-  protected state: () => ReplyValue;
-  protected borrows: PageBorrows;
-  constructor(state: () => ReplyValue) {
-    this.state = state;
-    this.borrows = new PageBorrows(state);
-  }
-  begin() {
-    this.frame++;
-  }
+export type { Entry, PreparedPage } from "./prepared-ownership.ts";
+export class PreparedStore extends PreparedOwnership {
   borrow(page: PreparedPage) {
     return this.borrows.borrow(page);
-  }
-  completed(stroke: bigint, revision: bigint, detail: number, chunk: bigint) {
-    const hit = this.retained(stroke, revision, detail, 0n, chunk);
-    if (!hit) {
-      metrics.preparedMisses++;
-      return undefined;
-    }
-    metrics.preparedHits++;
-    return this.completedPages(hit);
-  }
-  private *completedPages(hit: Entry): Generator<PreparedPage> {
-    for (const page of this.retainedPages(hit)) {
-      const lease = this.borrows.borrow(page);
-      try {
-        yield lease;
-      } finally {
-        lease.release();
-      }
-    }
   }
   protected retained(
     stroke: bigint,
@@ -58,14 +15,12 @@ export class PreparedStore {
     frame: bigint,
     chunk: bigint,
   ) {
-    const entries = this.entries.get(`${stroke}:${chunk}`) ?? [];
+    const entries = this.entries.get(String(stroke) + ":" + String(chunk));
     let hit: Entry | undefined;
-    for (let i = entries.length - 1; i >= 0; i--) {
-      const entry = entries[i];
-      if (!entry) continue;
+    for (const entry of entries ?? []) {
       if (entry.revision !== revision) {
+        metrics.preparedStaleRetirements++;
         this.clear(entry);
-        entries.splice(i, 1);
         continue;
       }
       if (entry.detail < detail) continue;
@@ -74,57 +29,39 @@ export class PreparedStore {
         (frame
           ? frames.coverage(this.state(), entry.token, frame)
           : preparation.coverage(this.state(), entry.token));
-      if (covered) hit = entry;
-      else metrics.preparedCoverageMisses++;
+      if (
+        covered &&
+        (!hit ||
+          entry.detail < hit.detail ||
+          (entry.detail === hit.detail && entry.used >= hit.used))
+      )
+        hit = entry;
+      else if (!covered) metrics.preparedCoverageMisses++;
     }
     return hit;
   }
-  protected *retainedPages(hit: Entry): Generator<PreparedPage> {
-    hit.used = this.frame;
+  protected *retainedPages(hit: Entry, detail: number): Generator<PreparedPage> {
+    metrics.preparedRequests++;
+    metrics.preparedHits++;
+    if (hit.detail > detail) metrics.preparedFinerHits++;
+    hit.used = this.residency.active?.sequence ?? 0;
+    this.lru.delete(hit);
+    this.lru.set(hit, true);
+    const alternatives = this.entries.get(hit.key);
+    if (alternatives) {
+      alternatives.delete(hit);
+      alternatives.add(hit);
+    }
     hit.pins++;
     try {
-      yield* hit.pages;
+      for (const page of hit.pages) {
+        metrics.preparedHitPages++;
+        metrics.preparedHitBytes += page.data.byteLength;
+        yield page;
+      }
     } finally {
       hit.pins--;
+      if (hit.stale && !hit.pins) this.clear(hit);
     }
-  }
-  protected clear(entry: Entry) {
-    for (const p of entry.pages) this.borrows.retire(p);
-    if (entry.token) {
-      preparation.release(this.state(), entry.token);
-      this.tickets--;
-    }
-    this.bytes -= entry.bytes;
-    this.pages -= entry.pages.length;
-  }
-  protected trim(bytes: number, pages: number, ticket = false) {
-    for (const [key, entries] of this.entries) {
-      for (let i = entries.length - 1; i >= 0; i--) {
-        const e = entries[i];
-        if (!e || e.pins) continue;
-        if (
-          this.bytes + bytes <= 8 * 1024 ** 2 &&
-          this.pages + pages <= 3072 &&
-          (!ticket || this.tickets < 192)
-        )
-          return;
-        if (e.used === this.frame && (!ticket || this.tickets < 192)) continue;
-        this.clear(e);
-        entries.splice(i, 1);
-      }
-      if (!entries.length) this.entries.delete(key);
-    }
-  }
-  protected clearStore() {
-    for (const entries of this.entries.values()) for (const e of entries) this.clear(e);
-    this.entries.clear();
-  }
-  resources() {
-    const retired = this.borrows.resources();
-    return {
-      bytes: this.bytes + retired.bytes,
-      pages: this.pages + retired.pages,
-      streamOnly: false,
-    };
   }
 }

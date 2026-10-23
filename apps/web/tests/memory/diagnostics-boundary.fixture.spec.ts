@@ -47,6 +47,9 @@ test("DIAG-03/04 actual app discards unknown metadata, retains u64 IDs, and read
         admissionRevision: "18446744073709551615",
         admissionScene: "9007199254740993",
         admissionMapping: "0",
+        sourceRevision: "18446744073709551615",
+        sourceMapping: "9007199254740993",
+        sourceThrough: "0",
         cause: "timeout",
       }),
     ]),
@@ -57,6 +60,7 @@ for (const [action, reason] of [
   ["byte-overflow", "bytes"],
   ["invalid", "invalid"],
   ["invalid-admission", "invalid"],
+  ["invalid-source", "invalid"],
   ["invalid-cause", "invalid"],
   ["throwing-getter", "sink"],
 ] as const)

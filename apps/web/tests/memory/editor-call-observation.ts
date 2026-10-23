@@ -19,6 +19,8 @@ export async function observeEditorCalls(page: Page) {
           try {
             if (
               (name === "memoryUndo" && dataset.trapStage === "injected command") ||
+              (name === "memoryReleasePage" && dataset.trapStage === "release-page") ||
+              (name === "memoryReleasePreparation" && dataset.trapStage === "release-ticket") ||
               (name === "reply_code" && dataset.armedStage === "injected getter") ||
               (name === "__wbg_reply_free" && dataset.armedStage === "injected destructor")
             )

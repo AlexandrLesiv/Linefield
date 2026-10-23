@@ -1,6 +1,6 @@
 import { bridge } from "../../../src/memory/bridge.ts";
 import { edit } from "../../../src/memory/edit-bridge.ts";
-import { frames } from "../../../src/memory/frame-bridge.ts";
+import { captureLive } from "../../../src/memory/current-coverage.ts";
 import { scene } from "../../../src/memory/scene-bridge.ts";
 import { preparation } from "../../../src/memory/preparation-bridge.ts";
 import { tail } from "../../../src/memory/tail-bridge.ts";
@@ -10,11 +10,12 @@ import type { ReplyValue } from "../../../src/memory/bridge.ts";
 export function tailFixture(count = 129) {
   let state = bridge.create();
   state = queryReady(bridge.metrics(bridge.enter(state.owner), 1n, 1024, 768, 1));
-  const frame = frames.capture(state);
   state = edit.begin(state, 1, 300, 300, 0.5, true);
   if (count > 1) state = appendTailPoints(state, 1, count - 1);
   const stroke = scene.ids(state, 0n).ids[0];
-  if (state.code !== "ok" || frame.code !== "ok" || stroke === undefined) throw Error("setup");
+  if (state.code !== "ok" || stroke === undefined) throw Error("setup");
+  const frame = captureLive(state, stroke);
+  if (frame.code !== "ok") throw Error("live anchor");
   return { state, frame: frame.id, stroke };
 }
 export function appendTailPoints(s: ReplyValue, from: number, count: number) {

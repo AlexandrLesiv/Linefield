@@ -1,3 +1,5 @@
+import { Residency, transition } from "./residency.ts";
+import type { ResidencyToken, IdleBudget } from "./residency.ts";
 import { compactGpu } from "./gpu-compaction.ts";
 import { geometryMetrics as metrics } from "./geometry-metrics.ts";
 type Range = { offset: number; size: number };
@@ -7,13 +9,44 @@ export type Allocation = {
   offset: number;
   size: number;
   slab: Slab;
-  used: number;
+  usedPass: number;
+  admitted: number;
 };
 export class GpuArena {
   private slabs: Slab[] = [];
   private values = new Map<bigint, Allocation>();
   private capacity = 0;
-  private frame = 0;
+  private live = 0;
+  private ranges = 0;
+  private residency = new Residency((credit, budget) => this.idle(credit, budget));
+  private scan: MapIterator<[bigint, Allocation]> | undefined;
+  private scanning: ResidencyToken | undefined;
+  protect() {
+    this.scan = undefined;
+    this.scanning = undefined;
+    return this.residency.open();
+  }
+  unprotect(token: ResidencyToken, accepted: boolean) {
+    this.residency.close(token, accepted);
+  }
+  private idle(credit: ResidencyToken | undefined, budget: IdleBudget) {
+    if (!credit || this.residency.active) return false;
+    if (this.scanning !== credit) {
+      this.scanning = credit;
+      this.scan = this.values.entries();
+    }
+    while (transition(budget)) {
+      const free = this.capacity - this.live;
+      if (free >= credit.bytes && 4096 - this.values.size >= credit.pages) return false;
+      const next = this.scan?.next().value;
+      if (!next) return false;
+      if (next[1].usedPass === credit.sequence) continue;
+      this.release(next[0]);
+      metrics.gpuPressureRetirements++;
+      this.snapshot();
+    }
+    return true;
+  }
   private disabled = false;
   private growth = true;
   private gl: WebGL2RenderingContext;
@@ -26,16 +59,20 @@ export class GpuArena {
     this.budget = Math.min(128 * 1024 ** 2, 192 * 1024 ** 2 - targets) - 256 * 1024;
   }
   begin() {
-    this.frame++;
     this.moves = 0;
   }
   get bytes() {
     return this.capacity;
   }
+  get metadataEstimate() {
+    return this.values.size * 160 + this.slabs.length * 128 + this.ranges * 48 + 256;
+  }
   private snapshot() {
     metrics.gpuAllocated = this.capacity;
-    metrics.gpuLive = this.slabs.reduce((n, s) => n + s.live, 0);
-    metrics.gpuFree = this.capacity - metrics.gpuLive;
+    metrics.gpuLive = this.live;
+    metrics.gpuFree = this.capacity - this.live;
+    metrics.gpuAllocations = this.values.size;
+    metrics.gpuMetadataEstimate = this.metadataEstimate;
   }
   private release(id: bigint) {
     const a = this.values.get(id);
@@ -43,16 +80,12 @@ export class GpuArena {
     a.slab.free.push({ offset: a.offset, size: a.size });
     a.slab.live -= a.size;
     this.values.delete(id);
-    a.slab.free.sort((x, y) => x.offset - y.offset);
-    for (let i = a.slab.free.length - 1; i > 0; i--) {
-      const x = a.slab.free[i - 1],
-        y = a.slab.free[i];
-      if (x && y && x.offset + x.size === y.offset) {
-        x.size += y.size;
-        a.slab.free.splice(i, 1);
-      }
-    }
+    this.live -= a.size;
+    this.ranges++;
+    // Constant-work idle release. Fragmented ranges are reconciled only by the
+    // existing non-idle compaction fallback; aggregate free bytes are not a fit promise.
   }
+
   private allocate(size: number): Allocation | undefined {
     for (const slab of this.slabs) {
       const range = slab.free.find((r) => r.size >= size);
@@ -60,35 +93,36 @@ export class GpuArena {
       const offset = range.offset;
       range.offset += size;
       range.size -= size;
-      if (!range.size) slab.free.splice(slab.free.indexOf(range), 1);
+      if (!range.size) {
+        slab.free.splice(slab.free.indexOf(range), 1);
+        this.ranges--;
+      }
       slab.live += size;
-      return { buffer: slab.buffer, offset, size, slab, used: this.frame };
+      this.live += size;
+      return {
+        buffer: slab.buffer,
+        offset,
+        size,
+        slab,
+        usedPass: this.residency.active?.sequence ?? 0,
+        admitted: this.residency.admit(),
+      };
     }
     return undefined;
   }
   get(id: bigint, data: Float32Array): Allocation | undefined {
-    if (this.disabled) return undefined;
+    if (this.disabled || !this.residency.enabled) return undefined;
     const existing = this.values.get(id);
     if (existing) {
-      existing.used = this.frame;
+      existing.usedPass = this.residency.active?.sequence ?? 0;
+      this.values.delete(id);
+      this.values.set(id, existing);
+      metrics.gpuRetainedHits++;
       return existing;
     }
-    if (this.values.size >= 4096) {
-      const old = [...this.values].find(([, a]) => a.used !== this.frame);
-      if (!old) return undefined;
-      this.release(old[0]);
-    }
     const size = 2 ** Math.ceil(Math.log2(Math.max(32, data.byteLength)));
+    if (this.values.size >= 4096) return this.refuse(size);
     let result = this.allocate(size);
-    if (!result) {
-      for (const [key, a] of this.values) {
-        if (a.used !== this.frame) {
-          this.release(key);
-          result = this.allocate(size);
-          if (result) break;
-        }
-      }
-    }
     if (!result && this.moves < 8) {
       compactGpu(this.gl, this.scratch, this.values.values(), 8);
       this.moves = 8;
@@ -104,10 +138,11 @@ export class GpuArena {
         }
         if (end < slab.size) slab.free.push({ offset: end, size: slab.size - end });
       }
+      this.ranges = this.slabs.reduce((n, slab) => n + slab.free.length, 0);
       result = this.allocate(size);
     }
     if (!result) this.growth = true;
-    if (!result) return undefined;
+    if (!result) return this.refuse(size);
     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, result.buffer);
     this.gl.bufferSubData(this.gl.ARRAY_BUFFER, result.offset, data);
     metrics.gpuUploads++;
@@ -115,6 +150,13 @@ export class GpuArena {
     this.values.set(id, result);
     this.snapshot();
     return result;
+  }
+  private refuse(size: number) {
+    if (size <= 32768) {
+      metrics.gpuCapacityRefusals++;
+      this.residency.refuse(size, 1, 0, 4194304);
+    }
+    return undefined;
   }
   maintain() {
     if (this.disabled || !this.growth) return;
@@ -138,13 +180,21 @@ export class GpuArena {
     }
     this.slabs.push({ buffer, size: next, free: [{ offset: 0, size: next }], live: 0 });
     this.capacity += next;
+    this.ranges++;
     this.snapshot();
   }
   dispose() {
+    this.stop();
     for (const slab of this.slabs) this.gl.deleteBuffer(slab.buffer);
     this.slabs = [];
     this.values.clear();
     this.capacity = 0;
+    this.live = 0;
+    this.ranges = 0;
     this.snapshot();
+  }
+  stop() {
+    this.disabled = true;
+    this.residency.stop();
   }
 }

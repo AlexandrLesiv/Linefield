@@ -9,14 +9,25 @@ export const metricGroups: readonly (readonly MetricKey[])[] = [
     "submitted",
     "validated",
     "pending",
-    "inputP95",
+    "inputPercentile",
     "inputMax",
     "inputCount",
     "inputWindow",
     "scheduling",
   ],
-  ["queued", "active", "readyBytes", "hits", "misses", "upload"],
-  ["gpuLive", "gpuAllocated", "cpu", "wasm"],
+  ["queued", "active", "readyBytes", "requests", "hits", "misses", "finerHits", "upload"],
+  [
+    "gpuLive",
+    "gpuAllocated",
+    "gpuTotal",
+    "gpuRetiring",
+    "cpu",
+    "cpuMetadata",
+    "cpuRetiring",
+    "uncertainPages",
+    "uncertainTickets",
+    "wasm",
+  ],
 ];
 export function metricValue(value: number | undefined): string {
   return value === undefined ? t("diagnostics.unavailable") : number.format(value);
@@ -49,6 +60,7 @@ export function createMetricView(): {
       list.append(row.node);
     }
     section.append(element("h3", css.heading, t(headings[i] ?? "diagnostics.memory")), list);
+    if (i === 2) section.append(element("p", css.muted, t("diagnostics.memoryNote")));
     node.append(section);
   });
   return {

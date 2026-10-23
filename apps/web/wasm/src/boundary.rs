@@ -22,6 +22,10 @@ pub struct Data {
     pub preparation: RefCell<Option<linefield_editor_engine::PreparationInput>>,
     pub placement: Cell<linefield_editor_engine::Placement>,
     pub tail: Cell<linefield_editor_engine::TailStatus>,
+    pub coverage: Cell<linefield_editor_engine::CurrentCoverage>,
+    pub capture: Cell<linefield_editor_engine::FrameCapture>,
+    pub visibility: RefCell<Option<linefield_editor_engine::VisibilityPage>>,
+    pub visibility_consumed: Cell<u8>,
 }
 impl Drop for Data {
     fn drop(&mut self) {
@@ -67,6 +71,23 @@ pub fn execute_data<S>(
 where
     S: From<Slot> + Into<JsValue>,
 {
+    execute_snapshot::<S>(operation, false)
+}
+pub fn execute_query<S>(
+    operation: impl FnOnce(&mut Engine, &Data) -> Code,
+) -> Result<JsValue, JsValue>
+where
+    S: From<Slot> + Into<JsValue>,
+{
+    execute_snapshot::<S>(operation, true)
+}
+fn execute_snapshot<S>(
+    operation: impl FnOnce(&mut Engine, &Data) -> Code,
+    bounded_query: bool,
+) -> Result<JsValue, JsValue>
+where
+    S: From<Slot> + Into<JsValue>,
+{
     if BUSY.replace(true) {
         return Err(JsValue::from_str("boundary-unavailable"));
     }
@@ -80,7 +101,13 @@ where
     reserved
         .try_reserve_exact(256)
         .map_err(|_| JsValue::from_str("boundary-capacity"))?;
-    let value = ENGINE.with(|engine| engine.borrow().projection(Code::Unavailable));
+    let value = ENGINE.with(|engine| {
+        if bounded_query {
+            engine.borrow().query_projection(Code::Unavailable)
+        } else {
+            engine.borrow().projection(Code::Unavailable)
+        }
+    });
     let data = Rc::new(Data {
         value: Cell::new(value),
         consumed: Cell::new(false),
@@ -96,14 +123,24 @@ where
         preparation: RefCell::new(None),
         placement: Cell::new(Default::default()),
         tail: Cell::new(Default::default()),
+        coverage: Cell::new(Default::default()),
+        capture: Cell::new(Default::default()),
+        visibility: RefCell::new(None),
+        visibility_consumed: Cell::new(0),
     });
     LIVE.set(true);
     let result = S::from(Slot(Rc::clone(&data))).into();
     ENGINE.with(|engine| {
         if let Ok(mut engine) = engine.try_borrow_mut() {
-            engine.begin_command();
+            if !bounded_query {
+                engine.begin_command();
+            }
             let code = operation(&mut engine, &data);
-            data.value.set(engine.projection(code));
+            data.value.set(if bounded_query {
+                engine.query_projection(code)
+            } else {
+                engine.projection(code)
+            });
         }
     });
     Ok(result)

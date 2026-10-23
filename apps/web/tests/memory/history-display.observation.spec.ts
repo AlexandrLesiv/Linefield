@@ -1,30 +1,11 @@
 import { test, expect } from "@playwright/test";
 import type { Page } from "@playwright/test";
 import { clear, complete } from "./observed-frame.ts";
-import { observeHistoryDisplay, releaseHistory } from "./history-display-observation.ts";
+import { releaseHistory } from "./history-display-observation.ts";
+import { heldPrefix } from "./capacity-setup.ts";
 
-async function stroke(page: Page, y: number) {
-  await clear(page);
-  await page.mouse.move(300, y);
-  await page.mouse.down();
-  await page.mouse.move(750, y, { steps: 32 });
-  await page.mouse.up();
-  await complete(page);
-}
 async function setup(page: Page) {
-  await observeHistoryDisplay(page);
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
-  await page.locator(".new-tile").click();
-  await expect(page.locator("canvas")).toHaveAttribute("data-state", "ready");
-  await stroke(page, 300);
-  await stroke(page, 450);
-  await page.evaluate(() => {
-    document.documentElement.dataset.holdHistory = "true";
-    document.documentElement.dataset.historyPixels = "true";
-  });
-  await clear(page);
-  await page.getByRole("button", { name: "Undo last action", exact: true }).click();
+  await heldPrefix(page, false, true);
   await expect
     .poll(async () => Number(await page.locator("html").getAttribute("data-history-replies")))
     .toBeGreaterThan(0);

@@ -54,6 +54,7 @@ export class LiveTail {
     this.retire(through);
     if (!this.back && count > through && this.front?.count !== count) {
       const next = tail.capture(this.state(), this.stroke, this.frame, through, this.detail);
+      if (next.code === "capacity") return;
       if (next.code !== "ok" || next.anchor !== this.frame) throw Error(next.code);
       this.back = next;
       this.gpu.resetBack();

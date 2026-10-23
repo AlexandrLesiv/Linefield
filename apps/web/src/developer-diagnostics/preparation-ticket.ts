@@ -30,11 +30,13 @@ export function preparationTicket(
   });
   return new PreparationTicket(metadata);
 }
+export type PreparationTrace = PreparationTicket;
 class PreparationTicket implements JobObservation {
   readonly #metadata: Readonly<DiagnosticEvent>;
   #request: string | undefined;
   #cause: PreparationCause | undefined;
   #finished = false;
+  #cleanupFailed = false;
   constructor(metadata: Readonly<DiagnosticEvent>) {
     this.#metadata = metadata;
   }
@@ -51,12 +53,26 @@ class PreparationTicket implements JobObservation {
   cause(cause: PreparationCause): void {
     this.#cause ??= cause;
   }
-  abandoned(count: number): void {
+  cleanupFailure(): void {
+    if (this.#cleanupFailed) return;
+    this.#cleanupFailed = true;
+    this.cause("cleanup-failed");
+    record({
+      ...this.#metadata,
+      event: "resource.failure",
+      atMs: performance.now(),
+      origin: "renderer",
+      outcome: "failed",
+      cause: "cleanup-failed",
+      ...ids({ request: this.#request }),
+    });
+  }
+  abandoned(count: number | undefined): void {
     if (this.#finished) return;
     this.cause("cancelled");
     this.outcome("rejected", count);
   }
-  outcome(outcome: "completed" | "stale" | "rejected", count: number): void {
+  outcome(outcome: "completed" | "stale" | "rejected", count: number | undefined): void {
     if (this.#finished) return;
     this.#finished = true;
     if (!diagnosticsStore.capturing) return;
@@ -75,7 +91,7 @@ class PreparationTicket implements JobObservation {
               ? "stale"
               : "failed",
       ...(outcome === "completed" ? {} : { cause }),
-      count,
+      ...(count === undefined ? {} : { count }),
       ...ids({ request: this.#request }),
     });
   }

@@ -10,6 +10,7 @@ export const preparationCauses = [
   "dispatch-failed",
   "capacity",
   "preparation-failed",
+  "cleanup-failed",
   "stale",
 ] as const;
 export type PreparationCause = (typeof preparationCauses)[number];

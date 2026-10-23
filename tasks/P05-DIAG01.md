@@ -1,25 +1,30 @@
 # P05-DIAG01 — Bounded developer diagnostics and local export
 
-Status: authorized by decision243. Independent storage/presentation work may start against a
-frozen committed M03 checkpoint; final runtime hooks and acceptance wait for the coordinated
-M03 integration handoff. No overlapping memory/renderer/engine implementation ownership.
+Status: active under decision243. The integrated diagnostics checkpoint on frozen M03
+32d00e6216116e23d891ae3f0a2a78329f069cf8 passes174 production,54 observation and82 fixture
+browser cases on its exact R7 build, each once with no retries. Resource generation,
+static/build and scoped source review pass. Current hooks report copied source coverage,
+validated Prefix publication separately from readiness, cache retention and typed cleanup
+outcomes. Corrected localization IDs retain the existing semantic-ID validation rule.
+Branch codex/p05-diag01-developer-diagnostics; one implementation writer owns the cohesive leaf.
+The lead now authorizes normal dependency integration of reviewed M03 commit00cb641,
+whose runtime is fbaede9fc86bb7f7cd44bedaa4c76d6d76e16e65. Freeze and verify that exact combined
+build before PR/M04 handoff. Earlier R7 results do not automatically cover this dependency delta.
 The lead may freeze an exact independently reviewed and functionally verified M03 dependency
 with clearly recorded open performance findings so DIAG01/M04 can address them. This is not
 M03 completion, a passing performance profile or relaxed acceptance. Final M09 adoption still
 requires the unresolved absolute/relative gates.
-The current B7 checkpoint adds the actual panel, pinned metrics and bounded local capture/export
-on frozen M03 ancestry479b8312. Its61-file source/evidence review and scoped actual-build designer
-review are closed; affected14 fixture and two production cases pass without retries/skips/flakes.
-Production CNmk5I0w is isolated on http://127.0.0.1:65185/. This is not the latest M03 drawing
-runtime. Final M03 reconciliation/current-coverage hooks, truthful replacement of retired cache
-counters, same-host overhead and combined acceptance remain open. Generated reports stay ignored.
+The panel, pinned metrics and bounded local capture/export are implemented. Same-host overhead,
+current combined-build designer/fresh review and final acceptance remain open. Generated reports
+stay ignored. Preserve the existing older preview65185 and all drawing previews unchanged.
 
 The bounded older-base overhead comparison completed six modes without timed hard-stop errors,
 LongTasks or drops. Closed-panel warm Redo rendering reached10.9ms versus6.5/8.0ms baseline
 brackets, exceeding the existing relative investigation rule while remaining below16ms absolute.
-Cold pan missed250ms in every mode, including both baselines. DIAG-05 remains open. A subsequent
-two-file cleanup removes redundant Wasm scalar reads and inactive opt-in submission bookkeeping;
-it passes static checks but has no new runtime/timing acceptance. Preview65185 retains B7.
+Cold pan missed250ms in every mode, including both baselines. DIAG-05 remains open. The current
+implementation removes redundant Wasm scalar reads and inactive opt-in submission bookkeeping;
+functional checks do not establish their timing effect. Recheck the final combined build against
+the same reviewed M03 control and unchanged thresholds before adopting the diagnostics overhead.
 Position: integrate after P05-M03, before M04 integration. One branch/PR stacked on the verified
 frozen M03 source; owner alone merges. The lead settles remaining decisions within the renewed
 autonomous window, ending on return or 2026-10-23 07:13:55 UTC.
@@ -49,6 +54,32 @@ memory/input/render/Rust sources, drawing-shell integration and shared tests rem
 until the lead explicitly transfers those hooks on a frozen checkpoint. Static validation may
 run independently; browser/GPU runs are serialized. This partial work is not a usable preview
 or accepted diagnostics implementation by itself.
+
+The coordinated integration reservation extends DIAG01 ownership to drawing-shell.ts,
+memory/document.ts, view.ts, diagnostics.ts, bridge.ts, edit-bridge.ts, input-state.ts,
+input.ts, input-batch.ts, input-keyboard.ts, editor-controls.ts, command-timing.ts and
+the small gpu-display.ts observation adapter; its actual-app diagnostics E2E and bounded fixture hook; and Vite build-identity
+integration. M03 cold work owns frame commands/building, readiness, scheduling observations and
+its tests. The gpu-display adapter is now frozen and that module returned to M03 capacity
+ownership. The second serialized handoff reserves preparation-executor.ts and prepared-cache.ts
+for DIAG01's additive named job start/finish/reject/stale-adoption observations, without changing
+their APIs, worker protocol, source ownership or cache policy. M03 coordinates any later edit.
+DIAG01 does not edit live/progressive-scene, GPU allocation, resource accounting or the new
+current-coverage query until another explicit handoff. Reconcile these hooks on the final
+M03 base before adoption. No extra Wasm reads, worker protocol, mutable editor or universal bus.
+
+Use narrow named copied-metadata callbacks for command outcomes, existing accepted state,
+submission/publication and cached resource samples. Availability comes from normal state and
+host lifecycle updates; terminal inspection is host-only. Existing replies supply lossless
+canonical decimal u64 correlations. Unknown metadata is discarded; invalid allowed values are
+rejected. The pending sample metric is Unavailable without compatible authoritative watermarks.
+No detail tracing is inferred from queue/page counts. Browser/GPU verification is serialized
+with M03; isolated output directories preserve its frozen previews and comparison builds.
+Worker detail uses existing immutable ticket metadata and the main host clock; never retain
+sample arrays or raw error objects. Per-job/page events are capture-only, with bounded baseline
+summaries/failures. Editing commands already correlate session/interaction/request/content;
+source IDs appear only when a normal authoritative read supplies them, never from stroke counts
+or an extra query. Missing source/sample watermarks remain explicitly unavailable.
 
 ## Concrete edge cases and evidence ownership
 

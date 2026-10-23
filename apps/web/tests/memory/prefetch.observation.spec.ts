@@ -44,23 +44,39 @@ test("MIG-WORKER-12 navigation disposes confirmed pending frame prefetch and Res
   await clear(page);
   await page.mouse.move(260, 300);
   await page.mouse.down();
-  await page.mouse.move(800, 450, { steps: 384 });
+  for (let part = 1; part <= 6; part++) {
+    await page.mouse.move(260 + (540 * part) / 6, 300 + (150 * part) / 6, { steps: 64 });
+    // Functional setup only: drain bounded observations without changing the 384 samples.
+    const observed = await page.evaluate(() => window["__linefieldPerfRead"]?.());
+    expect(observed?.dropped).toBe(0);
+  }
   await page.mouse.up();
-  await complete(page);
+  const previous = await complete(page);
   const artwork = await page.screenshot({ clip });
   expect(artwork.equals(blank)).toBe(false);
+  await page.locator(".back").click();
+  await expect(page.locator("canvas")).toHaveCount(0);
+  await clear(page);
   await page.evaluate(() => {
     document.documentElement.dataset.holdPreparation = "true";
   });
-  await page.getByRole("button", { name: "Rotate canvas right 15°", exact: true }).click();
+  await page.getByRole("button", { name: "Resume temporary drawing", exact: true }).click();
   await expect
     .poll(async () => Number(await page.locator("html").getAttribute("data-pending-starts")))
     .toBeGreaterThanOrEqual(2);
+  const resumed = await page.evaluate(() => window["__linefieldPerfRead"]?.());
+  expect(resumed?.dropped).toBe(0);
+  const identity = resumed?.records.findLast((r) => r.kind === "overlay-submit");
+  expect(identity).toBeDefined();
+  expect(identity?.owner).toBe(previous?.owner);
+  expect(identity?.content).toBe(previous?.content);
+  expect(identity?.session).not.toBe(previous?.session);
+  const terminated = Number(await page.locator("html").getAttribute("data-terminated-workers"));
   await page.locator(".back").click();
   await expect(page.locator("canvas")).toHaveCount(0);
   await expect
     .poll(async () => Number(await page.locator("html").getAttribute("data-terminated-workers")))
-    .toBeGreaterThanOrEqual(1);
+    .toBeGreaterThan(terminated);
   await page.evaluate(() => {
     document.documentElement.dataset.holdPreparation = "false";
   });
@@ -68,7 +84,7 @@ test("MIG-WORKER-12 navigation disposes confirmed pending frame prefetch and Res
   await page.getByRole("button", { name: "Resume temporary drawing", exact: true }).click();
   await expect(page.locator("canvas")).toHaveAttribute("data-state", "ready");
   await clear(page);
-  await page.getByRole("button", { name: "Reset canvas rotation", exact: true }).click();
+  await page.getByRole("button", { name: "Reset view", exact: true }).click();
   await complete(page);
   await expect.poll(async () => (await page.screenshot({ clip })).equals(artwork)).toBe(true);
   await clear(page);

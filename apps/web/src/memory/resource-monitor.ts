@@ -3,8 +3,15 @@ import { preparationHeap } from "./preparation-loader.ts";
 import type { StateValue } from "./bridge.ts";
 import { wasmBytes } from "./loader.ts";
 import { diagnostic } from "./diagnostics.ts";
-import { retiringGpuBytes } from "./gpu-retirement.ts";
-type Geometry = { bytes: number; pages: number; streamOnly: boolean };
+import { retiringGpuBytes, retiringCpuResources } from "./gpu-retirement.ts";
+type Geometry = {
+  bytes: number;
+  pages: number;
+  streamOnly: boolean;
+  metadataEstimate?: number;
+  uncertainDescriptors?: number;
+  uncertainTickets?: number;
+};
 let highWater = 0;
 let aboveTarget = false;
 let current: ReturnType<typeof totals> | undefined;
@@ -19,6 +26,11 @@ function totals(
   highWater = Math.max(highWater, wasm);
   const pixels = width * height;
   const buffers = pixels ? 2 * 4096 * 32 : 0;
+  const retiring = retiringCpuResources();
+  const metadataEstimate =
+    (geometry.metadataEstimate ?? 0) +
+    (retiring.metadataEstimate ?? 0) +
+    (pixels ? m.gpuMetadataEstimate : 0);
   return {
     canonical: s.canonicalCharge,
     historyExclusive: s.historyCharge,
@@ -26,29 +38,47 @@ function totals(
     rustOverhead: s.cpuCharge - s.canonicalCharge - s.historyCharge - s.derivedCharge,
     wasmHighWater: highWater,
     hostGeometry: geometry.bytes,
+    retiringHostGeometry: retiring.bytes,
+    retiringGeometryPages: retiring.pages,
+    hostMetadataEstimate: metadataEstimate,
     geometryPages: geometry.pages,
+    uncertainGeometryDescriptors: geometry.uncertainDescriptors ?? 0,
+    uncertainGeometryTickets: geometry.uncertainTickets ?? 0,
+    retiringUncertainDescriptors: retiring.uncertainDescriptors ?? 0,
+    retiringUncertainTickets: retiring.uncertainTickets ?? 0,
     streamOnly: geometry.streamOnly,
     gpuStreamingBuffers: buffers,
-    gpuMask: pixels * (packed ? 4 : 3),
+    gpuMask: pixels * 4,
+    gpuScratch: pixels * (packed ? 4 : 3),
     gpuStaging: pixels * (packed ? 4 : 3),
     gpuBase: pixels * (packed ? 4 : 3),
-    gpuTargetBytes: pixels * (packed ? 12 : 9),
+    gpuTargetBytes: pixels * (packed ? 16 : 13),
     gpuRetiring: retiringGpuBytes(),
-    gpuGeometryLimit: Math.min(128 * 1024 ** 2, 192 * 1024 ** 2 - pixels * (packed ? 12 : 9)),
+    gpuGeometryLimit: Math.min(128 * 1024 ** 2, 192 * 1024 ** 2 - pixels * (packed ? 16 : 13)),
     gpuGeometryCapacity: m.gpuAllocated,
     gpuGeometryLive: m.gpuLive,
     gpuGeometryFree: m.gpuFree,
     worker: m.workerHeap,
     mainPreparation: preparationHeap(),
     preparationCopies: m.preparationCopies + m.readyBytes,
+    visibilityCopies: m.visibilityBytes,
     material: 0,
     // Driver/default framebuffer estimates are separate from owned GL allocations.
     driverFramebufferEstimate: pixels * 4,
     driverFormatPaddingEstimate: pixels * 8,
     // Linear memory already contains Rust allocations; never add those charges twice.
     ownedCpu:
-      wasm + geometry.bytes + m.workerHeap + preparationHeap() + m.preparationCopies + m.readyBytes,
-    ownedGpu: pixels ? pixels * (packed ? 12 : 9) + buffers + m.gpuAllocated : retiringGpuBytes(),
+      wasm +
+      geometry.bytes +
+      retiring.bytes +
+      metadataEstimate +
+      m.workerHeap +
+      preparationHeap() +
+      m.preparationCopies +
+      m.readyBytes +
+      m.visibilityBytes,
+    ownedGpu:
+      (pixels ? pixels * (packed ? 16 : 13) + buffers + m.gpuAllocated : 0) + retiringGpuBytes(),
   };
 }
 export function observeResources(
@@ -85,12 +115,4 @@ export function reportResources(
     )
   )
     diagnostic("display", "soft-target", s.session);
-}
-
-export function sumGeometry(a: Geometry, b?: Geometry): Geometry {
-  return {
-    bytes: a.bytes + (b?.bytes ?? 0),
-    pages: a.pages + (b?.pages ?? 0),
-    streamOnly: a.streamOnly || !!b?.streamOnly,
-  };
 }

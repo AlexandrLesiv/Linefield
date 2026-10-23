@@ -33,11 +33,15 @@ mod preparation;
 
 mod preparation_status;
 
+mod coverage_snapshot;
+mod current_coverage;
 mod display_readiness;
 mod frame;
+mod frame_capture;
 mod frame_preparation;
 mod live_preparation;
 mod stable_preparation;
 mod tail_display;
 mod tail_pages;
 mod tail_preparation;
+mod visibility;

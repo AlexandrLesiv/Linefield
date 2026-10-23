@@ -10,6 +10,9 @@ export class LiveGpu {
   private width: number;
   private height: number;
   private arena: GpuArena;
+  private stableTarget: ReturnType<typeof allocateGpu>["mask"];
+  private frontTarget: ReturnType<typeof allocateGpu>["mask"];
+  private backTarget: ReturnType<typeof allocateGpu>["mask"];
   constructor(
     gl: WebGL2RenderingContext,
     r: ReturnType<typeof allocateGpu>,
@@ -22,15 +25,18 @@ export class LiveGpu {
     this.width = width;
     this.height = height;
     this.arena = arena;
-    this.stable = new GpuPass(gl, r, r.mask, null, width, height, arena);
-    this.tail = new GpuPass(gl, r, r.overlayMask, null, width, height, arena);
-    this.back = new GpuPass(gl, r, r.backMask, null, width, height, arena);
+    this.stableTarget = r.packed ? r.base : r.liveMask;
+    this.frontTarget = r.packed ? r.staging : r.overlayMask;
+    this.backTarget = r.packed ? r.scratch : r.backMask;
+    this.stable = new GpuPass(gl, r, this.stableTarget, null, width, height, arena);
+    this.tail = new GpuPass(gl, r, this.frontTarget, null, width, height, arena);
+    this.back = new GpuPass(gl, r, this.backTarget, null, width, height, arena);
   }
   clearFront() {
     this.tail = new GpuPass(
       this.gl,
       this.r,
-      this.r.overlayMask,
+      this.frontTarget,
       null,
       this.width,
       this.height,
@@ -41,7 +47,7 @@ export class LiveGpu {
     this.back = new GpuPass(
       this.gl,
       this.r,
-      this.r.backMask,
+      this.backTarget,
       null,
       this.width,
       this.height,
@@ -51,54 +57,35 @@ export class LiveGpu {
   publishBack() {
     this.clearFront();
     const gl = this.gl;
-    gl.bindFramebuffer(gl.FRAMEBUFFER, this.r.overlayMask.framebuffer);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this.frontTarget.framebuffer);
     gl.disable(gl.SCISSOR_TEST);
     gl.colorMask(!this.r.packed, !this.r.packed, !this.r.packed, true);
     gl.disable(gl.BLEND);
-    blit(gl, this.r, this.r.backMask.texture, this.width, this.height, undefined, undefined, true);
+    blit(gl, this.r, this.backTarget.texture, this.width, this.height, undefined, undefined, true);
   }
-  display(color: readonly number[], matrix?: Float32Array, combine = true) {
+  display(
+    color: readonly number[],
+    matrix?: Float32Array,
+    combine = true,
+    destination: WebGLFramebuffer | null = null,
+  ) {
     const gl = this.gl;
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, destination);
     gl.disable(gl.SCISSOR_TEST);
-    gl.colorMask(true, true, true, true);
+    gl.colorMask(true, true, true, !(destination && this.r.packed));
     gl.enable(gl.BLEND);
     gl.blendEquation(gl.FUNC_ADD);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     blit(
       gl,
       this.r,
-      this.r.mask.texture,
+      this.stableTarget.texture,
       this.width,
       this.height,
       color,
       matrix,
       false,
-      combine ? this.r.overlayMask.texture : undefined,
+      combine ? this.frontTarget.texture : undefined,
     );
-  }
-  stage(color: readonly number[]) {
-    const gl = this.gl,
-      r = this.r;
-    gl.bindFramebuffer(gl.FRAMEBUFFER, r.staging.framebuffer);
-    gl.disable(gl.SCISSOR_TEST);
-    gl.colorMask(true, true, true, !r.packed);
-    gl.disable(gl.BLEND);
-    blit(gl, r, r.base.texture, this.width, this.height);
-    // Packed fallback copies the completed stable mask into base alpha only. The tail
-    // is now obsolete; no paused candidate or other live mask is allowed to coexist.
-    let texture = r.mask.texture;
-    if (r.packed) {
-      gl.bindFramebuffer(gl.FRAMEBUFFER, r.base.framebuffer);
-      gl.colorMask(false, false, false, true);
-      blit(gl, r, texture, this.width, this.height, undefined, undefined, true);
-      texture = r.base.texture;
-    }
-    gl.bindFramebuffer(gl.FRAMEBUFFER, r.staging.framebuffer);
-    gl.colorMask(true, true, true, !r.packed);
-    gl.enable(gl.BLEND);
-    gl.blendEquation(gl.FUNC_ADD);
-    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    blit(gl, r, texture, this.width, this.height, color);
   }
 }

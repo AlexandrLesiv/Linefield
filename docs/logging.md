@@ -55,6 +55,24 @@ render/cache/worker events and presentation. Correlation must pass through the c
 without creating another editor owner. Detailed capture may affect timing and must disclose that
 fact. Establish separate checks with capture off/on; diagnostic traces are not release benchmarks.
 
+The web report represents shared u64 identities as canonical decimal strings: at most20 ASCII
+digits, no leading zero except `0`, and no value above18446744073709551615. Convert directly
+from bigint, never through Number or a growing alias map. Counts and durations remain checked
+bounded numbers. Copy allowed fields once, discard unknown fields without retaining their
+objects, and reject invalid allowed values. Capture/export acceptance includes boundary and
+privacy canaries. An accepted-not-submitted sample metric remains Unavailable until compatible
+authoritative sample watermarks exist; page counts and a completion boolean cannot supply it.
+
+Preparation diagnostics associate each ticket with the executor's actual assigned request
+before dispatch/waiting for the first page. Capture-only `worker.admitted` records that join;
+`worker.started` requires successful dispatch. Pre-admission rejection has no fabricated request.
+Concurrent zero-page failure, timeout and cancellation must remain distinguishable. Use a
+per-job observation value, never an ambient asynchronous context or a guessed next counter.
+Frame identity describes the immutable preparation source. Current state captured at admission
+uses explicit admission-revision/scene/mapping fields; it cannot stand in for the frozen source's
+revision. Unavailable source provenance stays unavailable. These observations do not change
+worker messages, admission, editing authority or result relevance.
+
 Required acceptance before adoption: real drawing and history correlated through publication;
 stale/rejected/cancelled worker work distinguishable; controlled overload and export failure;
 content-redaction canaries; no interruption or pointer interception while drawing; bounded

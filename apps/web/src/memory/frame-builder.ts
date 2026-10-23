@@ -4,6 +4,8 @@ import { batchObservation } from "./performance-observation.ts";
 import type { PreparedCache } from "./prepared-cache.ts";
 import type { GpuRenderer } from "./gpu-renderer.ts";
 import type { ReplyValue } from "./bridge.ts";
+import type { ResidencyToken } from "./residency.ts";
+import { cleanupAsync, cleanupSync } from "./cleanup-failure.ts";
 export async function buildFrame(
   state: () => ReplyValue,
   prepared: PreparedCache,
@@ -12,16 +14,29 @@ export async function buildFrame(
   detail: number,
   alive: () => boolean,
   signal: AbortSignal,
+  extension?: { after: bigint; predecessor: bigint; issuing: () => void },
 ) {
   if (!alive()) return false;
-  prepared.begin();
-  const commands = new FrameCommands(state, prepared, receipt.through, detail, receipt.id);
-  const cancel = () => commands.stop();
-  signal.addEventListener("abort", cancel, { once: true });
-  if (signal.aborted) cancel();
+  let cpu: ResidencyToken | undefined, gpu: ResidencyToken | undefined;
+  let commands: FrameCommands | undefined;
+  let accepted = false;
+  const cancel = () => commands?.stop();
   let initialized = false,
     serial = 0;
   try {
+    cpu = prepared.begin();
+    gpu = renderer.protect();
+    commands = new FrameCommands(
+      state,
+      prepared,
+      receipt.through,
+      detail,
+      receipt.id,
+      extension?.after,
+      extension?.predecessor,
+    );
+    signal.addEventListener("abort", cancel, { once: true });
+    if (signal.aborted) cancel();
     // Preparation awaits happen BEFORE GPU admission. Only ready commands hold slots.
     while (await commands.ready()) {
       if (!alive()) return false;
@@ -38,7 +53,7 @@ export async function buildFrame(
       try {
         if (!alive()) return false;
         if (!initialized) {
-          renderer.begin();
+          renderer.begin(!extension);
           initialized = true;
         }
         for (; count < 256; count++) {
@@ -60,8 +75,10 @@ export async function buildFrame(
             break;
           }
           if (command.kind === "group") renderer.group();
-          else if (command.kind === "composite") renderer.composite();
-          else
+          else if (command.kind === "composite") {
+            extension?.issuing();
+            renderer.composite();
+          } else
             try {
               bytes += command.page.data.byteLength;
               const p = frames.placement(state(), receipt.id, command.stroke, command.page.page);
@@ -69,7 +86,7 @@ export async function buildFrame(
               if (p.available)
                 renderer.draw(command.page.data, p.matrix, command.color, command.page.page);
             } finally {
-              command.page.release?.();
+              cleanupSync(() => command.page.release?.());
             }
         }
       } finally {
@@ -96,15 +113,36 @@ export async function buildFrame(
       await renderer.slot();
       try {
         if (!alive()) return false;
-        renderer.begin();
+        renderer.begin(!extension);
       } finally {
         serial = renderer.check();
       }
     }
     await renderer.validated(serial);
-    return alive() && frames.transform(state(), receipt.id).code === "ok";
+    accepted = alive() && frames.transform(state(), receipt.id).code === "ok";
   } finally {
     signal.removeEventListener("abort", cancel);
-    await commands.dispose();
+    let credit = false;
+    try {
+      await cleanupAsync(async () => {
+        commands?.stop();
+        await commands?.dispose();
+      });
+      credit =
+        accepted &&
+        !extension &&
+        !signal.aborted &&
+        alive() &&
+        frames.transform(state(), receipt.id).code === "ok";
+    } finally {
+      cleanupSync(() => {
+        try {
+          if (gpu) renderer.unprotect(gpu, credit);
+        } finally {
+          if (cpu) prepared.end(cpu, credit);
+        }
+      });
+    }
   }
+  return accepted && !signal.aborted && alive();
 }

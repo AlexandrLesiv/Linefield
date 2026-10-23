@@ -4,6 +4,20 @@ use crate::{
 };
 use linefield_editor_engine::Code;
 use wasm_bindgen::prelude::*;
+#[wasm_bindgen(js_name=fixtureVisibilityLimit,unchecked_return_type="Reply")]
+pub fn visibility_limit(limit: JsValue, clear: JsValue) -> Result<JsValue, JsValue> {
+    execute::<Reply>(|e| {
+        (|| {
+            let limit = number(limit)?;
+            let clear = clear.as_bool().ok_or(Code::Invalid)?;
+            if limit.fract() != 0.0 || !(0.0..=32768.0).contains(&limit) {
+                return Err(Code::Invalid);
+            }
+            Ok(e.fixture_visibility_limit(limit as usize, clear))
+        })()
+        .unwrap_or_else(|code| code)
+    })
+}
 #[wasm_bindgen(js_name=fixtureTerminalReserve,unchecked_return_type="Reply")]
 pub fn terminal() -> Result<JsValue, JsValue> {
     execute::<Reply>(|e| e.fixture_terminal_reserve())

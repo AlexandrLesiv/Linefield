@@ -6,20 +6,39 @@ export async function observeTraversal(page: Page) {
       const result = await instantiate(source, imports);
       const exports = result.instance.exports;
       const prepare = exports.memoryFramePreparation,
+        visibility = exports.memoryFrameVisibility,
         table = exports["__wbindgen_externrefs"];
-      if (typeof prepare !== "function" || !(table instanceof WebAssembly.Table)) return result;
+      if (
+        typeof prepare !== "function" ||
+        typeof visibility !== "function" ||
+        !(table instanceof WebAssembly.Table)
+      )
+        return result;
       const frames = new Map<
         string,
-        { id: string; calls: number; culled: number; current: number; max: number; turns: number }
-      >();
-      let scheduled = false;
-      const flush = () => {
-        scheduled = false;
-        for (const frame of frames.values()) {
-          if (frame.current) frame.turns++;
-          frame.max = Math.max(frame.max, frame.current);
-          frame.current = 0;
+        {
+          id: string;
+          queries: number;
+          preparations: number;
+          visits: number;
+          hulls: number;
+          done: boolean;
         }
+      >();
+      const frameFor = (id: string) => {
+        const frame = frames.get(id) ?? {
+          id,
+          queries: 0,
+          preparations: 0,
+          visits: 0,
+          hulls: 0,
+          done: false,
+        };
+        frames.set(id, frame);
+        if (frames.size > 16) frames.delete(frames.keys().next().value ?? "");
+        return frame;
+      };
+      const flush = () => {
         document.documentElement.dataset.traversal = JSON.stringify([...frames.values()]);
       };
       Object.defineProperty(result.instance, "exports", {
@@ -28,18 +47,15 @@ export async function observeTraversal(page: Page) {
           memoryFramePreparation: (...args: unknown[]) => {
             const value: unknown = Reflect.apply(prepare, undefined, args);
             if (document.documentElement.dataset.trackTraversal === "true") {
-              const id = `${args.at(-1)}`;
-              const frame = frames.get(id) ?? {
-                id,
-                calls: 0,
-                culled: 0,
-                current: 0,
-                max: 0,
-                turns: 0,
-              };
-              frame.calls++;
-              frame.current++;
-              // Borrow the generated JS snapshot without consuming its externref or freeing it.
+              frameFor(String(args.at(-1))).preparations++;
+              flush();
+            }
+            return value;
+          },
+          memoryFrameVisibility: (...args: unknown[]) => {
+            const value: unknown = Reflect.apply(visibility, undefined, args);
+            if (document.documentElement.dataset.trackTraversal === "true") {
+              // Borrow only scalar metadata; the producer owns and consumes arrays.
               const snapshot: unknown =
                 Array.isArray(value) && value[2] === 0 && typeof value[0] === "number"
                   ? table.get(value[0])
@@ -49,15 +65,16 @@ export async function observeTraversal(page: Page) {
                 typeof snapshot === "object" &&
                 "code" in snapshot &&
                 snapshot.code === "ok" &&
-                "token" in snapshot &&
-                snapshot.token === 0n
-              )
-                frame.culled++;
-              frames.set(id, frame);
-              if (frames.size > 16) frames.delete(frames.keys().next().value ?? "");
-              if (!scheduled) {
-                scheduled = true;
-                setTimeout(flush, 0);
+                "visitedNodes" in snapshot &&
+                "constructedHulls" in snapshot &&
+                "done" in snapshot
+              ) {
+                const frame = frameFor(String(args[3]));
+                frame.queries++;
+                frame.visits += Number(snapshot.visitedNodes);
+                frame.hulls += Number(snapshot.constructedHulls);
+                frame.done = snapshot.done === true;
+                flush();
               }
             }
             return value;

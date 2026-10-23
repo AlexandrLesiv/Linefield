@@ -5,7 +5,7 @@ import type { MetricKey, MetricSnapshot } from "./metrics.ts";
 import * as css from "./presentation.css.ts";
 const rows: readonly (readonly MetricKey[])[] = [
   ["submitted", "validated"],
-  ["pending", "inputP95", "inputMax"],
+  ["pending", "inputPercentile", "inputMax"],
   ["queued", "active", "readyBytes", "gpuLive", "gpuAllocated"],
   ["hits", "misses", "upload"],
 ];

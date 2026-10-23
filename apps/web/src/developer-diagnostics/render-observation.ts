@@ -3,7 +3,7 @@ import type { ReplyValue } from "../memory/bridge.ts";
 import { diagnosticsStore, identity, isCurrent } from "./runtime-port.ts";
 import { metricsWanted, renderMetric, sourceMetric } from "./runtime-metrics.ts";
 let lastSubmission = "";
-let lastPublication = "";
+let lastAcknowledgement = "";
 export function submitted(state: ReplyValue, epoch: number, serial: number, complete: boolean) {
   evidence.submissionObservation(state, epoch, serial, complete);
   if (!metricsWanted() && !diagnosticsStore.capturing) return;
@@ -29,24 +29,14 @@ export function submitted(state: ReplyValue, epoch: number, serial: number, comp
     diagnosticsStore.sinkFailure();
   }
 }
-export function validated(state: ReplyValue, epoch: number, receipt: bigint, serial: number) {
+export function acknowledged(state: ReplyValue, epoch: number, receipt: bigint, serial: number) {
   evidence.acknowledgementObservation(state, epoch, receipt, serial);
   try {
     const key = `${state.session}:${state.content}:${state.mapping}:${epoch}:${receipt}`;
-    if (key === lastPublication || !isCurrent(state)) return;
-    lastPublication = key;
+    if (key === lastAcknowledgement || !isCurrent(state)) return;
+    lastAcknowledgement = key;
     renderMetric("validated");
     sourceMetric("current");
-    diagnosticsStore.record({
-      event: "frame.published",
-      atMs: performance.now(),
-      origin: "renderer",
-      ...identity(state),
-      operation: receipt.toString(10),
-      generation: String(epoch),
-      frame: String(serial),
-      outcome: "completed",
-    });
   } catch {
     diagnosticsStore.sinkFailure();
   }

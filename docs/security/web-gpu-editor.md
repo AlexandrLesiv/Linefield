@@ -52,11 +52,41 @@ The host retains one front and one building tail, with one latest scalar request
 ticket and one transient page. Publish by synchronous whole-mask replacement; empty replacement
 also clears old support. Captured CPU completeness is not current source, GPU validation or
 physical presentation. Frozen-source progress must continue under new input without allowing
-old content to acknowledge the newest frame. Resource accounting uses actual 9P/12P target
+old content to acknowledge the newest frame. Resource accounting uses the current target
 payload and residual geometry within the same 192 MiB aggregate, including retiring generations.
 Test distinct sampler/write textures, partial allocation cleanup and stale callbacks after
 Cancel/End/pan/resize/restore/fatal. Healthy release disposes child descriptors; terminal-fatal
 host cleanup must never call the poisoned editor, including through wrapper finalizers.
+
+The current [independent live/candidate handoff](../interfaces/web-live-coverage.md) extends
+SEC-03/09/13 with Prefix/LiveSource/DisplayOnly authority and three checked named operations.
+Historical cutoff, semantic inclusion and GPU-complete pixels are distinct. Wrong proof kind
+must reject even at equal counts; source invalidation is permanent, while pan cancellation
+preserves pregesture completed coverage. The current query is bounded in document size and
+cannot secretly construct a full projection or resource sum. Recapture requires Rust-certified
+immutable source/view equivalence plus host validation of the unchanged GPU generation.
+
+Target payload is now13P/16P, with residual geometry and retiring generations still within192MiB.
+Fixed frame/tail storage is at most3072 Rust bytes and1024 host payload bytes, with at most8
+combined receipts and2 tails. Host object overhead remains separately accounted. Check both
+allocation orders, full-slot deferral, partial format cleanup and source-preserving failure.
+Sealed S cannot mutate until its visible graph is consumed. Packed active-E RGB copyback must
+preserve every physical L/F/T alpha plane and avoid sampler/write aliases. No rollback is
+claimed after ambiguous GPU issue; use bounded recovery, never duplicate group source-over.
+Test accepted/rejected gesture folds, late completions, equivalent-prefix negative controls,
+terminal no-more-exports and incomplete offscreen reveal without false exact acknowledgement.
+
+## Optional sparse coverage
+
+M04's [first-stage contract](../interfaces/web-sparse-coverage.md) retains SEC-03/09/13:
+checked fixed integer routes, bounded work/storage and two independent bank/allocation loans.
+Both eviction and compaction honor loans through final validated readers, including cancellation
+after upload but before draw. Count live and retiring route bytes before geometry admission;
+an optional failure selects complete fallback rather than a document quota or per-frame retry.
+Unknown bounds cannot certify invisibility. Before S is touched, discard uncomposited G and
+replay the exact group once; after any possible S write use existing ambiguous-composite recovery.
+Test stale generations, sentinel/range/work overflows, two-fence retirement, packed alpha,
+before/after-composite failures and warm zero-upload reuse. Current timing/AA gates remain.
 
 ## Bounded developer diagnostics
 
@@ -70,7 +100,8 @@ pointer/focus interception. Approval of the plan is not current implementation/e
 
 Copy only finite bounded numeric values, fixed enums and checked build/ephemeral identifiers;
 never retain editor snapshots, mutable foreign wrappers or arbitrary metadata/error objects.
-Wrong types/unknown keys/content canaries reject before retention. Correlation is diagnostic
+Discard unknown fields without retaining the caller object; reject invalid allowlisted values
+before retention. Content canaries must not survive copying or export. Correlation is diagnostic
 metadata, never permission to mutate or certify a frame. Terminal state forbids new Wasm queries.
 An idle failed editor may inspect/export/clear an existing host-only report. New capture is
 disabled; terminal transition freezes an existing capture as partial. Diagnostic availability

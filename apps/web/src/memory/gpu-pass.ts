@@ -120,6 +120,8 @@ export class GpuPass {
       gl.bufferSubData(gl.ARRAY_BUFFER, 0, data);
       metrics.gpuUploads++;
       metrics.gpuUploadBytes += data.byteLength;
+      metrics.gpuStreamUploads++;
+      metrics.gpuStreamUploadBytes += data.byteLength;
     }
     gl.uniform2f(gl.getUniformLocation(this.resources.ink, "viewport"), this.width, this.height);
     gl.uniform4fv(gl.getUniformLocation(this.resources.ink, "color"), color);
@@ -134,16 +136,8 @@ export class GpuPass {
     const gl = this.gl;
     this.previousBounds = this.groupBounds;
     scissor(gl, this.groupBounds, this.width, this.height);
-    let texture = this.mask.texture;
-    if (this.resources.packed && this.destination === this.mask.framebuffer) {
-      const other =
-        this.mask === this.resources.base ? this.resources.staging : this.resources.base;
-      gl.bindFramebuffer(gl.FRAMEBUFFER, other.framebuffer);
-      gl.colorMask(false, false, false, true);
-      gl.disable(gl.BLEND);
-      blit(gl, this.resources, texture, this.width, this.height, undefined, undefined, true);
-      texture = other.texture;
-    }
+    const texture = this.mask.texture;
+    if (this.destination === this.mask.framebuffer) throw Error("gpu-feedback");
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.destination);
     gl.colorMask(true, true, true, !(this.resources.packed && this.destination));
     gl.enable(gl.BLEND);

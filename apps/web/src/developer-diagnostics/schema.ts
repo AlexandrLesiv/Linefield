@@ -89,6 +89,9 @@ export interface DiagnosticEvent {
   readonly admissionRevision?: string;
   readonly admissionScene?: string;
   readonly admissionMapping?: string;
+  readonly sourceRevision?: string;
+  readonly sourceMapping?: string;
+  readonly sourceThrough?: string;
   readonly frame?: string;
   readonly generation?: string;
   readonly count?: number;
@@ -108,6 +111,9 @@ const identityKeys = [
   "admissionRevision",
   "admissionScene",
   "admissionMapping",
+  "sourceRevision",
+  "sourceMapping",
+  "sourceThrough",
   "frame",
   "generation",
 ] as const;

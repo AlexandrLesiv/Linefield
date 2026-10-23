@@ -79,6 +79,7 @@ impl Engine {
             self.document.visible -= 1;
         }
         self.clear_tail_displays();
+        self.prune_visibility();
         self.scene_changed(true);
         Code::Ok
     }

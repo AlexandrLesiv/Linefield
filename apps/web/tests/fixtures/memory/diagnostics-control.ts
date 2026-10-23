@@ -1,5 +1,6 @@
 import { diagnosticsStore } from "../../../src/developer-diagnostics/runtime-port.ts";
 import type { DiagnosticEvent } from "../../../src/developer-diagnostics/schema.ts";
+import { diagnosticDataString } from "./diagnostics-event-observation.ts";
 // Bounded adversarial metadata only. This module is absent from the production entry.
 document.addEventListener("fixture-diagnostics", (event) => {
   if (!(event instanceof CustomEvent)) return;
@@ -36,6 +37,9 @@ document.addEventListener("fixture-diagnostics", (event) => {
       admissionRevision: "18446744073709551615",
       admissionScene: "9007199254740993",
       admissionMapping: "0",
+      sourceRevision: "18446744073709551615",
+      sourceMapping: "9007199254740993",
+      sourceThrough: "0",
       content: "PRIVATE_DRAWING_CANARY",
       path: "/PRIVATE_PATH_CANARY",
       message: "PRIVATE_ERROR_CANARY",
@@ -48,6 +52,12 @@ document.addEventListener("fixture-diagnostics", (event) => {
       event: "worker.admitted",
       atMs: performance.now(),
       admissionRevision: "18446744073709551616",
+    });
+  } else if (action === "invalid-source") {
+    diagnosticsStore.record({
+      event: "frame.published",
+      atMs: performance.now(),
+      sourceRevision: "18446744073709551616",
     });
   } else if (action === "invalid-cause") {
     const record: DiagnosticEvent = {
@@ -89,6 +99,9 @@ document.addEventListener("fixture-diagnostics", (event) => {
         admissionRevision: id,
         admissionScene: id,
         admissionMapping: id,
+        sourceRevision: id,
+        sourceMapping: id,
+        sourceThrough: id,
         frame: id,
         generation: id,
         count: Number.MAX_SAFE_INTEGER,
@@ -100,7 +113,7 @@ document.addEventListener("fixture-diagnostics", (event) => {
   } else if (action === "worker-sink") {
     const original = diagnosticsStore.record.bind(diagnosticsStore);
     diagnosticsStore.record = (record, detailed) => {
-      if (record.event === "worker.started") {
+      if (diagnosticDataString(record, "event") === "worker.started") {
         diagnosticsStore.record = original;
         document.body.dataset.fixtureWorkerSink = "failed-once";
         throw Error("PRIVATE_WORKER_SINK_CANARY");

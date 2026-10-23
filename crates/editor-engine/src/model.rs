@@ -85,9 +85,12 @@ pub struct Projection {
 }
 #[derive(Default)]
 pub struct Engine {
+    pub(crate) visibility: [Option<crate::visibility_cursor::Cursor>; 2],
+    pub(crate) visibility_counter: u64,
+    pub(crate) visibility_cache: crate::visibility_cache::Cache,
     pub(crate) tails: [Option<crate::tail_display::TailDisplay>; 2],
     pub(crate) tail_counter: u64,
-    pub(crate) frames: Vec<crate::FrameReceipt>,
+    pub(crate) frames: [Option<crate::FrameReceipt>; 8],
     pub(crate) frame_counter: u64,
     pub(crate) preparations: Vec<crate::preparation::Ticket>,
     pub(crate) preparation_counter: u64,
@@ -113,6 +116,12 @@ impl Engine {
         self.active_cancelled = false;
     }
     pub fn projection(&self, code: Code) -> Projection {
+        let mut value = self.query_projection(code);
+        value.resources = self.resources();
+        value.cpu_charge = value.resources.total();
+        value
+    }
+    pub fn query_projection(&self, code: Code) -> Projection {
         let mut value = self.current.unwrap_or(Projection {
             code,
             owner: 0,
@@ -136,8 +145,6 @@ impl Engine {
             active_cancelled: false,
         });
         value.code = code;
-        value.resources = self.resources();
-        value.cpu_charge = value.resources.total();
         value.style = self.document.style;
         value.view = self.document.view;
         value.interaction = self.document.gesture.map_or(0, |g| g.id);

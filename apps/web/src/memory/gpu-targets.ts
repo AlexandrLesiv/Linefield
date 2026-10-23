@@ -12,19 +12,23 @@ export function targets(gl: WebGL2RenderingContext, width: number, height: numbe
   };
   try {
     const mask = add(gl.R8),
+      liveMask = add(gl.R8),
       overlayMask = add(gl.R8),
       backMask = add(gl.R8),
       staging = add(gl.RGB8),
-      base = add(gl.RGB8);
+      base = add(gl.RGB8),
+      scratch = add(gl.RGB8);
     if (gl.getError() !== gl.NO_ERROR) throw Error("gpu-target");
     return {
       mask,
+      liveMask,
       overlayMask,
       backMask,
       staging,
       base,
+      scratch,
       packed: false,
-      bytes: width * height * 9,
+      bytes: width * height * 13,
       dispose,
     };
   } catch {
@@ -35,16 +39,19 @@ export function targets(gl: WebGL2RenderingContext, width: number, height: numbe
     try {
       const staging = add(gl.RGBA8),
         base = add(gl.RGBA8),
-        backMask = add(gl.RGBA8);
+        scratch = add(gl.RGBA8),
+        mask = add(gl.RGBA8);
       if (gl.getError() !== gl.NO_ERROR) throw Error("gpu-target");
       return {
-        mask: staging,
-        overlayMask: base,
-        backMask,
+        mask,
+        liveMask: base,
+        overlayMask: staging,
+        backMask: scratch,
         staging,
         base,
+        scratch,
         packed: true,
-        bytes: width * height * 12,
+        bytes: width * height * 16,
         dispose,
       };
     } catch (error) {

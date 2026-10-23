@@ -64,6 +64,26 @@ unvalidated typed-array coercion. Ordinary fixed ArrayBuffers only; reject share
 backing. Copy snapshots to host ownership; release one outstanding boundary snapshot in finally
 before the next command. Read-page cursors are revision-scoped, not mutable editor handles.
 
+M03 classifies only `memoryFramePlacement` and `memoryFramePreparationCoverage` as read-only
+queries through the existing bounded query boundary. Their shared engine methods and helpers
+must remain read-only; preserve all owner/session/frame/source/detail/coverage and numerical
+checks. Their snapshots expose no resource-charge getters, so they need not recompute full
+resource projections. Ordinary State/resource reads and every mutation retain their current
+boundary and accounting. This is not authority to reclassify other apparent reads.
+
+Like existing visibility/current-coverage queries, these two queries preserve the
+`activeCancelled` latch on both success and typed rejection. They do not repeat cancellation,
+mutate history or acknowledge pixels. The next ordinary command resets the latch before its
+operation as before. This is an explicit observable amendment from their prior ordinary-call
+behavior, even though current host placement/coverage consumers do not read that getter.
+Keep the existing single-snapshot, LIVE/BUSY, pre-operation reservation/wrapper allocation,
+one-use matrix copy, destructor and poisoned-export protections unchanged. Required browser
+boundary evidence covers positive cancellation, successful/rejected queries (including invalid
+JS identity types), unchanged common identities and source/history, ordinary-command reset even
+on typed rejection, stale/incomplete/retired coverage, placement rejection, snapshot contention
+and terminal failure. Assert the latch before an ordinary State read can reset it. Freeze this narrow delta and
+compare the same warm/cold workload; fewer resource walks alone is not a performance pass.
+
 M02 adds named style/begin/append/end/cancel/Undo/Redo, pan begin/update/end, zoomAt/rotateAt,
 scene IDs, stroke snapshot and geometry-page exports to existing lifecycle/metrics APIs.
 Begin captures mapping/pointer; append includes interaction, base mapping and exact first index.
@@ -165,19 +185,17 @@ failure streams complete output; context loss invalidates GPU leases without era
 Keep staging/mask/base/overlay capacity within the composite budget. Measure cold work, uploaded
 bytes, combined UI frame and visible reveal; transformed old pixels alone are not a reveal pass.
 
-M03 format amendment with transactional tail replacement: three R8 masks store scalar MAX
-coverage for live stable, visible tail and hidden replacement tail; two RGB8 targets hold
-opaque base/staging color. Candidate reconstruction remains mutually exclusive with the live
-accumulator in this narrow repair. Preserve 8-bit precision and ordered group coverage; future
-transparent layer intermediates still require alpha. For P backing pixels (at most 8,388,608),
-target payload is 9P bytes, at most 72 MiB. When RGB8/R8 fails, dispose the complete partial
-attempt before the three-RGBA8 fallback: existing color targets retain stable/front alpha,
-and a dedicated third alpha plane holds the hidden replacement. This uses 12P, at most 96 MiB.
-Check framebuffer completeness and failure cleanup for both paths.
+M03 independent live/candidate coverage follows the current
+[handoff contract](web-live-coverage.md). Three RGB8 colors hold display/candidate/fold scratch;
+four R8 masks hold candidate group/live stable/visible tail/hidden replacement. At most8,388,608
+backing pixels gives13P bytes,104MiB. Dispose the complete failed normal attempt before the
+four-RGBA8 packed fallback:16P,128MiB. Live alpha owners remain physical across color-role swaps.
+Preserve8-bit coverage and ordered group blending; future transparent layers still require alpha.
+Check framebuffer completeness, sampler/write separation and failure cleanup for both paths.
 
 Keep requested owned target and geometry allocations together within 192 MiB. Geometry,
 including the 256 KiB streaming reserve, is limited to min(128 MiB,192 MiB−target payload):
-120 MiB at maximum normal backing, 96 MiB for packed fallback. Count unique allocations,
+88 MiB at maximum normal backing, 64 MiB for packed fallback. Count unique allocations,
 unused slab capacity and retiring generations; optional pixel caches consume this same total.
 Retire old submitted work asynchronously before replacing a full generation, or subtract its
 still-charged capacity before growth. No blocking GPU wait on input callbacks. Context loss
@@ -342,6 +360,9 @@ coarser sufficient detail only after250ms without a view change. Restart that de
 navigation; pan alone must not reprepare view-independent geometry. Rust continues to enforce
 minimum detail/coverage. Disposable alternatives remain within existing cache limits and may
 be retired under pressure. Coarsening never reduces the accepted precision guarantee.
+The concrete M03 host policy follows [retained geometry and disposal](web-geometry-retention.md):
+smallest sufficient detail, strict captured-pass residency, complete streaming, bounded idle
+LRU adaptation and charged old-generation cleanup. Its checks are separate from visibility.
 
 Host controls may cache locale formatters and skip unchanged presentation updates. Shared input
 admission and contact/sequence state still update synchronously; no actual samples or capability
@@ -446,19 +467,17 @@ than resurrecting its old terminal pixels. Clear obsolete front before covers/pr
 claim completeness; final promotion uses canonical stable only. A failed replacement keeps the
 previous valid front; cancelled/incompatible owner cleanup removes its entire contribution.
 
-When the live owner C ends, retire only its hidden back construction, retain its visible front
-and finish canonical stable C. Any following independent group D uses the now-free dedicated
-back target as scratch, preserving source-over group order. Never clear C's front for D or MAX
-their independent coverage together. Shared single-interaction admission excludes simultaneous
-C back construction and D scratch use. Test partial back at End followed by immediate D,
-translucent overlap and camera/cancellation in both format paths. D's existing immediate-cache
-capacity limitation remains separate; this refinement does not certify oversized D progress.
+When the live owner C ends, retire hidden back construction but preserve materialized stable/front
+coverage until the [independent handoff](web-live-coverage.md) folds or includes it. The next
+source receives independent streamed live authority; never MAX different strokes or rely on an
+unbounded retained-page queue. Candidate G remains separate throughout the handoff. Test partial
+back at End followed by immediate D, translucent overlap and camera/cancellation in both formats.
 
 After End, retained displayed coverage stays in its fixed anchor and follows Rust camera
 transforms until canonical promotion. Finer detail or newly exposed coverage remains provisional
 until the strict replacement path covers it. Context/metrics/fatal failures retain existing
-recovery and cancellation behavior. Candidate/live exclusion is unchanged: this narrow fix does
-not close the separate historical replacement plus oversized new-stroke cache-capacity issue.
+recovery and cancellation behavior. Independent coverage replaces candidate/live exclusion;
+its source, viewport-fold, sealed provisional layer and receipt bounds are specified separately.
 
 MIG-WORKER-33 requires the actual large-backing, 5%/wide-pen reproduction, meaningful intermediate
 pixels, exact pressure parity, continuous-input generation advancement, captured-neighbor tests,
@@ -474,12 +493,35 @@ flatten far positions into global f32 coordinates. Traverse left before right to
 order. Unknown, partially built or overflowing bounds cannot certify invisibility: descend or
 resume a complete conservative scan. Camera-dependent worker planning remains excluded.
 
-Named `memoryFrameVisibility(owner,session,scene,frame,cursor)` returns a generated snapshot
+Named `memoryFrameVisibility(owner,session,scene,frame,predecessor,cursor)` returns a generated snapshot
 with code, equal-length strokes/chunks/revisions arrays of at most128 entries, an opaque next
-cursor and done. Zero starts a query. Each call visits at most512 nodes and constructs at most
+cursor and done. Bounded scalar metadata includes visitedNodes, constructedHulls, indexBytes,
+cursorBytes and replyBytes. Report actual allocated capacity, not logical entry counts; embedded
+cursor storage is a subset of Engine overhead, never an additional derived-memory charge.
+Heap storage and copied host arrays remain charged to their actual owner until released.
+Zero starts a query. Each call visits at most512 nodes and constructs at most
 four missing chunk hulls; empty progress is valid. Include this CPU work in the host's existing
 cumulative2ms/1024-transition budget and yield an actual task. Read captured source positions
 directly rather than repeatedly scanning the beginning of the document for every page.
+
+Predecessor zero requests the full captured Prefix. For an R→N extension, a nonzero predecessor
+names R and frame names N. Rust checks both current Prefix proofs, equal captured view/metrics,
+and N.count = R.count +1 with the exact next immutable source before starting at R.count.
+The host cannot supply a source ordinal, arbitrary skip range or DisplayOnly/LiveSource authority.
+Cursor continuation repeats the exact frame/predecessor tuple; the start ordinal is immutable
+cursor state, not a change to N's full-Prefix authority. Releasing either named receipt retires
+its cursor. No additional receipt is allocated. The scene argument validates the current request
+against the editor's latest scene; it does not bind traversal to a volatile camera scene. Later
+valid appends/camera changes may continue an otherwise valid captured query using the new current
+scene. Changed source prefix or metrics still reject it. Host extension publication independently
+requires its existing validated R pixels; a query is never a GPU-pixel certificate.
+
+Successful done returns next cursor zero and releases its stack/pins immediately, including when
+the final reply contains entries. Rejected continuation never allocates or advances a cursor;
+wrong ownership or a mismatched tuple cannot destroy an unrelated valid cursor. After validated
+ownership, a permanently invalid bound prefix/metrics retires that cursor. Cancellation releases
+one of its named receipts, and session teardown releases every cursor. Failed start returns no
+cursor and leaves no partial reservation. Copied reply capacity remains separately accounted.
 
 At most two cursors, each at most8KiB including its bounded traversal stack, bind the captured
 frame prefix/view/metrics and index generation. Index generations/node identities never reuse
@@ -512,6 +554,12 @@ Direct WebGL2 analytic capsules. MAX coverage unions each logical stroke/source-
 source-over composites groups once in layer/paint order. Pencil remains nonopaque at opacity1.
 No cached image may change order, overlap, union identity or source appearance. Geometry cache
 misses cannot hide accepted strokes. Input acceptance never waits for a completed frame.
+
+M04's first optional backend stage follows [bounded sparse coverage](web-sparse-coverage.md):
+existing G/S, fixed route banks and two geometry loans, conservative integer tile quads,
+complete-group fallback before composition and bounded retirement. Numerical/GPU parity and
+same-host benefit are required before adoption into the normal path. Pixel-copy/lattice and
+archive work have their own later proof; this routing contract does not certify exact pan reuse.
 
 M02 thin-taper AA refinement: evaluate the continuous envelope of the source discs' antialiased
 coverage, rather than applying the tiny-radius cap only to a numerically selected nearest disc.

@@ -178,7 +178,7 @@ export const catalog = {
       context: "Bounded local developer diagnostics",
       arguments: {},
     },
-    "diagnostics.inputP95": {
+    "diagnostics.inputPercentile": {
       kind: "plain",
       context: "Bounded local developer diagnostics",
       arguments: {},
@@ -206,6 +206,51 @@ export const catalog = {
     "diagnostics.readyBytes": {
       kind: "plain",
       context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.requests": {
+      kind: "plain",
+      context: "Diagnostic retained resource accounting",
+      arguments: {},
+    },
+    "diagnostics.finerHits": {
+      kind: "plain",
+      context: "Diagnostic retained resource accounting",
+      arguments: {},
+    },
+    "diagnostics.cpuMetadata": {
+      kind: "plain",
+      context: "Diagnostic retained resource accounting",
+      arguments: {},
+    },
+    "diagnostics.cpuRetiring": {
+      kind: "plain",
+      context: "Diagnostic retained resource accounting",
+      arguments: {},
+    },
+    "diagnostics.gpuTotal": {
+      kind: "plain",
+      context: "Diagnostic retained resource accounting",
+      arguments: {},
+    },
+    "diagnostics.gpuRetiring": {
+      kind: "plain",
+      context: "Diagnostic retained resource accounting",
+      arguments: {},
+    },
+    "diagnostics.uncertainPages": {
+      kind: "plain",
+      context: "Diagnostic retained resource accounting",
+      arguments: {},
+    },
+    "diagnostics.uncertainTickets": {
+      kind: "plain",
+      context: "Diagnostic retained resource accounting",
+      arguments: {},
+    },
+    "diagnostics.memoryNote": {
+      kind: "plain",
+      context: "Diagnostic retained resource accounting",
       arguments: {},
     },
     "diagnostics.hits": {

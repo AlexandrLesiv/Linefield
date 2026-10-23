@@ -1,7 +1,21 @@
-export type PreparationFault = "timeout" | "cancel" | "midstream" | "preadmission";
+export type PreparationFault =
+  | "timeout"
+  | "cancel"
+  | "midstream"
+  | "armed-midstream"
+  | "preadmission";
 /** Isolated browser fault at the real Worker boundary; never imported by the application. */
 export function preparationFault(mode: PreparationFault): void {
   const Original = Worker;
+  let armed = mode !== "armed-midstream";
+  const midstream = mode === "midstream" || mode === "armed-midstream";
+  document.addEventListener(
+    "fixture-worker-midstream-arm",
+    () => {
+      armed = true;
+    },
+    { once: true },
+  );
   let chosen = false;
   class FaultWorker extends Original {
     constructor(url: string | URL, options?: WorkerOptions) {
@@ -26,7 +40,8 @@ export function preparationFault(mode: PreparationFault): void {
               }
               if ((mode === "timeout" || mode === "cancel") && value.kind === "page") return;
               if (
-                mode === "midstream" &&
+                armed &&
+                midstream &&
                 value.kind === "page" &&
                 first === undefined &&
                 "request" in value &&
@@ -64,7 +79,8 @@ export function preparationFault(mode: PreparationFault): void {
               document.body.dataset.fixtureHeldRequests = requests.join(",");
           }
           if (
-            mode === "midstream" &&
+            armed &&
+            midstream &&
             !failed &&
             message.kind === "next" &&
             message.request === first

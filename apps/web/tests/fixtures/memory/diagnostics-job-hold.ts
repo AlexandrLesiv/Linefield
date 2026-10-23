@@ -4,10 +4,14 @@ document.addEventListener("fixture-job-hold", (event) => {
   if (!(event instanceof CustomEvent)) return;
   const mode: unknown = event.detail;
   if (mode !== "fallback" && mode !== "replacement" && mode !== "paused") return;
+  delete document.body.dataset.fixtureHeldJob;
+  delete document.body.dataset.fixtureJobReleased;
+  delete document.body.dataset.fixtureFirstJobCause;
   const original = PreparationExecutor.prototype.pages;
   let held = false;
   PreparationExecutor.prototype.pages = async function* (input, urgent, observation) {
     const iterator = original.call(this, input, urgent, observation);
+    let restore = () => {};
     try {
       for (;;) {
         const result = await iterator.next();
@@ -27,6 +31,16 @@ document.addEventListener("fixture-job-hold", (event) => {
             generation: this.diagnosticGeneration,
             urgent: urgent === true,
           });
+          if (observation) {
+            const cause = observation.cause;
+            observation.cause = (value) => {
+              document.body.dataset.fixtureFirstJobCause ??= value;
+              cause.call(observation, value);
+            };
+            restore = () => {
+              observation.cause = cause;
+            };
+          }
           await new Promise<void>((resolve) => {
             const release = (signal?: Event) => {
               clearTimeout(timer);
@@ -43,7 +57,11 @@ document.addEventListener("fixture-job-hold", (event) => {
         yield result.value;
       }
     } finally {
-      await iterator.return(undefined);
+      try {
+        await iterator.return(undefined);
+      } finally {
+        restore();
+      }
     }
   };
 });

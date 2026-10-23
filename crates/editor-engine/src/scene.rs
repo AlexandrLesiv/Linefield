@@ -37,13 +37,15 @@ impl Engine {
         }
         let mut out = Vec::new();
         out.try_reserve_exact(256).map_err(|_| Code::Capacity)?;
-        for s in self.document.strokes[..self.document.visible]
+        let prefix = &self.document.strokes[..self.document.visible];
+        let start = prefix.partition_point(|s| s.id <= after);
+        for s in prefix[start..]
             .iter()
             .chain(self.document.active.iter())
+            .filter(|s| s.id > after)
+            .take(256)
         {
-            if s.id > after && out.len() < 256 {
-                out.push(s.id);
-            }
+            out.push(s.id);
         }
         Ok(out)
     }

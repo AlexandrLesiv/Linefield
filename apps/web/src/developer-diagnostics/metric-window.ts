@@ -62,7 +62,7 @@ export class MetricWindow {
       inputWindow: Math.min(1000, now - this.#started),
       ...(samples.length && now - this.#overflowAt > 1000
         ? {
-            inputP95: samples[Math.ceil(samples.length * 0.95) - 1] ?? 0,
+            inputPercentile: samples[Math.ceil(samples.length * 0.95) - 1] ?? 0,
             inputMax: samples.at(-1) ?? 0,
           }
         : {}),

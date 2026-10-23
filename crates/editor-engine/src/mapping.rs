@@ -52,6 +52,7 @@ impl Engine {
             // Cancellation, suspension and departure each retain their terminal generation.
             self.cancel_current(Code::Ok);
             self.clear_tail_displays();
+            self.release_visibility(None);
             if self.current.is_some_and(|v| v.phase != Phase::Suspended) {
                 self.advance();
                 if let Some(value) = self.current.as_mut() {
@@ -64,6 +65,7 @@ impl Engine {
         }
         self.cancel_current(Code::Ok);
         self.clear_tail_displays();
+        self.release_visibility(None);
         self.advance();
         self.sequence = sequence;
         if let Some(value) = self.current.as_mut() {
@@ -83,6 +85,7 @@ impl Engine {
         }
         self.cancel_current(Code::Ok);
         self.clear_tail_displays();
+        self.release_visibility(None);
         self.advance();
         if let Some(value) = self.current.as_mut() {
             value.phase = Phase::Suspended;
