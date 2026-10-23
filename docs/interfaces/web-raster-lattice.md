@@ -14,8 +14,14 @@ resources and scheduling. No archive, atlas, extra texture, dirty-region ABI or 
 
 Walk the captured prefix once. Prepare/place each page once, reject pages outside all dirty
 rectangles, bind/upload each surviving page once and issue at most four bounded scissored draws.
-Composite each group only into those disjoint rectangles. Charge each issued draw to existing
-budgets; retain loans across rectangle yields without holding a GPU slot. This can reduce GPU
+Composite each group only into those disjoint rectangles. One page issues its at-most-four
+intersecting draws as a bounded atomic step, retaining its loan and binding throughout. Before
+starting, check the deadline and reserve sufficient remaining command capacity for the actual
+draw count; charge every issued draw. Check the deadline again and yield before the next page
+when exhausted. Do not yield midway through a shared streaming-buffer binding: live input could
+overwrite it. No GPU slot survives a yield. The existing2ms cooperative deadline and256-command
+batch ceiling remain; measure single-page callback/overshoot cost rather than treating atomicity
+as a performance exemption. This can reduce GPU
 work but still traverses/prepares the prefix; it does not promise removal of cold preparation.
 
 ## Exact accepted displacement
@@ -39,6 +45,33 @@ canonical coordinates or additional per-event allocation.
 - Visibility/preparation coverage remains canonical and expands outward for rho transformed through the inverse basis in addition to existing support/AA padding. Descriptor culling uses anchor bounds plus integer offset and residual; failure to establish disjointness keeps the page. Old clipped preparation must still cover the target canonical bounds.
 
 This interval implementation and integrated placement remain review obligations: passing the older exact-offset probe is not their proof. Stop if useful ordinary integral lanes collapse; do not silently remove 5%, rotated or odd-backing cases.
+
+The expanded integer quad needs a coverage proof separate from positional AA error. Bound the
+rounded radius-plus2 and every endpoint-plus/minus-expanded-radius operation, including outward
+rounding allowances, within absolute2^18. Under the existing one-ULP highp model each of the two
+pre-floor operations contributes at most2^-5px, for at most1/16px combined uncertainty. Outward
+floor/ceil adds no inward error. Together with the adopted clipped-viewport coverage bound below
+0.5px, this stays below0.5625px, less than the padding slack `2 − 1.414214`.
+
+Separately require integer bounds and bounds-plus-offset within exact binary32 integer range;
+clipped corners stay within the backing extent≤8192, and pixel-center-minus-offset remains an
+exact half-integer. Those exact offset operations have zero additional positional rounding debit.
+The unchanged clip conversion keeps its existing allowance; rho remains inside0.07. Existing
+canonical placement's nonnegative arithmetic/radius terms already bound their combined magnitude
+below146801, leaving ample room under2^18 after expansion/rounding. Demonstrate that implication
+against the actual rounded operands so this optional optimization cannot introduce a new canonical
+capacity failure. An uncertifiable anchored route selects the whole-candidate canonical fallback.
+
+The fixed-function viewport premise is a separate renderer capability, not implied by shader
+integer representability or a passing pixel example. Evaluate its existing conservative bound
+with actual backing dimensions/highp/subpixel precision once per renderer/metrics generation.
+If it cannot certify coverage below0.5px (including large backing dimensions), preserve ordinary
+application admission: use canonical captures and the original canonical quad route for every
+plane, with offset0, and disable pan reuse with an explicit capability miss. Do not infer general
+8192px coverage from the isolated8192px pixel case. Supported generations use the integer quad;
+route/program generation participates in the recipe and cannot change beneath an existing bitmap.
+Never combine the original quad with anchored offsets or relabel old-route pixels as new-route
+pixels. This fallback changes neither document limits nor the original canonical renderer policy.
 
 ### Generated boundary and render phase
 
