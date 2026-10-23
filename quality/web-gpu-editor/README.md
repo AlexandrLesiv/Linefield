@@ -406,5 +406,40 @@ coverage. Current-build designer/fresh independent review and owner PR review re
 
 Substitution is allowed only with equal observable behavior and documented measured rationale.
 A mechanism omitted because its evidence is unfinished remains pending, not silently adopted.
+
+## Isolated sparse-atlas entry (not enabled in production)
+
+The M04 writer owns MIG-TILE-01/04 in `sparse-proof.fixture.spec.ts`: generated accepted
+source/page/placement and real GL compare ordinary and tight atlas rendering in normal/packed
+formats. The initial positive control requires one whole21-capsule page, eleven spans
+(including the odd terminal span) and four slots; further
+rows cover taper/rotation, partial tile edges, odd/large backing and numerical/work refusals.
+Exact RGB, positive ink, unchanged packed alpha, bounded continuation and fixed planner/route
+payload are required. The reviewed R3 proof passed both browser cases with zero retries:
+ten admitted sparse pixel comparisons, fourteen ordinary full-fallback comparisons and two
+issued-reader fault controls. RGB equality is exact; packed alpha is preserved. The first
+positive in each format used the whole21-capsule page, eleven spans and four slots. The wide
+source reached the sample-area refusal after nine slots and positive routing work. Each
+injected GL validation error rejected, drained actual readers before deleting both route
+textures and issued no fallback replay. Chrome155.0.8059.86 ran the byte-verified isolated build.
+The original setup failure (four raw samples incorrectly assumed to produce four capsules)
+and its packed UNRUN result remain preserved; they are not retroactively passed.
+Injected invalid planner operands never alter canonical source or the ordinary reference.
+
+The finite numerical guard uses the explicit engineering premise in
+`docs/interfaces/web-sparse-coverage.md`; it is not a universal GPU accuracy certificate.
+This isolated stream-backed executor does not establish production arena loans, held-page
+lookahead, stale-owner/cancellation recovery, budget integration or a useful retained benefit.
+Before production integration, cover sparse→ordinary and refusal→ordinary transitions: every
+dirty G atlas slot must be cleared after validated presenter readers, or represented in the
+ordinary pass's dirty footprint. Packed ownership and prior S content must survive. Keep full
+mode as the default until those lifecycle, numerical, exact-pixel and cost gates close.
+
+The completed scheduling/sampling checkpoint retains thirteen relative performance flags.
+The single matched bracket observed approximately one frame of pan improvement, while the
+request 298 (a 32-sample thin stroke) End fence/publication result remains unresolved.
+Functional parity and bounded
+producer work do not close those timing gates or establish a fragment bottleneck.
+
 Current limitations: no persistence, per-layer opacity/groups/masks, arbitrary nonuniform
 transforms, text/shapes/images, physical paper wear/tilt simulation or post-M09 worker changes.

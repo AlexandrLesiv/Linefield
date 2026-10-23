@@ -10,6 +10,7 @@ import { rasterState } from "./raster-state.ts";
 import { integerQuad } from "./integer-quad.ts";
 import { displaySampling } from "./display-sampling.ts";
 import { samplingFailure } from "./sampling-failure.ts";
+import { sparseProof } from "./sparse-proof.ts";
 export function seedActions(
   action: (name: string, run: () => Promise<unknown>) => void,
   canvas: HTMLCanvasElement,
@@ -23,6 +24,7 @@ export function seedActions(
       return run();
     });
   const cases: [string, () => unknown][] = [
+    ["sparse-proof", () => sparseProof(canvas)],
     ["integer-quad", () => integerQuad(canvas)],
     ["display-sampling", () => displaySampling(canvas)],
     ["sampling-failure", () => samplingFailure(canvas)],

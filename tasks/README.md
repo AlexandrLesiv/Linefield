@@ -29,8 +29,10 @@ M04's current scheduling/temporary-image checkpoint has371 distinct browser pass
 63observation,177production), static/build checks and scoped independent/designer review. Its
 reviewed actual application is on65224;65222 and earlier previews remain unchanged. Original
 fixture/reporting failures remain recorded with narrow repairs, not relabeled as passes. Same-view
-prefix reuse and continuous held-pan revelation are implemented. Current performance comparison,
-G-only sparse coverage, production pan-region reuse and conditional tiles remain open; neither
+prefix reuse and continuous held-pan revelation are implemented. A bounded comparison improves
+pan acknowledgement164.4/166.1→147.8ms; thirteen per-request relative flags remain, including one
+thin-stroke End slower than both controls. Full performance acceptance, G-only sparse coverage,
+production pan-region reuse and conditional tiles remain open; neither
 isolated arithmetic/layout nor integer-quad proof enables production pan-copy. M05 settings/material work is preserved
 on its paused branch; shaders and combined browser acceptance remain pending. M06/M07 have prepared
 contracts only; M08/M09 remain unimplemented. M05–M09 await resumption and frozen predecessors.
