@@ -139,10 +139,21 @@ Enter optional pan-copy only after the predecessor query identifies a view/phase
 An unchanged same-prefix or unsupported successor-count case retains its existing no-work miss
 and mandatory-fold priority. A valid zero-shift certificate alone does not require a redundant
 image copy when the source and target view/phase already agree.
+If shared validation refuses a ready candidate's zero-shift recapture, distinguish that phase
+miss from temporary receipt capacity. Discard only the unsealed candidate, which is not part of
+the displayed painter graph, and reconstruct for the current view. Preserve displayed B and
+live coverage; never repeatedly seal/fold the refused candidate or transplant its recipe to a
+different phase. Sealed candidates retain their existing visible-coverage lifecycle.
 
 Use existing bounded aggregate diagnostics for attempts, validated copies, copied/dirty pixel
 area, categorized misses and skipped GPU draws/compositions. Counts describe actual issued work;
 no per-page production events, raw coordinates or additional polling.
+Performance-test observations link a ready image to publication through explicit successful
+zero-shift recapture transitions when its immutable receipt changes. Record the old/new receipt
+IDs only after shared validation and successful old-receipt release. Correlation requires the
+same owner/session/renderer epoch and ordered, unambiguous transitions; matching content or
+timestamps alone cannot establish image lineage. Missing transitions remain unmeasured. These
+bounded records are excluded from production and do not change rendering or editing behavior.
 
 Retain eight combined receipts, two fences, existing page/ticket/queue budgets and 192 MiB. Engine inline raster state is charged through Engine size. Measure actual integrated Option<FrameReceipt>, Option<TailDisplay> and combined registry against existing 256/512/3072 bounds. Host metadata is fixed per existing receipt/candidate and counted; no additional GPU texture allocation. Recipe misses do not silently raise geometry retention limits.
 

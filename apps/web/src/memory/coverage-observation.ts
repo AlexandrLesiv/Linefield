@@ -9,9 +9,12 @@ export function coverageObservation(
     | "copyback"
     | "extension-retain"
     | "extension-discard"
-    | "pan-ready",
+    | "pan-ready"
+    | "pan-recapture",
   receipt: bigint,
-  region?: { epoch: number; copiedPixels: number; dirtyPixels: number },
+  region?:
+    | { epoch: number; copiedPixels: number; dirtyPixels: number }
+    | { epoch: number; fromReceipt: string },
 ) {
   if (import.meta.env.MODE === "performance-e2e")
     append({

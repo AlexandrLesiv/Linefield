@@ -139,7 +139,9 @@ export class CompletedCandidate {
   recapture() {
     if (!this.ready || this.sealed || !this.receipt) return;
     const next = recaptureCandidate(this.receipt, this.state(), this.renderer, this.policy);
-    if (next) this.receipt = next;
+    // Only unsealed S reaches recapture; it has not entered the visible painter graph.
+    if (next === "phase-miss") this.cancel();
+    else if (next) this.receipt = next;
   }
   take() {
     if (!this.ready || this.busy || this.sealed) throw Error("gpu-queue");

@@ -96,7 +96,8 @@ export class ProgressiveScene {
       if (!this.consume(q, detail)) return this.present(q);
       consumed = true;
       q = this.coverage();
-      if (!q.candidateViewCurrent) this.candidate.cancel();
+      if (!q.candidateViewCurrent || (!q.candidateExactView && !q.candidateRecaptureSafe))
+        this.candidate.cancel();
     }
     q = this.coverage();
     if (this.candidate.ready && q.candidateRecaptureSafe && !q.candidateExactView) {
@@ -127,7 +128,8 @@ export class ProgressiveScene {
       if (!consumed && q.canFold && !retainingEnded(q, this.live)) {
         if (!this.consume(q, detail)) return this.present(q);
         q = this.coverage();
-        if (!q.candidateViewCurrent) this.candidate.cancel();
+        if (!q.candidateViewCurrent || (!q.candidateExactView && !q.candidateRecaptureSafe))
+          this.candidate.cancel();
         q = this.coverage();
       }
     }

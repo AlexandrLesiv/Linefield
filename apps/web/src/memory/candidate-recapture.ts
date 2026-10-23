@@ -2,6 +2,7 @@ import { currentCoverage } from "./current-coverage.ts";
 import { framePanReuse } from "./frame-pan-reuse.ts";
 import { frames } from "./frame-bridge.ts";
 import { cleanupRelease } from "./cleanup-failure.ts";
+import { coverageObservation } from "./coverage-observation.ts";
 import type { Receipt } from "./frame-receipt.ts";
 import type { ReplyValue } from "./bridge.ts";
 import type { GpuRenderer } from "./gpu-renderer.ts";
@@ -24,10 +25,15 @@ export function recaptureCandidate(
     if (previous.recipe?.eligible) {
       const match = framePanReuse(state, previous.id, next.id);
       if (match.code !== "ok") throw Error(match.code);
-      if (!match.reusable || match.shift[0] || match.shift[1]) return;
+      if (!match.reusable || match.shift[0] || match.shift[1]) return "phase-miss" as const;
     }
     cleanupRelease(() => frames.release(state, previous.id));
     accepted = true;
+    if (import.meta.env.MODE === "performance-e2e" && previous.recipe?.eligible)
+      coverageObservation(state, "pan-recapture", next.id, {
+        epoch: renderer.epoch,
+        fromReceipt: `${previous.id}`,
+      });
     return { ...next, ...(previous.recipe ? { recipe: previous.recipe } : {}) };
   } finally {
     if (!accepted) cleanupRelease(() => frames.release(state, next.id));
