@@ -3,6 +3,23 @@
 Status: authorized by decision243. Independent storage/presentation work may start against a
 frozen committed M03 checkpoint; final runtime hooks and acceptance wait for the coordinated
 M03 integration handoff. No overlapping memory/renderer/engine implementation ownership.
+The lead may freeze an exact independently reviewed and functionally verified M03 dependency
+with clearly recorded open performance findings so DIAG01/M04 can address them. This is not
+M03 completion, a passing performance profile or relaxed acceptance. Final M09 adoption still
+requires the unresolved absolute/relative gates.
+The current B7 checkpoint adds the actual panel, pinned metrics and bounded local capture/export
+on frozen M03 ancestry479b8312. Its61-file source/evidence review and scoped actual-build designer
+review are closed; affected14 fixture and two production cases pass without retries/skips/flakes.
+Production CNmk5I0w is isolated on http://127.0.0.1:65185/. This is not the latest M03 drawing
+runtime. Final M03 reconciliation/current-coverage hooks, truthful replacement of retired cache
+counters, same-host overhead and combined acceptance remain open. Generated reports stay ignored.
+
+The bounded older-base overhead comparison completed six modes without timed hard-stop errors,
+LongTasks or drops. Closed-panel warm Redo rendering reached10.9ms versus6.5/8.0ms baseline
+brackets, exceeding the existing relative investigation rule while remaining below16ms absolute.
+Cold pan missed250ms in every mode, including both baselines. DIAG-05 remains open. A subsequent
+two-file cleanup removes redundant Wasm scalar reads and inactive opt-in submission bookkeeping;
+it passes static checks but has no new runtime/timing acceptance. Preview65185 retains B7.
 Position: integrate after P05-M03, before M04 integration. One branch/PR stacked on the verified
 frozen M03 source; owner alone merges. The lead settles remaining decisions within the renewed
 autonomous window, ending on return or 2026-10-23 07:13:55 UTC.

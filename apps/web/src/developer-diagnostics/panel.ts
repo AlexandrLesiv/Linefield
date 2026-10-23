@@ -68,6 +68,7 @@ export function createPanel(actions: PanelActions, build: BuildIdentity) {
     "failures",
     "appBuild",
     "engineBuild",
+    "preparationBuild",
   ] as const) {
     const row = metricRow(`diagnostics.${key}`);
     fields.set(key, row.value);
@@ -75,6 +76,7 @@ export function createPanel(actions: PanelActions, build: BuildIdentity) {
   }
   fields.get("appBuild")?.replaceChildren(document.createTextNode(build.app));
   fields.get("engineBuild")?.replaceChildren(document.createTextNode(build.engine));
+  fields.get("preparationBuild")?.replaceChildren(document.createTextNode(build.preparation));
   integrity.append(element("h3", css.heading, t("diagnostics.integrity")), list);
   const announcement = element("p", css.announcement);
   announcement.setAttribute("aria-live", "polite");

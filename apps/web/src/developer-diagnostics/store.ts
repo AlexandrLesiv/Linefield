@@ -62,7 +62,10 @@ export class DiagnosticsStore {
         this.#drop("invalid");
         return;
       }
-      detailed ||= record.value.event === "frame.trace" || record.value.command === "append";
+      detailed ||=
+        record.value.event === "frame.trace" ||
+        record.value.event.startsWith("worker.") ||
+        ["append", "pan.update", "rotate.update"].includes(record.value.command ?? "");
       if (detailed && !this.#capture) return;
       if (!detailed) this.#baseline.push(record);
       if (this.#capture) {

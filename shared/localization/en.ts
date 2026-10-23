@@ -57,6 +57,8 @@ export const en = {
   "diagnostics.dropped": "Dropped records",
   "diagnostics.failures": "Sink failures",
   "diagnostics.appBuild": "Application build",
+  "diagnostics.preparationBuild": "Preparation build",
+  "diagnostics.settings": "Settings",
   "diagnostics.engineBuild": "Engine build",
   "diagnostics.state": "Source/render state",
   "diagnostics.current": "Current",

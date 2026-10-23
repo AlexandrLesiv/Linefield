@@ -268,6 +268,16 @@ export const catalog = {
       context: "Bounded local developer diagnostics",
       arguments: {},
     },
+    "diagnostics.preparationBuild": {
+      kind: "plain",
+      context: "Bounded local developer diagnostics",
+      arguments: {},
+    },
+    "diagnostics.settings": {
+      kind: "plain",
+      context: "Drawing settings diagnostics entry",
+      arguments: {},
+    },
     "diagnostics.engineBuild": {
       kind: "plain",
       context: "Bounded local developer diagnostics",

@@ -11,6 +11,10 @@ export default defineConfig(({ mode }) => {
     plugins: [vanillaExtractPlugin(), productionPolicy(fixtures ? "e2e" : "production")],
     resolve: {
       alias: {
+        "#memory-wasm?url":
+          fileURLToPath(new URL("linefield_web_memory_bg.wasm", generated)) + "?url",
+        "#preparation-wasm?url":
+          fileURLToPath(new URL("linefield_web_preparation_bg.wasm", generated)) + "?url",
         "#preparation-bindings": fileURLToPath(new URL("linefield_web_preparation.js", generated)),
         "#preparation-wasm": fileURLToPath(new URL("linefield_web_preparation_bg.wasm", generated)),
         "#memory-bindings": fileURLToPath(new URL("linefield_web_memory.js", generated)),

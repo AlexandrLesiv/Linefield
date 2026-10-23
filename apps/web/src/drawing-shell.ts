@@ -36,6 +36,7 @@ export function createDrawingShell(name: string, requestBack: () => void, founda
   settings.setAttribute("aria-label", t("canvas.settingsUnavailable"));
   settings.title = t("canvas.settingsUnavailable");
   settings.disabled = true;
+  settings.dataset.drawingSettings = "";
   settings.classList.add(settingsControl);
   header.append(back, title, settings);
   const rail = element("div", `drawing-rail ${drawingRail}`);

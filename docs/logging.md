@@ -1,11 +1,11 @@
 # Structured diagnostics plan
 
-Status: required architecture direction with partial web instrumentation. The current web
-editor has a bounded command ring and aggregate resource/geometry counters; it does not yet
-provide the complete correlated incident capture or an owner-facing export. Native sinks and
-their concrete schemas remain subject to S02. This expands CT-07 and INV-09.
+Status: P05-DIAG01 implements bounded web capture/export and a developer panel on its isolated
+review branch. Scoped source/evidence and actual-build designer review pass; reconciliation
+with the latest M03 runtime, complete source/publication hooks and overhead acceptance remain.
+Native sinks and their concrete schemas remain subject to S02. This expands CT-07 and INV-09.
 
-## Current web coverage and proposed developer diagnostics
+## Web coverage and developer diagnostics
 
 The M03 audit found a100-event memory-command ring with request/session, command, outcome and
 monotonic timestamp, plus a dropped-event counter. It records several lifecycle and editing
@@ -13,12 +13,14 @@ commands. It does not consistently record action origin, pointer type, stroke id
 content revision or worker/frame correlation. Some style/view actions lack a command label.
 Aggregate geometry and resource counters exist; their values are accounted allocations or
 estimates, not measured process memory or physical GPU residency. Detailed input/render traces
-use a separate2048-event compile-time test ring, absent from the ordinary production preview. There is
-no user-facing diagnostic capture, dashboard or download in the current drawing screen.
+use a separate2048-event compile-time test ring, absent from ordinary production. The isolated
+DIAG01 branch adds the user-facing capture, panel and explicit download described below; the
+M03-only previews retain their existing instrumentation until reviewed integration.
 
 The owner approved WEB-DIAG-D1 on 2026-10-22 under decision243, with remaining concrete
 technical/design decisions delegated to the lead. P05-DIAG01 implements this direction after
-the M03 runtime contract freezes. The following is an approved plan, not an implemented UI:
+the M03 runtime contract freezes. WEB-DIAG-D1.1 specifies the implemented panel/capture states;
+task P05-DIAG01 records current evidence and remaining integration gates:
 
 - Keep a small always-on ring of lifecycle summaries: input gesture begin/end/cancel, central
   command result, stroke/history revision, preparation operation, frame publication/rejection,
@@ -34,11 +36,11 @@ the M03 runtime contract freezes. The following is an approved plan, not an impl
   data, not delivered FPS or physical pen-to-screen latency. Show aggregate input callback p95/max,
   source/render progress, worker queue/jobs, cache bytes/hits/misses, upload bytes and failures.
   Distinguish accounted CPU/GPU/Wasm memory, unavailable measurements and stale snapshots.
-- Propose a baseline cap of1024 events and1MiB logical payload, and detailed capture ending at
+- Use a baseline cap of1024 events and1MiB logical payload, and detailed capture ending at
   the first of30seconds,4096 events or2MiB including its baseline prelude. Keep one report per
   tab, freeze on Stop/limit/departure/hidden tab, and report partial capture, drops and sink
-  failures. Account actual buffers and export allocation separately. Final caps and measured
-  overhead must be checked before adoption; these are not storage or editor limits.
+  failures. Account actual buffers and export allocation separately. Verify the adopted caps
+  and measured overhead before adoption; these are not storage or editor limits.
 - Include exact build identifiers, schema version, monotonic clock domain and correlated
   temporary operation IDs. Exclude artwork, raw coordinates/pressure samples, document names,
   paths, raw URLs/errors, credentials and persistent user/device IDs. No telemetry or automatic

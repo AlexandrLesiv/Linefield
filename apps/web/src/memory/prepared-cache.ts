@@ -5,6 +5,7 @@ import { preparation } from "./preparation-bridge.ts";
 import { geometryMetrics as metrics } from "./geometry-metrics.ts";
 import { PreparedStore } from "./prepared-store.ts";
 import type { PreparedPage } from "./prepared-store.ts";
+import { preparationTicket } from "../developer-diagnostics/preparation-ticket.ts";
 export type { PreparedPage } from "./prepared-store.ts";
 export class PreparedCache extends PreparedStore {
   private executor: PreparationExecutor | undefined;
@@ -51,6 +52,7 @@ export class PreparedCache extends PreparedStore {
     }
     let attempt = 0;
     const executor = (this.executor ??= new PreparationExecutor());
+    const observerId = executor.diagnosticGeneration;
     for (;;) {
       if (!current()) throw Error("disposed");
       this.trim(0, 0, true);
@@ -59,6 +61,7 @@ export class PreparedCache extends PreparedStore {
         : preparation.begin(this.state(), stroke, chunk, revision, detail);
       if (input.code !== "ok") throw Error(input.code);
       if (!input.token) break;
+      const trace = preparationTicket(this.state(), input.token, stroke, observerId, frame);
       const pages: PreparedPage[] = [];
       let ordinal = 0n,
         bytes = 0,
@@ -67,9 +70,11 @@ export class PreparedCache extends PreparedStore {
         streaming = false;
       const clipped = input.parameters[3] === 1;
       try {
-        for await (const result of executor.pages(input, urgent || attempt > 0)) {
-          if (!current() || preparation.current(this.state(), input.token) !== "ok")
+        for await (const result of executor.pages(input, urgent || attempt > 0, trace)) {
+          if (!current() || preparation.current(this.state(), input.token) !== "ok") {
+            trace?.cause(!current() ? "disposed" : "stale");
             throw Error("stale-scene");
+          }
           if (result.data.length) {
             this.trim(bytes + result.data.byteLength, pages.length + 1);
             const start = performance.now(),
@@ -104,10 +109,14 @@ export class PreparedCache extends PreparedStore {
             }
           }
           if (result.done) {
-            if (preparation.complete(this.state(), input.token, ordinal) !== "ok")
+            if (preparation.complete(this.state(), input.token, ordinal) !== "ok") {
+              trace?.cause("stale");
               throw Error("stale-scene");
-            if (frame && !frames.coverage(this.state(), input.token, frame))
+            }
+            if (frame && !frames.coverage(this.state(), input.token, frame)) {
+              trace?.cause("stale");
               throw Error("stale-mapping");
+            }
             complete = true;
           }
         }
@@ -138,13 +147,16 @@ export class PreparedCache extends PreparedStore {
           stored = true;
           if (!clipped) preparation.release(this.state(), input.token);
         } else preparation.release(this.state(), input.token);
+        trace?.outcome("completed", Number(ordinal));
         break;
       } catch (error) {
+        trace?.outcome(!current() ? "stale" : "rejected", Number(ordinal));
         if (!current()) throw Error("disposed", { cause: error });
         if (attempt++ === 0 && error instanceof Error && error.message === "worker-unavailable")
           continue;
         throw error;
       } finally {
+        trace?.abandoned(Number(ordinal));
         if (!stored) {
           this.pendingPages -= pages.length;
           this.pendingBytes -= bytes;

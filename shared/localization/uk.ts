@@ -57,6 +57,8 @@ export const uk = {
   "diagnostics.dropped": "Втрачені записи",
   "diagnostics.failures": "Помилки приймання записів",
   "diagnostics.appBuild": "Збірка застосунку",
+  "diagnostics.preparationBuild": "Збірка підготовки",
+  "diagnostics.settings": "Налаштування",
   "diagnostics.engineBuild": "Збірка рушія",
   "diagnostics.state": "Стан джерела/відображення",
   "diagnostics.current": "Актуальний",

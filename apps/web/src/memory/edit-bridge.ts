@@ -4,6 +4,7 @@ import { diagnostic } from "./diagnostics.ts";
 import * as api from "#memory-bindings";
 import type { Reply } from "#memory-bindings";
 import type { ReplyValue } from "./bridge.ts";
+import { observeReply } from "../developer-diagnostics/runtime-port.ts";
 export function take<T extends Reply, R>(action: () => T, copy: (value: T) => R): R {
   return editorSnapshot(action, copy);
 }
@@ -18,17 +19,21 @@ export const copyReply = (v: Reply): ReplyValue => ({
   presentation: v.presentation,
   activeCancelled: v.activeCancelled,
 });
-const command = (action: () => Reply, name = "") => {
+const command = (action: () => Reply, name = "", observation = name) => {
   const result = take(action, copyReply);
   inputObservation(result, name || "update");
+  observeReply(observation, result);
   if (name) diagnostic(name, result.code, result.session);
   return result;
 };
 export const edit = {
-  resetView: (s: ReplyValue) => command(() => api.memoryResetView(s.owner, s.session, s.mapping)),
+  resetView: (s: ReplyValue) =>
+    command(() => api.memoryResetView(s.owner, s.session, s.mapping), "", "view"),
   style: (s: ReplyValue, width: number, color: readonly number[]) =>
-    command(() =>
-      api.memoryStyle(s.owner, s.session, width, color[0] ?? 0, color[1] ?? 0, color[2] ?? 0),
+    command(
+      () => api.memoryStyle(s.owner, s.session, width, color[0] ?? 0, color[1] ?? 0, color[2] ?? 0),
+      "",
+      "style",
     ),
   begin: (
     s: ReplyValue,
@@ -50,8 +55,10 @@ export const edit = {
     p: Float64Array,
     flags: Uint8Array,
   ) =>
-    command(() =>
-      api.memoryAppend(s.owner, s.session, s.interaction, s.mapping, index, x, y, p, flags),
+    command(
+      () => api.memoryAppend(s.owner, s.session, s.interaction, s.mapping, index, x, y, p, flags),
+      "",
+      "append",
     ),
   end: (s: ReplyValue, next: bigint) =>
     command(() => api.memoryEnd(s.owner, s.session, s.interaction, s.mapping, next), "end"),
@@ -74,17 +81,34 @@ export const edit = {
           y,
         ),
       "begin",
+      rotate ? "rotate.begin" : "pan.begin",
     ),
-  panUpdate: (s: ReplyValue, sequence: bigint, x: number, y: number, snap: boolean) =>
-    command(() =>
-      api.memoryPanUpdate(s.owner, s.session, s.interaction, s.mapping, sequence, x, y, snap),
+  panUpdate: (
+    s: ReplyValue,
+    sequence: bigint,
+    x: number,
+    y: number,
+    snap: boolean,
+    rotate = false,
+  ) =>
+    command(
+      () => api.memoryPanUpdate(s.owner, s.session, s.interaction, s.mapping, sequence, x, y, snap),
+      "",
+      rotate ? "rotate.update" : "pan.update",
     ),
-  panEnd: (s: ReplyValue, sequence: bigint) =>
-    command(() => api.memoryPanEnd(s.owner, s.session, s.interaction, s.mapping, sequence), "end"),
+  panEnd: (s: ReplyValue, sequence: bigint, rotate = false) =>
+    command(
+      () => api.memoryPanEnd(s.owner, s.session, s.interaction, s.mapping, sequence),
+      "end",
+      rotate ? "rotate.end" : "pan.end",
+    ),
   view: (s: ReplyValue, value: number, x: number, y: number, rotate: boolean, snap = false) =>
-    command(() =>
-      rotate
-        ? api.memoryRotateAt(s.owner, s.session, s.mapping, value, x, y, snap)
-        : api.memoryZoomAt(s.owner, s.session, s.mapping, value, x, y),
+    command(
+      () =>
+        rotate
+          ? api.memoryRotateAt(s.owner, s.session, s.mapping, value, x, y, snap)
+          : api.memoryZoomAt(s.owner, s.session, s.mapping, value, x, y),
+      "",
+      "view",
     ),
 };

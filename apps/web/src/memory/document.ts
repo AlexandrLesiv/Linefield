@@ -4,6 +4,7 @@ import { attachGpuDisplay } from "./gpu-display.ts";
 import { createMemoryView } from "./view.ts";
 import type { MemoryView } from "./view.ts";
 import { diagnostic } from "./diagnostics.ts";
+import { attachDiagnostics } from "../developer-diagnostics/attachment.ts";
 let owner = 0n;
 let api: Bridge | undefined;
 let current: ReplyValue | undefined;
@@ -87,9 +88,11 @@ export function attachMemory(surface: HTMLElement): () => void {
     }
   }
   view = createMemoryView(surface, () => void start());
+  const detachDiagnostics = attachDiagnostics(surface, view.canvas);
   void start();
   return () => {
     if (!alive()) return;
+    detachDiagnostics();
     generation += 1;
     attempt += 1;
     if (api && current?.session && !fatal) {

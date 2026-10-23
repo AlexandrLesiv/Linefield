@@ -6,7 +6,8 @@ import type { MetricSnapshot } from "./metrics.ts";
 import { createPanel } from "./panel.ts";
 import { createOverlay } from "./overlay.ts";
 import type { DiagnosticAvailability, DiagnosticHost } from "./host.ts";
-import { canCapture, sameAvailability } from "./host.ts";
+import { canCapture, sameAvailability, initialAvailability } from "./host.ts";
+import { DeferredNotification } from "./deferred.ts";
 import { bindPanelDismissal } from "./dismissal.ts";
 const emptyMetrics: MetricSnapshot = { atMs: 0, idle: true, source: "unavailable", values: {} };
 /** Presentation adapter only. The host supplies cached availability; no engine queries here. */
@@ -19,13 +20,8 @@ export class DeveloperDiagnostics {
   readonly #metrics: MetricUpdates;
   readonly #unsubscribe: () => void;
   readonly #unbind: () => void;
-  #availability: DiagnosticAvailability = {
-    idle: false,
-    ready: false,
-    visible: false,
-    terminal: false,
-    interactionEpoch: 0,
-  };
+  #availability: DiagnosticAvailability = initialAvailability;
+  readonly #presentation = new DeferredNotification();
   #open = false;
   #observing = false;
   #snapshot = emptyMetrics;
@@ -86,7 +82,10 @@ export class DeveloperDiagnostics {
   open(): boolean {
     if (!this.#canAct()) return false;
     this.#open = true;
-    this.#metrics.offer(this.#snapshot);
+    this.#metrics.offer({
+      ...this.#snapshot,
+      idle: this.#snapshot.idle || performance.now() - this.#snapshot.atMs > 1000,
+    });
     this.#refresh();
     this.#panel.title.focus();
     return true;
@@ -110,7 +109,7 @@ export class DeveloperDiagnostics {
       this.#export.clear();
       this.#store.stop("terminal");
     }
-    this.#refresh();
+    this.#presentation.schedule(() => this.#refresh());
     if (terminal) this.#metrics.offer(this.#snapshot);
   }
   acceptedDeparture(): void {
@@ -127,6 +126,7 @@ export class DeveloperDiagnostics {
   dispose(): void {
     this.acceptedDeparture();
     this.#disposed = true;
+    this.#presentation.cancel();
     this.#unsubscribe();
     this.#export.clear();
     this.#metrics.stop();

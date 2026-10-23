@@ -1,3 +1,5 @@
+import { observePointer, observeWheel } from "../developer-diagnostics/input-observation.ts";
+import { keyboardIntent } from "../developer-diagnostics/intent.ts";
 import { inputKeyboard } from "./input-keyboard.ts";
 import { inputBatch } from "./input-batch.ts";
 import { edit } from "./edit-bridge.ts";
@@ -72,7 +74,16 @@ export function attachInput(canvas: HTMLCanvasElement, commands: Commands) {
     } else {
       const [x, y] = localPoint(canvas, e);
       contact.sequence += 1n;
-      commands.run(() => edit.panUpdate(contact.token, contact.sequence, x, y, e.shiftKey));
+      commands.run(() =>
+        edit.panUpdate(
+          contact.token,
+          contact.sequence,
+          x,
+          y,
+          e.shiftKey,
+          contact.mode === "rotate",
+        ),
+      );
     }
     e.preventDefault();
   }
@@ -98,7 +109,7 @@ export function attachInput(canvas: HTMLCanvasElement, commands: Commands) {
     } else {
       move(e);
       owner.release();
-      commands.run(() => edit.panEnd(contact.token, contact.sequence));
+      commands.run(() => edit.panEnd(contact.token, contact.sequence, contact.mode === "rotate"));
     }
     e.preventDefault();
   }
@@ -117,10 +128,10 @@ export function attachInput(canvas: HTMLCanvasElement, commands: Commands) {
       contact.releaseTime = e.timeStamp;
     } else owner.cancel("capture-loss");
   }
-  canvas.addEventListener("pointerdown", down, options);
-  canvas.addEventListener("pointermove", move, options);
-  canvas.addEventListener("pointerup", up, options);
-  canvas.addEventListener("lostpointercapture", lost, options);
+  canvas.addEventListener("pointerdown", observePointer(down), options);
+  canvas.addEventListener("pointermove", observePointer(move), options);
+  canvas.addEventListener("pointerup", observePointer(up), options);
+  canvas.addEventListener("lostpointercapture", observePointer(lost), options);
   canvas.addEventListener(
     "pointercancel",
     (e) => {
@@ -129,8 +140,8 @@ export function attachInput(canvas: HTMLCanvasElement, commands: Commands) {
     options,
   );
   canvas.addEventListener("blur", () => owner.cancel(), options);
-  window.addEventListener("keydown", keys.down, options);
-  window.addEventListener("keyup", keys.up, options);
+  window.addEventListener("keydown", keyboardIntent(keys.down), options);
+  window.addEventListener("keyup", keyboardIntent(keys.up), options);
   window.addEventListener(
     "blur",
     () => {
@@ -151,20 +162,20 @@ export function attachInput(canvas: HTMLCanvasElement, commands: Commands) {
   );
   canvas.addEventListener(
     "wheel",
-    (e) => {
+    observeWheel((e) => {
       e.preventDefault();
       if (owner.current) return;
       const r = canvas.getBoundingClientRect(),
         v = commands.view(),
         zoom = Math.max(0.05, Math.min(16, v.zoom * Math.exp(-e.deltaY * 0.001)));
       commands.run((s) => edit.view(s, zoom, e.clientX - r.left, e.clientY - r.top, false));
-    },
+    }),
     { ...options, passive: false },
   );
   for (const type of ["pointerup", "pointermove", "pointercancel", "gotpointercapture"] as const)
     document.addEventListener(
       type,
-      (e) => {
+      observePointer((e) => {
         if (!owner.current?.pending) return;
         if (type === "gotpointercapture" && owner.matches(e)) {
           owner.cancel("capture-loss");
@@ -174,7 +185,7 @@ export function attachInput(canvas: HTMLCanvasElement, commands: Commands) {
         if (type === "pointerup") up(e);
         else if (type === "pointermove") move(e);
         else if (owner.matches(e)) owner.cancel("capture-loss");
-      },
+      }),
       { ...options, capture: true },
     );
   return {

@@ -1,9 +1,12 @@
+import { preparationCauses } from "./preparation-causes.ts";
+import type { PreparationCause } from "./preparation-causes.ts";
 export const eventNames = [
   "gesture.begin",
   "gesture.end",
   "gesture.cancel",
   "command.result",
   "history.changed",
+  "worker.admitted",
   "worker.started",
   "worker.finished",
   "worker.rejected",
@@ -39,6 +42,19 @@ export const commands = [
   "redo",
   "view",
   "style",
+  "create",
+  "enter",
+  "metrics",
+  "leave",
+  "dispose",
+  "load",
+  "presented",
+  "pan.begin",
+  "pan.update",
+  "pan.end",
+  "rotate.begin",
+  "rotate.update",
+  "rotate.end",
   "resize",
   "resume",
   "suspend",
@@ -60,6 +76,7 @@ export interface DiagnosticEvent {
   readonly outcome?: (typeof outcomes)[number];
   readonly command?: (typeof commands)[number];
   readonly failure?: (typeof failures)[number];
+  readonly cause?: PreparationCause;
   readonly pointer?: (typeof pointers)[number];
   readonly session?: string;
   readonly interaction?: string;
@@ -67,6 +84,11 @@ export interface DiagnosticEvent {
   readonly operation?: string;
   readonly stroke?: string;
   readonly revision?: string;
+  readonly scene?: string;
+  readonly mapping?: string;
+  readonly admissionRevision?: string;
+  readonly admissionScene?: string;
+  readonly admissionMapping?: string;
   readonly frame?: string;
   readonly generation?: string;
   readonly count?: number;
@@ -81,6 +103,11 @@ const identityKeys = [
   "operation",
   "stroke",
   "revision",
+  "scene",
+  "mapping",
+  "admissionRevision",
+  "admissionScene",
+  "admissionMapping",
   "frame",
   "generation",
 ] as const;
@@ -106,6 +133,7 @@ const enums = {
   outcome: outcomes,
   command: commands,
   failure: failures,
+  cause: preparationCauses,
   pointer: pointers,
 };
 export interface SafeRecord {
@@ -155,17 +183,5 @@ export function safeRecord(input: DiagnosticEvent): SafeRecord | undefined {
     bytes += key.length + 4 + (typeof item === "string" ? item.length + 2 : String(item).length);
   return Object.freeze({ value: Object.freeze(Object.assign(value, fields)), bytes: bytes - 1 });
 }
-export interface BuildIdentity {
-  readonly app: string;
-  readonly engine: string;
-}
-export function safeBuild(build: BuildIdentity): Readonly<BuildIdentity> {
-  const clean = (value: string) =>
-    typeof value === "string" &&
-    value.length > 0 &&
-    value.length <= 96 &&
-    !/[^a-zA-Z0-9_-]/.test(value)
-      ? value
-      : "unavailable";
-  return Object.freeze({ app: clean(build.app), engine: clean(build.engine) });
-}
+export { safeBuild } from "./build-schema.ts";
+export type { BuildIdentity } from "./build-schema.ts";

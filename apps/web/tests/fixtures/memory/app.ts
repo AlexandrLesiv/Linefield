@@ -1,4 +1,6 @@
 import "../../../src/main.ts";
+import "./diagnostics-control.ts";
+import "./diagnostics-job-hold.ts";
 import * as api from "#memory-bindings";
 import { loadEngine } from "../../../src/memory/loader.ts";
 import { diagnosticSnapshot } from "../../../src/memory/diagnostics.ts";

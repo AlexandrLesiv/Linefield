@@ -3,7 +3,7 @@ import { frames } from "./frame-bridge.ts";
 import { runObservedCommand } from "./command-timing.ts";
 import type { CommandTiming } from "./command-timing.ts";
 import { editorHealthy } from "./editor-health.ts";
-import { acknowledgementObservation, submissionObservation } from "./performance-observation.ts";
+import { validated, submitted } from "../developer-diagnostics/render-observation.ts";
 import { diagnostic } from "./diagnostics.ts";
 import type { Bridge, ReplyValue } from "./bridge.ts";
 import type { MemoryView } from "./view.ts";
@@ -115,12 +115,12 @@ export function attachGpuDisplay(
       cache?.render(detail);
       const serial = renderer.check();
       cache?.submitted(serial);
-      submissionObservation(state, renderer.epoch, serial, cache?.inputComplete ?? false);
+      submitted(state, renderer.epoch, serial, cache?.inputComplete ?? false);
       if (!cache?.ready) return;
       report();
       const receipt = cache?.acknowledgement;
       if (receipt && accept(frames.ready(state, receipt)) && accept(api.presented(state)))
-        acknowledgementObservation(state, renderer.epoch, receipt, serial);
+        validated(state, renderer.epoch, receipt, serial);
       view.status("ready");
       automaticRetry = 0;
       sync();

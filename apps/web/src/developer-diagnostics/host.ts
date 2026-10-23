@@ -17,6 +17,13 @@ export interface DiagnosticHost {
    */
   observeMetrics(wanted: boolean): void;
 }
+export const initialAvailability: DiagnosticAvailability = {
+  idle: false,
+  ready: false,
+  visible: false,
+  terminal: false,
+  interactionEpoch: 0,
+};
 export function sameAvailability(a: DiagnosticAvailability, b: DiagnosticAvailability): boolean {
   return (
     a.idle === b.idle &&
