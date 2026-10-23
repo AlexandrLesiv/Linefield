@@ -11,6 +11,7 @@ export const eventNames = [
   "worker.finished",
   "worker.rejected",
   "frame.published",
+  "frame.composed",
   "frame.rejected",
   "surface.lost",
   "surface.recovered",
@@ -78,6 +79,7 @@ export interface DiagnosticEvent {
   readonly failure?: (typeof failures)[number];
   readonly cause?: PreparationCause;
   readonly pointer?: (typeof pointers)[number];
+  readonly owner?: string;
   readonly session?: string;
   readonly interaction?: string;
   readonly request?: string;
@@ -100,6 +102,7 @@ export interface DiagnosticEvent {
 }
 const numericKeys = ["count", "bytes", "durationMs"] as const;
 const identityKeys = [
+  "owner",
   "session",
   "interaction",
   "request",

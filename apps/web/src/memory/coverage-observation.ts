@@ -2,7 +2,13 @@ import { append } from "./performance-observation.ts";
 import type { ReplyValue } from "./bridge.ts";
 export function coverageObservation(
   s: ReplyValue,
-  phase: "seal" | "consume" | "copyback" | "extension-retain" | "extension-discard",
+  phase:
+    | "seal"
+    | "consume"
+    | "view-consume"
+    | "copyback"
+    | "extension-retain"
+    | "extension-discard",
   receipt: bigint,
 ) {
   if (import.meta.env.MODE === "performance-e2e")

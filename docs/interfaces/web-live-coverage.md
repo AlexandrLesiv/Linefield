@@ -142,8 +142,12 @@ old masks/anchors and initialize the latest active source E. S/G remain intact. 
 D began/ended before any render, fold only materialized C, record cutoffD and start E; candidate
 reconstruction supplies D in order. A cutoff is never a certificate that D pixels were displayed.
 
-Do not fold/reanchor during a cancellable view gesture. Transform original B and ended C until
-End/cancel, preserving the pregesture pixels for Escape. After accepted pan End, a fold retains
+Ordinary live-source folding remains forbidden during a cancellable view gesture. The narrow
+validated completed-prefix display composition below may release S for another reconstruction;
+retaining the original B texture for the entire gesture must not block newly revealed regions.
+Escape restores the Rust-owned pregesture camera. The most recent complete B follows that
+camera while any missing coverage is reconstructed; this does not change document/history.
+After accepted pan End, a fold retains
 the entire currently visible B/C union, including C outside B's old footprint. Outside-viewport
 raster is disposable; later pan-back may be incomplete until reconstruction. Canonical content
 is retained, and incomplete/provisional coverage cannot acknowledge exact currentness.
@@ -161,12 +165,44 @@ does not create a silent retry loop. Validate the in-flight successor as well as
 predecessor. Undo that removes only N's group must abort N's pending worker/queue wait promptly,
 even when R remains valid; do not wait for an obsolete reply or watchdog before rebuilding.
 
-Global installation requires validated S at the latest completed cutoff, exact content/view/
-mapping/metrics and no view gesture. Swap B/S and transfer its Prefix, retaining active E's
+Exact-view installation requires validated S at the latest completed cutoff and exact content/
+view/mapping/metrics. Swap B/S and transfer its Prefix, retaining active E's
 physical coverage. Draw E once afterward. Active input still forbids presented/ready acknowledgement.
 At-cutoff stale content/mapping with identical Rust-certified source/view can take a fresh
 Prefix capture and transfer the unchanged validated S after a no-await recheck; no JS key rewrite.
 Otherwise request one bounded current-view rebuild immediately, not after a hypothetical next End.
+
+During an active view gesture, a fully GPU-validated, no-longer-busy S at the complete current
+prefix/content can release the reconstruction slot before End. Exact-current-view S can install
+directly. An older-view S must not replace B alone: reversal can expose useful B pixels outside
+S's footprint. Instead compose the existing displayed B/ended-live/S graph once into X, in its
+existing painter order, then retain that union as DisplayOnly B. This uses existing surfaces,
+receipt limits, queue bounds and submission slots; it is not a pixel-copy or lattice optimization.
+
+Named `memoryViewDisplayFrameCapture(owner,session,mapping,candidatePrefix)` returns the existing
+generated DisplayFrameSnapshot. Rust validates current command ownership/session/mapping,
+Ready/metrics, an active view gesture with no active ink, and a retained Prefix with current
+lineage/content, the complete visible cutoff and matching metrics. Its captured view/mapping may
+be older; that is the reason for the operation. All rejection precedes allocation. The resulting
+DisplayOnly receipt captures the current canonical view, grants no geometry/current-prefix
+authority and cannot acknowledge readiness. Ordinary captureDisplay/canFold rules stay unchanged.
+
+The host captures the whole displayed graph before stop/dispose/swap, reserves the incoming
+anchor before GPU issue and composes into X under an existing submission reservation. Preserve
+candidateIncludesLive ordering, RGB-only packed writes and all reader lifetimes. Adopt the new
+anchor transactionally, then retire covered ended-live and candidate ownership. S reuse follows
+the union reader commands on the same context; no third fence. Capacity before issue preserves
+the old graph unchanged. Any ambiguous issue/adoption/release/submit failure uses existing
+terminal recovery and retains uncertain ownership; never resume the old logical B after a swap.
+
+Free S for one latest-view reconstruction immediately, including while the pointer remains held
+and stationary. Do not restart useful in-flight work on every move, fold per move without a new
+completed candidate, or rewrite old-view pixels as an exact current Prefix. Input completion and
+acknowledgement remain false throughout the gesture. Successive moves must reveal successive
+offscreen regions before release. Verify repeated fractional/rotated temporary compositions
+separately for intermediate coverage/filtering; canonical geometry limits are unchanged, and
+End/Escape must reconstruct exact canonical output. Passing a temporary-image check is not an
+exact-copy, latency or whole-M04 acceptance claim.
 
 ### Sealed provisional candidate
 
@@ -180,8 +216,9 @@ old pixels over newly exposed regions or apply group opacity twice. It grants no
 Once displayed, seal S and its underlying display graph until consumption. Before any B mutation,
 ordinary publication, live fold or in-place S extension, consume the layer in that exact painter
 order. Hiding it after a new End would flash away progress; painting it over newly folded D could
-erase D. During a view gesture retain B/S/ended-live anchors; at most one next group/successor
-may wait in G. Do not restart a candidate per move. Source-invalidating history follows existing
+erase D. During a view gesture, a complete-current-prefix S can leave this sealed state through
+the explicit union-preserving display composition above. Other sealed graphs retain B/S/ended-live anchors; at most
+one next group/successor may wait in G. Do not restart a candidate per move. Source-invalidating history follows existing
 historical-display/reconstruction rules, not source-valid sealed reuse.
 
 At the first eligible CanFold turn consume the visible completed graph into X at a fresh DisplayOnly

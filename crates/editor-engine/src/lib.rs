@@ -14,6 +14,8 @@ mod lifecycle;
 mod mapping;
 mod model;
 pub mod numerics;
+#[cfg(feature = "e2e-fixtures")]
+pub mod raster_probe;
 mod resources;
 mod scene;
 pub use document::{RawSample, Samples, Stroke, Style};

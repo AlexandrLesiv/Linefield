@@ -6,6 +6,7 @@ import {
   currentCoverage,
   captureLive,
   captureDisplay,
+  captureViewDisplay,
 } from "../../../src/memory/current-coverage.ts";
 import { tail } from "../../../src/memory/tail-bridge.ts";
 import { queryReady } from "./query-readiness.ts";
@@ -35,6 +36,7 @@ export function coverageBoundary() {
     check(captureDisplay(altered).code !== "ok", "display capture authority fence");
   }
   s = edit.begin(s, 1, 300, 300, 0.5, true);
+  check(captureViewDisplay(s, prefix.id).code === "active", "active ink cannot view-compose");
   q = currentCoverage(s);
   const source = q.activeSource;
   check(source > 0n && q.activeCount === 1n, "active identity");
@@ -71,8 +73,35 @@ export function coverageBoundary() {
   q = currentCoverage(s, anchor.id, successor.id, successor.id);
   check(q.viewGestureActive && !q.canFold && !q.candidateViewCurrent, "cancellable camera fact");
   check(captureDisplay(s).code === "active", "no gesture reanchor");
+  const viewDisplay = captureViewDisplay(s, successor.id);
+  check(viewDisplay.code === "ok", "narrow complete-prefix view union anchor");
+  check(frames.transform(s, viewDisplay.id).code === "invalid", "view union is not Prefix");
+  check(frames.ready(s, viewDisplay.id).code === "invalid", "view union cannot acknowledge");
+  check(frames.displayTransform(s, viewDisplay.id).code === "ok", "current view union placement");
+  check(captureViewDisplay(s, prefix.id).code === "stale-scene", "incomplete prefix rejects");
+  check(captureViewDisplay(s, display.id).code === "invalid", "DisplayOnly is not a candidate");
+  check(captureViewDisplay(s, anchor.id).code === "invalid", "LiveSource is not a candidate");
+  check(captureViewDisplay(s, 999n).code === "stale-scene", "unknown candidate rejects");
+  for (const altered of [
+    { ...s, owner: s.owner + 1n },
+    { ...s, session: s.session + 1n },
+    { ...s, mapping: s.mapping + 1n },
+  ])
+    check(captureViewDisplay(altered, successor.id).code !== "ok", "view union authority fence");
+  const held: bigint[] = [];
+  for (let i = 0; i < 8; i++) {
+    const next = captureViewDisplay(s, successor.id);
+    if (next.code === "capacity") break;
+    check(next.code === "ok", "bounded view union slot");
+    held.push(next.id);
+  }
+  check(captureViewDisplay(s, successor.id).code === "capacity", "view union respects eight slots");
+  for (const id of held) frames.release(s, id);
+  frames.release(s, viewDisplay.id);
+  check(captureViewDisplay(s, viewDisplay.id).code === "stale-scene", "released candidate rejects");
   check(tail.status(s, front.id).code === "ok", "live parent survives view motion");
   s = edit.cancel(s, "escape");
+  check(captureViewDisplay(s, successor.id).code === "active", "no gesture means no view union");
   q = currentCoverage(s, anchor.id, successor.id, successor.id);
   check(
     q.candidateRecaptureSafe && !q.candidateExactView,
@@ -96,10 +125,24 @@ export function coverageBoundary() {
     q.candidateRecaptureSafe && q.nextSource === 0n && !q.candidateExactView,
     "no-next history recapture",
   );
+  s = edit.panBegin(s, 4, 400, 400, false);
+  check(
+    captureViewDisplay(s, successor.id).code === "stale-scene",
+    "old content cannot view-compose",
+  );
+  s = edit.cancel(s, "escape");
+  const beforeMetrics = frames.capture(s);
+  check(beforeMetrics.code === "ok", "fresh content before metrics change");
   frames.release(s, display.id);
   check(frames.displayTransform(s, display.id).code === "stale-scene", "released display stale");
   s = bridge.metrics(s, 2n, 1025, 768, 1);
   check(frames.displayTransform(s, prefix.id).code === "stale-mapping", "metrics fence old raster");
+  s = queryReady(s);
+  s = edit.panBegin(s, 5, 400, 400, false);
+  check(
+    captureViewDisplay(s, beforeMetrics.id).code === "stale-mapping",
+    "view union metrics fence",
+  );
   closeTailFixture(s);
   return report();
 }

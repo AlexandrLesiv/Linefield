@@ -11,6 +11,10 @@ mod geometry_results;
 mod ink;
 mod mapping;
 mod queries;
+#[cfg(feature = "e2e-fixtures")]
+mod raster_fixture;
+#[cfg(feature = "e2e-fixtures")]
+mod raster_result;
 mod snapshots;
 mod state;
 pub use camera::*;

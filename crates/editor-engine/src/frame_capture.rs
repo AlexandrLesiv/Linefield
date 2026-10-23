@@ -55,6 +55,30 @@ impl Engine {
             ..FrameCapture::default()
         })
     }
+    pub fn capture_view_display_frame(
+        &mut self,
+        owner: u64,
+        session: u64,
+        mapping: u64,
+        candidate: u64,
+    ) -> Result<FrameCapture, Code> {
+        let q = self.current_coverage(owner, session, mapping, 0, 0, candidate)?;
+        if !q.view_gesture_active || q.active_source != 0 {
+            return Err(Code::Active);
+        }
+        if !q.candidate_valid || !q.candidate_at_cutoff || !q.candidate_content_current {
+            return Err(Code::StaleScene);
+        }
+        self.frame_transform(owner, session, mapping, candidate)?;
+        let f = self.capture_special_frame(mapping, FrameAuthority::DisplayOnly, 0)?;
+        Ok(FrameCapture {
+            id: f.id,
+            cutoff_count: f.count as u64,
+            cutoff_through: f.through,
+            mapping: f.mapping,
+            ..FrameCapture::default()
+        })
+    }
     fn capture_special_frame(
         &mut self,
         mapping: u64,

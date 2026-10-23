@@ -1,6 +1,12 @@
 import { blit } from "./gpu-pass.ts";
 import type { GpuRenderer } from "./gpu-renderer.ts";
 import type { LiveGpu } from "./live-gpu.ts";
+import { frames } from "./frame-bridge.ts";
+import type { ReplyValue } from "./bridge.ts";
+import type { DisplayBase } from "./display-base.ts";
+import type { CompletedCandidate } from "./completed-candidate.ts";
+import type { LiveOwner } from "./live-owner.ts";
+import type { Coverage } from "./current-coverage.ts";
 export type DisplayGraph = {
   base: Float32Array | undefined;
   candidate: Float32Array | undefined;
@@ -9,6 +15,26 @@ export type DisplayGraph = {
     | undefined;
   candidateIncludesLive: boolean;
 };
+export function sceneGraph(
+  state: ReplyValue,
+  base: DisplayBase,
+  candidate: CompletedCandidate,
+  live: LiveOwner,
+  q: Coverage,
+): DisplayGraph {
+  let matrix: Float32Array | undefined;
+  if (candidate.sealed && candidate.receipt) {
+    const transform = frames.displayTransform(state, candidate.receipt.id);
+    if (transform.code !== "ok") throw Error(transform.code);
+    matrix = transform.matrix;
+  }
+  return {
+    base: base.transform(),
+    candidate: matrix,
+    live: live.graph(q),
+    candidateIncludesLive: q.candidateIncludesLive,
+  };
+}
 function colorLayer(renderer: GpuRenderer, texture: WebGLTexture, matrix: Float32Array) {
   const { gl, resources: r, width, height } = renderer;
   gl.disable(gl.BLEND);

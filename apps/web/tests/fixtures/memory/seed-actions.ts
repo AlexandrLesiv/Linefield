@@ -5,10 +5,20 @@ import { seedFailure } from "./seed-failure.ts";
 import { seedPressure } from "./seed-pressure.ts";
 import { seedPublication } from "./seed-publication.ts";
 import { seedRelease } from "./seed-release.ts";
+import { rasterMatrix } from "./raster-proof.ts";
+import { rasterState } from "./raster-state.ts";
 export function seedActions(
   action: (name: string, run: () => Promise<unknown>) => void,
   canvas: HTMLCanvasElement,
 ) {
+  for (const [name, run] of [
+    ["matrix", rasterMatrix],
+    ["state", rasterState],
+  ] as const)
+    action(`Run raster proof ${name}`, async () => {
+      await loadEngine();
+      return run();
+    });
   const cases: [string, () => unknown][] = [
     ...(["promote", "fold", "create", "create-release"] as const).map(
       (mode) =>

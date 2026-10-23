@@ -8,6 +8,8 @@ thread_local! {
     static BUSY: Cell<bool> = const { Cell::new(false) };
 }
 pub struct Data {
+    #[cfg(feature = "e2e-fixtures")]
+    pub raster: Cell<crate::raster_result::Result>,
     pub value: Cell<Projection>,
     pub consumed: Cell<bool>,
     _reserved: Vec<u8>,
@@ -110,6 +112,8 @@ where
         }
     });
     let data = Rc::new(Data {
+        #[cfg(feature = "e2e-fixtures")]
+        raster: Cell::new(Default::default()),
         value: Cell::new(value),
         consumed: Cell::new(false),
         _reserved: reserved,

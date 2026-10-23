@@ -1,11 +1,14 @@
 ## Current priority — full vector migration (2026-10-22)
 
-Current owner renewal on 2026-10-22: [decision243](../docs/decisions.md) authorizes autonomous
-M03–M09 and all required scoped technical/design decisions until the owner's return or
-2026-10-23 07:13:55 UTC. [P05-DIAG01](P05-DIAG01.md) implements the approved bounded logging
-and development mode after the M03 runtime contract freezes. The existing continuation is active
-every 20 minutes until that deadline or the owner's return.
-No merges; preserve current previews and reference5207. Quality requirements remain unchanged.
+Current2026-10-23: the owner returned and the overnight continuation is paused. The owner then
+explicitly resumed [M04](P05-M04.md): repair its three fixture findings, complete the panning/
+rendering optimizations, checks and reviews, update PR20 and open a separate preview. Preserve
+65220 and all earlier previews. M05–M09 remain paused; owner-only merging remains unchanged.
+
+The [decision243](../docs/decisions.md) absence window has ended. The resumed M04 authority is
+recorded in decision244; the scheduled continuation remains paused. [P05-DIAG01](P05-DIAG01.md)
+provides bounded logging and development mode. Preserve current previews and reference5207;
+quality requirements and the prohibition on agent merges remain unchanged.
 
 The migration sequence is [M01](P05-M01.md) → [M02](P05-M02.md) → [M03](P05-M03.md) →
 [M04](P05-M04.md) → [M05](P05-M05.md) → [M06](P05-M06.md) → [M07](P05-M07.md) →
@@ -13,20 +16,22 @@ The migration sequence is [M01](P05-M01.md) → [M02](P05-M02.md) → [M03](P05-
 [MIG-C1](../docs/interfaces/web-gpu-editor.md)/[MIG-D1](../docs/design/web-gpu-editor.md).
 M01 is frozen at9e92c63 in [PR16](https://github.com/AlexandrLesiv/Linefield/pull/16).
 M02 runtime is frozen at1157aeba in draft [PR17](https://github.com/AlexandrLesiv/Linefield/pull/17).
-M03 is active in [draft PR18](https://github.com/AlexandrLesiv/Linefield/pull/18) on that frozen
+M03 is recorded in [draft PR18](https://github.com/AlexandrLesiv/Linefield/pull/18) on that frozen
 runtime; its Undo-continuity preview remains available on port65177. M03's current wake/retention
 checkpoint passes275 unique browser cases plus four affected fixture rechecks, static/build and
 scoped reviews; preview65206 preserves prior builds. DIAG01 is in draft
 [PR19](https://github.com/AlexandrLesiv/Linefield/pull/19), with bounded exportable diagnostics and
 development tools on65208. Capture overhead and remaining M03 timing/resource gates stay open.
 M04's first same-view prefix reuse checkpoint passes346 selected cases and scoped reviews;
-preview65220 is available. Its one bounded comparison reduced completed-frame acknowledgement
+preview65220 is preserved. Its held-pan regression is repaired in reviewed preview65222, with24
+distinct targeted cases passing; repeated forced-composition quality and full performance remain
+open. Its one bounded comparison reduced completed-frame acknowledgement
 from63.8/61.6ms controls to48.7ms; this is not panning or full-profile acceptance. Sparse coverage,
-regions and tiles remain in progress. First compiled raster arithmetic/layout proof is authorized;
-production pan-copy is gated. M05 settings/material controls are under source review on its
-separate branch; shaders and combined browser acceptance remain pending. M06/M07 have prepared
-contracts only; M08/M09 remain unimplemented. Later work needs frozen predecessors, not renewed
-permission. No source or model checkpoint is a compiled shader, appearance or performance pass.
+regions and tiles remain in progress. The first compiled raster arithmetic/layout proof passes
+its two browser cases; production pan-copy is still gated. M05 settings/material work is preserved
+on its paused branch; shaders and combined browser acceptance remain pending. M06/M07 have prepared
+contracts only; M08/M09 remain unimplemented. M05–M09 await resumption and frozen predecessors.
+No source or numerical checkpoint is a compiled shader, appearance or performance pass.
 PR10 is verified merged at3eaaff8c07c3e15bdcbbbdb97c74031426fbe454. Older status statements
 below are historical. One task/branch/PR, parent-first stacked review, owner-only merges.
 

@@ -51,6 +51,8 @@ macro_rules! snapshot {
     };
 }
 snapshot!(PreparationSnapshot);
+#[cfg(feature = "e2e-fixtures")]
+snapshot!(RasterProofSnapshot);
 snapshot!(TailDisplaySnapshot);
 snapshot!(CurrentCoverageSnapshot);
 snapshot!(FrameReuseSnapshot);

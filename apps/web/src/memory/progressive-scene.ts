@@ -6,11 +6,12 @@ import { ReceiptLeases } from "./receipt-lease.ts";
 import { cleanupScene } from "./scene-cleanup.ts";
 import type { Coverage } from "./current-coverage.ts";
 import { CompletedCandidate } from "./completed-candidate.ts";
+import { promoteCandidate } from "./candidate-promotion.ts";
+import { consumeViewCandidate } from "./view-candidate.ts";
 import { DisplayBase } from "./display-base.ts";
 import { LiveOwner } from "./live-owner.ts";
-import { displayGraph } from "./display-graph.ts";
+import { displayGraph, sceneGraph } from "./display-graph.ts";
 import type { DisplayGraph } from "./display-graph.ts";
-import { frames } from "./frame-bridge.ts";
 import { coverageObservation } from "./coverage-observation.ts";
 import { PreparedCache } from "./prepared-cache.ts";
 import { loadPreparation } from "./preparation-loader.ts";
@@ -66,18 +67,7 @@ export class ProgressiveScene {
     return observeCoverage(this.state(), q);
   }
   private graph(q: Coverage): DisplayGraph {
-    let candidate: Float32Array | undefined;
-    if (this.candidate.sealed && this.candidate.receipt) {
-      const transform = frames.displayTransform(this.state(), this.candidate.receipt.id);
-      if (transform.code !== "ok") throw Error(transform.code);
-      candidate = transform.matrix;
-    }
-    return {
-      base: this.base.transform(),
-      candidate,
-      live: this.live.graph(q),
-      candidateIncludesLive: q.candidateIncludesLive,
-    };
+    return sceneGraph(this.state(), this.base, this.candidate, this.live, q);
   }
   private consume(q: Coverage, detail: number) {
     return consumePrefix(
@@ -111,20 +101,23 @@ export class ProgressiveScene {
       if (!q.candidateViewCurrent) this.candidate.cancel();
     }
     q = this.coverage();
-    if (
-      this.candidate.ready &&
-      q.candidateRecaptureSafe &&
-      !q.candidateExactView &&
-      !q.viewGestureActive
-    ) {
+    if (this.candidate.ready && q.candidateRecaptureSafe && !q.candidateExactView) {
       this.candidate.recapture();
       q = this.coverage();
     }
-    if (this.candidate.ready && q.candidateExactView && !q.viewGestureActive) {
-      const next = this.candidate.take();
-      if (!next) throw Error("gpu-queue");
-      this.renderer.promote();
-      this.base.publish(next, this.renderer, true);
+    if (
+      consumeViewCandidate(
+        this.state(),
+        this.renderer,
+        this.base,
+        this.candidate,
+        this.live,
+        () => this.graph(q),
+        q,
+      )
+    )
+      q = this.coverage();
+    if (promoteCandidate(this.state(), this.candidate, this.base, this.renderer, q)) {
       q = this.coverage();
       if (q.liveState === "included") {
         this.live.dispose();
@@ -171,6 +164,7 @@ export class ProgressiveScene {
     this.inputComplete =
       this.base.prefix &&
       !this.base.historical &&
+      !q.viewGestureActive &&
       this.base.receipt?.key === `${s.content}:${s.mapping}` &&
       (!q.activeSource || (q.liveState === "active" && !!this.live.value?.covers(q.liveCount)));
     if (
