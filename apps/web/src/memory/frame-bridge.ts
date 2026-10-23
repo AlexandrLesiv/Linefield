@@ -1,3 +1,4 @@
+import { placementPhase } from "./placement-phase.ts";
 import * as api from "#memory-bindings";
 import { editorHealthy } from "./editor-health.ts";
 import { copyReply, take } from "./edit-bridge.ts";
@@ -8,6 +9,16 @@ export const frames = {
   capture: (s: ReplyValue) =>
     take(
       () => api.memoryFrameCapture(s.owner, s.session, s.mapping),
+      (v) => ({
+        code: v.code,
+        id: v.frameId,
+        through: v.page,
+        key: `${v.frameContent}:${v.frameMapping}`,
+      }),
+    ),
+  canonical: (s: ReplyValue) =>
+    take(
+      () => api.memoryFrameCaptureCanonical(s.owner, s.session, s.mapping),
       (v) => ({
         code: v.code,
         id: v.frameId,
@@ -60,8 +71,5 @@ export const frames = {
       (v) => v.code === "ok" && v.page === 1n,
     ),
   placement: (s: ReplyValue, frame: bigint, stroke: bigint, page: bigint) =>
-    take(
-      () => api.memoryFramePlacement(s.owner, s.session, frame, stroke, page),
-      (v) => ({ code: v.code, available: v.available, matrix: v.matrix }),
-    ),
+    take(() => api.memoryFramePlacement(s.owner, s.session, frame, stroke, page), placementPhase),
 };

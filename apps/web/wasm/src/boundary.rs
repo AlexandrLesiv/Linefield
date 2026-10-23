@@ -8,6 +8,8 @@ thread_local! {
     static BUSY: Cell<bool> = const { Cell::new(false) };
 }
 pub struct Data {
+    #[cfg(feature = "e2e-fixtures")]
+    pub raster: Cell<crate::raster_result::Result>,
     pub value: Cell<Projection>,
     pub consumed: Cell<bool>,
     _reserved: Vec<u8>,
@@ -23,6 +25,8 @@ pub struct Data {
     pub placement: Cell<linefield_editor_engine::Placement>,
     pub tail: Cell<linefield_editor_engine::TailStatus>,
     pub coverage: Cell<linefield_editor_engine::CurrentCoverage>,
+    pub reuse: Cell<linefield_editor_engine::FrameReuse>,
+    pub pan_reuse: Cell<linefield_editor_engine::FramePanReuse>,
     pub capture: Cell<linefield_editor_engine::FrameCapture>,
     pub visibility: RefCell<Option<linefield_editor_engine::VisibilityPage>>,
     pub visibility_consumed: Cell<u8>,
@@ -109,6 +113,8 @@ where
         }
     });
     let data = Rc::new(Data {
+        #[cfg(feature = "e2e-fixtures")]
+        raster: Cell::new(Default::default()),
         value: Cell::new(value),
         consumed: Cell::new(false),
         _reserved: reserved,
@@ -124,6 +130,8 @@ where
         placement: Cell::new(Default::default()),
         tail: Cell::new(Default::default()),
         coverage: Cell::new(Default::default()),
+        reuse: Cell::new(Default::default()),
+        pan_reuse: Cell::new(Default::default()),
         capture: Cell::new(Default::default()),
         visibility: RefCell::new(None),
         visibility_consumed: Cell::new(0),

@@ -52,12 +52,12 @@ export class GpuSubmission {
         for (let i = 0; error !== this.gl.NO_ERROR && i < 8; i++) error = this.gl.getError();
       for (const item of this.pending) this.gl.deleteSync(item.sync);
       this.pending = [];
-      this.wake.progress();
       if (validate) {
         this.validated = last?.serial ?? this.validated;
         metrics.validatedSubmissions = this.validated;
         metrics.validatedTime = performance.now();
       }
+      this.wake.progress();
     }
     metrics.gpuInFlight = this.pending.length;
     return this.pending.length + this.reserved < 2;
@@ -86,7 +86,7 @@ export class GpuSubmission {
       this.ready();
       if (this.validated < serial) await this.turn();
     }
-    if (this.disposed) throw Error("disposed");
+    if (this.disposed || this.retiring) throw Error("disposed");
   }
   turn() {
     return this.wake.wait();

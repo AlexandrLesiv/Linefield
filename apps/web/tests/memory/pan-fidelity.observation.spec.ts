@@ -4,7 +4,13 @@ import type { Page } from "@playwright/test";
 type Observed = Readonly<Record<string, string | number | boolean>>;
 async function panFrame(page: Page, records: Observed[], accepted?: Observed) {
   let input = accepted,
-    sealed = records.some((r) => r.kind === "coverage-transition" && r.phase === "seal");
+    rebuilt = records.some(
+      (r) =>
+        accepted &&
+        ["owner", "session", "content", "mapping"].every((key) => r[key] === accepted[key]) &&
+        (r.kind === "receipt-publish" ||
+          (r.kind === "coverage-transition" && r.phase === "view-consume")),
+    );
   await expect
     .poll(async () => {
       const snapshot = await page.evaluate(() => window["__linefieldPerfRead"]?.());
@@ -16,12 +22,16 @@ async function panFrame(page: Page, records: Observed[], accepted?: Observed) {
         const matching =
           input &&
           ["owner", "session", "content", "mapping"].every((key) => record[key] === input?.[key]);
-        if (matching && record.kind === "coverage-transition" && record.phase === "seal")
-          sealed = true;
+        if (
+          matching &&
+          (record.kind === "receipt-publish" ||
+            (record.kind === "coverage-transition" && record.phase === "view-consume"))
+        )
+          rebuilt = true;
         if (
           matching &&
           record.kind === "overlay-submit" &&
-          (!accepted || (sealed && !record.complete))
+          (!accepted || (rebuilt && !record.complete))
         )
           shown = true;
       }
@@ -33,7 +43,7 @@ async function panFrame(page: Page, records: Observed[], accepted?: Observed) {
     .toBe(true);
   return input;
 }
-test("MIG-WORKER-14 integer pan preserves settled AA through sealed progress and ended current receipt", async ({
+test("MIG-WORKER-14 integer pan preserves settled AA through held reconstruction and ended current receipt", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
@@ -73,16 +83,14 @@ test("MIG-WORKER-14 integer pan preserves settled AA through sealed progress and
   await complete(page);
   const ended = await page.screenshot({ clip: shifted });
   await test.info().attach("settled", { body: settled, contentType: "image/png" });
-  await test
-    .info()
-    .attach("transformed-pan-possibly-sealed", { body: provisional, contentType: "image/png" });
-  await test.info().attach("validated-sealed-pan", { body: rebuilt, contentType: "image/png" });
+  await test.info().attach("transformed-pan", { body: provisional, contentType: "image/png" });
+  await test.info().attach("validated-held-pan", { body: rebuilt, contentType: "image/png" });
   await test.info().attach("ended-pan", { body: ended, contentType: "image/png" });
   await test.info().attach("gesture-transitions", {
     body: JSON.stringify(records),
     contentType: "application/json",
   });
   expect(provisional.equals(settled), "integer provisional copy").toBe(true);
-  expect(rebuilt.equals(settled), "integer validated sealed layer").toBe(true);
+  expect(rebuilt.equals(settled), "integer validated held reconstruction").toBe(true);
   expect(ended.equals(settled), "integer committed pan").toBe(true);
 });

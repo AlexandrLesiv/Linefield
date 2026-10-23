@@ -1,5 +1,8 @@
+pub(crate) mod interval;
 mod magnitude;
 mod normalize;
+pub mod raster_offset;
+pub(crate) mod raster_residual;
 mod round;
 use crate::Code;
 pub use normalize::normalize;

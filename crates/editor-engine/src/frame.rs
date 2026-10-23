@@ -17,6 +17,7 @@ pub struct FrameReceipt {
     pub ordinal: usize,
     pub(crate) view: Viewport,
     pub(crate) metrics: Metrics,
+    pub(crate) raster: crate::raster_capture::RasterCapture,
 }
 impl Engine {
     pub fn capture_frame(
@@ -50,6 +51,7 @@ impl Engine {
             ordinal: 0,
             view: self.document.view,
             metrics,
+            raster: self.raster.capture,
         };
         self.insert_frame(receipt)
     }
@@ -84,12 +86,20 @@ impl Engine {
         if m != f.metrics {
             return Err(Code::StaleMapping);
         }
-        self.display_transform(f.view, m)
+        self.raster_display_transform(*f, m)
     }
     pub(crate) fn display_transform(
         &self,
         captured: Viewport,
         m: Metrics,
+    ) -> Result<Placement, Code> {
+        self.display_transform_offset(captured, m, [0; 2])
+    }
+    pub(crate) fn display_transform_offset(
+        &self,
+        captured: Viewport,
+        m: Metrics,
+        offset: [i32; 2],
     ) -> Result<Placement, Code> {
         let v = self.document.view;
         let (s, c) = (v.angle - captured.angle).sin_cos();
@@ -99,8 +109,14 @@ impl Engine {
         let (vs, vc) = v.angle.sin_cos();
         let x = m.width * m.backing / 2.0;
         let y = m.height * m.backing / 2.0;
-        let tx = x + (vc * dx - vs * dy) * v.zoom * m.backing - (c * x - s * y) * scale;
-        let ty = y + (vs * dx + vc * dy) * v.zoom * m.backing - (s * x + c * y) * scale;
+        let tx = -(c * f64::from(offset[0]) - s * f64::from(offset[1])) * scale
+            + x
+            + (vc * dx - vs * dy) * v.zoom * m.backing
+            - (c * x - s * y) * scale;
+        let ty = -(s * f64::from(offset[0]) + c * f64::from(offset[1])) * scale
+            + y
+            + (vs * dx + vc * dy) * v.zoom * m.backing
+            - (s * x + c * y) * scale;
         let matrix = crate::geometry_precision::placement(
             [c * scale, s * scale, -s * scale, c * scale, tx, ty],
             [0.0, 0.0, m.width * m.backing, m.height * m.backing],
@@ -111,6 +127,8 @@ impl Engine {
         Ok(Placement {
             matrix,
             available: true,
+            disposition: crate::PlacementDisposition::Visible,
+            ..Default::default()
         })
     }
     pub(crate) fn frame_receipt(
@@ -146,7 +164,7 @@ impl Engine {
         if stroke > f.through {
             return Err(Code::StaleScene);
         }
-        self.project_page(stroke, page, f.view, f.metrics)
+        self.project_frame_page(stroke, page, f)
     }
     pub fn release_frame(&mut self, owner: u64, session: u64, id: u64) -> Code {
         if let Err(c) = self.session(owner, session) {

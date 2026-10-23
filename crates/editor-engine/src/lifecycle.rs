@@ -1,5 +1,9 @@
 use crate::{Code, Engine, Phase};
 impl Engine {
+    pub fn begin_command(&mut self) {
+        self.active_cancelled = false;
+    }
+
     pub fn create(&mut self) -> Code {
         if self.current.is_some() {
             return Code::Active;
@@ -47,6 +51,7 @@ impl Engine {
         self.pages.clear();
         self.preparations.clear();
         self.frames = [None; 8];
+        self.raster.reset(self.document.view, None);
         self.continuation = None;
         // Enter/update admission reserves this generation; cleanup cannot consume it early.
         self.advance();
@@ -68,6 +73,7 @@ impl Engine {
         self.visibility_cache.clear();
         self.clear_tail_displays();
         self.document = Default::default();
+        self.raster.reset(self.document.view, None);
         self.pages.clear();
         self.preparations.clear();
         self.frames = [None; 8];

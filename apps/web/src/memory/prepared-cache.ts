@@ -1,30 +1,37 @@
+import { pendingResources } from "./prepared-resources.ts";
 import * as observed from "../developer-diagnostics/preparation-completion.ts";
 import { preparationTicket } from "../developer-diagnostics/preparation-ticket.ts";
 import type { PreparationOutcome } from "../developer-diagnostics/preparation-completion.ts";
 import { PendingPreparation } from "./pending-preparation.ts";
 import { CleanupFailure } from "./cleanup-failure.ts";
 import { PreparationTicket } from "./preparation-ticket.ts";
-import { orderedPreparation } from "./ordered-preparation.ts";
+import { readPrepared } from "./prepared-read.ts";
 import { frames } from "./frame-bridge.ts";
 import { PreparationExecutor } from "./preparation-executor.ts";
 import { preparation } from "./preparation-bridge.ts";
 import { geometryMetrics as metrics } from "./geometry-metrics.ts";
-import { PreparedStore } from "./prepared-store.ts";
-import type { PreparedPage } from "./prepared-store.ts";
+import { PreparedStore, type PreparedPage } from "./prepared-store.ts";
 export type { PreparedPage } from "./prepared-store.ts";
 export class PreparedCache extends PreparedStore {
   private executor: PreparationExecutor | undefined;
   private generation = 0;
   private pending = { pages: 0, bytes: 0, tickets: 0 };
   private stopped = false;
-  reader(stroke: bigint, count: bigint, detail: number, frame: bigint, chunk: bigint) {
+  reader(
+    stroke: bigint,
+    count: bigint,
+    detail: number,
+    frame: bigint,
+    chunk: bigint,
+    exact = false,
+  ) {
     const revision = count < (chunk + 1n) * 128n + 1n ? count : (chunk + 1n) * 128n + 1n;
-    const hit = this.retained(stroke, revision, detail, frame, chunk);
+    const hit = this.retained(stroke, revision, detail, frame, chunk, exact);
     return hit
       ? this.retainedPages(hit, detail)
-      : this.chunk(stroke, count, detail, false, frame, chunk);
+      : this.chunk(stroke, count, detail, false, frame, chunk, exact);
   }
-  async *read(
+  read(
     stroke: bigint,
     count: bigint,
     detail: number,
@@ -32,10 +39,7 @@ export class PreparedCache extends PreparedStore {
     frame = 0n,
   ): AsyncGenerator<PreparedPage> {
     const prepare = (chunk: bigint) => this.chunk(stroke, count, detail, urgent, frame, chunk);
-    function* chunks() {
-      for (let chunk = 0n; chunk < (count + 127n) / 128n; chunk++) yield prepare(chunk);
-    }
-    for await (const page of orderedPreparation(chunks())) yield this.borrows.borrow(page);
+    return readPrepared(count, prepare, (page) => this.borrows.borrow(page));
   }
   private async *chunk(
     stroke: bigint,
@@ -44,13 +48,14 @@ export class PreparedCache extends PreparedStore {
     urgent: boolean,
     frame: bigint,
     chunk: bigint,
+    exact = false,
   ): AsyncGenerator<PreparedPage> {
     if (this.stopped) return;
     const generation = this.generation;
     const current = () => !this.stopped && generation === this.generation;
     const revision = count < (chunk + 1n) * 128n + 1n ? count : (chunk + 1n) * 128n + 1n;
     const key = `${stroke}:${chunk}`;
-    const hit = this.retained(stroke, revision, detail, frame, chunk);
+    const hit = this.retained(stroke, revision, detail, frame, chunk, exact);
     if (hit) {
       yield* this.retainedPages(hit, detail);
       return;
@@ -107,7 +112,11 @@ export class PreparedCache extends PreparedStore {
               );
             metrics.adoptionMilliseconds += performance.now() - start;
             if (adopted.code !== "ok") throw Error(adopted.code);
-            const page = { page: adopted.page, data: result.data };
+            const page = {
+              page: adopted.page,
+              data: result.data,
+              recipe: { detail, unclipped: !clipped },
+            };
             pending.add(page);
             yield page;
             if (pending.streaming) pending.release();
@@ -176,14 +185,7 @@ export class PreparedCache extends PreparedStore {
     }
   }
   override resources() {
-    const value = super.resources();
-    return {
-      ...value,
-      tickets: value.tickets + this.pending.tickets,
-      metadataEstimate: value.metadataEstimate + this.pending.pages * 96,
-      bytes: value.bytes + this.pending.bytes,
-      pages: value.pages + this.pending.pages,
-    };
+    return pendingResources(super.resources(), this.pending);
   }
   dispose() {
     this.stopped = true;

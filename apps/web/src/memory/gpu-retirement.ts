@@ -6,6 +6,8 @@ export type CpuRetirement = {
     metadataEstimate?: number;
     uncertainDescriptors?: number;
     uncertainTickets?: number;
+    receiptLeases?: number;
+    uncertainReceiptLeases?: number;
   };
   cleanup: () => Promise<void>;
 };
@@ -15,6 +17,7 @@ type Retirement = {
   drained: () => boolean;
   release: () => void;
   metadata?: () => number;
+  samplerObjects?: number;
 };
 type Record = {
   gpu: Retirement;
@@ -107,6 +110,9 @@ export function retiringCpuResources() {
 }
 export function retiringGpuBytes() {
   return current && !current.gpuDone ? current.gpu.bytes : 0;
+}
+export function retiringGpuSamplers() {
+  return current && !current.gpuDone ? (current.gpu.samplerObjects ?? 0) : 0;
 }
 export function pollGpuRetirement() {
   if (scheduled) cancelAnimationFrame(scheduled);

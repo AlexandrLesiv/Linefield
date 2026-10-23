@@ -89,6 +89,10 @@ CPU admission includes pending, retiring and borrowed-retired ownership exactly 
 transfer is not reclamation. Bounded transient working owners remain visible separately; do not
 claim the resident8MiB limit describes all host geometry memory.
 
+Production drains preparation readers for the current visibility reply before replacing that
+reply. Keep the existing cumulative producer budgets, painter order and complete cancellation
+drain. Cross-reply lookahead is not an adopted optimization; see the M04 task disposition.
+
 Move at most one evicted CPU entry, without copying its pages array, into a retirement cursor.
 Drain it under the idle transition budget; borrowed pages transfer to their existing retirement
 owner until final release. The clipped ticket counts until successfully released. Do not select

@@ -32,6 +32,16 @@ export const currentCoverage = (s: ReplyValue, live = 0n, installed = 0n, candid
     }),
   );
 export type Coverage = ReturnType<typeof currentCoverage>;
+export const captureViewDisplay = (s: ReplyValue, candidate: bigint) =>
+  take(
+    () => api.memoryViewDisplayFrameCapture(s.owner, s.session, s.mapping, candidate),
+    (v) => ({
+      code: v.code,
+      id: v.frameId,
+      through: v.cutoffThrough,
+      key: `0:${v.frameMapping}`,
+    }),
+  );
 export const captureLive = (s: ReplyValue, source: bigint) =>
   take(
     () => api.memoryLiveFrameCapture(s.owner, s.session, s.mapping, source),

@@ -14,6 +14,8 @@ mod lifecycle;
 mod mapping;
 mod model;
 pub mod numerics;
+#[cfg(feature = "e2e-fixtures")]
+pub mod raster_probe;
 mod resources;
 mod scene;
 pub use document::{RawSample, Samples, Stroke, Style};
@@ -33,7 +35,9 @@ mod frame;
 pub use frame::{FrameAuthority, FrameReceipt};
 mod frame_capture;
 mod frame_registry;
+mod frame_reuse;
 pub use frame_capture::FrameCapture;
+pub use frame_reuse::{FrameReuse, FrameReuseMiss};
 mod current_coverage;
 pub use current_coverage::{CurrentCoverage, LiveState};
 
@@ -56,3 +60,14 @@ mod visibility_cursor;
 mod visibility_range;
 mod visibility_walk;
 pub use visibility_cursor::VisibilityPage;
+
+mod frame_pan_reuse;
+mod raster_capture;
+mod raster_placement;
+mod raster_state;
+pub use frame_pan_reuse::{FramePanReuse, PanReuseMiss};
+pub use raster_placement::{PlacementDisposition, RasterMiss};
+
+mod camera_reset;
+
+mod raster_quad;

@@ -11,6 +11,10 @@ mod geometry_results;
 mod ink;
 mod mapping;
 mod queries;
+#[cfg(feature = "e2e-fixtures")]
+mod raster_fixture;
+#[cfg(feature = "e2e-fixtures")]
+mod raster_result;
 mod snapshots;
 mod state;
 pub use camera::*;
@@ -39,9 +43,14 @@ mod display_readiness;
 mod frame;
 mod frame_capture;
 mod frame_preparation;
+mod frame_reuse;
 mod live_preparation;
 mod stable_preparation;
 mod tail_display;
 mod tail_pages;
 mod tail_preparation;
 mod visibility;
+
+mod frame_canonical;
+mod frame_pan_reuse;
+mod placement_phase;

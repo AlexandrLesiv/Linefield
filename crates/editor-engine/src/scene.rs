@@ -3,6 +3,10 @@ use crate::{Code, Engine, Style, numerics::Axis};
 pub struct Placement {
     pub matrix: [f32; 6],
     pub available: bool,
+    pub raster_epoch: u64,
+    pub offset: [i32; 2],
+    pub disposition: crate::PlacementDisposition,
+    pub raster_miss: crate::RasterMiss,
 }
 #[derive(Debug)]
 pub struct Page {
@@ -148,9 +152,19 @@ impl Engine {
             scale,
             m.width.max(m.height) * m.backing,
         )?;
+        crate::raster_quad::certify(
+            matrix,
+            descriptor.centers,
+            width * 0.5,
+            scale,
+            descriptor.key.detail,
+            [0; 2],
+        )?;
         Ok(Placement {
             matrix,
             available: true,
+            disposition: crate::PlacementDisposition::Visible,
+            ..Default::default()
         })
     }
     pub fn release_page(&mut self, page: u64) {

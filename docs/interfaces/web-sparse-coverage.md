@@ -1,8 +1,11 @@
 # M04 bounded sparse coverage
 
 First-stage contract adopted by the lead under decision243 after shared-engine and rendering
-review. Implementation waits for the frozen M03 predecessor and one assigned M04 writer.
-Compiled/GPU correctness and performance checks below remain required, not passed by design.
+review. The isolated reusable executor passes its scoped browser correctness checks, but its
+fixed cost screen rejects production adoption: all four thin-scene positive medians are slower
+than the full path and eleven of sixteen negative cells exceed the adverse-regression rule.
+Production remains full mode. Retain this source experiment and its failure/resource contract;
+no further sparse integration is authorized by a correctness pass alone.
 Completed-region reuse, raster-lattice proof and the optional tile archive are later M04 stages.
 
 ## Responsibility and preserved authority
@@ -17,6 +20,34 @@ packed-mask ownership and at most eight frame/tail receipts. A Prefix is source 
 LiveSource/DisplayOnly cannot become current geometry authority. Candidate/source/renderer
 identities fence every cohort and completion. Neither source authority nor a completed CPU
 plan proves that GPU pixels are complete.
+
+## Conservative first integration
+
+The lead adopts a one-page completed-group entry for the first runtime checkpoint. Only the
+following actual Composite proves that the retained page is the entire logical group; a second
+Page permanently selects ordinary rendering for that group before any sparse work is issued.
+This is optional optimization admission, not a stroke-size limit. Multipage and empty groups
+retain the complete path. Require useful ordinary-app short-stroke and warm-history hits before
+enabling this entry; a fixture-only hit does not retain an optimization benefit.
+
+FrameCommands owns the held page explicitly. It remains inside the existing32-command/1MiB
+admission, including its original age, until released exactly once. Producer lookahead must
+remain possible at capacity. Delayed Composite/second-page preparation, route planning and bank
+waits occur without a reserved GPU slot. Preserve the captured Prefix, style, immutable checked
+placement and CPU page for replay; never obtain replacement authority from a newer editor view.
+An unexpected Group or end-of-stream before Composite is failure, not permission to compose.
+
+For an optional pre-S refusal, drain issued G readers, clear G and replay the retained group
+once through the complete pass. The first presenter S write is an irreversible boundary: mark
+it before issue and discard/recover the candidate on any later uncertainty. Do not replay over
+partial S. Geometry-loan, route-bank and G-presenter reader lifetimes remain independent.
+
+This restriction does not change the representations or limits below. Review the actual finite
+arithmetic enclosure, queue accounting, replay and reader lifetimes before enabling production.
+Compare complete versus sparse costs including failed attempts, routing, clear, uploads and
+presentation. Retain complete rendering if useful end-to-end improvement is not established.
+Production pan-lattice and archive adoption remain separately gated; this entry does not replace
+large-stroke or panning acceptance.
 
 ## Fixed representation and resource limits
 
@@ -141,6 +172,36 @@ outward error before floor/ceil. Integer vertices lie within0..8192, but clip co
 raster precision must also keep combined edge uncertainty below0.5px. Fragment ownership cannot
 repair a missing pixel center. Existing quarter-pixel and AA tolerances remain unchanged.
 
+### First-checkpoint numerical admission
+
+The first implementation uses scalar outward binary64 intervals over the exact uploaded f32
+operands. Widen CPU arithmetic to adjacent representable endpoints before adding shader error.
+Use a conservative1ULP allowance for shader additions/multiplications,2ULP for inverse square
+root and3ULP for division. ULP bounds include the next binade at an interval boundary. Enclose
+all permitted affine evaluation/contraction orders, scale, radius multiplication, radius+2 and
+endpoint subtraction/addition before floor/ceil. Zero is supported explicitly; uncertifiable
+underflow, overflow, nonfinite values or cancellation choose the complete path. Initially admit
+the scale squared-sum only inside `[2^-60,2^60]`; bracket square-root endpoints with outward
+square checks. No reliance on Math.hypot matching shader rounding.
+
+For the actual clip expression `p/viewport*2-1`, derive clip error Ec with the same operation
+rules. Require highp precision of at least23 bits and SUBPIXEL_BITS at least4. Integer atlas
+vertices remain inside0..8192. The lead adopts an explicit conservative implementation model
+with per-operation fixed-function relative error e=2e-5: propagate division by1, viewport scale
+and translation outward, and verify they fit `D*Ec/2 + 4*e*D`. Admit only when this bound plus
+one whole subpixel quantum is strictly below0.5px on both axes. In particular, this initial model
+does not admit8192-pixel axes; complete rendering remains available there.
+
+This fixed-function model is an engineering premise with a safety margin over
+[OpenGL ES3.0.6 section2.1.1](https://registry.khronos.org/OpenGL/specs/es/3.0/es_spec_3.0.pdf)'s
+approximate accuracy statement, not a claimed normative IEEE guarantee.
+[GLSL ES3.00 sections4.5.1 and8.5](https://registry.khronos.org/OpenGL/specs/es/3.0/GLSL_ES_Specification_3.00.pdf)
+supply the shader-operation premises. Keep the model explicit
+in source review and validate the supported implementation with exact full/sparse browser pixel
+comparisons before enabling the optional route. Unsupported precision or failed bounds select
+complete rendering, never wider artwork tolerance. A tested device corpus is not every-GPU
+acceptance. The projection/quad error must separately fit the existing `2−1.414214` guard.
+
 ## Composition, fallback and failure
 
 All capsules for a logical group MAX-union into its assigned G slots. One destination tile has
@@ -149,8 +210,17 @@ disjoint, so final source-over applies once in paint order without repeated opac
 Each group starts with zeroed G after previous presenter readers validate: clear normal coverage
 or packed G alpha only. Prior-group atlas coverage cannot survive into the next group's MAX.
 
-After geometry readers validate, reuse a retired route bank for the slot-to-destination
-presenter table. For destination integer pixel d, fetch source `s=d−t+a` with integer
+Rewriting a geometry route bank as the slot-to-destination presenter table requires its geometry
+readers to validate first. In the conservative one-page path, the second bank may instead hold
+the presenter table if it is already free of all previous readers. Keep the first bank and its
+geometry allocation immutable; ordered commands in the same WebGL context may then issue G
+geometry followed by S presentation without an intervening validation wait. This introduces no
+third bank, fence or permission to reuse G early. Mark composite-issued before the first S write;
+any error discovered afterward discards the candidate instead of replaying over partial S. Both
+banks, source geometry and G remain owned through their actual last readers, and every part must
+validate before publication. The next group clears/reuses G only after presenter readers validate.
+
+For destination integer pixel d, fetch source `s=d−t+a` with integer
 `texelFetch(G, (s.x,H−1−s.y),0)`. No normalized UV sampling or sampler/write alias is allowed.
 Normal G reads red; packed G is its independent alpha mask. Presenter writes S RGB only in
 packed mode, preserving live alpha, with ONE/ONE_MINUS_SRC_ALPHA and existing group opacity.

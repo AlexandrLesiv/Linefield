@@ -31,6 +31,7 @@ export class FrameCommands {
   private prepared: PreparedCache;
   private detail: number;
   private frame: bigint;
+  private exact: boolean;
   constructor(
     state: () => ReplyValue,
     prepared: PreparedCache,
@@ -39,11 +40,13 @@ export class FrameCommands {
     frame: bigint,
     after = 0n,
     predecessor = 0n,
+    exact = false,
   ) {
     this.state = state;
     this.prepared = prepared;
     this.detail = detail;
     this.frame = frame;
+    this.exact = exact;
     this.visibility = new FrameVisibility(state, frame, predecessor, through, after);
     this.completion = this.produce()
       .catch((error: unknown) => {
@@ -115,10 +118,10 @@ export class FrameCommands {
         this.stroke = { id, color: stroke.color };
         this.push({ kind: "group" });
       }
-      const { prepared, detail, frame } = this;
+      const { prepared, detail, frame, exact } = this;
       this.pages = new ReadyPreparation(
         (function* () {
-          for (const chunk of chunks) yield prepared.reader(id, count, detail, frame, chunk);
+          for (const chunk of chunks) yield prepared.reader(id, count, detail, frame, chunk, exact);
         })(),
       );
     }

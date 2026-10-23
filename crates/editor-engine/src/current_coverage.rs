@@ -104,11 +104,11 @@ impl Engine {
             q.candidate_view_current =
                 f.view == self.document.view && state.metrics == Some(f.metrics);
             q.candidate_mapping_current = f.mapping == mapping;
-            q.candidate_recapture_safe =
+            let current_view =
                 state.phase == Phase::Ready && q.candidate_at_cutoff && q.candidate_view_current;
-            q.candidate_exact_view = q.candidate_recapture_safe
-                && q.candidate_content_current
-                && q.candidate_mapping_current;
+            q.candidate_recapture_safe = current_view && f.raster == self.raster.capture;
+            q.candidate_exact_view =
+                current_view && q.candidate_content_current && q.candidate_mapping_current;
             if q.candidate_valid && f.count < self.document.visible {
                 let next = &self.document.strokes[f.count];
                 q.next_source = next.id;

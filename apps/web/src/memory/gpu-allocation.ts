@@ -1,6 +1,10 @@
+import { GpuReaderHold } from "./gpu-reader-hold.ts";
+import { rasterCapability } from "./raster-capability.ts";
 import { targets } from "./gpu-targets.ts";
 import { vertex, fragment, screenVertex, screenFragment } from "./gpu-shaders.ts";
 import { program } from "./gpu-resources.ts";
+import { seedVertex, seedFragment } from "./gpu-seed.ts";
+import { opaqueSampler } from "./opaque-sampler.ts";
 export function allocateGpu(gl: WebGL2RenderingContext, width: number, height: number) {
   const cleanup: (() => void)[] = [];
   const dispose = () => {
@@ -8,10 +12,15 @@ export function allocateGpu(gl: WebGL2RenderingContext, width: number, height: n
     cleanup.length = 0;
   };
   try {
+    const integerQuad = rasterCapability(gl, width, height);
     const ink = program(gl, vertex, fragment);
     cleanup.push(() => gl.deleteProgram(ink));
     const copy = program(gl, screenVertex, screenFragment);
     cleanup.push(() => gl.deleteProgram(copy));
+    const seed = program(gl, seedVertex, seedFragment);
+    cleanup.push(() => gl.deleteProgram(seed));
+    const rgbSampler = opaqueSampler(gl);
+    cleanup.push(() => gl.deleteSampler(rgbSampler));
     const vao = gl.createVertexArray();
     if (!vao) throw Error("gpu-buffer");
     cleanup.push(() => gl.deleteVertexArray(vao));
@@ -27,7 +36,20 @@ export function allocateGpu(gl: WebGL2RenderingContext, width: number, height: n
     const surfaces = targets(gl, width, height);
     cleanup.push(surfaces.dispose);
     if (gl.isContextLost() || gl.getError() !== gl.NO_ERROR) throw Error("gpu-resource");
-    return { ink, copy, vao, buffers, ...surfaces, dispose };
+    return {
+      baseGeneration: 0,
+      baseReusable: true,
+      copyReader: new GpuReaderHold(),
+      integerQuad,
+      ink,
+      copy,
+      seed,
+      rgbSampler,
+      vao,
+      buffers,
+      ...surfaces,
+      dispose,
+    };
   } catch (error) {
     dispose();
     throw error;

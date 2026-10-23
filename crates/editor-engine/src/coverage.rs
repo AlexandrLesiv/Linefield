@@ -30,10 +30,17 @@ impl Engine {
         };
         let x = relative(v.center[0], anchor[0])?;
         let y = relative(v.center[1], anchor[1])?;
-        let padding = padding + 0.000001;
         let (s, c) = v.angle.sin_cos();
+        let residual =
+            crate::numerics::raster_residual::LIMIT * (s.abs() + c.abs()) / (v.zoom * m.backing);
+        let padding = (padding + 0.000001 + residual.next_up()).next_up();
         let dx = (c.abs() * m.width + s.abs() * m.height) * 0.5 / v.zoom + padding;
         let dy = (s.abs() * m.width + c.abs() * m.height) * 0.5 / v.zoom + padding;
-        Ok([x - dx, y - dy, x + dx, y + dy])
+        Ok([
+            (x - dx).next_down(),
+            (y - dy).next_down(),
+            (x + dx).next_up(),
+            (y + dy).next_up(),
+        ])
     }
 }

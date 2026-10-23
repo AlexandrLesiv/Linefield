@@ -3665,3 +3665,25 @@ Reuse the existing thread continuation every 20 minutes, report meaningful outco
 pause it with a completed/remaining handoff at return, completion or deadline. Preserve65177
 and existing previews; show new reviewed builds separately. M10–M14 experiments, native hosts,
 persistence and unrelated features remain outside this authorization.
+
+## Decision244 — resume M04 after owner return
+
+On2026-10-23 the owner returned, ending the decision243 absence window and pausing its scheduled
+continuation. The owner subsequently explicitly resumed M04: fix its three fixture findings,
+finish panning/rendering optimizations, run checks and reviews, update PR20 and open a separate
+preview for manual testing. Preserve current65220 and all other existing previews. This resumes
+the approved M04 scope and its verification gates, not M05–M09 or the overnight schedule.
+Continue one writer/branch/PR and the reviewed shared Rust/host boundaries; no merge is authorized.
+
+Within that repair scope, the lead refined the existing rendering boundary after the reported
+held-pan regression and specialist/independent review. The named view-display capture validates
+the current Rust-owned gesture and completed prefix, allowing the host to preserve the displayed
+union in existing scratch storage and free its reconstruction target before mouse-up. It grants
+only disposable presentation authority, without editing/history changes or additional targets.
+See [the current live-coverage contract](interfaces/web-live-coverage.md). This technical refinement
+and agent review do not imply owner acceptance or completion of M04's remaining optimization gates.
+
+After that repair was pushed at8773c12, the owner explicitly renewed the remaining M04 work:
+finish rendering/panning optimizations and checks, update PR20 and open a new preview, preserving
+the reviewed port65222 build unchanged. The same task, branch, writer and quality gates continue;
+this does not resume M05–M09, restart the schedule or authorize a merge.

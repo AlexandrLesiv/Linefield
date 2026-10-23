@@ -3,56 +3,18 @@ import type { target } from "./gpu-resources.ts";
 import { emptyBounds, pageBounds, union, scissor } from "./gpu-scissor.ts";
 import { GpuArena } from "./gpu-arena.ts";
 import { geometryMetrics as metrics } from "./geometry-metrics.ts";
+import { blit } from "./gpu-blit.ts";
+export { blit } from "./gpu-blit.ts";
+import { intersections } from "./gpu-regions.ts";
+import type { Bounds } from "./gpu-scissor.ts";
+export type DrawPlan = { bounds: Bounds; clips: Bounds[] };
 type Resources = ReturnType<typeof allocateGpu>;
-export function blit(
-  gl: WebGL2RenderingContext,
-  r: Resources,
-  texture: WebGLTexture,
-  width: number,
-  height: number,
-  color?: readonly number[],
-  matrix?: Float32Array,
-  alphaOnly = false,
-  second?: WebGLTexture,
-) {
-  gl.useProgram(r.copy);
-  gl.bindVertexArray(null);
-  gl.activeTexture(gl.TEXTURE0);
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-  gl.uniform1i(gl.getUniformLocation(r.copy, "image"), 0);
-  gl.activeTexture(gl.TEXTURE1);
-  gl.bindTexture(gl.TEXTURE_2D, second ?? texture);
-  gl.uniform1i(gl.getUniformLocation(r.copy, "secondImage"), 1);
-  gl.uniform1i(gl.getUniformLocation(r.copy, "combine"), second ? 1 : 0);
-  gl.uniform1i(gl.getUniformLocation(r.copy, "coverage"), color ? 1 : 0);
-  gl.uniform1i(gl.getUniformLocation(r.copy, "alphaOnly"), alphaOnly ? 1 : 0);
-  gl.uniform1i(gl.getUniformLocation(r.copy, "packedMask"), r.packed ? 1 : 0);
-  gl.uniform4fv(gl.getUniformLocation(r.copy, "groupColor"), color ?? [0, 0, 0, 1]);
-  gl.uniform2f(gl.getUniformLocation(r.copy, "viewport"), width, height);
-  gl.uniformMatrix3fv(
-    gl.getUniformLocation(r.copy, "transform"),
-    false,
-    matrix
-      ? new Float32Array([
-          matrix[0] ?? 1,
-          matrix[1] ?? 0,
-          0,
-          matrix[2] ?? 0,
-          matrix[3] ?? 1,
-          0,
-          matrix[4] ?? 0,
-          matrix[5] ?? 0,
-          1,
-        ])
-      : new Float32Array([1, 0, 0, 0, 1, 0, 0, 0, 1]),
-  );
-  gl.drawArrays(gl.TRIANGLES, 0, 6);
-}
 export class GpuPass {
   private groupBounds = emptyBounds();
   private previousBounds = emptyBounds();
   private color: readonly number[] = [0, 0, 0, 1];
   private stream = 0;
+  private regions: readonly Bounds[] | undefined;
   private gl: WebGL2RenderingContext;
   private resources: Resources;
   private mask: ReturnType<typeof target>;
@@ -84,17 +46,45 @@ export class GpuPass {
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
   }
+  setRegions(regions: readonly Bounds[] | undefined) {
+    this.regions = regions;
+  }
+  plan(data: Float32Array, m: Float32Array, offset: readonly [number, number] = [0, 0]): DrawPlan {
+    const bounds = pageBounds(data, m);
+    bounds[0] += offset[0];
+    bounds[2] += offset[0];
+    bounds[1] += offset[1];
+    bounds[3] += offset[1];
+    return { bounds, clips: this.regions ? intersections(bounds, this.regions) : [bounds] };
+  }
+  compositePlan() {
+    return this.regions ? intersections(this.groupBounds, this.regions) : [this.groupBounds];
+  }
   group() {
     const gl = this.gl;
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.mask.framebuffer);
     gl.colorMask(!this.resources.packed, !this.resources.packed, !this.resources.packed, true);
-    scissor(gl, this.previousBounds, this.width, this.height);
+    const clears = this.regions
+      ? intersections(this.previousBounds, this.regions)
+      : [this.previousBounds];
     this.groupBounds = emptyBounds();
     gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    for (const bounds of clears) {
+      scissor(gl, bounds, this.width, this.height);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+    }
   }
-  draw(data: Float32Array, m: Float32Array, color: readonly number[], page = 0n) {
-    if (!data.length) return;
+  draw(
+    data: Float32Array,
+    m: Float32Array,
+    color: readonly number[],
+    page = 0n,
+    offset: readonly [number, number] = [0, 0],
+    plan = this.plan(data, m, offset),
+  ) {
+    if (!data.length || !plan.clips.length) return 0;
+    if (!this.resources.integerQuad && (offset[0] !== 0 || offset[1] !== 0))
+      throw Error("raster-capability");
     const gl = this.gl;
     this.color = color;
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.mask.framebuffer);
@@ -104,9 +94,7 @@ export class GpuPass {
     gl.blendFunc(gl.ONE, gl.ONE);
     gl.useProgram(this.resources.ink);
     gl.bindVertexArray(this.resources.vao);
-    const bounds = pageBounds(data, m);
-    union(this.groupBounds, bounds);
-    scissor(gl, bounds, this.width, this.height);
+    union(this.groupBounds, plan.bounds);
     const retained = page ? this.arena.get(page, data) : undefined;
     const buffer = retained?.buffer ?? this.resources.buffers[this.stream++ % 2];
     if (!buffer) throw Error("gpu-buffer");
@@ -123,19 +111,28 @@ export class GpuPass {
       metrics.gpuStreamUploads++;
       metrics.gpuStreamUploadBytes += data.byteLength;
     }
+    gl.uniform1i(
+      gl.getUniformLocation(this.resources.ink, "integerQuad"),
+      this.resources.integerQuad ? 1 : 0,
+    );
     gl.uniform2f(gl.getUniformLocation(this.resources.ink, "viewport"), this.width, this.height);
     gl.uniform4fv(gl.getUniformLocation(this.resources.ink, "color"), color);
+    gl.uniform2f(gl.getUniformLocation(this.resources.ink, "integerOffset"), offset[0], offset[1]);
     gl.uniformMatrix3fv(
       gl.getUniformLocation(this.resources.ink, "placement"),
       false,
       new Float32Array([m[0] ?? 0, m[1] ?? 0, 0, m[2] ?? 0, m[3] ?? 0, 0, m[4] ?? 0, m[5] ?? 0, 1]),
     );
-    gl.drawArraysInstanced(gl.TRIANGLES, 0, 6, data.length / 6);
+    for (const clip of plan.clips) {
+      scissor(gl, clip, this.width, this.height);
+      gl.drawArraysInstanced(gl.TRIANGLES, 0, 6, data.length / 6);
+    }
+    return plan.clips.length;
   }
-  composite() {
+  composite(clips = this.compositePlan()) {
     const gl = this.gl;
     this.previousBounds = this.groupBounds;
-    scissor(gl, this.groupBounds, this.width, this.height);
+
     const texture = this.mask.texture;
     if (this.destination === this.mask.framebuffer) throw Error("gpu-feedback");
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.destination);
@@ -143,6 +140,10 @@ export class GpuPass {
     gl.enable(gl.BLEND);
     gl.blendEquation(gl.FUNC_ADD);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    blit(gl, this.resources, texture, this.width, this.height, this.color);
+    for (const clip of clips) {
+      scissor(gl, clip, this.width, this.height);
+      blit(gl, this.resources, texture, this.width, this.height, this.color);
+    }
+    return clips.length;
   }
 }

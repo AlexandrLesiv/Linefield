@@ -3,12 +3,12 @@ import { t } from "../locale.ts";
 import { metricValue } from "./metric-view.ts";
 import type { MetricKey, MetricSnapshot } from "./metrics.ts";
 import * as css from "./presentation.css.ts";
-const rows: readonly (readonly MetricKey[])[] = [
+const rows = [
   ["submitted", "validated"],
   ["pending", "inputPercentile", "inputMax"],
   ["queued", "active", "readyBytes", "gpuLive", "gpuAllocated"],
   ["hits", "misses", "upload"],
-];
+] as const satisfies readonly (readonly MetricKey[])[];
 export function createOverlay() {
   const node = element("aside", css.overlay);
   node.hidden = true;

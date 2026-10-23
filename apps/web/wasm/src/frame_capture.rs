@@ -40,6 +40,25 @@ pub fn display_capture(
         }
     })
 }
+#[wasm_bindgen(js_name=memoryViewDisplayFrameCapture,unchecked_return_type="DisplayFrameSnapshot")]
+pub fn view_display_capture(
+    #[wasm_bindgen(unchecked_param_type = "bigint")] owner: JsValue,
+    #[wasm_bindgen(unchecked_param_type = "bigint")] session: JsValue,
+    #[wasm_bindgen(unchecked_param_type = "bigint")] mapping: JsValue,
+    #[wasm_bindgen(unchecked_param_type = "bigint")] candidate: JsValue,
+) -> Result<JsValue, JsValue> {
+    execute_query::<DisplayFrameSnapshot>(|e, d| {
+        match (|| {
+            e.capture_view_display_frame(id(owner)?, id(session)?, id(mapping)?, id(candidate)?)
+        })() {
+            Ok(value) => {
+                d.capture.set(value);
+                Code::Ok
+            }
+            Err(code) => code,
+        }
+    })
+}
 #[wasm_bindgen]
 impl LiveFrameSnapshot {
     #[wasm_bindgen(getter,js_name=frameId)]

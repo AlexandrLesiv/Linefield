@@ -3,7 +3,7 @@ import { preparationHeap } from "./preparation-loader.ts";
 import type { StateValue } from "./bridge.ts";
 import { wasmBytes } from "./loader.ts";
 import { diagnostic } from "./diagnostics.ts";
-import { retiringGpuBytes, retiringCpuResources } from "./gpu-retirement.ts";
+import { retiringGpuBytes, retiringGpuSamplers, retiringCpuResources } from "./gpu-retirement.ts";
 type Geometry = {
   bytes: number;
   pages: number;
@@ -11,6 +11,8 @@ type Geometry = {
   metadataEstimate?: number;
   uncertainDescriptors?: number;
   uncertainTickets?: number;
+  receiptLeases?: number;
+  uncertainReceiptLeases?: number;
 };
 let highWater = 0;
 let aboveTarget = false;
@@ -46,8 +48,17 @@ function totals(
     uncertainGeometryTickets: geometry.uncertainTickets ?? 0,
     retiringUncertainDescriptors: retiring.uncertainDescriptors ?? 0,
     retiringUncertainTickets: retiring.uncertainTickets ?? 0,
+    receiptLeases: geometry.receiptLeases ?? 0,
+    uncertainReceiptLeases: geometry.uncertainReceiptLeases ?? 0,
+    retiringReceiptLeases: retiring.receiptLeases ?? 0,
+    retiringUncertainReceiptLeases: retiring.uncertainReceiptLeases ?? 0,
     streamOnly: geometry.streamOnly,
     gpuStreamingBuffers: buffers,
+    // Program storage is driver-owned/opaque; count objects, do not invent byte charges.
+    gpuPrograms: pixels ? 3 : 0,
+    // Sampler driver storage is opaque; report its object separately, not invented bytes.
+    gpuSamplers: pixels ? 1 : 0,
+    retiringGpuSamplers: retiringGpuSamplers(),
     gpuMask: pixels * 4,
     gpuScratch: pixels * (packed ? 4 : 3),
     gpuStaging: pixels * (packed ? 4 : 3),

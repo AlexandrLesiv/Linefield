@@ -1,8 +1,12 @@
+import { presentBase } from "./gpu-present.ts";
+import { changedBase } from "./gpu-base-image.ts";
+import type { Bounds } from "./gpu-scissor.ts";
+import type { DrawPlan } from "./gpu-pass.ts";
 import { LiveGpu } from "./live-gpu.ts";
 import { GpuSubmission } from "./gpu-submission.ts";
 import { allocateGpu } from "./gpu-allocation.ts";
 import { GpuArena } from "./gpu-arena.ts";
-import { GpuPass, blit } from "./gpu-pass.ts";
+import { GpuPass } from "./gpu-pass.ts";
 import { gpuAdmission, retireGpu } from "./gpu-retirement.ts";
 import type { CpuRetirement } from "./gpu-retirement.ts";
 import type { ResidencyToken } from "./residency.ts";
@@ -62,7 +66,7 @@ export class GpuRenderer {
       throw e;
     }
   }
-  begin(clear = true) {
+  begin(clear = true, regions?: readonly Bounds[]) {
     const gl = this.gl;
     this.arena.begin();
     this.pass = new GpuPass(
@@ -74,6 +78,7 @@ export class GpuRenderer {
       this.height,
       this.arena,
     );
+    this.pass.setRegions(regions);
     if (!clear) return;
     gl.bindFramebuffer(gl.FRAMEBUFFER, this.resources.staging.framebuffer);
     gl.disable(gl.SCISSOR_TEST);
@@ -90,13 +95,27 @@ export class GpuRenderer {
   group() {
     this.pass.group();
   }
-  draw(data: Float32Array, matrix: Float32Array, color: readonly number[], page = 0n) {
-    this.pass.draw(data, matrix, color, page);
+  plan(data: Float32Array, matrix: Float32Array, offset: readonly [number, number]) {
+    return this.pass.plan(data, matrix, offset);
   }
-  composite() {
-    this.pass.composite();
+  draw(
+    data: Float32Array,
+    matrix: Float32Array,
+    color: readonly number[],
+    page = 0n,
+    offset: readonly [number, number] = [0, 0],
+    plan?: DrawPlan,
+  ) {
+    this.pass.draw(data, matrix, color, page, offset, plan);
+  }
+  compositePlan() {
+    return this.pass.compositePlan();
+  }
+  composite(clips?: Bounds[]) {
+    this.pass.composite(clips);
   }
   promote() {
+    changedBase(this.resources);
     const old = this.resources.base;
     this.resources.base = this.resources.staging;
     this.resources.staging = old;
@@ -105,23 +124,8 @@ export class GpuRenderer {
     return new LiveGpu(this.gl, this.resources, this.width, this.height, this.arena);
   }
   overlay(matrix?: Float32Array, base = true, clearMask = true) {
+    presentBase(this, matrix, base);
     const gl = this.gl;
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    gl.disable(gl.SCISSOR_TEST);
-    gl.disable(gl.BLEND);
-    gl.colorMask(true, true, true, true);
-    gl.clearColor(1, 1, 1, 1);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    if (base)
-      blit(
-        gl,
-        this.resources,
-        this.resources.base.texture,
-        this.width,
-        this.height,
-        undefined,
-        matrix,
-      );
     return new GpuPass(
       gl,
       this.resources,
@@ -159,7 +163,8 @@ export class GpuRenderer {
     retireGpu(
       {
         bytes: this.resources.bytes + 256 * 1024 + this.arena.bytes,
-        metadata: () => this.arena.metadataEstimate,
+        metadata: () => this.arena.metadataEstimate + 96,
+        samplerObjects: 1,
         context: this.gl,
         drained: () => {
           if (this.gl.isContextLost()) return true;
@@ -170,6 +175,7 @@ export class GpuRenderer {
           return this.submissions.drained();
         },
         release: () => {
+          this.resources.copyReader.finish();
           this.submissions.dispose();
           this.arena.dispose();
           this.resources.dispose();

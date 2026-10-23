@@ -2,8 +2,19 @@ import { append } from "./performance-observation.ts";
 import type { ReplyValue } from "./bridge.ts";
 export function coverageObservation(
   s: ReplyValue,
-  phase: "seal" | "consume" | "copyback" | "extension-retain" | "extension-discard",
+  phase:
+    | "seal"
+    | "consume"
+    | "view-consume"
+    | "copyback"
+    | "extension-retain"
+    | "extension-discard"
+    | "pan-ready"
+    | "pan-recapture",
   receipt: bigint,
+  region?:
+    | { epoch: number; copiedPixels: number; dirtyPixels: number }
+    | { epoch: number; fromReceipt: string },
 ) {
   if (import.meta.env.MODE === "performance-e2e")
     append({
@@ -15,6 +26,7 @@ export function coverageObservation(
       mapping: `${s.mapping}`,
       content: `${s.content}`,
       scene: `${s.scene}`,
+      ...region,
       time: performance.now(),
     });
 }

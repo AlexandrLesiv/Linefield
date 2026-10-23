@@ -4,7 +4,7 @@ import type { MessageId } from "../locale.ts";
 import type { MetricKey, MetricSnapshot } from "./metrics.ts";
 import * as css from "./presentation.css.ts";
 const number = new Intl.NumberFormat(navigator.language, { maximumFractionDigits: 2 });
-export const metricGroups: readonly (readonly MetricKey[])[] = [
+export const metricGroups = [
   [
     "submitted",
     "validated",
@@ -28,7 +28,7 @@ export const metricGroups: readonly (readonly MetricKey[])[] = [
     "uncertainTickets",
     "wasm",
   ],
-];
+] as const satisfies readonly (readonly MetricKey[])[];
 export function metricValue(value: number | undefined): string {
   return value === undefined ? t("diagnostics.unavailable") : number.format(value);
 }

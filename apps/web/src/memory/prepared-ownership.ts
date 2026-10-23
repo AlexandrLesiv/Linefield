@@ -1,3 +1,5 @@
+import type { Entry } from "./prepared-types.ts";
+export type { Entry, PreparedPage } from "./prepared-types.ts";
 import { preparation } from "./preparation-bridge.ts";
 import { PageBorrows } from "./page-borrows.ts";
 import { ReleaseOwnership } from "./release-ownership.ts";
@@ -5,26 +7,6 @@ import { Residency, transition } from "./residency.ts";
 import type { ResidencyToken, IdleBudget } from "./residency.ts";
 import type { ReplyValue } from "./bridge.ts";
 import { geometryMetrics as metrics } from "./geometry-metrics.ts";
-export type PreparedPage = {
-  page: bigint;
-  data: Float32Array;
-  release?: () => void;
-  owner?: Entry;
-};
-export type Entry = {
-  key: string;
-  stroke: bigint;
-  revision: bigint;
-  detail: number;
-  token: bigint;
-  pages: PreparedPage[];
-  bytes: number;
-  used: number;
-  admitted: number;
-  pins: number;
-  borrowers: number;
-  stale: boolean;
-};
 export class PreparedOwnership {
   protected entries = new Map<string, Set<Entry>>();
   protected lru = new Map<Entry, true>();
@@ -190,8 +172,8 @@ export class PreparedOwnership {
       // Conservative host estimate, separate from exact typed-array payload.
       metadataEstimate:
         this.lru.size * 256 +
-        this.pages * 96 +
-        borrowed.records * 96 +
+        this.pages * 128 +
+        borrowed.records * 128 +
         (this.retiring ? 256 : 0) +
         this.retiringSlots * 8 +
         384,
