@@ -1,3 +1,4 @@
+import type { GpuReaderHold } from "./gpu-reader-hold.ts";
 import { frames } from "./frame-bridge.ts";
 import { cleanupRelease, CleanupFailure } from "./cleanup-failure.ts";
 import type { ReplyValue } from "./bridge.ts";
@@ -33,11 +34,15 @@ export class ReceiptLeases {
   resources() {
     const count = this.owned.size + (this.incoming ? 1 : 0);
     return {
-      metadataEstimate: count * 192,
+      metadataEstimate: count * 320,
       receiptLeases: count,
       uncertainReceiptLeases:
         [...this.owned].filter((v) => v.failed).length + (this.incomingFailure ? 1 : 0),
     };
+  }
+  async drain() {
+    await Promise.all([...this.owned].flatMap((v) => (v.retiring ? [v.retiring] : [])));
+    this.drained();
   }
   drained() {
     if (this.incomingFailure) throw this.incomingFailure;
@@ -49,12 +54,17 @@ export class ReceiptLeases {
     return {
       ...base,
       ...leases,
-      metadataEstimate: (base.metadataEstimate ?? 0) + leases.metadataEstimate + 256,
+      metadataEstimate: (base.metadataEstimate ?? 0) + leases.metadataEstimate + 512,
     };
   }
 }
 export class ReceiptLease {
   readonly receipt: Receipt;
+  retiring: Promise<void> | undefined;
+  defer(hold: GpuReaderHold, release: () => void) {
+    if (this.retiring) return;
+    this.retiring = hold.hold(release);
+  }
   private count = 1;
   private state: ReplyValue;
   private closed: () => void;

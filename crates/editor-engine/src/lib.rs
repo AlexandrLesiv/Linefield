@@ -60,3 +60,14 @@ mod visibility_cursor;
 mod visibility_range;
 mod visibility_walk;
 pub use visibility_cursor::VisibilityPage;
+
+mod frame_pan_reuse;
+mod raster_capture;
+mod raster_placement;
+mod raster_state;
+pub use frame_pan_reuse::{FramePanReuse, PanReuseMiss};
+pub use raster_placement::{PlacementDisposition, RasterMiss};
+
+mod camera_reset;
+
+mod raster_quad;

@@ -39,6 +39,7 @@ impl Engine {
         }
         if sequence == u64::MAX {
             self.suspend(owner, session, mapping, sequence);
+            self.raster.reset(self.document.view, None);
             return Code::Exhausted;
         }
         if self
@@ -68,6 +69,7 @@ impl Engine {
         self.release_visibility(None);
         self.advance();
         self.sequence = sequence;
+        self.raster.reset(self.document.view, Some(metrics));
         if let Some(value) = self.current.as_mut() {
             value.phase = Phase::Ready;
             value.metrics = Some(metrics);
@@ -87,6 +89,7 @@ impl Engine {
         self.clear_tail_displays();
         self.release_visibility(None);
         self.advance();
+        self.raster.reset(self.document.view, None);
         if let Some(value) = self.current.as_mut() {
             value.phase = Phase::Suspended;
             value.metrics = None;

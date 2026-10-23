@@ -10,6 +10,16 @@ pub(crate) fn placement(
     scale: f64,
     viewport: f64,
 ) -> Result<[f32; 6], Code> {
+    placement_residual(values, bounds, radius, scale, viewport, 0.0)
+}
+pub(crate) fn placement_residual(
+    values: [f64; 6],
+    bounds: [f64; 4],
+    radius: f64,
+    scale: f64,
+    viewport: f64,
+    residual: f64,
+) -> Result<[f32; 6], Code> {
     let m = values.map(|v| v as f32);
     let x = bounds[0].abs().max(bounds[2].abs());
     let y = bounds[1].abs().max(bounds[3].abs());
@@ -32,7 +42,7 @@ pub(crate) fn placement(
     if m.iter().any(|v| !v.is_finite())
         || coefficient[0].hypot(coefficient[1]) > 0.02
         || translation.iter().any(|v| v.abs() > 0.01)
-        || gpu > 0.07
+        || gpu + residual > 0.07
     {
         return Err(Code::NumericalCapacity);
     }

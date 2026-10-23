@@ -56,6 +56,7 @@ snapshot!(RasterProofSnapshot);
 snapshot!(TailDisplaySnapshot);
 snapshot!(CurrentCoverageSnapshot);
 snapshot!(FrameReuseSnapshot);
+snapshot!(FramePanReuseSnapshot);
 snapshot!(LiveFrameSnapshot);
 snapshot!(DisplayFrameSnapshot);
 snapshot!(VisibilitySnapshot);

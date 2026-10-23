@@ -1,6 +1,9 @@
 import { vertex, fragment } from "./gpu-shaders.ts";
-const quad = ` float r=max(pa.z,pb.z)+1.414214;
- vec2 p=mix(min(pa.xy,pb.xy)-r,max(pa.xy,pb.xy)+r,corners[gl_VertexID]);`;
+const quad = ` float r=max(pa.z,pb.z)+2.0;
+ vec2 lo=floor(min(pa.xy,pb.xy)-r)+integerOffset;
+ vec2 hi=ceil(max(pa.xy,pb.xy)+r)+integerOffset;
+ vec2 p=mix(clamp(lo,vec2(0),viewport),clamp(hi,vec2(0),viewport),corners[gl_VertexID]);
+ if(!integerQuad){float oldR=max(pa.z,pb.z)+1.414214;p=mix(min(pa.xy,pb.xy)-oldR,max(pa.xy,pb.xy)+oldR,corners[gl_VertexID]);}`;
 const routed = `
  int route=routing.x+((gl_InstanceID/routing.y)/routing.z)*routing.y+gl_InstanceID%routing.y;
  ivec4 entry=texelFetch(routeTable,ivec2(route%1024,route/1024),0);
@@ -10,11 +13,13 @@ const routed = `
  vec2 hi=min(ceil(max(pa.xy,pb.xy)+r),min(vec2(tile.xy+64),viewport));
  vec2 p=(mix(lo,hi,corners[gl_VertexID])-vec2(tile.xy))+vec2(tile.zw);
  if(entry.z<0||any(lessThanEqual(hi,lo))){gl_Position=vec4(2,2,0,1);return;}`;
-const position = ` vec2 pos=vec2(gl_FragCoord.x,viewport.y-gl_FragCoord.y);`;
+const position = ` vec2 pos=vec2(gl_FragCoord.x,viewport.y-gl_FragCoord.y)-integerOffset;`;
 const routedPosition = ` vec2 pos=(vec2(gl_FragCoord.x,viewport.y-gl_FragCoord.y)-vec2(tile.zw))+vec2(tile.xy);
  if(any(lessThan(pos,vec2(tile.xy)))||any(greaterThanEqual(pos,min(vec2(tile.xy+64),viewport))))discard;`;
 if (!vertex.includes(quad) || !fragment.includes(position)) throw Error("sparse-reviewed-shader");
 export const sparseVertex = vertex
+  .replace("uniform vec2 integerOffset;\n", "")
+  .replace("uniform bool integerQuad;\n", "")
   .replace("precision highp float;", "precision highp float;precision highp int;")
   .replace(
     "uniform mat3 placement;",
@@ -24,6 +29,7 @@ uniform highp isampler2D routeTable;uniform ivec3 routing;flat out ivec4 tile;`,
   .replace(quad, routed);
 // Only pixel-coordinate reconstruction/ownership changes. The analytic body is verbatim.
 export const sparseFragment = fragment
+  .replace(" uniform vec2 integerOffset;", "")
   .replace("precision highp float;", "precision highp float;precision highp int;")
   .replace("flat in vec3 pa;", "flat in ivec4 tile;flat in vec3 pa;")
   .replace(position, routedPosition);

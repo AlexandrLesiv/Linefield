@@ -107,6 +107,7 @@ impl Engine {
             ordinal: count,
             view: self.document.view,
             metrics,
+            raster: crate::raster_capture::RasterCapture::canonical(self.document.view),
         })
     }
 }

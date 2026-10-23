@@ -2,8 +2,9 @@ import { frames } from "./frame-bridge.ts";
 import { live } from "./live-bridge.ts";
 import { buildCandidate } from "./candidate-build.ts";
 import type { Seed } from "./candidate-build.ts";
-import { frameReuse } from "./frame-reuse.ts";
-import { copyPrefix } from "./gpu-seed.ts";
+import { candidateSeed } from "./candidate-seed.ts";
+import { CandidatePolicy } from "./candidate-policy.ts";
+import { recaptureCandidate } from "./candidate-recapture.ts";
 import type { ReceiptLease } from "./receipt-lease.ts";
 import { geometryMetrics as metrics } from "./geometry-metrics.ts";
 import { retirementObservation } from "./performance-observation.ts";
@@ -17,6 +18,7 @@ export class CompletedCandidate {
   ready = false;
   busy = false;
   sealed = false;
+  private policy = new CandidatePolicy();
   private abort = new AbortController();
   private stopped = false;
   private pending: Receipt | undefined;
@@ -42,7 +44,7 @@ export class CompletedCandidate {
   }
   start(detail: number) {
     if (this.busy || this.receipt || this.stopped) return;
-    const next = frames.capture(this.state());
+    const next = this.policy.capture(this.state(), this.renderer);
     if (next.code === "capacity") return;
     if (next.code !== "ok") throw Error(next.code);
     this.receipt = next;
@@ -57,8 +59,8 @@ export class CompletedCandidate {
   }
   seed(detail: number, source: ReceiptLease) {
     if (this.busy || this.receipt || this.stopped || this.sealed) return;
-    metrics.prefixSeedAttempts++;
-    const next = frames.capture(this.state());
+    if (!this.policy.canSeed(this.state())) return;
+    const next = this.policy.capture(this.state(), this.renderer);
     if (next.code === "capacity") {
       metrics.prefixSeedCapacityMisses++;
       return;
@@ -66,26 +68,18 @@ export class CompletedCandidate {
     if (next.code !== "ok") throw Error(next.code);
     let transferred = false;
     try {
-      const reuse = frameReuse(this.state(), source.receipt.id, next.id);
-      if (reuse.code !== "ok") throw Error(reuse.code);
-      if (!reuse.reusable) {
-        if (reuse.missReason === "view") metrics.prefixSeedViewMisses++;
-        else if (reuse.missReason === "same-prefix") metrics.prefixSeedSameMisses++;
-        else metrics.prefixSeedCountMisses++;
-        return;
-      }
-      const release = source.borrow();
+      const admission = candidateSeed(
+        this.state(),
+        this.renderer,
+        source,
+        next,
+        detail,
+        this.policy,
+      );
+      if (!admission) return;
       this.receipt = next;
       transferred = true;
-      this.launch(next, detail, source.receipt, {
-        release,
-        copy: () => {
-          copyPrefix(this.renderer);
-          metrics.prefixSeedCopies++;
-          metrics.prefixSeedPixels += this.renderer.width * this.renderer.height;
-          metrics.prefixSeedSkippedSources += Number(reuse.sourceCount);
-        },
-      });
+      this.launch(next, detail, admission.predecessor, admission.seed);
     } finally {
       if (!transferred) cleanupRelease(() => frames.release(this.state(), next.id));
     }
@@ -97,6 +91,7 @@ export class CompletedCandidate {
     this.busy = true;
     metrics.pendingFrames = 1;
     const signal = this.abort.signal;
+    const started = this.state();
     const operation = buildCandidate({
       owner: this,
       state: this.state,
@@ -105,6 +100,8 @@ export class CompletedCandidate {
       next,
       detail,
       signal,
+      exact: this.policy.exact,
+      retry: () => this.policy.retry(started, this.state()),
       predecessor,
       seed,
       alive: () =>
@@ -141,12 +138,8 @@ export class CompletedCandidate {
   }
   recapture() {
     if (!this.ready || this.sealed || !this.receipt) return;
-    const next = frames.capture(this.state());
-    if (next.code === "capacity") return;
-    if (next.code !== "ok") throw Error(next.code);
-    const previous = this.receipt.id;
-    cleanupRelease(() => frames.release(this.state(), previous));
-    this.receipt = next;
+    const next = recaptureCandidate(this.receipt, this.state(), this.renderer, this.policy);
+    if (next) this.receipt = next;
   }
   take() {
     if (!this.ready || this.busy || this.sealed) throw Error("gpu-queue");

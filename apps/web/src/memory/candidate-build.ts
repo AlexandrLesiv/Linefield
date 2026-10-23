@@ -1,3 +1,7 @@
+import { AnchorMiss } from "./placement-phase.ts";
+import type { RegionRead } from "./gpu-regions.ts";
+import { area } from "./gpu-regions.ts";
+import { recipe } from "./frame-recipe.ts";
 import { frames } from "./frame-bridge.ts";
 import { buildFrame } from "./frame-builder.ts";
 import { geometryMetrics as metrics } from "./geometry-metrics.ts";
@@ -7,7 +11,7 @@ import type { ReplyValue } from "./bridge.ts";
 import type { PreparedCache } from "./prepared-cache.ts";
 import type { GpuRenderer } from "./gpu-renderer.ts";
 import type { Receipt } from "./frame-receipt.ts";
-export type Seed = { copy: () => void; release: () => void };
+export type Seed = { copy?: () => void; region?: RegionRead; release: () => void };
 type Work = {
   owner: { receipt: Receipt | undefined; ready: boolean; sealed: boolean };
   state: () => ReplyValue;
@@ -15,6 +19,8 @@ type Work = {
   renderer: GpuRenderer;
   next: Receipt;
   detail: number;
+  exact: boolean;
+  retry: () => boolean;
   signal: AbortSignal;
   alive: () => boolean;
   retain: () => boolean;
@@ -28,9 +34,13 @@ export async function buildCandidate(w: Work) {
     issued = false;
   let cleanupFailure: CleanupFailure | undefined;
   try {
-    if (seed) {
+    if (seed?.copy) {
       issued = true;
       seed.copy();
+    }
+    if (predecessor && !seed) {
+      next.recipe = recipe(w.detail, w.renderer.epoch, predecessor.recipe);
+      if (!predecessor.recipe) next.recipe.eligible = false;
     }
     accepted = await buildFrame(
       state,
@@ -47,15 +57,20 @@ export async function buildCandidate(w: Work) {
             issuing: () => (issued = true),
           }
         : undefined,
+      seed?.region,
+      w.exact || !!seed?.region,
     );
     accepted = accepted && w.alive();
     if (accepted) {
       if (predecessor && !seed) cleanupRelease(() => frames.release(state(), predecessor.id));
       owner.receipt = next;
       owner.ready = true;
-      if (seed) metrics.prefixSeedCompleted++;
+      if (seed?.region) {
+        metrics.panCompleted++;
+      } else if (seed) metrics.prefixSeedCompleted++;
     }
   } catch (error) {
+    if (error instanceof AnchorMiss && w.retry()) return;
     if (error instanceof CleanupFailure) cleanupFailure = error;
     if (
       error instanceof CleanupFailure ||
@@ -103,5 +118,11 @@ export async function buildCandidate(w: Work) {
       w.settled,
       cleanupFailure,
     );
+    if (accepted && seed?.region)
+      coverageObservation(state(), "pan-ready", next.id, {
+        epoch: w.renderer.epoch,
+        copiedPixels: area(seed.region.overlap),
+        dirtyPixels: seed.region.dirty.reduce((sum, rect) => sum + area(rect), 0),
+      });
   }
 }

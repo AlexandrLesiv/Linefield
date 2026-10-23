@@ -85,6 +85,7 @@ pub struct Projection {
 }
 #[derive(Default)]
 pub struct Engine {
+    pub(crate) raster: crate::raster_state::RasterState,
     pub(crate) visibility: [Option<crate::visibility_cursor::Cursor>; 2],
     pub(crate) visibility_counter: u64,
     pub(crate) visibility_cache: crate::visibility_cache::Cache,
@@ -112,9 +113,6 @@ pub struct Engine {
     pub(crate) sequence: u64,
 }
 impl Engine {
-    pub fn begin_command(&mut self) {
-        self.active_cancelled = false;
-    }
     pub fn projection(&self, code: Code) -> Projection {
         let mut value = self.query_projection(code);
         value.resources = self.resources();

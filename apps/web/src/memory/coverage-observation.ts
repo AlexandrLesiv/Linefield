@@ -8,8 +8,10 @@ export function coverageObservation(
     | "view-consume"
     | "copyback"
     | "extension-retain"
-    | "extension-discard",
+    | "extension-discard"
+    | "pan-ready",
   receipt: bigint,
+  region?: { epoch: number; copiedPixels: number; dirtyPixels: number },
 ) {
   if (import.meta.env.MODE === "performance-e2e")
     append({
@@ -21,6 +23,7 @@ export function coverageObservation(
       mapping: `${s.mapping}`,
       content: `${s.content}`,
       scene: `${s.scene}`,
+      ...region,
       time: performance.now(),
     });
 }

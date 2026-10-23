@@ -50,3 +50,7 @@ mod tail_display;
 mod tail_pages;
 mod tail_preparation;
 mod visibility;
+
+mod frame_canonical;
+mod frame_pan_reuse;
+mod placement_phase;

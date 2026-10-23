@@ -185,7 +185,7 @@ export class ProgressiveScene {
       () => this.prepared.dispose(),
       () => this.live.dispose(),
       () => this.base.dispose(),
-    ]).then(() => this.leases.drained());
+    ]).then(() => this.leases.drain());
     return this.cleanup;
   }
 }

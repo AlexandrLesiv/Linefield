@@ -14,6 +14,7 @@ export class PreparedStore extends PreparedOwnership {
     detail: number,
     frame: bigint,
     chunk: bigint,
+    exact = false,
   ) {
     const entries = this.entries.get(String(stroke) + ":" + String(chunk));
     let hit: Entry | undefined;
@@ -23,7 +24,7 @@ export class PreparedStore extends PreparedOwnership {
         this.clear(entry);
         continue;
       }
-      if (entry.detail < detail) continue;
+      if (entry.detail < detail || (exact && entry.detail !== detail)) continue;
       const covered =
         !entry.token ||
         (frame

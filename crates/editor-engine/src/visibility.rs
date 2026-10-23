@@ -94,7 +94,8 @@ impl Engine {
             return Ok((frame, 0));
         }
         let previous = self.frame_receipt(owner, session, predecessor)?;
-        if previous.view != frame.view
+        if previous.raster != frame.raster
+            || previous.view != frame.view
             || previous.metrics != frame.metrics
             || previous.count.checked_add(1) != Some(frame.count)
             || self

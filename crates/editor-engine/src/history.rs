@@ -39,6 +39,12 @@ impl Engine {
                 self.scene_changed(false);
             } else {
                 self.document.view = g.base;
+                if g.rotate {
+                    self.raster
+                        .reset(g.base, self.current.and_then(|v| v.metrics));
+                } else {
+                    self.raster.terminal(g.base, true);
+                }
                 self.advance();
             }
             self.active_cancelled = true;

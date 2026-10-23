@@ -47,6 +47,7 @@ export class DisplayBase {
     return transform.matrix;
   }
   publish(next: Receipt, renderer: GpuRenderer, prefix: boolean) {
+    if (!prefix) delete next.recipe;
     this.prefix = false;
     this.historical = true;
     // Incoming ownership is registered before the old release can poison the engine.

@@ -4,20 +4,6 @@ fn angle(v: f64) -> f64 {
     if value == 0.0 { 0.0 } else { value }
 }
 impl Engine {
-    pub fn reset_view(&mut self, owner: u64, session: u64, mapping: u64) -> Code {
-        if let Err(c) = self.ready(owner, session, mapping) {
-            return c;
-        }
-        if self.document.busy() {
-            return Code::Active;
-        }
-        if self.document.view == Default::default() {
-            return Code::Noop;
-        }
-        self.document.view = Default::default();
-        self.advance();
-        Code::Ok
-    }
     #[expect(
         clippy::too_many_arguments,
         reason = "MIG-C1 named typed command/query parameters"
@@ -40,6 +26,9 @@ impl Engine {
         }
         if !x.is_finite() || !y.is_finite() || x.abs() > 16384.0 || y.abs() > 16384.0 {
             return Code::Invalid;
+        }
+        if !rotate && let Some(m) = self.current.and_then(|v| v.metrics) {
+            self.raster.begin(self.document.view, m, [x, y]);
         }
         self.interaction_counter += 1;
         self.document.gesture = Some(Gesture {
@@ -105,6 +94,12 @@ impl Engine {
             }
         }
         self.document.view = next;
+        if g.rotate {
+            self.raster
+                .reset(next, self.current.and_then(|v| v.metrics));
+        } else {
+            self.raster.update([x, y], next);
+        }
         g.sequence = sequence;
         self.document.gesture = Some(g);
         self.advance();
@@ -127,6 +122,7 @@ impl Engine {
         if self.document.gesture.is_none_or(|g| g.sequence != sequence) {
             return self.cancel_current(Code::Sequence);
         }
+        self.raster.terminal(self.document.view, false);
         self.document.gesture = None;
         Code::Ok
     }
@@ -181,6 +177,7 @@ impl Engine {
             Err(c) => return c,
         };
         self.document.view = next;
+        self.raster.reset(next, Some(m));
         self.advance();
         Code::Ok
     }

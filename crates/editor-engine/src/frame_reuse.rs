@@ -57,7 +57,10 @@ impl Engine {
             target_through: target.through,
             ..Default::default()
         };
-        result.miss = if source.view != target.view || source.metrics != target.metrics {
+        result.miss = if source.view != target.view
+            || source.metrics != target.metrics
+            || source.raster != target.raster
+        {
             FrameReuseMiss::View
         } else if source.count == target.count {
             FrameReuseMiss::SamePrefix

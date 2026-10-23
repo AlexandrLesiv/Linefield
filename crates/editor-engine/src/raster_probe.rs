@@ -101,9 +101,9 @@ impl RasterProbe {
         self.failed = false;
     }
 }
-// Composition measures a proposed payload, not the eventual integrated Rust layout.
-type ProposedFrame = (FrameReceipt, RasterCapture);
-type ProposedTail = (crate::tail_display::TailDisplay, RasterCapture);
+// The production receipt now embeds its raster capture; measure the actual layout.
+type ProposedFrame = FrameReceipt;
+type ProposedTail = crate::tail_display::TailDisplay;
 pub fn layouts() -> [usize; 5] {
     [
         size_of::<RasterCapture>(),

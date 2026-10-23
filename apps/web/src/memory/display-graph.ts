@@ -1,3 +1,4 @@
+import { changedBase } from "./gpu-base-image.ts";
 import { blit } from "./gpu-pass.ts";
 import type { GpuRenderer } from "./gpu-renderer.ts";
 import type { LiveGpu } from "./live-gpu.ts";
@@ -64,6 +65,7 @@ export function displayGraph(renderer: GpuRenderer, graph: DisplayGraph, scratch
 export function consumeGraph(renderer: GpuRenderer, graph: DisplayGraph) {
   const { gl, resources: r, width, height } = renderer;
   displayGraph(renderer, graph, true);
+  changedBase(r);
   if (graph.live?.active) {
     gl.bindFramebuffer(gl.FRAMEBUFFER, r.base.framebuffer);
     gl.disable(gl.SCISSOR_TEST);

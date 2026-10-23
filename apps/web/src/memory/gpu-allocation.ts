@@ -1,3 +1,5 @@
+import { GpuReaderHold } from "./gpu-reader-hold.ts";
+import { rasterCapability } from "./raster-capability.ts";
 import { targets } from "./gpu-targets.ts";
 import { vertex, fragment, screenVertex, screenFragment } from "./gpu-shaders.ts";
 import { program } from "./gpu-resources.ts";
@@ -10,6 +12,7 @@ export function allocateGpu(gl: WebGL2RenderingContext, width: number, height: n
     cleanup.length = 0;
   };
   try {
+    const integerQuad = rasterCapability(gl, width, height);
     const ink = program(gl, vertex, fragment);
     cleanup.push(() => gl.deleteProgram(ink));
     const copy = program(gl, screenVertex, screenFragment);
@@ -33,7 +36,20 @@ export function allocateGpu(gl: WebGL2RenderingContext, width: number, height: n
     const surfaces = targets(gl, width, height);
     cleanup.push(surfaces.dispose);
     if (gl.isContextLost() || gl.getError() !== gl.NO_ERROR) throw Error("gpu-resource");
-    return { ink, copy, seed, rgbSampler, vao, buffers, ...surfaces, dispose };
+    return {
+      baseGeneration: 0,
+      baseReusable: true,
+      copyReader: new GpuReaderHold(),
+      integerQuad,
+      ink,
+      copy,
+      seed,
+      rgbSampler,
+      vao,
+      buffers,
+      ...surfaces,
+      dispose,
+    };
   } catch (error) {
     dispose();
     throw error;
