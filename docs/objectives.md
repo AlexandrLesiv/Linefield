@@ -1,3 +1,12 @@
+## Authorized web migration — 2026-10-21
+
+M01–M09 integrate the retained complete5207 reference capabilities into existing Linefield
+using shared Rust semantics and direct WebGL. [MIG-C1](interfaces/web-gpu-editor.md) and
+[MIG-D1](design/web-gpu-editor.md) specify the current amendment. Layers, continuous rotation,
+selection, Slice and paper-contact pencils are now authorized web scope despite older deferrals
+below. Session-only/no-save disclosure and existing gallery remain. Native implementation,
+persistence, shapes/text/images/cloud and later worker experiments remain separate.
+
 # Objectives and first preview
 
 Deliver an editable vector sketching app: responsive, offline-first and cross-platform, with a consistent Linefield visual system and shared Rust behavior. Host implementations retain platform input, text editing, accessibility and OS integration; platform-native visual themes are not mandatory (decision 232). macOS remains the primary product target; implement web first, then macOS, with iPhone/iPad the next native priority. Responsiveness claims require measurements.
