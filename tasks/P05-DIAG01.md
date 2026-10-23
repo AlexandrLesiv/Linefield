@@ -10,6 +10,11 @@ Branch codex/p05-diag01-developer-diagnostics; one implementation writer owns th
 The normal dependency merge of reviewed M03 commit00cb641 had no conflicts; its runtime is
 fbaede9fc86bb7f7cd44bedaa4c76d6d76e16e65. Fresh R8 browser evidence covers this exact dependency
 delta. Source and all71 generated artifacts stayed unchanged through the three browser lanes.
+The subsequent normal M03 dependency merge atf8751cf contains only the reviewed GPU-wake test
+readback repair and verification prose. Four affected fixtures pass once on fresh fixture output
+with static checks, exact nonblank visible/retained pixels and pre/post served-byte verification.
+Runtime, production/observation/Wasm and all71 preceding assets remain unchanged. These are four
+scoped rechecks, not a new314-case full run. The reviewed diagnostics preview is unchanged.
 The lead may freeze an exact independently reviewed and functionally verified M03 dependency
 with clearly recorded open performance findings so DIAG01/M04 can address them. This is not
 M03 completion, a passing performance profile or relaxed acceptance. Final M09 adoption still
