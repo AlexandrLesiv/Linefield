@@ -1,8 +1,11 @@
 # M04 bounded sparse coverage
 
 First-stage contract adopted by the lead under decision243 after shared-engine and rendering
-review. Implementation waits for the frozen M03 predecessor and one assigned M04 writer.
-Compiled/GPU correctness and performance checks below remain required, not passed by design.
+review. The isolated reusable executor passes its scoped browser correctness checks, but its
+fixed cost screen rejects production adoption: all four thin-scene positive medians are slower
+than the full path and eleven of sixteen negative cells exceed the adverse-regression rule.
+Production remains full mode. Retain this source experiment and its failure/resource contract;
+no further sparse integration is authorized by a correctness pass alone.
 Completed-region reuse, raster-lattice proof and the optional tile archive are later M04 stages.
 
 ## Responsibility and preserved authority

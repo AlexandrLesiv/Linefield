@@ -31,8 +31,12 @@ reviewed actual application is on65224;65222 and earlier previews remain unchang
 fixture/reporting failures remain recorded with narrow repairs, not relabeled as passes. Same-view
 prefix reuse and continuous held-pan revelation are implemented. A bounded comparison improves
 pan acknowledgement164.4/166.1→147.8ms; thirteen per-request relative flags remain, including one
-thin-stroke End slower than both controls. Full performance acceptance, G-only sparse coverage,
-production pan-region reuse and conditional tiles remain open; neither
+thin-stroke End slower than both controls. The isolated reusable sparse executor passes four
+scoped browser cases, but its fixed120-pass/four-cold-pair cost screen rejects production
+adoption: all four positive medians and eleven of sixteen negative cells regress. Production
+stays full mode. Filling the existing eight preparation readers across visibility replies is
+the next bounded panning change. Full performance acceptance, production pan-region reuse and
+conditional tiles remain open; neither
 isolated arithmetic/layout nor integer-quad proof enables production pan-copy. M05 settings/material work is preserved
 on its paused branch; shaders and combined browser acceptance remain pending. M06/M07 have prepared
 contracts only; M08/M09 remain unimplemented. M05–M09 await resumption and frozen predecessors.
