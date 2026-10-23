@@ -60,6 +60,17 @@ No threshold relaxation to obtain green. Missing/flaky/skipped/stale evidence is
 
 ## M03 browser scheduling and lifetime checks
 
+MIG-QUERY-01/02 (`query.fixture.spec.ts`) are generated browser-boundary E2E under
+CT-06, INV-01/04/08/09/11 and MIG-E05/E06. Only frame placement and frame preparation
+coverage use the bounded read-query boundary: positively cancelled input followed by
+successful, stale and malformed-JS queries preserves `activeCancelled` until an ordinary
+command (including typed rejection) or State read resets it. Assert before State reads.
+One-live-wrapper refusal and one-use matrix copying remain unchanged. The fixture verifies
+incomplete/clipped-outside/retired/wrong-authority proofs, stale pages/frames, source/history
+and fresh ordinary resource accounting; existing GPU numerics and fatal getter/destructor
+lanes retain numerical/terminal coverage. No allocation-failure or performance pass is
+inferred from these boundary cases. Freeze and compare the same workload separately.
+
 The implementation writer owns these actual-route tests under `apps/web/tests/memory`;
 CT-02/03/06/07/08, INV-01–05/08 and SU-03/04/13/14/16/20 apply. Observation files run only
 against a separately identified `performance-e2e` build. Their hooks are excluded from production.

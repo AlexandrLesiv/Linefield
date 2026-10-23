@@ -1,5 +1,5 @@
 use crate::{
-    boundary::{execute_data, id, number},
+    boundary::{execute_data, execute_query, id, number},
     snapshots::{PlacementSnapshot, PreparationSnapshot},
 };
 use linefield_editor_engine::Code;
@@ -47,7 +47,7 @@ pub fn coverage(
     #[wasm_bindgen(unchecked_param_type = "bigint")] token: JsValue,
     #[wasm_bindgen(unchecked_param_type = "bigint")] frame: JsValue,
 ) -> Result<JsValue, JsValue> {
-    execute_data::<PreparationSnapshot>(|e, d| {
+    execute_query::<PreparationSnapshot>(|e, d| {
         match (|| e.frame_preparation_coverage(id(owner)?, id(session)?, id(token)?, id(frame)?))()
         {
             Ok(p) => {
@@ -66,7 +66,7 @@ pub fn placement(
     #[wasm_bindgen(unchecked_param_type = "bigint")] stroke: JsValue,
     #[wasm_bindgen(unchecked_param_type = "bigint")] page: JsValue,
 ) -> Result<JsValue, JsValue> {
-    execute_data::<PlacementSnapshot>(|e, d| {
+    execute_query::<PlacementSnapshot>(|e, d| {
         match (|| e.frame_placement(id(owner)?, id(session)?, id(frame)?, id(stroke)?, id(page)?))()
         {
             Ok(p) => {

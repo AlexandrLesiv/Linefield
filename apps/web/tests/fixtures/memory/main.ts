@@ -1,4 +1,6 @@
 import { tailComposite } from "./tail-composite.ts";
+import { queryLatch } from "./query-latch.ts";
+import { queryValidity } from "./query-validity.ts";
 import { visibilityPressure } from "./visibility-pressure.ts";
 import { visibilityLifetime } from "./visibility-lifetime.ts";
 import { visibilityYield } from "./visibility-yield.ts";
@@ -59,6 +61,14 @@ function action(name: string, run: () => Promise<unknown>): void {
 action("Run boundary matrix", async () => {
   await loadEngine();
   return boundaryMatrix();
+});
+action("Run query latch", async () => {
+  await loadEngine();
+  return queryLatch();
+});
+action("Run query validity", async () => {
+  await loadEngine();
+  return queryValidity();
 });
 action("Run visibility pressure", async () => {
   await loadEngine();
