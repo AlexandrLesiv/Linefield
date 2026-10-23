@@ -1,6 +1,7 @@
 import { gpuWakeSource } from "./gpu-wake-source.ts";
 import { gpuWakeProbe } from "./gpu-wake-probe.ts";
 import { assertions } from "./tail-fixture.ts";
+import { compareWakePixels } from "./gpu-wake-pixels.ts";
 export async function gpuWakeSlots(canvas: HTMLCanvasElement, reserved: boolean) {
   const { check, report } = assertions(),
     source = await gpuWakeSource(canvas);
@@ -73,10 +74,7 @@ export async function gpuWakeSlots(canvas: HTMLCanvasElement, reserved: boolean)
     probe.releaseAll();
     await pending;
     const final = await source.pixels();
-    check(
-      final.every((value, index) => value === baseline[index]),
-      "actual prepared source has exact final pixels",
-    );
+    const pixels = await compareWakePixels(baseline, final);
     const quiet = probe.snapshot();
     await probe.pause(80);
     check(
@@ -86,6 +84,7 @@ export async function gpuWakeSlots(canvas: HTMLCanvasElement, reserved: boolean)
     return {
       ...report(),
       reserved,
+      pixels,
       counters: probe.snapshot(),
       scope:
         "actual canonical preparation/render/submission; controlled GL fence hold, not timing evidence",
