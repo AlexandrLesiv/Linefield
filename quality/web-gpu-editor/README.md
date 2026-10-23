@@ -123,7 +123,7 @@ Record exact build and actual outcomes in the task; this mapping alone is not a 
 
 | Case / source | Concrete trigger and expected invariant |
 | --- | --- |
-| MIG-WORKER-11 / promotion.observation.spec.ts and scheduling.observation.spec.ts | End→pan before promotion preserves exact Rust-issued receipt identity; forty completed strokes → warmed Undo/Redo preserves ordered exact pixels with bounded32-command/1MiB ready queue, up to256 commands per2ms submission slice; observe successful refill beyond32 without claiming timing acceptance |
+| MIG-WORKER-11 / promotion.observation.spec.ts and scheduling.observation.spec.ts | End→pan before promotion preserves exact Rust-issued receipt identity; forty completed strokes → two settled Undo commands and two distinct Redo commands under held display RAF force a positive multi-successor miss with no seed copy; warmed complete replay preserves ordered exact pixels with bounded32-command/1MiB ready queue, up to256 commands per2ms submission slice; observe successful refill beyond32 without claiming timing acceptance |
 | MIG-WORKER-12 / prefetch.observation.spec.ts | Same-view Back/Resume clears disposable warmth; at least two confirmed delayed worker starts in the new session → Back before results → Resume: worker terminated, no late resurrection, exact source and Undo retained |
 | MIG-WORKER-13 / traversal.observation.spec.ts; visibility.fixture.spec.ts |65,537 expected source samples using generated actual-handler setup → wholly offscreen warm frame: positive certified visibility query, zero preparation, exact current acknowledgement, blank/restored pixels and Undo/Redo equivalence. Separate explicitly evicted-index boundary fixture runs the real host producer, observes incomplete cold progress across actual task turns before GPU validation, bounds each query to512 visits/four hulls, then validates/acknowledges blank pixels. Synthetic setup and cache-eviction replay are not physical input or timing evidence |
 | MIG-WORKER-14 / pan-fidelity.observation.spec.ts | Settled committed receipt → integer pan → positively validated sealed candidate without global acknowledgement → End with exact current receipt: compare exact shifted interior pixels across transformed (possibly already sealed), sealed and ended states |
@@ -330,9 +330,17 @@ GPU wake experiment acceptance (CT-06; existing MIG-WORKER-05/15/16/24/27/28):
 
 | Scenario / authored case | Required behavior and evidence limit |
 | --- | --- |
-| MIG-GPU-WAKE-01 / gpu-wake.fixture.spec.ts slots, reservation | Actual canonical source, worker preparation and GL rendering; simultaneous consumers share one 4→8→16→32ms task, two-reader cap and reserved slot retain all-reader validation, actual drain resets backoff; exact pixel parity and zero idle tasks |
+| MIG-GPU-WAKE-01 / gpu-wake.fixture.spec.ts slots, reservation | Actual canonical source, worker preparation and GL rendering; simultaneous consumers share one 4→8→16→32ms task, two-reader cap and reserved slot retain all-reader validation, actual drain resets backoff; exact baseline/final visible and retained-target pixel parity, positive ink/paper controls and zero idle tasks |
 | MIG-GPU-WAKE-02 / gpu-wake.fixture.spec.ts lifecycle | Controlled hide-before-fire and stale callbacks, repeated show, dormant owner abort and replacement identity; real CPU geometry held after GPU drain has no awaited wake tasks, then replacement renders visibly |
 | MIG-GPU-WAKE-03 / gpu-wake.fixture.spec.ts deadline | Controlled clock keeps observations below the existing one-second gap rebase; short hidden interval excluded while 10s of visible no-progress still fails without deleting uncertain readers |
+
+Visible pixels are captured synchronously in the overlay turn because the default framebuffer
+is non-preserved. The completed retained target is read separately after serial validation.
+Equality remains exact for both outputs; bounded SHA-256, ink/paper counts, mismatch counts and
+at most12 differing byte samples are attached even on failure. This repairs a fixture readback
+race found during M04 integration; the original failing pixels were not retained, so the exact
+original buffer contents remain unknown. Keep visible and retained-target checks distinct;
+neither substitutes for the other or for the positive ink/paper controls.
 
 These cases are controlled browser/render-boundary integration;
 they are not native background-tab timing or performance acceptance. Each attaches actual
