@@ -328,7 +328,9 @@ manifest in docs/reuse-ledger.md identifies the reference; discarded experiments
 |Versioned prebuilt material response and rebuild-on-contextrestore; no synchronous firststroke bake | M05 / E05/E08 and coldreadiness |
 
 M04 unchanged-view prefix seed follows [the adopted first-slice contract](../../docs/interfaces/web-prefix-reuse.md).
-Pan lattice, sparse routes, region reconstruction and archives remain separate later stages.
+The adopted pan lattice and viewport-region reconstruction follow
+[web-raster-lattice.md](../../docs/interfaces/web-raster-lattice.md). Sparse atlas routing
+remains isolated; document-tile archives are not implemented.
 
 | Scenario / authored case | Required positive/negative evidence |
 | --- | --- |
@@ -339,12 +341,40 @@ Pan lattice, sparse routes, region reconstruction and archives remain separate l
 | MIG-TILE-06 / prefix-seed.fixture.spec.ts query/before/after/draw/release | Checked identities, activeCancelled latch and one snapshot; actual copy/draw phase faults never promote B as ready S; full reconstruction recovers; failed receipt acknowledgement retains charged uncertainty and blocks replacement |
 | MIG-TILE-01 / integer-quad.fixture.spec.ts | Isolated proposed offset0 vertex bounds with unchanged endpoint/fragment evaluation; real accepted Rust source/style/view/placement and actual required detail, normal/packed exact RGB over odd/large backing, angles and taper. Positive ink and exact source counts prevent vacuity; bounded corpus only, not production shader conversion or universal routing/edge enclosure |
 
-These new cases are authored and initially unrun. Fixture integration is not actual-route E2E;
+Fixture integration is not actual-route E2E;
 each attaches actual browser version and result. Existing M03 sealed/busy, context/Back/resize,
 packed live-mask, cleanup and worker-failure lanes remain required regressions. Fixed host lease
 metadata and retiring uncertainty are reported; three GL programs are counted separately from
 opaque driver storage. No additional texture/fence/receipt allowance or performance pass follows.
 Exact reviewed DIAG integration, fresh source review and frozen-build functional evidence precede PR.
+
+## M04 certified viewport-region reuse
+
+The implementation writer owns CT-03/04/06/08, INV-01/04/08/09/11 and
+MIG-TILE-02/05/06 in `region-reuse.fixture.spec.ts` and
+`region-route.observation.spec.ts`. Both run normal and packed targets. Require current
+runtime and build identity for every run; earlier prefix/sparse results do not certify these paths.
+
+| Case | Observable invariant |
+| --- | --- |
+| pixels / matrix | Actual overlap copy and fewer geometry draws; exact full-reference RGB, positive paper/ink and exposed-strip ink. Covers signed/reversed shifts, backing1/2/1.25, zoom.05/1, rotated/far coordinates, odd257×193 dimensions and translucent overlap. The second pan follows a full-reference reconstruction. |
+| capability / phases | Supported ordinary targets use certified anchors; unsupported dimensions use canonical epoch0/offset0 placement. Exact half/adjacent fractional rejection, recovery, Cancel, inclusive16384 device bound, over-bound rejection, basis changes and stale-scene Undo retain typed outcomes and canonical pixels. Cancel zero-shift certificates issue no redundant host pan attempt/copy. |
+| failure placement / source | Late placement refusal and actual source-texture ABA reject obsolete work; one ordinary reconstruction preserves positive canonical pixels and exact RGB. |
+| held fold | Hold a real page reader across Begin/End/next Begin and actual prefix fold; changed B generation prevents obsolete copy. Cancel and canonical reconstruction preserve completed work. |
+| submission failure / context loss / release failure | Issued-copy failure transfers source-reader ownership to GPU retirement. Held fence keeps the reader charged; actual completion or context loss reconciles it. Failed generated release retains uncertainty, blocks replacement admission and cannot report completed drain. |
+| alpha exhaustion | Copy preserves packed private alpha; checked generation exhaustion disables optional reuse without wrap or losing ordinary reconstruction. |
+| provenance | Worker/local fallback data, origins and partitions agree; eviction regenerates identical placement/recipe. Exact and proven streamed pages permit reuse; actual finer/clipped and unknown recipes require full reconstruction. Independent GL copy/draw/composite plus group counts require a first256-command submission including one copy, positive dirty geometry, a later submission and exact RGB. The fixed test clock exposes the command cap and is never timing evidence. |
+| actual route | Trusted pointer pan produces a certified B with explicit ready→recapture→publish→successful-ack lineage, then active input/Cancel/End and later eligible reuse preserve exact reference pixels. Interior-only artwork exercises empty dirty geometry. Bounded lineage rejects missing, ambiguous, cyclic or stale associations; unknown candidates earn no useful-hit attribution. |
+| composition-chain regression | Fractional End may invalidate a ready candidate's raster phase. Preserve visible composed pixels through the ordinary fold before discarding an unusable sealed candidate and rebuilding. An explicit recapture phase miss may discard only unsealed S, which has not entered the painter graph. Capacity refusal stays retryable. |
+
+Integrated Rust compile-time bounds constrain actual `Option<FrameReceipt>` to256bytes,
+`Option<TailDisplay>` to512bytes and the8+2 registry to3072bytes on each compiled target.
+The isolated raster probe reports proposed-type sizes and is not substituted for those actual
+type assertions. Browser fixture results do not establish physical device behavior, native
+conformance, performance acceptance, exhaustive numerical coverage or measured driver residency.
+Production excludes performance observation events and fixture entry points. Current exact-build
+results, original failed runs and unrun dispositions remain in ignored evidence; the task records
+the accepted checkpoint and outstanding performance/design/owner review.
 
 GPU wake experiment acceptance (CT-06; existing MIG-WORKER-05/15/16/24/27/28):
 

@@ -65,7 +65,7 @@ for (const packed of [false, true])
           await clear(page);
           await page.mouse.up();
           await page.keyboard.up(key);
-          await complete(page);
+          await complete(page, false, false, (records) => rows.push(...records));
           references.push(await page.screenshot({ clip }));
         }
         await reset(page);

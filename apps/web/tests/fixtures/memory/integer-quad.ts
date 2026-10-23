@@ -6,14 +6,9 @@ import { program } from "../../../src/memory/gpu-resources.ts";
 import { GpuRenderer } from "../../../src/memory/gpu-renderer.ts";
 import { queryReady } from "./query-readiness.ts";
 import { retireRenderer } from "./retire-renderer.ts";
-const oldQuad = ` float r=max(pa.z,pb.z)+1.414214;
- vec2 p=mix(min(pa.xy,pb.xy)-r,max(pa.xy,pb.xy)+r,corners[gl_VertexID]);`;
-const newQuad = ` float r=max(pa.z,pb.z)+2.0;
- vec2 lo=floor(min(pa.xy,pb.xy)-r),hi=ceil(max(pa.xy,pb.xy)+r);
- vec2 p=mix(lo,hi,corners[gl_VertexID]);`;
-// Fixture-only offset-zero common recipe; production program and fragment remain unchanged.
+// Isolated offset-zero comparison explicitly fixes each reviewed shader branch.
 export async function integerQuad(canvas: HTMLCanvasElement) {
-  if (!vertex.includes(oldQuad)) throw Error("reviewed vertex recipe changed");
+  if (!vertex.includes("if(!integerQuad)")) throw Error("reviewed vertex recipe changed");
   const rows = [];
   for (const [width, height] of [
     [65, 67],
@@ -31,7 +26,8 @@ export async function integerQuad(canvas: HTMLCanvasElement) {
       const renderer = new GpuRenderer(canvas, width, height);
       const gl = renderer.gl,
         original = renderer.resources.ink;
-      const expanded = program(gl, vertex.replace(oldQuad, newQuad), fragment);
+      const legacy = program(gl, vertex.replace("if(!integerQuad)", "if(true)"), fragment);
+      const expanded = program(gl, vertex.replace("if(!integerQuad)", "if(false)"), fragment);
       try {
         for (const strokeWidth of [1, 12]) {
           state = edit.style(state, strokeWidth, [0.2, 0.4, 0.8]);
@@ -103,7 +99,7 @@ export async function integerQuad(canvas: HTMLCanvasElement) {
           if (gl.getError() !== gl.NO_ERROR) throw Error("readback");
           return pixels;
         }
-        const reference = await render(original),
+        const reference = await render(legacy),
           actual = await render(expanded);
         let changed = 0,
           maximum = 0,
@@ -133,6 +129,7 @@ export async function integerQuad(canvas: HTMLCanvasElement) {
         renderer.resources.ink = original;
         await retireRenderer(renderer);
         gl.deleteProgram(expanded);
+        gl.deleteProgram(legacy);
         bridge.leave(state);
         bridge.dispose(state.owner);
       }

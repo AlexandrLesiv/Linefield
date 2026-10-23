@@ -1,3 +1,4 @@
+import { regionActions } from "./region-actions.ts";
 import { loadEngine } from "../../../src/memory/loader.ts";
 import { seedQuery } from "./seed-query.ts";
 import { seedRender } from "./seed-render.ts";
@@ -16,6 +17,7 @@ export function seedActions(
   action: (name: string, run: () => Promise<unknown>) => void,
   canvas: HTMLCanvasElement,
 ) {
+  regionActions(action, canvas);
   for (const [name, run] of [
     ["matrix", rasterMatrix],
     ["state", rasterState],

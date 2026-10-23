@@ -19,11 +19,17 @@ export async function seedPressure(
         held.push(receipt.id);
       }
     const copies = metrics.prefixSeedCopies,
+      panCopies = metrics.panCopies,
+      panAttempts = metrics.panAttempts,
       capacity = metrics.prefixSeedCapacityMisses;
     await f.seed();
     check(
       metrics.prefixSeedCopies === copies && !f.candidate.busy,
       "optional miss issues no copy or candidate work",
+    );
+    check(
+      metrics.panCopies === panCopies && metrics.panAttempts === panAttempts,
+      "same prefix, capacity and multiple successors never enter pan-copy route",
     );
     check(!f.base.prefix && !!f.base.receipt, "ordinary fold still completed");
     if (mode === "capacity")
