@@ -31,14 +31,21 @@ export async function gpuWakeSource(canvas: HTMLCanvasElement) {
     await renderer.slot();
     renderer.promote();
     renderer.overlay();
-    await renderer.validated(renderer.check());
-    const data = new Uint8Array(1024 * 768 * 4),
+    const serial = renderer.check(),
       gl = renderer.gl;
-    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, null);
-    gl.readPixels(0, 0, 1024, 768, gl.RGBA, gl.UNSIGNED_BYTE, data);
+    const read = (framebuffer: WebGLFramebuffer | null) => {
+      const data = new Uint8Array(1024 * 768 * 4);
+      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, framebuffer);
+      gl.readPixels(0, 0, 1024, 768, gl.RGBA, gl.UNSIGNED_BYTE, data);
+      return data;
+    };
+    // The default framebuffer is non-preserved: capture before yielding to presentation.
+    const visible = read(null);
+    await renderer.validated(serial);
+    const retained = read(renderer.resources.base.framebuffer);
     if (!["ok", "noop"].includes(frames.ready(state, receipt.id).code))
       throw Error("validated receipt");
-    return data;
+    return { visible, retained };
   };
   return {
     renderer,

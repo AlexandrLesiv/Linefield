@@ -1,6 +1,7 @@
 import { gpuWakeSource } from "./gpu-wake-source.ts";
 import { gpuWakeProbe } from "./gpu-wake-probe.ts";
 import { assertions } from "./tail-fixture.ts";
+import { wakePixelsPresent } from "./gpu-wake-pixels.ts";
 import { gpuAdmission, retiringGpuBytes } from "../../../src/memory/gpu-retirement.ts";
 export async function gpuWakeLifecycle(canvas: HTMLCanvasElement) {
   const { check, report } = assertions(),
@@ -83,13 +84,12 @@ export async function gpuWakeLifecycle(canvas: HTMLCanvasElement) {
     probe.releaseAll();
     await successor;
     const pixels = await replacement.pixels();
-    check(
-      pixels.some((value, index) => index % 4 !== 3 && value < 240),
-      "replacement visibly renders canonical source",
-    );
+    // Both independently captured outputs must contain ink and paper after replacement.
+    const visible = await wakePixelsPresent(pixels);
     return {
       ...report(),
       counters: probe.snapshot(),
+      pixels: visible,
       scope:
         "real GL owner with controlled visibility/queued callback faults; not native background-tab timing",
     };
