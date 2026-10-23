@@ -308,6 +308,22 @@ manifest in docs/reuse-ledger.md identifies the reference; discarded experiments
 |Layer appearance versus metadata invalidation; rename/select/lock need not invalidate pixels | M06 / E09 |
 |Versioned prebuilt material response and rebuild-on-contextrestore; no synchronous firststroke bake | M05 / E05/E08 and coldreadiness |
 
+GPU wake experiment acceptance (CT-06; existing MIG-WORKER-05/15/16/24/27/28):
+
+| Scenario / authored case | Required behavior and evidence limit |
+| --- | --- |
+| MIG-GPU-WAKE-01 / gpu-wake.fixture.spec.ts slots, reservation | Actual canonical source, worker preparation and GL rendering; simultaneous consumers share one 4→8→16→32ms task, two-reader cap and reserved slot retain all-reader validation, actual drain resets backoff; exact pixel parity and zero idle tasks |
+| MIG-GPU-WAKE-02 / gpu-wake.fixture.spec.ts lifecycle | Controlled hide-before-fire and stale callbacks, repeated show, dormant owner abort and replacement identity; real CPU geometry held after GPU drain has no awaited wake tasks, then replacement renders visibly |
+| MIG-GPU-WAKE-03 / gpu-wake.fixture.spec.ts deadline | Controlled clock keeps observations below the existing one-second gap rebase; short hidden interval excluded while 10s of visible no-progress still fails without deleting uncertain readers |
+
+These new cases are authored controlled browser/render-boundary integration, initially unrun;
+they are not native background-tab timing or performance acceptance. Each attaches actual
+browser version/platform and fixture results. Listener disposal is source-reviewed, not
+directly counted by these fixtures. Existing actual-route cancellation, Back/Resume,
+worker failure, retirement, context-loss, normal/packed parity and reduced-motion lanes
+remain required; these boundary cases do not replace them. Production hook exclusion and
+matched same-host timing against32d00e6 remain separate build/evidence gates.
+
 Substitution is allowed only with equal observable behavior and documented measured rationale.
 A mechanism omitted because its evidence is unfinished remains pending, not silently adopted.
 Current limitations: no persistence, per-layer opacity/groups/masks, arbitrary nonuniform

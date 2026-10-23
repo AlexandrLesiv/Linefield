@@ -1,4 +1,5 @@
 import { tailComposite } from "./tail-composite.ts";
+import { gpuWakeActions } from "./gpu-wake-actions.ts";
 import { retentionPressure } from "./retention-pressure.ts";
 import { retentionGpu } from "./retention-gpu.ts";
 import { retentionLifetime } from "./retention-lifetime.ts";
@@ -65,6 +66,7 @@ function action(name: string, run: () => Promise<unknown>): void {
   });
   actions!.append(button);
 }
+gpuWakeActions(action, canvas);
 action("Run boundary matrix", async () => {
   await loadEngine();
   return boundaryMatrix();
