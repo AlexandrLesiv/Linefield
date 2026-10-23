@@ -1,4 +1,4 @@
-import { gpuTurn } from "./gpu-turn.ts";
+import { GpuTurn } from "./gpu-turn.ts";
 import { geometryMetrics as metrics } from "./geometry-metrics.ts";
 type Pending = { sync: WebGLSync; serial: number; started: number };
 export class GpuSubmission {
@@ -9,10 +9,15 @@ export class GpuSubmission {
   private disposed = false;
   private retiring = false;
   private lifetime = new AbortController();
+  private wake: GpuTurn;
   private observed = performance.now();
   private gl: WebGL2RenderingContext;
   constructor(gl: WebGL2RenderingContext) {
     this.gl = gl;
+    this.wake = new GpuTurn(this.lifetime.signal, (start, end) => {
+      for (const item of this.pending)
+        item.started += Math.max(0, end - Math.max(start, item.started));
+    });
   }
   get idle() {
     return this.pending.length === 0 && this.reserved === 1;
@@ -27,7 +32,12 @@ export class GpuSubmission {
       const status = this.gl.clientWaitSync(item.sync, 0, 0);
       if (status === this.gl.WAIT_FAILED) throw Error("gpu-resource");
       if (status !== this.gl.ALREADY_SIGNALED && status !== this.gl.CONDITION_SATISFIED) {
-        if (resumed || document.visibilityState === "hidden") item.started = now;
+        const hidden = document.visibilityState === "hidden";
+        if (!this.retiring && hidden) {
+          all = false;
+          continue;
+        }
+        if (resumed || (this.retiring && hidden)) item.started = now;
         if (now - item.started > 10000) throw Error("gpu-resource");
         all = false;
       }
@@ -42,6 +52,7 @@ export class GpuSubmission {
         for (let i = 0; error !== this.gl.NO_ERROR && i < 8; i++) error = this.gl.getError();
       for (const item of this.pending) this.gl.deleteSync(item.sync);
       this.pending = [];
+      this.wake.progress();
       if (validate) {
         this.validated = last?.serial ?? this.validated;
         metrics.validatedSubmissions = this.validated;
@@ -59,6 +70,7 @@ export class GpuSubmission {
   }
   submit() {
     if (this.pending.length >= 2) throw Error("gpu-queue");
+    this.wake.track();
     const sync = this.gl.fenceSync(this.gl.SYNC_GPU_COMMANDS_COMPLETE, 0);
     if (!sync) throw Error("gpu-resource");
     if (this.reserved) this.reserved--;
@@ -77,7 +89,7 @@ export class GpuSubmission {
     if (this.disposed) throw Error("disposed");
   }
   turn() {
-    return gpuTurn(this.lifetime.signal);
+    return this.wake.wait();
   }
   retire() {
     this.retiring = true;

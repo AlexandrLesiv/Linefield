@@ -1,15 +1,15 @@
 # P05-DIAG01 — Bounded developer diagnostics and local export
 
-Status: active under decision243. The integrated diagnostics checkpoint on frozen M03
-32d00e6216116e23d891ae3f0a2a78329f069cf8 passes174 production,54 observation and82 fixture
-browser cases on its exact R7 build, each once with no retries. Resource generation,
+Status: active under decision243. The R8 diagnostics checkpoint integrates frozen M03
+00cb641f702f40cc4682d4bd116ca07b3529101c and passes174 production,54 observation and86 fixture
+browser cases on its exact combined build, each once with no retries, skips or flaky results. Resource generation,
 static/build and scoped source review pass. Current hooks report copied source coverage,
 validated Prefix publication separately from readiness, cache retention and typed cleanup
 outcomes. Corrected localization IDs retain the existing semantic-ID validation rule.
 Branch codex/p05-diag01-developer-diagnostics; one implementation writer owns the cohesive leaf.
-The lead now authorizes normal dependency integration of reviewed M03 commit00cb641,
-whose runtime is fbaede9fc86bb7f7cd44bedaa4c76d6d76e16e65. Freeze and verify that exact combined
-build before PR/M04 handoff. Earlier R7 results do not automatically cover this dependency delta.
+The normal dependency merge of reviewed M03 commit00cb641 had no conflicts; its runtime is
+fbaede9fc86bb7f7cd44bedaa4c76d6d76e16e65. Fresh R8 browser evidence covers this exact dependency
+delta. Source and all71 generated artifacts stayed unchanged through the three browser lanes.
 The lead may freeze an exact independently reviewed and functionally verified M03 dependency
 with clearly recorded open performance findings so DIAG01/M04 can address them. This is not
 M03 completion, a passing performance profile or relaxed acceptance. Final M09 adoption still

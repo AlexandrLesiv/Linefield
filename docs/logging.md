@@ -1,21 +1,20 @@
 # Structured diagnostics plan
 
 Status: P05-DIAG01 implements bounded web capture/export and a developer panel on its isolated
-review branch. Scoped source/evidence and actual-build designer review pass; reconciliation
-with the latest M03 runtime, complete source/publication hooks and overhead acceptance remain.
+review branch, integrated with the latest frozen M03 runtime and source/publication hooks.
+Current-build browser checks pass; final design/evidence and overhead acceptance remain.
 Native sinks and their concrete schemas remain subject to S02. This expands CT-07 and INV-09.
 
 ## Web coverage and developer diagnostics
 
-The M03 audit found a100-event memory-command ring with request/session, command, outcome and
-monotonic timestamp, plus a dropped-event counter. It records several lifecycle and editing
-commands. It does not consistently record action origin, pointer type, stroke identity,
-content revision or worker/frame correlation. Some style/view actions lack a command label.
-Aggregate geometry and resource counters exist; their values are accounted allocations or
-estimates, not measured process memory or physical GPU residency. Detailed input/render traces
-use a separate2048-event compile-time test ring, absent from ordinary production. The isolated
-DIAG01 branch adds the user-facing capture, panel and explicit download described below; the
-M03-only previews retain their existing instrumentation until reviewed integration.
+The web host correlates allowlisted command/gesture, preparation and publication summaries in
+a bounded ring. Explicit capture adds bounded worker/render events and local export. Current
+hooks include copied source coverage, validated Prefix publication separately from readiness,
+cache retention and typed cleanup outcomes. Aggregate resource counters represent accounted
+allocations or estimates, not measured process memory or physical GPU residency. The separate
+2048-event compile-time performance-test ring remains absent from ordinary production; it is
+not the user-facing capture. Unavailable authoritative sample watermarks stay explicitly
+unavailable. Older M03-only previews keep their existing instrumentation unchanged.
 
 The owner approved WEB-DIAG-D1 on 2026-10-22 under decision243, with remaining concrete
 technical/design decisions delegated to the lead. P05-DIAG01 implements this direction after
