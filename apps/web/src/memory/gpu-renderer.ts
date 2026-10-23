@@ -4,6 +4,8 @@ import { allocateGpu } from "./gpu-allocation.ts";
 import { GpuArena } from "./gpu-arena.ts";
 import { GpuPass, blit } from "./gpu-pass.ts";
 import { gpuAdmission, retireGpu } from "./gpu-retirement.ts";
+import type { CpuRetirement } from "./gpu-retirement.ts";
+import type { ResidencyToken } from "./residency.ts";
 let resourceEpoch = 0;
 export class GpuRenderer {
   readonly epoch = ++resourceEpoch;
@@ -43,20 +45,20 @@ export class GpuRenderer {
     const scratch = this.resources.buffers[0];
     if (!scratch) throw Error("gpu-buffer");
     this.arena = new GpuArena(gl, scratch, this.resources.bytes);
-    this.pass = new GpuPass(
-      gl,
-      this.resources,
-      this.resources.mask,
-      this.resources.staging.framebuffer,
-      width,
-      height,
-      this.arena,
-    );
     try {
+      this.pass = new GpuPass(
+        gl,
+        this.resources,
+        this.resources.mask,
+        this.resources.staging.framebuffer,
+        width,
+        height,
+        this.arena,
+      );
       gl.viewport(0, 0, width, height);
       if (gl.isContextLost() || gl.getError() !== gl.NO_ERROR) throw Error("gpu-resource");
     } catch (e) {
-      this.resources.dispose();
+      this.dispose();
       throw e;
     }
   }
@@ -78,6 +80,12 @@ export class GpuRenderer {
     gl.colorMask(true, true, true, !this.resources.packed);
     gl.clearColor(1, 1, 1, 1);
     gl.clear(gl.COLOR_BUFFER_BIT);
+  }
+  protect() {
+    return this.arena.protect();
+  }
+  unprotect(token: ResidencyToken, accepted: boolean) {
+    this.arena.unprotect(token, accepted);
   }
   group() {
     this.pass.group();
@@ -145,26 +153,31 @@ export class GpuRenderer {
   validated(serial: number) {
     return this.submissions.wait(serial);
   }
-  dispose() {
+  dispose(cpu?: CpuRetirement) {
     if (this.disposed) return;
-    this.disposed = true;
     let started = false;
-    retireGpu({
-      bytes: this.resources.bytes + 256 * 1024 + this.arena.bytes,
-      context: this.gl,
-      drained: () => {
-        if (this.gl.isContextLost()) return true;
-        if (!started) {
-          this.submissions.retire();
-          started = true;
-        }
-        return this.submissions.drained();
+    retireGpu(
+      {
+        bytes: this.resources.bytes + 256 * 1024 + this.arena.bytes,
+        metadata: () => this.arena.metadataEstimate,
+        context: this.gl,
+        drained: () => {
+          if (this.gl.isContextLost()) return true;
+          if (!started) {
+            this.submissions.retire();
+            started = true;
+          }
+          return this.submissions.drained();
+        },
+        release: () => {
+          this.submissions.dispose();
+          this.arena.dispose();
+          this.resources.dispose();
+        },
       },
-      release: () => {
-        this.submissions.dispose();
-        this.arena.dispose();
-        this.resources.dispose();
-      },
-    });
+      cpu,
+    );
+    this.arena.stop();
+    this.disposed = true;
   }
 }

@@ -1,3 +1,6 @@
+import { PendingPreparation } from "./pending-preparation.ts";
+import { CleanupFailure } from "./cleanup-failure.ts";
+import { PreparationTicket } from "./preparation-ticket.ts";
 import { orderedPreparation } from "./ordered-preparation.ts";
 import { frames } from "./frame-bridge.ts";
 import { PreparationExecutor } from "./preparation-executor.ts";
@@ -9,13 +12,14 @@ export type { PreparedPage } from "./prepared-store.ts";
 export class PreparedCache extends PreparedStore {
   private executor: PreparationExecutor | undefined;
   private generation = 0;
-  private pendingPages = 0;
-  private pendingBytes = 0;
+  private pending = { pages: 0, bytes: 0, tickets: 0 };
   private stopped = false;
   reader(stroke: bigint, count: bigint, detail: number, frame: bigint, chunk: bigint) {
     const revision = count < (chunk + 1n) * 128n + 1n ? count : (chunk + 1n) * 128n + 1n;
     const hit = this.retained(stroke, revision, detail, frame, chunk);
-    return hit ? this.retainedPages(hit) : this.chunk(stroke, count, detail, false, frame, chunk);
+    return hit
+      ? this.retainedPages(hit, detail)
+      : this.chunk(stroke, count, detail, false, frame, chunk);
   }
   async *read(
     stroke: bigint,
@@ -42,36 +46,44 @@ export class PreparedCache extends PreparedStore {
     const generation = this.generation;
     const current = () => !this.stopped && generation === this.generation;
     const revision = count < (chunk + 1n) * 128n + 1n ? count : (chunk + 1n) * 128n + 1n;
-    const key = `${stroke}:${chunk}`,
-      entries = this.entries.get(key) ?? [];
+    const key = `${stroke}:${chunk}`;
     const hit = this.retained(stroke, revision, detail, frame, chunk);
     if (hit) {
-      yield* this.retainedPages(hit);
+      yield* this.retainedPages(hit, detail);
       return;
     }
+    metrics.preparedRequests++;
+    metrics.preparedMisses++;
     let attempt = 0;
     const executor = (this.executor ??= new PreparationExecutor());
     for (;;) {
       if (!current()) throw Error("disposed");
-      this.trim(0, 0, true);
       const input = frame
         ? frames.preparation(this.state(), stroke, chunk, revision, detail, frame)
         : preparation.begin(this.state(), stroke, chunk, revision, detail);
       if (input.code !== "ok") throw Error(input.code);
       if (!input.token) break;
-      const pages: PreparedPage[] = [];
+      const pending = new PendingPreparation(this.pending, this.borrows);
       let ordinal = 0n,
-        bytes = 0,
         complete = false,
-        stored = false,
-        streaming = false;
+        stored = false;
       const clipped = input.parameters[3] === 1;
+      const ticket = new PreparationTicket(
+        input.token,
+        clipped,
+        this.pending,
+        this.uncertainty,
+        this.state,
+      );
       try {
         for await (const result of executor.pages(input, urgent || attempt > 0)) {
           if (!current() || preparation.current(this.state(), input.token) !== "ok")
             throw Error("stale-scene");
           if (result.data.length) {
-            this.trim(bytes + result.data.byteLength, pages.length + 1);
+            if (!this.room(result.data.byteLength, 1) || this.pending.pages >= 128) {
+              pending.streaming = true;
+              pending.release();
+            }
             const start = performance.now(),
               adopted = preparation.adopt(
                 this.state(),
@@ -83,25 +95,9 @@ export class PreparedCache extends PreparedStore {
             metrics.adoptionMilliseconds += performance.now() - start;
             if (adopted.code !== "ok") throw Error(adopted.code);
             const page = { page: adopted.page, data: result.data };
-            pages.push(page);
-            this.pendingPages++;
-            this.pendingBytes += page.data.byteLength;
-            bytes += page.data.byteLength;
+            pending.add(page);
             yield page;
-            // If retained working capacity is unavailable, streaming releases consumed leases.
-            if (
-              bytes > 8 * 1024 ** 2 ||
-              this.bytes + this.pendingBytes > 8 * 1024 ** 2 ||
-              this.pages + this.pendingPages > 3072 ||
-              this.pendingPages > 128
-            ) {
-              for (const prior of pages) this.borrows.retire(prior);
-              this.pendingPages -= pages.length;
-              this.pendingBytes -= bytes;
-              pages.length = 0;
-              bytes = 0;
-              streaming = true;
-            }
+            if (pending.streaming) pending.release();
           }
           if (result.done) {
             if (preparation.complete(this.state(), input.token, ordinal) !== "ok")
@@ -114,42 +110,49 @@ export class PreparedCache extends PreparedStore {
         if (!current()) throw Error("disposed");
         if (
           complete &&
-          !streaming &&
-          (!clipped || this.tickets < 192) &&
-          this.bytes + bytes <= 8 * 1024 ** 2 &&
-          this.pages + pages.length <= 3072
+          !pending.streaming &&
+          this.room(0, 0) &&
+          (clipped || pending.pages.length > 0)
         ) {
-          entries.push({
+          const bytes = pending.bytes;
+          this.retain({
+            key,
             stroke,
             revision,
             detail,
             token: clipped ? input.token : 0n,
-            pages,
+            pages: pending.take(),
             bytes,
-            used: this.frame,
+            used: this.residency.active?.sequence ?? 0,
+            admitted: this.residency.admit(),
             pins: 0,
+            borrowers: 0,
+            stale: false,
           });
-          this.entries.set(key, entries);
-          this.bytes += bytes;
-          this.pages += pages.length;
-          if (clipped) this.tickets++;
-          this.pendingPages -= pages.length;
-          this.pendingBytes -= bytes;
           stored = true;
-          if (!clipped) preparation.release(this.state(), input.token);
-        } else preparation.release(this.state(), input.token);
+          if (clipped) ticket.transfer();
+        } else if (
+          complete &&
+          pending.totalPages <= 128 &&
+          pending.totalBytes <= 3145728 &&
+          (pending.totalPages > 0 || clipped)
+        ) {
+          metrics.preparedCapacityRefusals++;
+          this.residency.refuse(pending.totalBytes, pending.totalPages, clipped ? 1 : 0, 3145728);
+        }
+        if (!stored || !clipped) ticket.release();
         break;
       } catch (error) {
-        if (!current()) throw Error("disposed", { cause: error });
+        if (!current() && !(error instanceof CleanupFailure))
+          throw Error("disposed", { cause: error });
         if (attempt++ === 0 && error instanceof Error && error.message === "worker-unavailable")
           continue;
         throw error;
       } finally {
-        if (!stored) {
-          this.pendingPages -= pages.length;
-          this.pendingBytes -= bytes;
-          for (const page of pages) this.borrows.retire(page);
-          preparation.release(this.state(), input.token);
+        try {
+          pending.release();
+        } finally {
+          ticket.release();
         }
       }
     }
@@ -158,8 +161,10 @@ export class PreparedCache extends PreparedStore {
     const value = super.resources();
     return {
       ...value,
-      bytes: value.bytes + this.pendingBytes,
-      pages: value.pages + this.pendingPages,
+      tickets: value.tickets + this.pending.tickets,
+      metadataEstimate: value.metadataEstimate + this.pending.pages * 96,
+      bytes: value.bytes + this.pending.bytes,
+      pages: value.pages + this.pending.pages,
     };
   }
   dispose() {

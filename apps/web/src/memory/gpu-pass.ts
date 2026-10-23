@@ -120,6 +120,8 @@ export class GpuPass {
       gl.bufferSubData(gl.ARRAY_BUFFER, 0, data);
       metrics.gpuUploads++;
       metrics.gpuUploadBytes += data.byteLength;
+      metrics.gpuStreamUploads++;
+      metrics.gpuStreamUploadBytes += data.byteLength;
     }
     gl.uniform2f(gl.getUniformLocation(this.resources.ink, "viewport"), this.width, this.height);
     gl.uniform4fv(gl.getUniformLocation(this.resources.ink, "color"), color);

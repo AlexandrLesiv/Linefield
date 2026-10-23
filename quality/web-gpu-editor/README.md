@@ -60,6 +60,51 @@ No threshold relaxation to obtain green. Missing/flaky/skipped/stale evidence is
 
 ## M03 browser scheduling and lifetime checks
 
+The retained-geometry follow-up implements the adopted
+[retention contract](../../docs/interfaces/web-geometry-retention.md). Its new
+`retention.fixture.spec.ts` cases are authored and initially unrun; browser passes must be
+recorded against the subsequent frozen build. CPU pressure uses actual canonical strokes,
+worker preparation/adoption and checked placement until the existing payload/descriptor cap
+positively refuses retention. It then covers B streaming, a late A hit, actual LRU victim
+selection and later B reuse (MIG-WORKER-04/18). GPU cases exercise real WebGL allocations at
+small explicit residual budgets and at4096 allocations, separately from raster correctness.
+These are browser boundary/fault cases, not natural input or throughput claims.
+
+MIG-WORKER-15/27/28 hold the actual FrameCommands disposal after final submission to verify
+both tokens stay active and post-cleanup invalidation earns no idle credit. MIG-WORKER-05/16/24
+hold actual prepared-page CPU ownership after GPU retirement, including context loss and
+cleanup rejection; a replacement attachment receives the single admission wake. The candidate
+rejection case holds actual FrameCommands cleanup inside ProgressiveScene, then rejects it and
+requires the old owner gate to remain failed even after known host arrays drain. Release cases
+borrow an actually adopted worker page across retirement and fail generated page/ticket release
+before mutation, or return a rejected ticket code: uncertain canonical ownership stays separately
+charged, repeated release is idempotent, and fatal release permits no later editor export.
+MIG-WORKER-02/18 (`retention-detail.observation.spec.ts`) uses the actual app route, accepted
+zoom/rotation, a positively held display RAF, controlled clock, real worker requests and trusted
+strokes. It checks acceptance at240ms restarts the250ms quiet deadline, content does not restart
+it, genuine misses request held/final detail, and final Undo/Redo pixels agree. Generated button
+activation and scheduling control are explicitly integration evidence, not latency evidence.
+Actual-route screenshot parity remains in shared-pages and the existing recovery/cancellation
+lanes. Oversized whole-chunk demand, fragmentation/compaction, interrupted multi-page cursor
+drain, partial-constructor failures and per-host heap measurements still need focused evidence;
+these authored cases do not imply exhaustive coverage or M03 performance acceptance.
+
+Idle retirement counts metadata inspection and each page/ticket release against128 transitions
+and2ms. CPU key removal and GPU freed-range insertion avoid whole-list sorting/scanning in
+that idle path. Existing non-idle GPU compaction/free-list reconstruction and synchronous
+lifecycle/stale CPU cleanup are separate work and inherit no idle-time performance pass.
+Exact payload accounting includes pending, retiring and borrowed-retired ownership. Host
+metadata is explicitly an estimate: CPU256B/entry +96B/page or borrow record +8B/retiring array
+slot +384B owner state; GPU160B/allocation +128B/slab +48B/free range +256B owner state;
+the old-generation record adds192B. These conservative formulas are not portable measured
+JavaScript object sizes; target-browser heap/high-water verification remains required.
+
+SEC boundary rationale: this refinement adds host lifetime/accounting and bounded cache-policy
+metadata only. Existing generated Rust authority, page-size validation, immutable worker copies,
+source/coverage/placement queries, session fencing and production fixture exclusion remain.
+There is no new ABI, input trust source, persistence, transport or GPU target. Independent source
+review and existing adversarial/fatal browser lanes remain required before acceptance.
+
 MIG-QUERY-01/02 (`query.fixture.spec.ts`) are generated browser-boundary E2E under
 CT-06, INV-01/04/08/09/11 and MIG-E05/E06. Only frame placement and frame preparation
 coverage use the bounded read-query boundary: positively cancelled input followed by

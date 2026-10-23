@@ -1,4 +1,5 @@
-import { disposeDepartedScene } from "./departed-scene.ts";
+import { DetailRetention } from "./detail-retention.ts";
+import { retireScene } from "./scene-retirement.ts";
 import { frames } from "./frame-bridge.ts";
 import { runObservedCommand } from "./command-timing.ts";
 import type { CommandTiming } from "./command-timing.ts";
@@ -12,7 +13,7 @@ import { ProgressiveScene } from "./progressive-scene.ts";
 import { attachInput } from "./input.ts";
 import { attachEditorControls } from "./editor-controls.ts";
 import { reportResources } from "./resource-monitor.ts";
-import { gpuAdmission, retryGpuRetirement } from "./gpu-retirement.ts";
+import * as retirement from "./gpu-retirement.ts";
 export function attachGpuDisplay(
   view: MemoryView,
   api: Bridge,
@@ -22,7 +23,7 @@ export function attachGpuDisplay(
   update: (state: ReplyValue) => void,
   fatal: () => void,
 ) {
-  retryGpuRetirement();
+  retirement.retryGpuRetirement();
   let state = initial,
     frame = 0,
     stopped = false,
@@ -31,13 +32,25 @@ export function attachGpuDisplay(
     size = "",
     automaticRetry = 0;
   let renderer: GpuRenderer | undefined;
+  const detail = new DetailRetention(schedule);
   const accept = (next: ReplyValue) => {
     state = next;
     update(next);
+    if (next.code === "ok" || next.code === "noop")
+      detail.accept(next, () => api.mapping(next.owner, next.session));
     return next.code === "ok" || next.code === "noop";
   };
   let cache: ProgressiveScene | undefined;
   const valid = () => !stopped && alive();
+  const retire = () => {
+    retireScene(renderer, cache);
+    cache = undefined;
+    renderer = undefined;
+    detail.reset();
+  };
+  const waitRetirement = () => {
+    if (retirement.gpuRetirementPolling()) schedule();
+  };
   const commands = {
     read: () => state,
     run(action: (s: ReplyValue) => ReplyValue, timing?: CommandTiming) {
@@ -78,16 +91,13 @@ export function attachGpuDisplay(
     frame = 0;
     if (!valid() || lost || failed) return;
     try {
-      if (!gpuAdmission()) return schedule();
+      if (!retirement.gpuAdmission()) return waitRetirement();
       const { clientWidth: width, clientHeight: height } = view.canvas;
       const backing = devicePixelRatio;
       const dimensions = `${width}:${height}:${backing}`;
       if (dimensions !== size || !renderer) {
         input?.cancel();
-        cache?.dispose();
-        cache = undefined;
-        renderer?.dispose();
-        renderer = undefined;
+        retire();
         if (
           !width ||
           !height ||
@@ -99,10 +109,10 @@ export function attachGpuDisplay(
           sync();
           return;
         }
-        if (!gpuAdmission()) {
+        if (!retirement.gpuAdmission()) {
           report();
           sync();
-          return schedule();
+          return waitRetirement();
         }
         sync();
         renderer = new GpuRenderer(view.canvas, width, height, backing);
@@ -110,11 +120,8 @@ export function attachGpuDisplay(
         size = dimensions;
       }
       if (!renderer.available()) return schedule();
-      const mapping = api.mapping(state.owner, state.session);
-      const detail = 2 ** Math.ceil(Math.log2(mapping.zoom * backing));
-      cache?.render(detail);
+      cache?.render(detail.current);
       const serial = renderer.check();
-      cache?.submitted(serial);
       submissionObservation(state, renderer.epoch, serial, cache?.inputComplete ?? false);
       if (!cache?.ready) return;
       report();
@@ -132,11 +139,8 @@ export function attachGpuDisplay(
     diagnostic("display", error instanceof Error ? error.message : "failed", state.session);
     if (!editorHealthy()) fatal();
     input?.cancel();
-    renderer?.dispose();
-    renderer = undefined;
     try {
-      cache?.dispose();
-      cache = undefined;
+      retire();
       if (!valid()) return;
       accept(api.suspend(state, nextSequence()));
       sync();
@@ -161,15 +165,12 @@ export function attachGpuDisplay(
     cancelAnimationFrame(frame);
     frame = 0;
     try {
-      cache?.dispose();
-      cache = undefined;
+      retire();
       accept(api.suspend(state, nextSequence()));
       sync();
     } catch {
       fatal();
     }
-    renderer?.dispose();
-    renderer = undefined;
     report();
     view.status("displayLost");
   };
@@ -181,20 +182,19 @@ export function attachGpuDisplay(
   view.canvas.addEventListener("webglcontextlost", onLost);
   view.canvas.addEventListener("webglcontextrestored", onRestored);
   window.addEventListener("resize", schedule);
+  const unwatch = retirement.watchGpuAdmission(schedule);
   schedule();
   return () => {
     input?.dispose();
     controls?.dispose();
-    disposeDepartedScene(cache);
-    cache = undefined;
     stopped = true;
+    unwatch();
+    retire();
     observer.disconnect();
     cancelAnimationFrame(frame);
     window.removeEventListener("resize", schedule);
     view.canvas.removeEventListener("webglcontextlost", onLost);
     view.canvas.removeEventListener("webglcontextrestored", onRestored);
-    renderer?.dispose();
-    renderer = undefined;
     report();
   };
 }

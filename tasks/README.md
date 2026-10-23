@@ -14,10 +14,11 @@ The migration sequence is [M01](P05-M01.md) → [M02](P05-M02.md) → [M03](P05-
 M01 is frozen at9e92c63 in [PR16](https://github.com/AlexandrLesiv/Linefield/pull/16).
 M02 runtime is frozen at1157aeba in draft [PR17](https://github.com/AlexandrLesiv/Linefield/pull/17).
 M03 is active in [draft PR18](https://github.com/AlexandrLesiv/Linefield/pull/18) on that frozen
-runtime; its Undo-continuity preview remains available on port65177. The active-tail checkpoint
-on65179 and bounded cold-admission checkpoint have scoped passing checks/reviews. Independent
-live coverage, indexed visibility858f09c6 and query checkpoint1f1ae73 pass scoped browser/static checks and independent/
-designer review on65189. Read-query cost, retained-detail/LRU and full performance remain open.
+runtime; its Undo-continuity preview remains available on port65177. The current retention build
+passes163 production,54 observation and54 fixture browser cases, static/build checks and scoped
+designer review. Latest frozen preview65197 preserves all earlier previews. The preceding matched
+performance checkpoint stopped on a final-control ink failure and showed no useful cold gain.
+Natural timing, remaining retention evidence and full performance acceptance remain open.
 Later tasks await frozen
 predecessors, not repeated permission. M05 pencil and paper-grain asset preparation is independently
 complete atd6b84a9, with reviewed contracts/screens at1b1c59b on its unpublished branch;

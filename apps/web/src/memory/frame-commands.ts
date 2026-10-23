@@ -1,4 +1,5 @@
 import { FrameWake } from "./frame-wake.ts";
+import { CleanupFailure } from "./cleanup-failure.ts";
 import { admitFrame } from "./frame-admission.ts";
 import type { FillReason } from "./frame-admission.ts";
 import { scene } from "./scene-bridge.ts";
@@ -159,13 +160,35 @@ export class FrameCommands {
   }
   async dispose() {
     this.stop();
-    for (const command of this.queue) if (command.kind === "page") command.page.release?.();
+    let failure: unknown;
+    for (const command of this.queue)
+      if (command.kind === "page") {
+        try {
+          command.page.release?.();
+        } catch (error) {
+          failure ??= error;
+        }
+      }
     this.queue = [];
     this.bytes = 0;
     this.wake.signal();
-    await this.completion;
-    await this.pages?.dispose();
+    try {
+      await this.completion;
+    } catch (error) {
+      failure ??= error;
+    }
+    if (this.error instanceof CleanupFailure) failure ??= this.error;
+    try {
+      await this.pages?.dispose();
+    } catch (error) {
+      failure ??= error;
+    }
     this.pages = undefined;
-    this.visibility.dispose();
+    try {
+      this.visibility.dispose();
+    } catch (error) {
+      failure ??= error;
+    }
+    if (failure) throw failure;
   }
 }

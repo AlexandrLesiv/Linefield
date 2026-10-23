@@ -8,6 +8,7 @@ import type { ReplyValue } from "./bridge.ts";
 import type { PreparedCache } from "./prepared-cache.ts";
 import type { GpuRenderer } from "./gpu-renderer.ts";
 import type { Receipt } from "./frame-receipt.ts";
+import { CleanupFailure, finishCleanup, cleanupRelease } from "./cleanup-failure.ts";
 export class CompletedCandidate {
   receipt: Receipt | undefined;
   ready = false;
@@ -17,6 +18,7 @@ export class CompletedCandidate {
   private stopped = false;
   private pending: Receipt | undefined;
   private discard = false;
+  private completion: Promise<void> = Promise.resolve();
   private state: () => ReplyValue;
   private prepared: PreparedCache;
   private renderer: GpuRenderer;
@@ -56,13 +58,19 @@ export class CompletedCandidate {
     this.ready = false;
     this.busy = true;
     metrics.pendingFrames = 1;
-    void this.run(next, detail, predecessor).catch((error) => {
+    const operation = this.run(next, detail, predecessor);
+    this.completion = operation.catch((error) => {
+      if (error instanceof CleanupFailure) throw error;
+    });
+    void this.completion.catch(() => {});
+    void operation.catch((error) => {
       if (!this.stopped) this.failed(error);
     });
   }
   private async run(next: Receipt, detail: number, predecessor?: Receipt) {
     let accepted = false;
     let issued = false;
+    let cleanupFailure: CleanupFailure | undefined;
     const alive = () =>
       !this.stopped &&
       !this.abort.signal.aborted &&
@@ -86,12 +94,14 @@ export class CompletedCandidate {
       );
       accepted = accepted && alive();
       if (accepted) {
-        if (predecessor) frames.release(this.state(), predecessor.id);
+        if (predecessor) cleanupRelease(() => frames.release(this.state(), predecessor.id));
         this.receipt = next;
         this.ready = true;
       }
     } catch (error) {
+      if (error instanceof CleanupFailure) cleanupFailure = error;
       if (
+        error instanceof CleanupFailure ||
         !(
           error instanceof Error &&
           ["stale-scene", "stale-mapping", "disposed"].includes(error.message)
@@ -100,33 +110,45 @@ export class CompletedCandidate {
         throw error;
       metrics.stale++;
     } finally {
-      if (!accepted) {
-        frames.release(this.state(), next.id);
-        const retain =
-          predecessor &&
-          !issued &&
-          !this.discard &&
-          !this.stopped &&
-          frames.transform(this.state(), predecessor.id).code === "ok";
-        if (predecessor && !retain) frames.release(this.state(), predecessor.id);
-        this.receipt = retain ? predecessor : undefined;
-        this.ready = !!retain;
-        this.sealed = false;
-        if (predecessor)
-          coverageObservation(
-            this.state(),
-            retain ? "extension-retain" : "extension-discard",
-            next.id,
-          );
-      }
-      this.pending = undefined;
-      this.busy = false;
-      metrics.pendingFrames = 0;
-      retirementObservation(this.state(), next.id, this.abort.signal.aborted);
-      if (!this.stopped) {
-        this.abort = new AbortController();
-        this.changed();
-      }
+      finishCleanup(
+        () => {
+          if (!accepted) {
+            finishCleanup(
+              () => cleanupRelease(() => frames.release(this.state(), next.id)),
+              () => {
+                const retain =
+                  predecessor &&
+                  !issued &&
+                  !this.discard &&
+                  !this.stopped &&
+                  frames.transform(this.state(), predecessor.id).code === "ok";
+                if (predecessor && !retain)
+                  cleanupRelease(() => frames.release(this.state(), predecessor.id));
+                this.receipt = retain ? predecessor : undefined;
+                this.ready = !!retain;
+                this.sealed = false;
+                if (predecessor)
+                  coverageObservation(
+                    this.state(),
+                    retain ? "extension-retain" : "extension-discard",
+                    next.id,
+                  );
+              },
+            );
+          }
+        },
+        () => {
+          this.pending = undefined;
+          this.busy = false;
+          metrics.pendingFrames = 0;
+          retirementObservation(this.state(), next.id, this.abort.signal.aborted);
+          if (!this.stopped) {
+            this.abort = new AbortController();
+            this.changed();
+          }
+        },
+        cleanupFailure,
+      );
     }
   }
   validatePending() {
@@ -144,7 +166,8 @@ export class CompletedCandidate {
     const next = frames.capture(this.state());
     if (next.code === "capacity") return;
     if (next.code !== "ok") throw Error(next.code);
-    frames.release(this.state(), this.receipt.id);
+    const previous = this.receipt.id;
+    cleanupRelease(() => frames.release(this.state(), previous));
     this.receipt = next;
   }
   take() {
@@ -161,7 +184,8 @@ export class CompletedCandidate {
     this.ready = false;
     this.sealed = false;
     if (!this.busy) {
-      if (this.receipt) frames.release(this.state(), this.receipt.id);
+      const receipt = this.receipt;
+      if (receipt) cleanupRelease(() => frames.release(this.state(), receipt.id));
       this.receipt = undefined;
       if (!this.stopped) this.abort = new AbortController();
     }
@@ -169,5 +193,6 @@ export class CompletedCandidate {
   dispose() {
     this.stopped = true;
     this.cancel();
+    return this.completion;
   }
 }

@@ -1,5 +1,6 @@
 import type { prepareBegin } from "#preparation-bindings";
 import { currentCoverage, captureDisplay } from "./current-coverage.ts";
+import { cleanupScene } from "./scene-cleanup.ts";
 import type { Coverage } from "./current-coverage.ts";
 import { CompletedCandidate } from "./completed-candidate.ts";
 import { DisplayBase } from "./display-base.ts";
@@ -19,7 +20,7 @@ export class ProgressiveScene {
   private live: LiveOwner;
   private base: DisplayBase;
   private candidate: CompletedCandidate;
-  private stopped = false;
+  private cleanup: Promise<void> | undefined;
   private state: () => ReplyValue;
   private renderer: GpuRenderer;
   private changed: () => void;
@@ -32,19 +33,19 @@ export class ProgressiveScene {
     this.state = state;
     this.renderer = renderer;
     this.changed = changed;
-    this.prepared = new PreparedCache(state);
+    this.prepared = new PreparedCache(state, failed);
     this.base = new DisplayBase(state);
     this.live = new LiveOwner(state);
     this.candidate = new CompletedCandidate(state, this.prepared, renderer, changed, failed);
     void loadPreparation()
       .then((prepare) => {
-        if (!this.stopped) {
+        if (!this.cleanup) {
           this.prepare = prepare;
           changed();
         }
       })
       .catch((error) => {
-        if (!this.stopped) failed(error);
+        if (!this.cleanup) failed(error);
       });
   }
   get ready() {
@@ -184,15 +185,15 @@ export class ProgressiveScene {
   get acknowledgement() {
     return this.base.acknowledgement;
   }
-  submitted(_serial: number) {
-    /* Candidate submissions validate before ownership transfer. */
-  }
   resources = () => this.prepared.resources();
   dispose() {
-    this.stopped = true;
-    this.candidate.dispose();
-    this.prepared.dispose();
-    this.live.dispose();
-    this.base.dispose();
+    if (this.cleanup) return this.cleanup;
+    this.cleanup = cleanupScene([
+      () => this.candidate.dispose(),
+      () => this.prepared.dispose(),
+      () => this.live.dispose(),
+      () => this.base.dispose(),
+    ]);
+    return this.cleanup;
   }
 }

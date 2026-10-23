@@ -1,4 +1,5 @@
 import type { PreparedPage } from "./prepared-store.ts";
+import { CleanupFailure } from "./cleanup-failure.ts";
 type Reader = Generator<PreparedPage> | AsyncGenerator<PreparedPage>;
 type Entry = {
   reader: Reader;
@@ -63,14 +64,27 @@ export class ReadyPreparation {
   }
   async dispose() {
     this.ended = true;
-    this.source.return?.();
     const queue = this.queue;
     this.queue = [];
-    await Promise.allSettled(
+    let failure: unknown;
+    try {
+      this.source.return?.();
+    } catch (error) {
+      failure = error;
+    }
+    const settled = await Promise.allSettled(
       queue.map(async (entry) => {
         await entry.pending;
-        await entry.reader.return(undefined);
+        let readerFailure = entry.error instanceof CleanupFailure ? entry.error : undefined;
+        try {
+          await entry.reader.return(undefined);
+        } catch (error) {
+          readerFailure ??= error instanceof CleanupFailure ? error : new CleanupFailure(error);
+        }
+        if (readerFailure) throw readerFailure;
       }),
     );
+    for (const result of settled) if (result.status === "rejected") failure ??= result.reason;
+    if (failure) throw failure;
   }
 }

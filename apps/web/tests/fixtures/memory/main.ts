@@ -1,4 +1,11 @@
 import { tailComposite } from "./tail-composite.ts";
+import { retentionPressure } from "./retention-pressure.ts";
+import { retentionGpu } from "./retention-gpu.ts";
+import { retentionLifetime } from "./retention-lifetime.ts";
+import { retentionCleanup } from "./retention-cleanup.ts";
+import { retentionCandidateRejection } from "./retention-candidate-rejection.ts";
+import { retentionRelease } from "./retention-release.ts";
+import { retentionStoredCleanup } from "./retention-stored-cleanup.ts";
 import { queryLatch } from "./query-latch.ts";
 import { queryValidity } from "./query-validity.ts";
 import { visibilityPressure } from "./visibility-pressure.ts";
@@ -62,6 +69,31 @@ action("Run boundary matrix", async () => {
   await loadEngine();
   return boundaryMatrix();
 });
+for (const [name, run] of [
+  ["CPU pressure", retentionPressure],
+  ["GPU pressure", () => retentionGpu(canvas)],
+  ["GPU count", () => retentionGpu(canvas, true)],
+  ["cleanup", () => retentionCleanup(canvas)],
+  ["candidate rejected", () => retentionCandidateRejection(canvas)],
+  ["candidate receipt rejected", () => retentionCandidateRejection(canvas, "receipt")],
+  ["candidate residency rejected", () => retentionCandidateRejection(canvas, "residency")],
+  ["candidate operation rejected", () => retentionCandidateRejection(canvas, "operation-receipt")],
+  [
+    "candidate notification rejected",
+    () => retentionCandidateRejection(canvas, "commands-notification"),
+  ],
+  ["stored cleanup rejected", () => retentionStoredCleanup(canvas)],
+  ["page release", () => retentionRelease(canvas, "page")],
+  ["ticket release", () => retentionRelease(canvas, "ticket")],
+  ["ticket code", () => retentionRelease(canvas, "code")],
+  ["CPU lifetime", () => retentionLifetime(canvas, false, false)],
+  ["CPU rejected", () => retentionLifetime(canvas, true, false)],
+  ["CPU context lost", () => retentionLifetime(canvas, false, true)],
+] satisfies [string, () => Promise<unknown>][])
+  action(`Run retention ${name}`, async () => {
+    await loadEngine();
+    return run();
+  });
 action("Run query latch", async () => {
   await loadEngine();
   return queryLatch();

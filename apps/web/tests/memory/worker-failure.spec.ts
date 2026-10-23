@@ -38,6 +38,16 @@ test("MIG-WORKER-07 malformed worker geometry cannot replace completed artwork",
           );
           return;
         }
+        if (
+          injected &&
+          message &&
+          typeof message === "object" &&
+          "kind" in message &&
+          message.kind === "start"
+        )
+          document.documentElement.dataset.workerRecoveryStarts = String(
+            Number(document.documentElement.dataset.workerRecoveryStarts ?? 0) + 1,
+          );
         if (Array.isArray(options)) super.postMessage(message, options);
         else super.postMessage(message, options);
       }
@@ -60,6 +70,11 @@ test("MIG-WORKER-07 malformed worker geometry cannot replace completed artwork",
   await expect(page.locator("html")).toHaveAttribute("data-worker-malformed", "true");
   await expect(page.locator("canvas")).toHaveAttribute("data-state", "ready");
   await page.getByRole("button", { name: "Reset canvas rotation", exact: true }).click();
+  await expect
+    .poll(async () =>
+      Number(await page.locator("html").getAttribute("data-worker-recovery-starts")),
+    )
+    .toBeGreaterThan(0);
   try {
     await expect.poll(async () => (await page.screenshot({ clip })).equals(artwork)).toBe(true);
   } finally {
@@ -68,6 +83,13 @@ test("MIG-WORKER-07 malformed worker geometry cannot replace completed artwork",
       contentType: "image/png",
     });
   }
+  await page.getByRole("button", { name: "Undo last action", exact: true }).click();
+  await expect.poll(async () => (await page.screenshot({ clip })).equals(blank)).toBe(true);
+  await page.mouse.move(350, 350);
+  await page.mouse.down();
+  await page.mouse.move(500, 400, { steps: 8 });
+  await page.mouse.up();
+  await expect.poll(async () => (await page.screenshot({ clip })).equals(blank)).toBe(false);
   await page.getByRole("button", { name: "Undo last action", exact: true }).click();
   await expect.poll(async () => (await page.screenshot({ clip })).equals(blank)).toBe(true);
 });
