@@ -16,11 +16,13 @@ M02 runtime is frozen at1157aeba in draft [PR17](https://github.com/AlexandrLesi
 M03 is active in [draft PR18](https://github.com/AlexandrLesiv/Linefield/pull/18) on that frozen
 runtime; its Undo-continuity preview remains available on port65177. The active-tail checkpoint
 on65179 and bounded cold-admission checkpoint have scoped passing checks/reviews. Independent
-live coverage and indexed visibility858f09c6 pass scoped browser/static checks and independent/
+live coverage, indexed visibility858f09c6 and query checkpoint1f1ae73 pass scoped browser/static checks and independent/
 designer review on65189. Read-query cost, retained-detail/LRU and full performance remain open.
 Later tasks await frozen
 predecessors, not repeated permission. M05 pencil and paper-grain asset preparation is independently
-complete atd6b84a9 on its unpublished branch; M05 runtime integration still depends on M04.
+complete atd6b84a9, with reviewed contracts/screens at1b1c59b on its unpublished branch;
+M05 runtime integration still depends on M04. Its bounded CPU mapping experiment is diagnostic,
+not compiled shader or appearance acceptance.
 PR10 is verified merged at3eaaff8c07c3e15bdcbbbdb97c74031426fbe454. Older status statements
 below are historical. One task/branch/PR, parent-first stacked review, owner-only merges.
 
