@@ -1,4 +1,5 @@
 import type { SparseStorage } from "./sparse-storage.ts";
+import { sparseDescriptor } from "./sparse-descriptor.ts";
 export type SparseWork = {
   visited: number;
   entries: number;
@@ -9,6 +10,7 @@ export type SparseWork = {
 export class SparseRoutes {
   entries = 0;
   descriptors = 0;
+  originalDescriptors = 0;
   slots = 0;
   instances = 0;
   area = 0;
@@ -159,17 +161,16 @@ export class SparseRoutes {
       if (!this.tile()) return this.refuse("slot-or-area");
     } else this.sentinel(this.entries + this.cursor);
     if (++this.cursor === this.stride) {
-      const offset = this.descriptors++ * 8,
-        d = this.storage.descriptors;
-      d[offset] = this.span * 2;
-      d[offset + 1] = this.spanSize;
-      d[offset + 2] = this.entries;
-      d[offset + 3] = this.stride;
-      d[offset + 4] = this.spanSize;
-      d[offset + 5] = this.spanSize * this.stride;
-      d[offset + 6] = 0;
-      d[offset + 7] = 0;
-      this.storage.projection[this.span * 12 + 4] = this.spanArea;
+      this.originalDescriptors++;
+      this.descriptors = sparseDescriptor(
+        this.storage,
+        this.descriptors,
+        this.span * 2,
+        this.spanSize,
+        this.entries,
+        this.stride,
+        this.spanArea,
+      );
       this.entries += this.stride;
       this.span++;
       this.stride = 0;

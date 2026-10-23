@@ -5,6 +5,7 @@ import { commandTurn } from "../../../src/memory/frame-commands.ts";
 import { sparseSource } from "./sparse-source.ts";
 import { sparseRender } from "./sparse-render.ts";
 import { sparseFailure } from "./sparse-failure.ts";
+import { sparseReuse } from "./sparse-reuse.ts";
 import { retireRenderer } from "./retire-renderer.ts";
 import { samplingDifference, samplingImage } from "./sampling-pixels.ts";
 type Case = {
@@ -103,6 +104,7 @@ export async function sparseProof(canvas: HTMLCanvasElement) {
         transitions: plan.transitions,
         slots: plan.routes.slots,
         descriptors: plan.routes.descriptors,
+        originalDescriptors: plan.routes.originalDescriptors,
         entries: plan.routes.entries,
         geometry: actual.geometry,
         presented: actual.presented,
@@ -128,7 +130,10 @@ export async function sparseProof(canvas: HTMLCanvasElement) {
       }
       if (
         rows.length === 1 &&
-        (source.data.length !== 126 || plan.routes.slots !== 4 || plan.routes.descriptors !== 11)
+        (source.data.length !== 126 ||
+          plan.routes.slots !== 4 ||
+          plan.routes.originalDescriptors !== 11 ||
+          plan.routes.descriptors !== 2)
       )
         throw Error(`21-capsule/11-span/four-slot positive control ${JSON.stringify(row)}`);
       if (
@@ -151,6 +156,7 @@ export async function sparseProof(canvas: HTMLCanvasElement) {
   return {
     rows,
     issuedReaderFailure,
+    reuse: await sparseReuse(canvas),
     plannerPayload: storage.payloadBytes,
     usedPayload: storage.usedBytes,
     wrapperObjects: storage.wrapperObjects,

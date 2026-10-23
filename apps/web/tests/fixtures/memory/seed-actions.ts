@@ -11,6 +11,7 @@ import { integerQuad } from "./integer-quad.ts";
 import { displaySampling } from "./display-sampling.ts";
 import { samplingFailure } from "./sampling-failure.ts";
 import { sparseProof } from "./sparse-proof.ts";
+import { sparseCostScreen } from "./sparse-cost-screen.ts";
 export function seedActions(
   action: (name: string, run: () => Promise<unknown>) => void,
   canvas: HTMLCanvasElement,
@@ -25,6 +26,8 @@ export function seedActions(
     });
   const cases: [string, () => unknown][] = [
     ["sparse-proof", () => sparseProof(canvas)],
+    ["sparse-cost-correctness", () => sparseCostScreen(canvas, false)],
+    ["sparse-cost-screen", () => sparseCostScreen(canvas, true)],
     ["integer-quad", () => integerQuad(canvas)],
     ["display-sampling", () => displaySampling(canvas)],
     ["sampling-failure", () => samplingFailure(canvas)],

@@ -1,62 +1,48 @@
-import { program } from "./gpu-resources.ts";
-import {
-  sparseVertex,
-  sparseFragment,
-  sparsePresentVertex,
-  sparsePresentFragment,
-} from "./sparse-shaders.ts";
+import { SparseTables } from "./sparse-tables.ts";
 import type { GpuRenderer } from "./gpu-renderer.ts";
 import type { SparsePlan } from "./sparse-plan.ts";
-// Isolated proof executor only. Production keeps GpuPass; arena loans are not integrated.
+// Isolated reusable executor; production arena loans remain unintegrated.
 export class SparseGpu {
   readonly routeBytes = 262144;
-  private banks: WebGLTexture[] = [];
-  private ink: WebGLProgram | undefined;
-  private presenter: WebGLProgram | undefined;
-  private prepared = 0;
-  constructor(privateRenderer: GpuRenderer) {
-    this.renderer = privateRenderer;
-    const gl = privateRenderer.gl;
-    try {
-      for (let i = 0; i < 2; i++) {
-        const texture = gl.createTexture();
-        if (!texture) throw Error("sparse-route-allocation");
-        this.banks.push(texture);
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA16I, 1024, 16);
-      }
-      this.ink = program(gl, sparseVertex, sparseFragment);
-      this.presenter = program(gl, sparsePresentVertex, sparsePresentFragment);
-      if (gl.getError() !== gl.NO_ERROR) throw Error("sparse-allocation");
-    } catch (error) {
-      this.dispose();
-      throw error;
-    }
-  }
+  compositeIssued = false;
+  private tables: SparseTables;
   private renderer: GpuRenderer;
-  private table(plan: SparsePlan, bank: number, entries: number) {
-    const gl = this.renderer.gl,
-      texture = this.banks[bank];
-    if (!texture) throw Error("sparse-bank");
-    gl.activeTexture(gl.TEXTURE2);
-    gl.bindSampler(2, null);
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texSubImage2D(
-      gl.TEXTURE_2D,
-      0,
-      0,
-      0,
-      1024,
-      Math.ceil(entries / 1024),
-      gl.RGBA_INTEGER,
-      gl.SHORT,
-      plan.storage.routes,
-      bank * 65536,
-    );
+  private current: SparsePlan | undefined;
+  private geometryDone = 0;
+  private presented = 0;
+  private serial = 0;
+  private finished = true;
+  private disposed = false;
+  constructor(renderer: GpuRenderer) {
+    this.renderer = renderer;
+    this.tables = new SparseTables(renderer.gl);
+  }
+  async reset(plan: SparsePlan, precedingSerial = 0) {
+    if (this.disposed || !this.finished) throw Error("sparse-unfinished");
+    await this.renderer.validated(Math.max(this.serial, precedingSerial));
+    this.current = plan;
+    this.tables.prepared = 0;
+    this.geometryDone = 0;
+    this.presented = 0;
+    this.compositeIssued = false;
+    this.finished = false;
+  }
+  submitted(serial: number) {
+    this.serial = Math.max(this.serial, serial);
+  }
+  async complete() {
+    if (
+      !this.current ||
+      this.geometryDone !== this.current.routes.descriptors ||
+      this.presented !== this.current.routes.slots
+    )
+      throw Error("sparse-incomplete");
+    await this.renderer.validated(this.serial);
+    this.finished = true;
+  }
+  preparePresenter(plan: SparsePlan, budget: { deadline: number; remaining: number }) {
+    if (this.current !== plan || this.geometryDone) throw Error("sparse-prepare-order");
+    return this.tables.prepare(plan, this.renderer.width, budget);
   }
   geometry(
     plan: SparsePlan,
@@ -67,7 +53,9 @@ export class SparseGpu {
   ) {
     const r = this.renderer,
       gl = r.gl,
-      shader = this.ink;
+      shader = this.tables.ink;
+    if (this.current !== plan || this.compositeIssued || descriptor !== this.geometryDone)
+      throw Error("sparse-geometry-order");
     if (!shader || !r.resources.buffers[0]) throw Error("sparse-resources");
     const offset = descriptor * 8,
       d = plan.storage.descriptors;
@@ -85,12 +73,10 @@ export class SparseGpu {
     gl.bindVertexArray(r.resources.vao);
     gl.bindBuffer(gl.ARRAY_BUFFER, r.resources.buffers[0]);
     if (descriptor === 0) {
-      this.table(plan, 0, plan.routes.entries);
+      this.tables.upload(plan, 0, plan.routes.entries);
       gl.bufferSubData(gl.ARRAY_BUFFER, 0, data);
     }
-    gl.activeTexture(gl.TEXTURE2);
-    gl.bindSampler(2, null);
-    gl.bindTexture(gl.TEXTURE_2D, this.banks[0] ?? null);
+    this.tables.bind(0);
     const m = plan.storage.matrix;
     m[0] = matrix[0] ?? 0;
     m[1] = matrix[1] ?? 0;
@@ -118,39 +104,30 @@ export class SparseGpu {
         gl.vertexAttribDivisor(i, stride);
       }
       gl.drawArraysInstanced(gl.TRIANGLES, 0, 6, instances);
+      this.geometryDone++;
     } finally {
       gl.vertexAttribDivisor(0, 1);
       gl.vertexAttribDivisor(1, 1);
     }
   }
-  preparePresenter(plan: SparsePlan, budget: { deadline: number; remaining: number }) {
-    const s = plan.storage,
-      columns = Math.floor(this.renderer.width / 64);
-    while (this.prepared < 1024 && budget.remaining > 0 && performance.now() < budget.deadline) {
-      budget.remaining--;
-      const i = this.prepared++,
-        offset = 65536 + i * 4;
-      s.routes[offset] = i < plan.routes.slots ? (s.destinations[i * 2] ?? 0) : 0;
-      s.routes[offset + 1] = i < plan.routes.slots ? (s.destinations[i * 2 + 1] ?? 0) : 0;
-      s.routes[offset + 2] = i < plan.routes.slots ? i % columns : -1;
-      s.routes[offset + 3] = i < plan.routes.slots ? Math.floor(i / columns) : 0;
-    }
-    return this.prepared === 1024;
-  }
   present(plan: SparsePlan, first: number, count: number, color: readonly number[]) {
     const r = this.renderer,
       gl = r.gl,
-      shader = this.presenter;
+      shader = this.tables.presenter;
     if (
       !shader ||
-      this.prepared !== 1024 ||
+      this.current !== plan ||
+      this.tables.prepared !== 1024 ||
+      this.geometryDone !== plan.routes.descriptors ||
+      first !== this.presented ||
       count < 1 ||
       count > 16 ||
       first + count > plan.routes.slots ||
       r.resources.mask.texture === r.resources.staging.texture
     )
       throw Error("sparse-present");
-    if (!first) this.table(plan, 1, plan.routes.slots);
+    if (!first) this.tables.upload(plan, 1, plan.routes.slots);
+    this.tables.bind(1);
     gl.bindFramebuffer(gl.FRAMEBUFFER, r.resources.staging.framebuffer);
     gl.disable(gl.SCISSOR_TEST);
     gl.colorMask(true, true, true, !r.resources.packed);
@@ -173,15 +150,12 @@ export class SparseGpu {
     gl.uniform2f(gl.getUniformLocation(shader, "viewport"), r.width, r.height);
     gl.uniform1i(gl.getUniformLocation(shader, "routeTable"), 2);
     gl.uniform1i(gl.getUniformLocation(shader, "firstTile"), first);
+    this.compositeIssued = true;
     gl.drawArraysInstanced(gl.TRIANGLES, 0, 6, count);
+    this.presented += count;
   }
   dispose() {
-    const gl = this.renderer.gl;
-    for (const texture of this.banks) gl.deleteTexture(texture);
-    this.banks = [];
-    if (this.ink) gl.deleteProgram(this.ink);
-    if (this.presenter) gl.deleteProgram(this.presenter);
-    this.ink = undefined;
-    this.presenter = undefined;
+    this.disposed = true;
+    this.tables.dispose();
   }
 }

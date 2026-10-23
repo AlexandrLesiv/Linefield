@@ -435,6 +435,21 @@ dirty G atlas slot must be cleared after validated presenter readers, or represe
 ordinary pass's dirty footprint. Packed ownership and prior S content must survive. Keep full
 mode as the default until those lifecycle, numerical, exact-pixel and cost gates close.
 
+The subsequent reusable-executor checkpoint is pending fresh browser evidence. The M04 writer
+owns CT-06/07/08, INV-04/08/09 and MIG-TILE-01/04/05/06 in the sparse proof and
+`sparse-cost.fixture.spec.ts`. The real generated-page/GL controls require changed plans on
+reused banks (four→one→four slots), exact output after eleven original spans coalesce to two
+draws, blocked full→sparse entry until the preceding reader validates, and genuine task yields
+at exhausted planning/preparation boundaries without a held reservation. A post-S validation
+fault must retire all readers before deleting proof resources, with no optional replay.
+These controls are isolated browser integration, not production loan or app-acknowledgement
+evidence. The fixed cost corpus uses actual whole pages and reports refusals/multipage fallback;
+it must not replace a non-admitted positive workload to manufacture useful hits. The ordinary
+control retains real scissored clears/composite, streaming uploads, the256-command cap and
+two-slot backpressure without added per-group CPU validation. Cold allocation/first use and
+cleanup are separate from persistent-executor warm costs. Exact normal/packed output precedes
+the single bounded cost screen; production remains full-mode by default.
+
 The completed scheduling/sampling checkpoint retains thirteen relative performance flags.
 The single matched bracket observed approximately one frame of pan improvement, while the
 request 298 (a 32-sample thin stroke) End fence/publication result remains unresolved.

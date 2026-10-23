@@ -89,6 +89,19 @@ CPU admission includes pending, retiring and borrowed-retired ownership exactly 
 transfer is not reclamation. Bounded transient working owners remain visible separately; do not
 claim the resident8MiB limit describes all host geometry memory.
 
+M04 may fill those same eight preparation readers across consecutive visibility replies for
+the same captured stroke/revision/detail. Eight is the total across replies, not a per-reply
+allowance. Rust keeps its existing four-cold-hull/512-visit/128-row query bounds. Every extra
+visibility transition consumes the existing cumulative2ms/1024-transition producer budget;
+an awaited promise or queue wake alone never resets it. Keep one painter-order head, pin each
+retained reader before starting later work, and emit Composite only after the entire prior
+group completes. Stop at a new stroke or hold one explicitly accounted lookahead result.
+Do not retain an old visibility-page subarray after removing its allocation charge. Cancellation
+and failure drain all readers/pages once, including future-ready results, before their owner
+retires. No chunk-size, worker-message, source-proof, live-geometry ownership or queue-limit
+change is implied. Require cold4+4 ordering, stalled-head, stroke-boundary, progress-only,
+cancellation and warm-cache browser evidence before measuring the cold-pan improvement.
+
 Move at most one evicted CPU entry, without copying its pages array, into a retirement cursor.
 Drain it under the idle transition budget; borrowed pages transfer to their existing retirement
 owner until final release. The clipped ticket counts until successfully released. Do not select

@@ -207,8 +207,17 @@ disjoint, so final source-over applies once in paint order without repeated opac
 Each group starts with zeroed G after previous presenter readers validate: clear normal coverage
 or packed G alpha only. Prior-group atlas coverage cannot survive into the next group's MAX.
 
-After geometry readers validate, reuse a retired route bank for the slot-to-destination
-presenter table. For destination integer pixel d, fetch source `s=d−t+a` with integer
+Rewriting a geometry route bank as the slot-to-destination presenter table requires its geometry
+readers to validate first. In the conservative one-page path, the second bank may instead hold
+the presenter table if it is already free of all previous readers. Keep the first bank and its
+geometry allocation immutable; ordered commands in the same WebGL context may then issue G
+geometry followed by S presentation without an intervening validation wait. This introduces no
+third bank, fence or permission to reuse G early. Mark composite-issued before the first S write;
+any error discovered afterward discards the candidate instead of replaying over partial S. Both
+banks, source geometry and G remain owned through their actual last readers, and every part must
+validate before publication. The next group clears/reuses G only after presenter readers validate.
+
+For destination integer pixel d, fetch source `s=d−t+a` with integer
 `texelFetch(G, (s.x,H−1−s.y),0)`. No normalized UV sampling or sampler/write alias is allowed.
 Normal G reads red; packed G is its independent alpha mask. Presenter writes S RGB only in
 packed mode, preserving live alpha, with ONE/ONE_MINUS_SRC_ALPHA and existing group opacity.

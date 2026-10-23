@@ -27,6 +27,7 @@ export async function sparseFailure(
     deleted = 0,
     retired = false;
   let faultDraws = 0,
+    postSDraws = 0,
     earlyDeletes = 0,
     replayDraws = 0,
     rejected = false;
@@ -56,6 +57,8 @@ export async function sparseFailure(
   };
   gl.drawArraysInstanced = (mode, first, count, instances) => {
     draws++;
+    if (gl.getParameter(gl.DRAW_FRAMEBUFFER_BINDING) === renderer.resources.staging.framebuffer)
+      postSDraws++;
     if (faults) replayDraws++;
     draw(mode, first, count, instances);
   };
@@ -66,7 +69,7 @@ export async function sparseFailure(
   gl.getError = () => {
     const actual = error();
     if (actual !== gl.NO_ERROR) throw Error(`unexpected real GL error ${actual}`);
-    if (draws && !retired) {
+    if (postSDraws && !retired) {
       if (!faults) faultDraws = draws;
       faults++;
       return gl.INVALID_OPERATION;
@@ -87,6 +90,7 @@ export async function sparseFailure(
       rejected,
       draws,
       faultDraws,
+      postSDraws,
       faults,
       issued,
       remainingReaders: readers.size,
@@ -101,6 +105,7 @@ export async function sparseFailure(
       !rejected ||
       !faults ||
       !draws ||
+      !postSDraws ||
       issued < 2 ||
       readers.size ||
       textures.size !== 2 ||
