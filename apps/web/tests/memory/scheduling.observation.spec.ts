@@ -1,10 +1,17 @@
 import { test, expect } from "@playwright/test";
 import { complete, clear } from "./observed-frame.ts";
 import { checkAdmissions } from "./cold-observation.ts";
+import {
+  installRetentionObservation,
+  control,
+  records as readRecords,
+} from "./retention-route-observation.ts";
 test("MIG-WORKER-11 warm painter-order replay refills bounded submission slices", async ({
   page,
+  browser,
 }, info) => {
   test.setTimeout(60000);
+  await installRetentionObservation(page);
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await page.locator(".new-tile").click();
@@ -23,18 +30,42 @@ test("MIG-WORKER-11 warm painter-order replay refills bounded submission slices"
   const admissions: Readonly<Record<string, string | number | boolean>>[] = [];
   const rounds: { jobs: number; uploads: number; first: number; last: number }[] = [];
   for (let i = 0; i < 2; i++) {
-    await clear(page);
-    await page.getByRole("button", { name: "Undo last action", exact: true }).click();
-    await complete(page);
+    for (let action = 0; action < 2; action++) {
+      await clear(page);
+      await page.getByRole("button", { name: "Undo last action", exact: true }).click();
+      await complete(page);
+    }
     await clear(page);
     const before = await page.evaluate(() => window["__linefieldPerfRead"]?.().geometry);
     if (!before) throw Error("observation build required");
     const first = admissions.length;
-    await page.getByRole("button", { name: "Redo last action", exact: true }).click();
-    await complete(page, true, false, (records) => {
-      batches.push(...records.filter((record) => record.kind === "frame-batch"));
-      admissions.push(...records.filter((record) => record.kind === "frame-admission"));
+    await page.evaluate(() => {
+      document.documentElement.dataset.holdRetentionFrames = "true";
+      document.documentElement.dataset.retentionFrames = "0";
     });
+    let held: Awaited<ReturnType<typeof readRecords>> = [];
+    try {
+      // Two distinct real host commands while presentation is held:38→39→40.
+      await control(page, "Redo last action");
+      await control(page, "Redo last action");
+      await expect
+        .poll(async () => Number(await page.locator("html").getAttribute("data-retention-frames")))
+        .toBeGreaterThan(0);
+      held = await readRecords(page);
+    } finally {
+      await page.evaluate(() => window.dispatchEvent(new Event("release-retention-frames")));
+    }
+    const accepted = held.filter((r) => r.kind === "input" && r.command === "redo");
+    await complete(
+      page,
+      true,
+      false,
+      (records) => {
+        batches.push(...records.filter((record) => record.kind === "frame-batch"));
+        admissions.push(...records.filter((record) => record.kind === "frame-admission"));
+      },
+      accepted.at(-1),
+    );
     const after = await page.evaluate(() => window["__linefieldPerfRead"]?.().geometry);
     if (!after) throw Error("observation build required");
     rounds.push({
@@ -43,6 +74,26 @@ test("MIG-WORKER-11 warm painter-order replay refills bounded submission slices"
       first,
       last: admissions.length,
     });
+    await info.attach(`warm-replay-round-${i}`, {
+      body: JSON.stringify({
+        version: browser.version(),
+        held,
+        before,
+        after,
+        batches,
+        admissions,
+        rounds,
+        scope:
+          "two canonical Redo commands under controlled display RAF; functional scheduling, not timing",
+      }),
+      contentType: "application/json",
+    });
+    expect(accepted).toHaveLength(2);
+    expect(accepted.every((r) => r.outcome === "ok")).toBe(true);
+    expect(new Set(accepted.map((r) => r.content)).size).toBe(2);
+    expect(held.some((r) => r.kind === "frame-batch" || r.kind === "receipt-publish")).toBe(false);
+    expect(after.prefixSeedCountMisses).toBeGreaterThan(before.prefixSeedCountMisses);
+    expect(after.prefixSeedCopies).toBe(before.prefixSeedCopies);
     await expect.poll(async () => (await page.screenshot({ clip })).equals(original)).toBe(true);
   }
   expect(batches.length).toBeGreaterThan(0);
