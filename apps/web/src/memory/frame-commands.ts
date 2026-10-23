@@ -107,7 +107,7 @@ export class FrameCommands {
         this.done = true;
         break;
       }
-      const { stroke: id, count } = next;
+      const { stroke: id, count, chunks } = next;
       if (this.stroke?.id !== id) {
         if (this.stroke) this.push({ kind: "composite" });
         const stroke = scene.stroke(this.state(), id);
@@ -115,16 +115,10 @@ export class FrameCommands {
         this.stroke = { id, color: stroke.color };
         this.push({ kind: "group" });
       }
-      const { prepared, detail, frame, visibility } = this;
+      const { prepared, detail, frame } = this;
       this.pages = new ReadyPreparation(
         (function* () {
-          let source: ReturnType<FrameVisibility["next"]> = next;
-          while (source.kind !== "done") {
-            yield source.kind === "chunk"
-              ? prepared.reader(id, count, detail, frame, source.chunk)
-              : undefined;
-            source = visibility.next(id, count);
-          }
+          for (const chunk of chunks) yield prepared.reader(id, count, detail, frame, chunk);
         })(),
       );
     }

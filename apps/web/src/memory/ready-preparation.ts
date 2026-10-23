@@ -14,11 +14,10 @@ export type ReadyResult =
 // A poll performs one bounded transition. Only explicitly resolved results are consumed;
 // a pending painter-order head cannot be overtaken by later prefetched pages.
 export class ReadyPreparation {
-  private source: Iterator<Reader | undefined>;
+  private source: Iterator<Reader>;
   private queue: Entry[] = [];
   private ended = false;
-  private sourceProgress = false;
-  constructor(source: Iterable<Reader | undefined>) {
+  constructor(source: Iterable<Reader>) {
     this.source = source[Symbol.iterator]();
   }
   private advance(entry: Entry) {
@@ -37,19 +36,17 @@ export class ReadyPreparation {
     } else entry.result = result;
   }
   poll(): ReadyResult {
-    const head = this.queue[0];
-    if (!this.ended && this.queue.length < 8 && (!this.sourceProgress || !head || head.pending)) {
+    if (!this.ended && this.queue.length < 8) {
       const next = this.source.next();
-      this.sourceProgress = !next.done && !next.value;
       if (next.done) this.ended = true;
-      else if (next.value) {
+      else {
         const entry: Entry = { reader: next.value };
         this.queue.push(entry);
         this.advance(entry);
       }
       return { kind: "progress" };
     }
-    this.sourceProgress = false;
+    const head = this.queue[0];
     if (!head) return { kind: "done" };
     if (head.error) throw head.error;
     if (head.pending) return { kind: "pending", wait: head.pending };
