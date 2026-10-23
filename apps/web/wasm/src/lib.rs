@@ -39,6 +39,7 @@ mod display_readiness;
 mod frame;
 mod frame_capture;
 mod frame_preparation;
+mod frame_reuse;
 mod live_preparation;
 mod stable_preparation;
 mod tail_display;

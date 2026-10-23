@@ -1,11 +1,13 @@
 import type { prepareBegin } from "#preparation-bindings";
-import { currentCoverage, captureDisplay } from "./current-coverage.ts";
+import { currentCoverage } from "./current-coverage.ts";
+import { consumePrefix } from "./consume-prefix.ts";
+import { ReceiptLeases } from "./receipt-lease.ts";
 import { cleanupScene } from "./scene-cleanup.ts";
 import type { Coverage } from "./current-coverage.ts";
 import { CompletedCandidate } from "./completed-candidate.ts";
 import { DisplayBase } from "./display-base.ts";
 import { LiveOwner } from "./live-owner.ts";
-import { consumeGraph, displayGraph } from "./display-graph.ts";
+import { displayGraph } from "./display-graph.ts";
 import type { DisplayGraph } from "./display-graph.ts";
 import { frames } from "./frame-bridge.ts";
 import { coverageObservation } from "./coverage-observation.ts";
@@ -19,6 +21,7 @@ export class ProgressiveScene {
   private prepare: typeof prepareBegin | undefined;
   private live: LiveOwner;
   private base: DisplayBase;
+  private leases = new ReceiptLeases();
   private candidate: CompletedCandidate;
   private cleanup: Promise<void> | undefined;
   private state: () => ReplyValue;
@@ -34,7 +37,7 @@ export class ProgressiveScene {
     this.renderer = renderer;
     this.changed = changed;
     this.prepared = new PreparedCache(state, failed);
-    this.base = new DisplayBase(state);
+    this.base = new DisplayBase(state, this.leases);
     this.live = new LiveOwner(state);
     this.candidate = new CompletedCandidate(state, this.prepared, renderer, changed, failed);
     void loadPreparation()
@@ -75,24 +78,17 @@ export class ProgressiveScene {
       candidateIncludesLive: q.candidateIncludesLive,
     };
   }
-  private consume(q: Coverage) {
-    if (!q.canFold) return false;
-    if (q.liveState !== "active") this.live.value?.stopBack();
-    const next = captureDisplay(this.state());
-    if (next.code === "capacity") return false;
-    if (next.code !== "ok") throw Error(next.code);
-    let issued = false;
-    try {
-      consumeGraph(this.renderer, this.graph(q));
-      issued = true;
-      coverageObservation(this.state(), q.liveState === "active" ? "copyback" : "consume", next.id);
-      this.base.publish(next, this.renderer, false);
-      this.candidate.sealed = false;
-      if (q.liveState !== "active") this.live.dispose();
-      return true;
-    } finally {
-      if (!issued) frames.release(this.state(), next.id);
-    }
+  private consume(q: Coverage, detail: number) {
+    return consumePrefix(
+      this.state,
+      this.renderer,
+      this.base,
+      this.candidate,
+      this.live,
+      () => this.graph(q),
+      q,
+      detail,
+    );
   }
   render(detail: number) {
     this.inputComplete = false;
@@ -109,7 +105,7 @@ export class ProgressiveScene {
       !q.candidateIncludesLive &&
       this.live.value?.through !== q.liveCount;
     if (this.candidate.sealed && q.canFold && !retainingEnded) {
-      if (!this.consume(q)) return this.present(q);
+      if (!this.consume(q, detail)) return this.present(q);
       q = this.coverage();
       if (!q.candidateViewCurrent) this.candidate.cancel();
     }
@@ -144,7 +140,7 @@ export class ProgressiveScene {
       !this.candidate.sealed &&
       q.canFold
     ) {
-      if (!this.consume(q)) return this.present(q);
+      if (!this.consume(q, detail)) return this.present(q);
       q = this.coverage();
     }
     if (!this.live.value && q.activeSource && this.prepare) {
@@ -161,8 +157,11 @@ export class ProgressiveScene {
       (!this.base.prefix ||
         this.base.historical ||
         this.base.receipt?.key !== `${s.content}:${s.mapping}`)
-    )
+    ) {
+      const source = !q.activeSource && this.base.seedSource(this.renderer);
+      if (source) this.candidate.seed(detail, source);
       this.candidate.start(detail);
+    }
     this.present(this.coverage());
   }
   private present(q: Coverage) {
@@ -185,7 +184,7 @@ export class ProgressiveScene {
   get acknowledgement() {
     return this.base.acknowledgement;
   }
-  resources = () => this.prepared.resources();
+  resources = () => this.leases.combine(this.prepared.resources());
   dispose() {
     if (this.cleanup) return this.cleanup;
     this.cleanup = cleanupScene([
@@ -193,7 +192,7 @@ export class ProgressiveScene {
       () => this.prepared.dispose(),
       () => this.live.dispose(),
       () => this.base.dispose(),
-    ]);
+    ]).then(() => this.leases.drained());
     return this.cleanup;
   }
 }

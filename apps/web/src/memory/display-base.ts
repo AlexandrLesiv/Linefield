@@ -4,13 +4,33 @@ import { geometryMetrics as metrics } from "./geometry-metrics.ts";
 import type { ReplyValue } from "./bridge.ts";
 import type { Receipt } from "./frame-receipt.ts";
 import type { GpuRenderer } from "./gpu-renderer.ts";
+import { ReceiptLeases } from "./receipt-lease.ts";
+import type { ReceiptLease } from "./receipt-lease.ts";
 export class DisplayBase {
-  receipt: Receipt | undefined;
+  private lease: ReceiptLease | undefined;
+  private release: (() => void) | undefined;
+  private texture: WebGLTexture | undefined;
+  private epoch = 0;
+  private leases: ReceiptLeases;
+  get receipt() {
+    return this.lease?.receipt;
+  }
   prefix = false;
   historical = false;
   private state: () => ReplyValue;
-  constructor(state: () => ReplyValue) {
+  private releaseState: ReplyValue;
+  constructor(state: () => ReplyValue, leases = new ReceiptLeases()) {
     this.state = state;
+    this.releaseState = state();
+    this.leases = leases;
+  }
+  seedSource(renderer: GpuRenderer) {
+    return this.prefix &&
+      !this.historical &&
+      this.epoch === renderer.epoch &&
+      this.texture === renderer.resources.base.texture
+      ? this.lease
+      : undefined;
   }
   get installed() {
     return this.prefix ? (this.receipt?.id ?? 0n) : 0n;
@@ -27,8 +47,15 @@ export class DisplayBase {
     return transform.matrix;
   }
   publish(next: Receipt, renderer: GpuRenderer, prefix: boolean) {
+    this.prefix = false;
+    this.historical = true;
+    // Incoming ownership is registered before the old release can poison the engine.
+    const incoming = this.leases.adopt(next, this.releaseState);
     this.dispose();
-    this.receipt = next;
+    this.lease = incoming;
+    this.release = this.lease.reference();
+    this.texture = renderer.resources.base.texture;
+    this.epoch = renderer.epoch;
     this.prefix = prefix;
     this.historical = !prefix;
     if (prefix) {
@@ -46,8 +73,12 @@ export class DisplayBase {
       : undefined;
   }
   dispose() {
-    if (this.receipt) frames.release(this.state(), this.receipt.id);
-    this.receipt = undefined;
+    this.prefix = false;
+    this.historical = true;
+    this.release?.();
+    this.release = undefined;
+    this.lease = undefined;
+    this.texture = undefined;
     this.prefix = false;
     this.historical = false;
   }

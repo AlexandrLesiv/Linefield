@@ -308,6 +308,24 @@ manifest in docs/reuse-ledger.md identifies the reference; discarded experiments
 |Layer appearance versus metadata invalidation; rename/select/lock need not invalidate pixels | M06 / E09 |
 |Versioned prebuilt material response and rebuild-on-contextrestore; no synchronous firststroke bake | M05 / E05/E08 and coldreadiness |
 
+M04 unchanged-view prefix seed follows [the adopted first-slice contract](../../docs/interfaces/web-prefix-reuse.md).
+Pan lattice, sparse routes, region reconstruction and archives remain separate later stages.
+
+| Scenario / authored case | Required positive/negative evidence |
+| --- | --- |
+| MIG-TILE-02 / prefix-seed.observation.spec.ts | Actual idle End→settle before next Begin→Escape and separate End→next Begin without ack wait→Escape, positive copy/completion/skipped-prefix counters, fewer producer commands than independent view rebuild, exact pixels and Undo/Redo in normal/packed formats |
+| MIG-TILE-02 / prefix-seed.fixture.spec.ts query/render/invisible/same/multiple | Generated engine and real worker/GL path; exact full-rebuild RGB parity and fewer instanced draws; empty-prefix proof, invisible successor still waits for copy-covering validation; equal/multiple-prefix misses |
+| MIG-TILE-05 / prefix-seed.fixture.spec.ts capacity/render/invisible | Seven occupied receipts reserve the ordinary eighth fold before optional target; borrowed predecessor survives base replacement through cursor cleanup; held fence prevents false readiness |
+| MIG-TILE-05/06 / prefix-seed.fixture.spec.ts publication-promote/fold/create/create-release | Actual completed candidate promotion and issued ordinary fold; prior release or incoming-owner creation failure cannot publish; both receipts remain charged or incoming release is acknowledged once; repeated cleanup and generated-boundary poison exclude further exports and block replacement |
+| MIG-TILE-06 / prefix-seed.fixture.spec.ts query/before/after/draw/release | Checked identities, activeCancelled latch and one snapshot; actual copy/draw phase faults never promote B as ready S; full reconstruction recovers; failed receipt acknowledgement retains charged uncertainty and blocks replacement |
+
+These new cases are authored and initially unrun. Fixture integration is not actual-route E2E;
+each attaches actual browser version and result. Existing M03 sealed/busy, context/Back/resize,
+packed live-mask, cleanup and worker-failure lanes remain required regressions. Fixed host lease
+metadata and retiring uncertainty are reported; three GL programs are counted separately from
+opaque driver storage. No additional texture/fence/receipt allowance or performance pass follows.
+Exact reviewed DIAG integration, fresh source review and frozen-build functional evidence precede PR.
+
 GPU wake experiment acceptance (CT-06; existing MIG-WORKER-05/15/16/24/27/28):
 
 | Scenario / authored case | Required behavior and evidence limit |

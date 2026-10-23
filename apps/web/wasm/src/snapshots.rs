@@ -53,6 +53,7 @@ macro_rules! snapshot {
 snapshot!(PreparationSnapshot);
 snapshot!(TailDisplaySnapshot);
 snapshot!(CurrentCoverageSnapshot);
+snapshot!(FrameReuseSnapshot);
 snapshot!(LiveFrameSnapshot);
 snapshot!(DisplayFrameSnapshot);
 snapshot!(VisibilitySnapshot);

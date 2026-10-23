@@ -6,6 +6,8 @@ export type CpuRetirement = {
     metadataEstimate?: number;
     uncertainDescriptors?: number;
     uncertainTickets?: number;
+    receiptLeases?: number;
+    uncertainReceiptLeases?: number;
   };
   cleanup: () => Promise<void>;
 };

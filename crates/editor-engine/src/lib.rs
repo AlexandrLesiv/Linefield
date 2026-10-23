@@ -33,7 +33,9 @@ mod frame;
 pub use frame::{FrameAuthority, FrameReceipt};
 mod frame_capture;
 mod frame_registry;
+mod frame_reuse;
 pub use frame_capture::FrameCapture;
+pub use frame_reuse::{FrameReuse, FrameReuseMiss};
 mod current_coverage;
 pub use current_coverage::{CurrentCoverage, LiveState};
 

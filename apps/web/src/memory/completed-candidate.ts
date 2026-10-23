@@ -1,14 +1,17 @@
 import { frames } from "./frame-bridge.ts";
 import { live } from "./live-bridge.ts";
-import { buildFrame } from "./frame-builder.ts";
+import { buildCandidate } from "./candidate-build.ts";
+import type { Seed } from "./candidate-build.ts";
+import { frameReuse } from "./frame-reuse.ts";
+import { copyPrefix } from "./gpu-seed.ts";
+import type { ReceiptLease } from "./receipt-lease.ts";
 import { geometryMetrics as metrics } from "./geometry-metrics.ts";
 import { retirementObservation } from "./performance-observation.ts";
-import { coverageObservation } from "./coverage-observation.ts";
 import type { ReplyValue } from "./bridge.ts";
 import type { PreparedCache } from "./prepared-cache.ts";
 import type { GpuRenderer } from "./gpu-renderer.ts";
 import type { Receipt } from "./frame-receipt.ts";
-import { CleanupFailure, finishCleanup, cleanupRelease } from "./cleanup-failure.ts";
+import { CleanupFailure, cleanupRelease } from "./cleanup-failure.ts";
 export class CompletedCandidate {
   receipt: Receipt | undefined;
   ready = false;
@@ -52,13 +55,72 @@ export class CompletedCandidate {
     if (next.code !== "ok") throw Error(next.code);
     this.launch(next, detail, this.receipt);
   }
-  private launch(next: Receipt, detail: number, predecessor?: Receipt) {
+  seed(detail: number, source: ReceiptLease) {
+    if (this.busy || this.receipt || this.stopped || this.sealed) return;
+    metrics.prefixSeedAttempts++;
+    const next = frames.capture(this.state());
+    if (next.code === "capacity") {
+      metrics.prefixSeedCapacityMisses++;
+      return;
+    }
+    if (next.code !== "ok") throw Error(next.code);
+    let transferred = false;
+    try {
+      const reuse = frameReuse(this.state(), source.receipt.id, next.id);
+      if (reuse.code !== "ok") throw Error(reuse.code);
+      if (!reuse.reusable) {
+        if (reuse.missReason === "view") metrics.prefixSeedViewMisses++;
+        else if (reuse.missReason === "same-prefix") metrics.prefixSeedSameMisses++;
+        else metrics.prefixSeedCountMisses++;
+        return;
+      }
+      const release = source.borrow();
+      this.receipt = next;
+      transferred = true;
+      this.launch(next, detail, source.receipt, {
+        release,
+        copy: () => {
+          copyPrefix(this.renderer);
+          metrics.prefixSeedCopies++;
+          metrics.prefixSeedPixels += this.renderer.width * this.renderer.height;
+          metrics.prefixSeedSkippedSources += Number(reuse.sourceCount);
+        },
+      });
+    } finally {
+      if (!transferred) cleanupRelease(() => frames.release(this.state(), next.id));
+    }
+  }
+  private launch(next: Receipt, detail: number, predecessor?: Receipt, seed?: Seed) {
     this.pending = next;
     this.discard = false;
     this.ready = false;
     this.busy = true;
     metrics.pendingFrames = 1;
-    const operation = this.run(next, detail, predecessor);
+    const signal = this.abort.signal;
+    const operation = buildCandidate({
+      owner: this,
+      state: this.state,
+      prepared: this.prepared,
+      renderer: this.renderer,
+      next,
+      detail,
+      signal,
+      predecessor,
+      seed,
+      alive: () =>
+        !this.stopped && !signal.aborted && frames.transform(this.state(), next.id).code === "ok",
+      retain: () => !this.discard && !this.stopped,
+      settled: () => {
+        this.pending = undefined;
+        this.busy = false;
+        metrics.pendingFrames = 0;
+        retirementObservation(this.state(), next.id, signal.aborted);
+        if (!this.stopped) {
+          this.abort = new AbortController();
+          this.changed();
+        }
+      },
+    });
     this.completion = operation.catch((error) => {
       if (error instanceof CleanupFailure) throw error;
     });
@@ -66,90 +128,6 @@ export class CompletedCandidate {
     void operation.catch((error) => {
       if (!this.stopped) this.failed(error);
     });
-  }
-  private async run(next: Receipt, detail: number, predecessor?: Receipt) {
-    let accepted = false;
-    let issued = false;
-    let cleanupFailure: CleanupFailure | undefined;
-    const alive = () =>
-      !this.stopped &&
-      !this.abort.signal.aborted &&
-      frames.transform(this.state(), next.id).code === "ok";
-    try {
-      accepted = await buildFrame(
-        this.state,
-        this.prepared,
-        this.renderer,
-        next,
-        detail,
-        alive,
-        this.abort.signal,
-        predecessor
-          ? {
-              after: predecessor.through,
-              predecessor: predecessor.id,
-              issuing: () => (issued = true),
-            }
-          : undefined,
-      );
-      accepted = accepted && alive();
-      if (accepted) {
-        if (predecessor) cleanupRelease(() => frames.release(this.state(), predecessor.id));
-        this.receipt = next;
-        this.ready = true;
-      }
-    } catch (error) {
-      if (error instanceof CleanupFailure) cleanupFailure = error;
-      if (
-        error instanceof CleanupFailure ||
-        !(
-          error instanceof Error &&
-          ["stale-scene", "stale-mapping", "disposed"].includes(error.message)
-        )
-      )
-        throw error;
-      metrics.stale++;
-    } finally {
-      finishCleanup(
-        () => {
-          if (!accepted) {
-            finishCleanup(
-              () => cleanupRelease(() => frames.release(this.state(), next.id)),
-              () => {
-                const retain =
-                  predecessor &&
-                  !issued &&
-                  !this.discard &&
-                  !this.stopped &&
-                  frames.transform(this.state(), predecessor.id).code === "ok";
-                if (predecessor && !retain)
-                  cleanupRelease(() => frames.release(this.state(), predecessor.id));
-                this.receipt = retain ? predecessor : undefined;
-                this.ready = !!retain;
-                this.sealed = false;
-                if (predecessor)
-                  coverageObservation(
-                    this.state(),
-                    retain ? "extension-retain" : "extension-discard",
-                    next.id,
-                  );
-              },
-            );
-          }
-        },
-        () => {
-          this.pending = undefined;
-          this.busy = false;
-          metrics.pendingFrames = 0;
-          retirementObservation(this.state(), next.id, this.abort.signal.aborted);
-          if (!this.stopped) {
-            this.abort = new AbortController();
-            this.changed();
-          }
-        },
-        cleanupFailure,
-      );
-    }
   }
   validatePending() {
     if (

@@ -11,6 +11,8 @@ type Geometry = {
   metadataEstimate?: number;
   uncertainDescriptors?: number;
   uncertainTickets?: number;
+  receiptLeases?: number;
+  uncertainReceiptLeases?: number;
 };
 let highWater = 0;
 let aboveTarget = false;
@@ -46,8 +48,14 @@ function totals(
     uncertainGeometryTickets: geometry.uncertainTickets ?? 0,
     retiringUncertainDescriptors: retiring.uncertainDescriptors ?? 0,
     retiringUncertainTickets: retiring.uncertainTickets ?? 0,
+    receiptLeases: geometry.receiptLeases ?? 0,
+    uncertainReceiptLeases: geometry.uncertainReceiptLeases ?? 0,
+    retiringReceiptLeases: retiring.receiptLeases ?? 0,
+    retiringUncertainReceiptLeases: retiring.uncertainReceiptLeases ?? 0,
     streamOnly: geometry.streamOnly,
     gpuStreamingBuffers: buffers,
+    // Program storage is driver-owned/opaque; count objects, do not invent byte charges.
+    gpuPrograms: pixels ? 3 : 0,
     gpuMask: pixels * 4,
     gpuScratch: pixels * (packed ? 4 : 3),
     gpuStaging: pixels * (packed ? 4 : 3),

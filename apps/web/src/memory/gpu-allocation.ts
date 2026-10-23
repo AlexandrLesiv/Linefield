@@ -1,6 +1,7 @@
 import { targets } from "./gpu-targets.ts";
 import { vertex, fragment, screenVertex, screenFragment } from "./gpu-shaders.ts";
 import { program } from "./gpu-resources.ts";
+import { seedVertex, seedFragment } from "./gpu-seed.ts";
 export function allocateGpu(gl: WebGL2RenderingContext, width: number, height: number) {
   const cleanup: (() => void)[] = [];
   const dispose = () => {
@@ -12,6 +13,8 @@ export function allocateGpu(gl: WebGL2RenderingContext, width: number, height: n
     cleanup.push(() => gl.deleteProgram(ink));
     const copy = program(gl, screenVertex, screenFragment);
     cleanup.push(() => gl.deleteProgram(copy));
+    const seed = program(gl, seedVertex, seedFragment);
+    cleanup.push(() => gl.deleteProgram(seed));
     const vao = gl.createVertexArray();
     if (!vao) throw Error("gpu-buffer");
     cleanup.push(() => gl.deleteVertexArray(vao));
@@ -27,7 +30,7 @@ export function allocateGpu(gl: WebGL2RenderingContext, width: number, height: n
     const surfaces = targets(gl, width, height);
     cleanup.push(surfaces.dispose);
     if (gl.isContextLost() || gl.getError() !== gl.NO_ERROR) throw Error("gpu-resource");
-    return { ink, copy, vao, buffers, ...surfaces, dispose };
+    return { ink, copy, seed, vao, buffers, ...surfaces, dispose };
   } catch (error) {
     dispose();
     throw error;
