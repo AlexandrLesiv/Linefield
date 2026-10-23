@@ -40,6 +40,7 @@ export function candidateSeed(
   if (reuse.missReason === "view") metrics.prefixSeedViewMisses++;
   else if (reuse.missReason === "same-prefix") metrics.prefixSeedSameMisses++;
   else metrics.prefixSeedCountMisses++;
+  if (reuse.missReason !== "view") return;
   metrics.panAttempts++;
   if (!renderer.resources.integerQuad) {
     metrics.panCapabilityMisses++;

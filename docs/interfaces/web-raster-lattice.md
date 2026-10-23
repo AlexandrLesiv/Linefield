@@ -135,6 +135,10 @@ it is not reset by cleanup, a cache wake or another attempt to acquire a slot. R
 mapping or session creates a different request. A failed canonical retry uses the existing typed
 render failure/recovery path. Distinguish pan-copy from same-view successor seeding: pan-copy walks
 the entire captured prefix, never uses the successor seed's after-through frontier.
+Enter optional pan-copy only after the predecessor query identifies a view/phase difference.
+An unchanged same-prefix or unsupported successor-count case retains its existing no-work miss
+and mandatory-fold priority. A valid zero-shift certificate alone does not require a redundant
+image copy when the source and target view/phase already agree.
 
 Use existing bounded aggregate diagnostics for attempts, validated copies, copied/dirty pixel
 area, categorized misses and skipped GPU draws/compositions. Counts describe actual issued work;
