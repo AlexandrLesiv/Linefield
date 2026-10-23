@@ -42,9 +42,15 @@ export class GpuTurn {
   }
   progress() {
     this.delay = 4;
-    if (this.pending) {
-      this.cancel(this.pending);
-      this.arm(this.pending);
+    const wake = this.pending;
+    if (wake) {
+      this.cancel(wake);
+      if (document.visibilityState === "hidden") {
+        this.visibility();
+        return;
+      }
+      this.pending = undefined;
+      wake.resolve();
     }
   }
   private cancel(wake: Wake) {

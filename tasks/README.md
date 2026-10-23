@@ -3,7 +3,9 @@
 Current2026-10-23: the owner returned and the overnight continuation is paused. The owner then
 explicitly resumed [M04](P05-M04.md): repair its three fixture findings, complete the panning/
 rendering optimizations, checks and reviews, update PR20 and open a separate preview. Preserve
-65220 and all earlier previews. M05–M09 remain paused; owner-only merging remains unchanged.
+65222 and all earlier previews. Following the reviewed pan repair at8773c12, the owner renewed
+M04 to finish remaining optimizations/checks and publish a separate preview. M05–M09 remain
+paused; owner-only merging remains unchanged.
 
 The [decision243](../docs/decisions.md) absence window has ended. The resumed M04 authority is
 recorded in decision244; the scheduled continuation remains paused. [P05-DIAG01](P05-DIAG01.md)
@@ -14,7 +16,8 @@ The migration sequence is [M01](P05-M01.md) → [M02](P05-M02.md) → [M03](P05-
 [M04](P05-M04.md) → [M05](P05-M05.md) → [M06](P05-M06.md) → [M07](P05-M07.md) →
 [M08](P05-M08.md) → [M09](P05-M09.md). Contracts/design are
 [MIG-C1](../docs/interfaces/web-gpu-editor.md)/[MIG-D1](../docs/design/web-gpu-editor.md).
-M01 is frozen at9e92c63 in [PR16](https://github.com/AlexandrLesiv/Linefield/pull/16).
+M01 [PR16](https://github.com/AlexandrLesiv/Linefield/pull/16) is merged atb101a7e; its integrated
+tree matches the frozen9e92c63 tree exactly. M04 remains stacked on the open DIAG01 parent.
 M02 runtime is frozen at1157aeba in draft [PR17](https://github.com/AlexandrLesiv/Linefield/pull/17).
 M03 is recorded in [draft PR18](https://github.com/AlexandrLesiv/Linefield/pull/18) on that frozen
 runtime; its Undo-continuity preview remains available on port65177. M03's current wake/retention
@@ -22,13 +25,13 @@ checkpoint passes275 unique browser cases plus four affected fixture rechecks, s
 scoped reviews; preview65206 preserves prior builds. DIAG01 is in draft
 [PR19](https://github.com/AlexandrLesiv/Linefield/pull/19), with bounded exportable diagnostics and
 development tools on65208. Capture overhead and remaining M03 timing/resource gates stay open.
-M04's first same-view prefix reuse checkpoint passes346 selected cases and scoped reviews;
-preview65220 is preserved. Its held-pan regression is repaired in reviewed preview65222, with24
-distinct targeted cases passing; repeated forced-composition quality and full performance remain
-open. Its one bounded comparison reduced completed-frame acknowledgement
-from63.8/61.6ms controls to48.7ms; this is not panning or full-profile acceptance. Sparse coverage,
-regions and tiles remain in progress. The first compiled raster arithmetic/layout proof passes
-its two browser cases; production pan-copy is still gated. M05 settings/material work is preserved
+M04's current scheduling/temporary-image checkpoint has371 distinct browser passes (131fixture,
+63observation,177production), static/build checks and scoped independent/designer review. Its
+reviewed actual application is on65224;65222 and earlier previews remain unchanged. Original
+fixture/reporting failures remain recorded with narrow repairs, not relabeled as passes. Same-view
+prefix reuse and continuous held-pan revelation are implemented. Current performance comparison,
+G-only sparse coverage, production pan-region reuse and conditional tiles remain open; neither
+isolated arithmetic/layout nor integer-quad proof enables production pan-copy. M05 settings/material work is preserved
 on its paused branch; shaders and combined browser acceptance remain pending. M06/M07 have prepared
 contracts only; M08/M09 remain unimplemented. M05–M09 await resumption and frozen predecessors.
 No source or numerical checkpoint is a compiled shader, appearance or performance pass.

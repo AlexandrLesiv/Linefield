@@ -23,5 +23,10 @@ export async function installCandidateTurnHold(page: Page) {
       for (const run of held.splice(0)) timeout(run, 0);
       document.documentElement.dataset.candidateTurns = "0";
     });
+    document.addEventListener("step-candidate-turn", () => {
+      const run = held.shift();
+      if (run) timeout(run, 0);
+      document.documentElement.dataset.candidateTurns = String(held.length);
+    });
   });
 }

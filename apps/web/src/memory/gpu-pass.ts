@@ -3,6 +3,7 @@ import type { target } from "./gpu-resources.ts";
 import { emptyBounds, pageBounds, union, scissor } from "./gpu-scissor.ts";
 import { GpuArena } from "./gpu-arena.ts";
 import { geometryMetrics as metrics } from "./geometry-metrics.ts";
+import { resampleOpaque } from "./opaque-sampler.ts";
 type Resources = ReturnType<typeof allocateGpu>;
 export function blit(
   gl: WebGL2RenderingContext,
@@ -46,7 +47,16 @@ export function blit(
         ])
       : new Float32Array([1, 0, 0, 0, 1, 0, 0, 0, 1]),
   );
-  gl.drawArrays(gl.TRIANGLES, 0, 6);
+  // Mask/MAX/live composition keeps the texture's exact NEAREST sampling. Only
+  // transformed opaque RGB images use this sampler; packed alpha is not displayed.
+  try {
+    gl.bindSampler(0, !color && !alphaOnly && resampleOpaque(matrix) ? r.rgbSampler : null);
+    gl.bindSampler(1, null);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+  } finally {
+    gl.bindSampler(0, null);
+    gl.bindSampler(1, null);
+  }
 }
 export class GpuPass {
   private groupBounds = emptyBounds();

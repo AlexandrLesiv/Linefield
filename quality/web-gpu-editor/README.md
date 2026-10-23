@@ -130,6 +130,9 @@ Record exact build and actual outcomes in the task; this mapping alone is not a 
 | MIG-PAN-REVEAL-01/02 / pan-reveal.spec.ts | Actual pointer pan reveals successive previously offscreen sources before mouseup, including paused held input, reversal,5%/512px width/15° rotation, Escape and fresh End/Undo/Redo; exact source crops and bounded same-turn display samples check visible continuity. Functional E2E, not natural latency or general fractional-AA acceptance |
 | MIG-PAN-REVEAL-03 / view-union.fixture.spec.ts; MIG-WORKER-32 / current-coverage.fixture.spec.ts | Generated Rust view-union capture accepts old captured mapping only with current command authority and complete current prefix. Wrong owner/session/mapping/kind/source/phase/metrics/capacity reject. Controlled actual engine/preparation/GL normal/packed faults cover capacity before issue and post-swap release/submission retirement; DIAG provisional composition IDs correlate once without completed-publication claims. Boundary E2E, not actual pointer timing |
 | MIG-PAN-REVEAL-04 / pan-transform.observation.spec.ts | Bounded actual-route candidate-task hold positively exercises provisional union separately during fractional pan and changing-angle rotation; repeated held reversals must converge to exact canonical ended AA before mouseup, with exact End/Escape. Intermediate captures and nonblank coverage support separate designer review of transient resampling; no new tolerance or performance acceptance |
+| MIG-PAN-REVEAL-05 / composition-chain.observation.spec.ts | Three consecutive positively forced unions during each fractional pan and changing-angle rotation, normal/packed; no intervening exact Prefix publication/ack, and each replacement candidate matches the preceding union's owner/session/mapping/content. Retain every provisional/canonical capture and measured contour difference; exact End/Escape. Controlled task stepping is functional evidence, not natural latency |
+| MIG-PAN-REVEAL-06 / pan-scheduling.observation.spec.ts | Eligible sealed End consumes at most once and starts current reconstruction within the same render, with no intervening overlay; normal/packed positive transitions. Existing capacity-pan, sealed-ended-live and recovery cases preserve admission and ownership negatives |
+| MIG-PAN-REVEAL-07 / display-sampling.fixture.spec.ts | Real prepared opaque B, same source/matrix NEAREST-versus-LINEAR and canonical controls, normal/packed. Identity/integer presentation stays bit-identical to the previous path; integer canonical error equals the previous path rather than claiming unimplemented lattice parity. Fractional/rotation filtering, source preservation, paper edges, packed-alpha sentinel, post-draw binding restoration, null sampler allocation and deletion are positive controls |
 | MIG-WORKER-15 / cancellation.observation.spec.ts | Confirmed withheld real worker reply → Undo → matching current receipt acknowledgement within500ms; joined candidate has zero queue/job/copy charges; deliver obsolete reply, then fresh rebranch/Undo/Redo and repeat without resurrecting artwork |
 | MIG-WORKER-16 / pending-fatal.fixture.spec.ts | Confirmed pending candidate → real metrics trap or explicitly injected command/getter/destructor exception → immediate worker teardown, Back, late reply, forced GC and Resume: no subsequent canonical-editor export, fatal tombstone retained; positive export/call controls prevent vacuous proof |
 | MIG-WORKER-17 / control-work.observation.spec.ts | Begin/End positively change toolbar availability; unchanged accepted append batches issue zero toolbar mutations. Paired phase records preserve request/source identity and monotonic acquisition/Rust-return/state/control/contact times; these measure the batch body or command wrapper, not whole browser dispatch or physical latency |
@@ -168,19 +171,20 @@ query work counters do not establish frame latency or complete performance accep
 | MIG-LIVE-08 / tail-composite.fixture.spec.ts | Synthetic renderer-boundary RGBA groups in normal/packed targets: retained stable/front self-union, separate translucent D source-over at overlap, D removal preserves C, common pan/cancel alignment and exact canonical source-order pixels. No opacity UI or command-lifecycle claim |
 | MIG-WORKER-04 / gpu-budget.spec.ts | Maximum8,388,608 backing pixels → resize → Back: normal13B/pixel targets≤104MiB or packed16B/pixel≤128MiB; geometry including256KiB stream reserve is capped by min(128MiB,192MiB−target payload), and retiring generations block replacement allocation; requested payload is not physical driver residency |
 | MIG-WORKER-07 / worker-failure.spec.ts | Confirmed malformed worker reply during actual camera rebuild: reject geometry and preserve completed artwork/history |
-| MIG-RECOVERY-02 / recovery.spec.ts | Persistent allocation error: exactly one automatic renderer retry and two attempts after explicit Retry; count renderer attempts separately from optional-format/RGBA allocation attempts, then prove restored source/history |
+| MIG-RECOVERY-02 / recovery.spec.ts | Separate early sampler-error and later target-error phases: count actual sampler creation attempts, exactly one automatic renderer retry, two more after explicit Retry, no automatic work after latch; every failed sampler is deleted. Target phase preserves two optional-format/RGBA attempts per renderer; sampler phase reaches no textures. Disable fault, recover exact pixels and one-stroke Undo; raw phase counters attach on failure |
 
-The continuous-pan repair has24 distinct targeted E2E passes on2026-10-23, Chrome155.0.8059.86
-on macOS/arm64, one worker and zero retries: two actual-route reveal cases, thirteen affected
-observation cases, six normal/packed union fault cases, one checked coverage boundary and two
-compiled raster-proof cases. The repaired proof fixture uses512×384 CSS at backing4, preserving
-the8,388,608-pixel cap and exact offset/range checks. Its initial over-cap setup failure and the
-old65220 preview's held-pan blank-pixel failure remain negative evidence. The production and
-observation artifacts predate only that fixture setup repair; their runtime bytes are unchanged.
-Each changing-view experiment forces one stale-candidate union and observed ten total unions
-per gesture in this run. Repeated forced flattening without intervening exact reconstruction
-and its transient AA assessment remain open. These targeted results do not replace full M04,
-natural performance, physical-pen or later raster-lattice acceptance.
+The scheduling/opaque-sampling checkpoint has371 distinct passing E2E case IDs on2026-10-23:
+131 fixture,63 observation and177 production cases, one worker and zero retries per run.
+The first300 passing cases use the R3 source freeze; two reviewed recovery-test replacements
+and69 previously unrun cases use R4. Runtime and all46 current served-build assets are identical.
+Missing-manifest runner failure, the obsolete vertex-array retry proxy, the original integer
+canonical assertion and the earlier quad/proof setup failures remain separate negative evidence.
+The focused13 and short recovery pair have build/config/browser identity but lack contemporaneous
+HTTP-byte captures; remaining lanes record served hashes. Exact per-case manifests and captures
+remain in ignored evidence. Repeated forced unions and same-anchor replacements are now positive
+in both formats; transient-quality review uses their retained intermediate/canonical captures.
+This checkpoint does not establish natural performance, physical-pen, sparse routing or production
+raster-lattice acceptance. The compiled offset proof retains the backing cap and exact range checks.
 
 Scene-only source-prefix rejection must abort the candidate, terminate its exclusive worker and
 join preparation retirement before rebuilding. Ordinary pan/append preserves a useful receipt.
@@ -333,6 +337,7 @@ Pan lattice, sparse routes, region reconstruction and archives remain separate l
 | MIG-TILE-05 / prefix-seed.fixture.spec.ts capacity/render/invisible | Seven occupied receipts reserve the ordinary eighth fold before optional target; borrowed predecessor survives base replacement through cursor cleanup; held fence prevents false readiness |
 | MIG-TILE-05/06 / prefix-seed.fixture.spec.ts publication-promote/fold/create/create-release | Actual completed candidate promotion and issued ordinary fold; prior release or incoming-owner creation failure cannot publish; both receipts remain charged or incoming release is acknowledged once; repeated cleanup and generated-boundary poison exclude further exports and block replacement |
 | MIG-TILE-06 / prefix-seed.fixture.spec.ts query/before/after/draw/release | Checked identities, activeCancelled latch and one snapshot; actual copy/draw phase faults never promote B as ready S; full reconstruction recovers; failed receipt acknowledgement retains charged uncertainty and blocks replacement |
+| MIG-TILE-01 / integer-quad.fixture.spec.ts | Isolated proposed offset0 vertex bounds with unchanged endpoint/fragment evaluation; real accepted Rust source/style/view/placement and actual required detail, normal/packed exact RGB over odd/large backing, angles and taper. Positive ink and exact source counts prevent vacuity; bounded corpus only, not production shader conversion or universal routing/edge enclosure |
 
 These new cases are authored and initially unrun. Fixture integration is not actual-route E2E;
 each attaches actual browser version and result. Existing M03 sealed/busy, context/Back/resize,
@@ -348,6 +353,7 @@ GPU wake experiment acceptance (CT-06; existing MIG-WORKER-05/15/16/24/27/28):
 | MIG-GPU-WAKE-01 / gpu-wake.fixture.spec.ts slots, reservation | Actual canonical source, worker preparation and GL rendering; simultaneous consumers share one 4→8→16→32ms task, two-reader cap and reserved slot retain all-reader validation, actual drain resets backoff; exact baseline/final visible and retained-target pixel parity, positive ink/paper controls and zero idle tasks |
 | MIG-GPU-WAKE-02 / gpu-wake.fixture.spec.ts lifecycle | Controlled hide-before-fire and stale callbacks, repeated show, dormant owner abort and replacement identity; real CPU geometry held after GPU drain has no awaited wake tasks, then replacement renders visibly |
 | MIG-GPU-WAKE-03 / gpu-wake.fixture.spec.ts deadline | Controlled clock keeps observations below the existing one-second gap rebase; short hidden interval excluded while 10s of visible no-progress still fails without deleting uncertain readers |
+| MIG-GPU-WAKE-01/02/03 / gpu-wake.fixture.spec.ts progress, progress hidden, progress retire | Real all-reader validation resolves a shared visible wait before its parked timer; hidden validation stays dormant until visibility, and retirement before waiter continuation rejects rather than acquiring/drawing. Stale callbacks cannot settle a later owner; existing first-of-two-reader and reserved-slot negatives remain strict |
 
 Visible pixels are captured synchronously in the overlay turn because the default framebuffer
 is non-preserved. The completed retained target is read separately after serial validation.

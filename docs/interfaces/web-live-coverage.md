@@ -235,6 +235,49 @@ eligible prepared geometry. One consumption per sealed epoch, no per-frame copy/
 After ambiguous composite/copyback failure enter existing recovery; never publish partial B
 metadata or promise GPU rollback. Before issue, failure leaves the old display graph intact.
 
+### Progress after validated completion
+
+A newly sealed candidate may take the existing eligible consumption path in the same render
+turn. Require the same CanFold and unfinished-ended-live guards, reserve the mandatory display
+receipt first, preserve painter order and refresh coverage after consumption. Consume at most
+once in this turn; a capacity miss presents the unchanged graph and yields. Cancel an older-view
+candidate only after successful consumption, then admit the ordinary current-view reconstruction.
+No extra submission reservation, readiness acknowledgement or input-callback work is introduced.
+Waiting an additional animation frame solely to discover this already-known eligibility is not
+a lifetime requirement.
+
+After all issued GPU readers have signaled, no slot is reserved and error validation succeeds,
+the existing submission owner may immediately resolve its one pending wake. Cancel that wake's
+owned timer and clear its identity before resolving; every consumer rechecks its own serial or
+slot predicate. A wake is not a slot grant. Keep two fences, all-reader validation, real producer
+task yields, unready-fence backoff, hidden-page handling, cancellation and retirement unchanged.
+Test actual held-fence release and same-turn progression; measure complete acknowledgement, not
+only the first provisional display. This scheduling refinement has no numerical or editing delta.
+
+### Temporary color-image filtering
+
+Use one renderer-owned LINEAR/CLAMP_TO_EDGE sampler only for transformed opaque B/S color
+presentation and its existing display-union composition. An exactly identity linear matrix with
+exact integer translation retains NEAREST sampling; fractional, rotated or otherwise transformed
+color images use LINEAR. This classification controls presentation filtering only, never reuse
+authority or geometry certification. No epsilon or inferred integer displacement is permitted.
+Bind and restore every touched sampler unit explicitly, including failure paths. All textures
+retain their default NEAREST state. Geometry, MAX coverage, live-mask combination, G presentation
+and exact texelFetch copy remain unchanged. Packed color reads use RGB with output alpha one and
+RGB-only writes where required; source/destination alias restrictions remain mandatory.
+
+The sampler adds no image storage, target, receipt or fence. Allocate and dispose it with the
+renderer, account its fixed host metadata separately, and handle allocation/context errors through
+existing resource failure cleanup. The same-anchor replacement invariant prevents repeated
+temporary unions from indefinitely resampling an inherited old B feature: the next complete S
+captures the new B anchor synchronously and replaces its entire footprint before another union.
+
+Require matched source/transform NEAREST-versus-LINEAR and canonical captures, fractional pan and
+rotation/reversal, footprint edges, low zoom/wide strokes, repeated unions, packed-alpha/live
+isolation, exact identity/integer output and exact End/Escape restoration. Temporary filtering
+is not canonical geometry or exact-copy evidence. Keep existing canonical precision/AA thresholds;
+designer and independent review assess the temporary image separately, with no invented tolerance.
+
 ## Required evidence
 
 CT-02/03/04/06/07/08; INV-01/02/04/08/09/11; SU-03/04/13/14/16; SEC-03/09/13.

@@ -18,6 +18,7 @@ export function gpuWakeProbe(gl: WebGL2RenderingContext) {
     fired = 0,
     signaled = 0,
     peak = 0;
+  let parked = false;
   const fences = new Set<WebGLSync>(),
     held = new Set<WebGLSync>();
   const tasks = new Map<number, () => void>(),
@@ -35,6 +36,7 @@ export function gpuWakeProbe(gl: WebGL2RenderingContext) {
         return timeout(handler, delay, ...args);
       const run = () => Reflect.apply(handler, window, args);
       const id = timeout(() => {
+        if (parked) return;
         tasks.delete(id);
         fired++;
         run();
@@ -87,6 +89,9 @@ export function gpuWakeProbe(gl: WebGL2RenderingContext) {
     remove(sync);
   };
   return {
+    park: (value: boolean) => {
+      parked = value;
+    },
     pause: (ms = 40) => new Promise<void>((resolve) => timeout(resolve, ms)),
     advance: (ms: number) => {
       now += ms;

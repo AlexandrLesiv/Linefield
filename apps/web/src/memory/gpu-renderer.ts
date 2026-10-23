@@ -160,6 +160,7 @@ export class GpuRenderer {
       {
         bytes: this.resources.bytes + 256 * 1024 + this.arena.bytes,
         metadata: () => this.arena.metadataEstimate,
+        samplerObjects: 1,
         context: this.gl,
         drained: () => {
           if (this.gl.isContextLost()) return true;

@@ -2,6 +2,7 @@ import { observeCoverage } from "../developer-diagnostics/source-observation.ts"
 import type { prepareBegin } from "#preparation-bindings";
 import { currentCoverage } from "./current-coverage.ts";
 import { consumePrefix } from "./consume-prefix.ts";
+import { inputCovered, retainingEnded } from "./scene-readiness.ts";
 import { ReceiptLeases } from "./receipt-lease.ts";
 import { cleanupScene } from "./scene-cleanup.ts";
 import type { Coverage } from "./current-coverage.ts";
@@ -90,13 +91,10 @@ export class ProgressiveScene {
     if (this.candidate.receipt && !q.candidateValid) this.candidate.cancel();
     if (q.liveState === "obsolete" || q.liveState === "included") this.live.dispose();
     q = this.coverage();
-    const retainingEnded =
-      q.liveState === "ended" &&
-      !q.activeSource &&
-      !q.candidateIncludesLive &&
-      this.live.value?.through !== q.liveCount;
-    if (this.candidate.sealed && q.canFold && !retainingEnded) {
+    let consumed = false;
+    if (this.candidate.sealed && q.canFold && !retainingEnded(q, this.live)) {
       if (!this.consume(q, detail)) return this.present(q);
+      consumed = true;
       q = this.coverage();
       if (!q.candidateViewCurrent) this.candidate.cancel();
     }
@@ -126,6 +124,12 @@ export class ProgressiveScene {
     } else if (this.candidate.ready && q.candidateAtCutoff && !this.candidate.sealed) {
       this.candidate.sealed = true;
       coverageObservation(this.state(), "seal", this.candidate.receipt?.id ?? 0n);
+      if (!consumed && q.canFold && !retainingEnded(q, this.live)) {
+        if (!this.consume(q, detail)) return this.present(q);
+        q = this.coverage();
+        if (!q.candidateViewCurrent) this.candidate.cancel();
+        q = this.coverage();
+      }
     }
     if (
       this.live.value &&
@@ -160,13 +164,7 @@ export class ProgressiveScene {
   }
   private present(q: Coverage) {
     displayGraph(this.renderer, this.graph(q));
-    const s = this.state();
-    this.inputComplete =
-      this.base.prefix &&
-      !this.base.historical &&
-      !q.viewGestureActive &&
-      this.base.receipt?.key === `${s.content}:${s.mapping}` &&
-      (!q.activeSource || (q.liveState === "active" && !!this.live.value?.covers(q.liveCount)));
+    this.inputComplete = inputCovered(q, this.base, this.live, this.state());
     if (
       this.live.value ||
       this.candidate.busy ||

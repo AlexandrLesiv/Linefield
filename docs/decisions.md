@@ -3682,3 +3682,8 @@ union in existing scratch storage and free its reconstruction target before mous
 only disposable presentation authority, without editing/history changes or additional targets.
 See [the current live-coverage contract](interfaces/web-live-coverage.md). This technical refinement
 and agent review do not imply owner acceptance or completion of M04's remaining optimization gates.
+
+After that repair was pushed at8773c12, the owner explicitly renewed the remaining M04 work:
+finish rendering/panning optimizations and checks, update PR20 and open a new preview, preserving
+the reviewed port65222 build unchanged. The same task, branch, writer and quality gates continue;
+this does not resume M05–M09, restart the schedule or authorize a merge.

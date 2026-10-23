@@ -7,6 +7,9 @@ import { seedPublication } from "./seed-publication.ts";
 import { seedRelease } from "./seed-release.ts";
 import { rasterMatrix } from "./raster-proof.ts";
 import { rasterState } from "./raster-state.ts";
+import { integerQuad } from "./integer-quad.ts";
+import { displaySampling } from "./display-sampling.ts";
+import { samplingFailure } from "./sampling-failure.ts";
 export function seedActions(
   action: (name: string, run: () => Promise<unknown>) => void,
   canvas: HTMLCanvasElement,
@@ -20,6 +23,9 @@ export function seedActions(
       return run();
     });
   const cases: [string, () => unknown][] = [
+    ["integer-quad", () => integerQuad(canvas)],
+    ["display-sampling", () => displaySampling(canvas)],
+    ["sampling-failure", () => samplingFailure(canvas)],
     ...(["promote", "fold", "create", "create-release"] as const).map(
       (mode) =>
         [`publication-${mode}`, () => seedPublication(canvas, mode)] satisfies [
