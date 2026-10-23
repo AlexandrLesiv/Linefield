@@ -1,3 +1,4 @@
+import { observeCoverage } from "../developer-diagnostics/source-observation.ts";
 import type { prepareBegin } from "#preparation-bindings";
 import { currentCoverage, captureDisplay } from "./current-coverage.ts";
 import { cleanupScene } from "./scene-cleanup.ts";
@@ -59,7 +60,7 @@ export class ProgressiveScene {
       this.candidate.receipt?.id,
     );
     if (q.code !== "ok") throw Error(q.code);
-    return q;
+    return observeCoverage(this.state(), q);
   }
   private graph(q: Coverage): DisplayGraph {
     let candidate: Float32Array | undefined;

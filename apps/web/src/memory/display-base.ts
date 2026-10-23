@@ -1,5 +1,5 @@
 import { frames } from "./frame-bridge.ts";
-import { publicationObservation } from "./performance-observation.ts";
+import { published } from "../developer-diagnostics/publication-observation.ts";
 import { geometryMetrics as metrics } from "./geometry-metrics.ts";
 import type { ReplyValue } from "./bridge.ts";
 import type { Receipt } from "./frame-receipt.ts";
@@ -33,7 +33,7 @@ export class DisplayBase {
     this.historical = !prefix;
     if (prefix) {
       metrics.completeFrames++;
-      publicationObservation(this.state(), renderer, next);
+      published(this.state(), renderer, next);
     }
   }
   get acknowledgement() {

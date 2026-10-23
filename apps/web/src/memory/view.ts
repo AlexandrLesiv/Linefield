@@ -9,6 +9,7 @@ import {
   retry as retryStyle,
 } from "./view.css.ts";
 import { back } from "../canvas.css.ts";
+import { observeStatus } from "../developer-diagnostics/runtime-port.ts";
 export type Status =
   | "loading"
   | "ready"
@@ -58,6 +59,7 @@ export function createMemoryView(surface: HTMLElement, retry: () => void) {
   return {
     canvas,
     status(status: Status) {
+      observeStatus(status);
       canvas.dataset.state = status;
       canvas.setAttribute("aria-busy", String(status === "loading"));
       text.textContent = t(messages[status]);

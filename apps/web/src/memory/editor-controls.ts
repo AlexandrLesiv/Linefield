@@ -1,3 +1,4 @@
+import { toolbarCommands } from "../developer-diagnostics/intent.ts";
 import { revealLabel } from "./control-visibility.ts";
 import { controlPresentation, disabledActivation } from "./control-presentation.ts";
 import { drawingIcon } from "../drawing-icons.ts";
@@ -8,7 +9,8 @@ import type { Bridge } from "./bridge.ts";
 import { edit } from "./edit-bridge.ts";
 import type { Commands } from "./input-state.ts";
 import { colorInput, viewControls, viewButton, locked } from "./editor-controls.css.ts";
-export function attachEditorControls(canvas: HTMLCanvasElement, commands: Commands, api: Bridge) {
+export function attachEditorControls(canvas: HTMLCanvasElement, source: Commands, api: Bridge) {
+  const commands = toolbarCommands(source);
   const root = canvas.parentElement;
   if (!root) throw Error("editor-root");
   const rail = root.querySelector<HTMLElement>(".drawing-rail"),
