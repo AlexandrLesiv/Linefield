@@ -14,9 +14,13 @@ The lead may freeze an exact independently reviewed and functionally verified M0
 with clearly recorded open performance findings so DIAG01/M04 can address them. This is not
 M03 completion, a passing performance profile or relaxed acceptance. Final M09 adoption still
 requires the unresolved absolute/relative gates.
-The panel, pinned metrics and bounded local capture/export are implemented. Same-host overhead,
-current combined-build designer/fresh review and final acceptance remain open. Generated reports
-stay ignored. Preserve the existing older preview65185 and all drawing previews unchanged.
+The panel, pinned metrics and bounded local capture/export are implemented. Current combined-build
+independent source/evidence and scoped designer reviews are closed. The one-shot same-host R8
+comparison completed baseline/closed/panel/pin/capture/final-baseline without a hard-stop failure.
+Closed/panel/pin had no relative flag; detailed capture pan182.1ms versus148.1/148.8ms in the two
+baseline brackets exceeded the existing relative investigation rule. DIAG-05 remains open;
+do not reinterpret this bounded result as a complete performance pass. Generated reports stay
+ignored. Current isolated preview65208 is available; older65185 and all drawing previews remain unchanged.
 
 The bounded older-base overhead comparison completed six modes without timed hard-stop errors,
 LongTasks or drops. Closed-panel warm Redo rendering reached10.9ms versus6.5/8.0ms baseline

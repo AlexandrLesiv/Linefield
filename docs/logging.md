@@ -2,7 +2,7 @@
 
 Status: P05-DIAG01 implements bounded web capture/export and a developer panel on its isolated
 review branch, integrated with the latest frozen M03 runtime and source/publication hooks.
-Current-build browser checks pass; final design/evidence and overhead acceptance remain.
+Current-build browser and scoped design/evidence checks pass; detailed-capture overhead acceptance remains.
 Native sinks and their concrete schemas remain subject to S02. This expands CT-07 and INV-09.
 
 ## Web coverage and developer diagnostics
