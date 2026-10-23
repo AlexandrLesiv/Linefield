@@ -8,10 +8,10 @@ type Result =
   | { kind: "progress" }
   | { kind: "done" }
   | {
-      kind: "chunks";
+      kind: "chunk";
       stroke: bigint;
       count: bigint;
-      chunks: BigUint64Array;
+      chunk: bigint;
     };
 const empty = (): Page => ({
   strokes: new BigUint64Array(),
@@ -50,26 +50,25 @@ export class FrameVisibility {
   private account() {
     metrics.visibilityBytes -= this.charge;
     this.charge =
-      this.page.strokes.byteLength +
-      this.page.chunks.byteLength +
-      this.page.revisions.byteLength +
-      this.ids.byteLength;
+      this.page.strokes.buffer.byteLength +
+      this.page.chunks.buffer.byteLength +
+      this.page.revisions.buffer.byteLength +
+      this.ids.buffer.byteLength;
     metrics.visibilityBytes += this.charge;
   }
-  next(): Result {
+  next(group = 0n, revision = 0n): Result {
     if (this.offset < this.page.strokes.length) {
-      const start = this.offset;
-      const stroke = this.page.strokes[start],
-        count = this.page.revisions[start];
-      if (stroke === undefined || count === undefined) throw Error("visibility-page");
-      while (this.offset < this.page.strokes.length && this.page.strokes[this.offset] === stroke)
-        this.offset++;
-      return {
-        kind: "chunks",
-        stroke,
-        count,
-        chunks: this.page.chunks.subarray(start, this.offset),
-      };
+      const stroke = this.page.strokes[this.offset],
+        count = this.page.revisions[this.offset],
+        chunk = this.page.chunks[this.offset];
+      if (stroke === undefined || count === undefined || chunk === undefined)
+        throw Error("visibility-page");
+      // Leave the next group's row owned and charged by this page until the
+      // current painter-order queue drains. No sliced backing escapes next().
+      if (group && group !== stroke) return { kind: "done" };
+      if (group && revision !== count) throw Error("visibility-revision");
+      this.offset++;
+      return { kind: "chunk", stroke, count, chunk };
     }
     if (this.done) return { kind: "done" };
     if (this.fallback) return this.scan();
@@ -128,10 +127,15 @@ export class FrameVisibility {
       const count = Number(end - source.chunk > 128n ? 128n : end - source.chunk);
       const chunks = new BigUint64Array(count);
       for (let i = 0; i < count; i++) chunks[i] = source.chunk++;
-      this.page = { strokes: new BigUint64Array(), revisions: new BigUint64Array(), chunks };
+      this.page = {
+        strokes: new BigUint64Array(count).fill(source.id),
+        revisions: new BigUint64Array(count).fill(source.count),
+        chunks,
+      };
+      this.offset = 0;
       this.account();
       if (source.chunk === end) this.scanStroke = undefined;
-      return { kind: "chunks", stroke: source.id, count: source.count, chunks };
+      return { kind: "progress" };
     }
     if (this.idOffset < this.ids.length) {
       const id = this.ids[this.idOffset++];

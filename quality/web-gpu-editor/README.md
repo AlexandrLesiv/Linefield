@@ -435,7 +435,8 @@ dirty G atlas slot must be cleared after validated presenter readers, or represe
 ordinary pass's dirty footprint. Packed ownership and prior S content must survive. Keep full
 mode as the default until those lifecycle, numerical, exact-pixel and cost gates close.
 
-The subsequent reusable-executor checkpoint is pending fresh browser evidence. The M04 writer
+The subsequent reusable-executor checkpoint passed four browser cases with zero retries,
+including twenty exact full/sparse screen comparisons in normal/packed formats. The M04 writer
 owns CT-06/07/08, INV-04/08/09 and MIG-TILE-01/04/05/06 in the sparse proof and
 `sparse-cost.fixture.spec.ts`. The real generated-page/GL controls require changed plans on
 reused banks (four→one→four slots), exact output after eleven original spans coalesce to two
@@ -448,7 +449,31 @@ it must not replace a non-admitted positive workload to manufacture useful hits.
 control retains real scissored clears/composite, streaming uploads, the256-command cap and
 two-slot backpressure without added per-group CPU validation. Cold allocation/first use and
 cleanup are separate from persistent-executor warm costs. Exact normal/packed output precedes
-the single bounded cost screen; production remains full-mode by default.
+the single bounded cost screen. That completed screen was a no-go: all four thin positive
+cells regressed, as did eleven of sixteen negative cells under the frozen decision rule.
+Sparse rendering remains disabled in production; correctness does not establish a useful
+retained benefit and does not authorize another tuning attempt or integration.
+
+## Bounded cold preparation lookahead
+
+The M04 writer owns CT-02/03/04/06/07/08, INV-04/08/09 and MIG-WORKER-05/13/36/37 in
+`cold-lookahead.fixture.spec.ts`. These controlled real generated-engine/worker/renderer
+cases passed in both ordering formats and the four focused lifecycle/progress scenarios,
+with zero retries. Hold the actual first reader result while seven
+later readers become ready: at most eight readers may exist, with no head overtake or early
+Composite. A different stroke stays unconsumed while the prior reader queue is pending.
+After four readers start, releasing the actual frame must make the next visibility query
+reject and drain all admitted ownership. Cancellation drains future-ready results; a fresh
+successor must render exactly. A warm retained head followed by long cold invisible traversal
+must reach the command queue promptly, retain zero new preparation jobs and match exact RGB
+and alpha. Visibility progress/query transitions share the existing producer budget; each
+scalar result leaves its full backing allocation charged only in the current reply owner.
+The selected regression checkpoint passed68 unique cases: six new boundary fixtures,
+32 existing boundary fixtures,19 actual-route observation cases and11 production cases.
+Normal/packed ordering, warm reuse, history, continuous pan and existing retirement checks
+passed in that scope. Prompt ready-head queue delivery is proven; it does not establish an
+earlier GPU submission or a performance improvement. This changes neither Rust visibility bounds
+nor worker topology, command/geometry queues, source proof, receipt or fence limits.
 
 The completed scheduling/sampling checkpoint retains thirteen relative performance flags.
 The single matched bracket observed approximately one frame of pan improvement, while the
