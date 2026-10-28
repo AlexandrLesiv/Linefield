@@ -3630,16 +3630,3 @@ Use one task, one branch and one PR. The owner reviews and merges; verify integr
 starting dependent work. Automated tests are E2E only. Static type checking, lint, formatting,
 builds and source validation remain development checks; do not add unit or developer-tool suites.
 Task documentation grants no new product, persistence, native or architecture approval.
-
-## Decision242 — autonomous complete web vector migration
-
-On2026-10-21 the owner explicitly authorized M01–M09 and remaining scoped approvals/permissions
-for ten hours, ending2026-10-22 06:21:48UTC. The lead may settle material contracts/design
-within that scope using configured specialists, implement/check/review and open separate PRs.
-MIG-C1/MIG-D1 record those delegated engineering decisions; they are not personally reviewed
-owner versions. Direct WebGL2, Rust-owned semantics, pure geometry worker,384MiB graphics soft
-target, complete streaming fallback and full retained5207 features supersede conflicting older
-web first-slice restrictions. Preserve320MiB CPU soft target and performance profile v1.
-One task/branch/PR and owner-only merging remain. Frozen stacked parents allow continued work
-while the owner is absent; verify integration before parent-first merge. Preserve current
-previews and unrelated work. M10–M14 worker experiments and native/storage work are excluded.

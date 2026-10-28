@@ -79,7 +79,3 @@ node_modules/
 !/apps/web/quality/memory/
 /apps/web/quality/memory/*
 !/apps/web/quality/memory/README.md
-
-!/quality/web-gpu-editor/
-/quality/web-gpu-editor/*
-!/quality/web-gpu-editor/README.md
