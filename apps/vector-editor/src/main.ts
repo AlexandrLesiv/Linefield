@@ -1,4 +1,5 @@
 import "./style.css";
+import { installStatusAnnouncements } from "./status-announcements";
 import { installEditorSession } from "../../web/src/editor-session";
 import { t as hostMessage } from "../../web/src/locale";
 import { installHostTheme } from "./host-theme";
@@ -37,6 +38,7 @@ installHostTheme();
 installHostLocale();
 const canvas = document.querySelector("canvas")!;
 const status = document.querySelector<HTMLElement>("#status")!;
+const announceStatus = installStatusAnnouncements(status);
 const brushControls = createBrushControls();
 const core = await loadCore().catch((error: unknown) => {
 	showStartupFailure(status);
@@ -634,6 +636,7 @@ function frame() {
 requestAnimationFrame(frame);
 setInterval(() => {
 	const failure = runtimeFailure || error;
+	announceStatus(failure ? hostMessage("vector.engineFailure", {detail: failure}) : cache.warning || "");
 	status.textContent = failure ? hostMessage("vector.engineFailure", {detail: failure}) :
 		cache.warning ||
 		`${Math.round(camera.zoom * 100)}% · ${metrics.accepted.toLocaleString()} samples · ${metrics.backlog} chunks pending · ${(metrics.gpuBytes / 1048576).toFixed(1)} MB geometry · ${(metrics.coverageBytes / 1048576).toFixed(1)} MB coverage · ${(metrics.compositeCacheBytes / 1048576).toFixed(1)} MB region cache · Antialiased · Rust/Wasm + WebGL2`;
