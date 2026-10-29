@@ -1,0 +1,14 @@
+<!doctype html><meta charset="utf-8"><title>SAVE-01 isolated transport checkpoint</title>
+<h1>SAVE-01 transport checkpoint</h1>
+<p>Disposable generated data only. No editor, database or saved user drawings. Existing previews are unaffected.</p>
+<button id="run">Run comparison and recovery checks</button><pre id="output">Ready</pre>
+<script type="module">
+import { compare } from './probe.js';
+import { recovery } from './recovery.js';
+window.checkpoint = { compare, recovery };
+document.querySelector('#run').onclick = async () => {
+  const output = document.querySelector('#output'); output.textContent = 'Running…';
+  try { output.textContent = JSON.stringify({comparison: await compare(100000), recovery: await recovery()}, null, 2); }
+  catch(error) { output.textContent = String(error); }
+};
+</script>
