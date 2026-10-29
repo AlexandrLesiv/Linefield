@@ -1,7 +1,12 @@
 /** Actual-app worker instrumentation; no replacement geometry implementation. */
-export async function observeGeometryWorker(page, forceFailure = false, corruptWide = false) {
+export async function observeGeometryWorker(
+  page,
+  forceFailure = false,
+  corruptWide = false,
+  failCopy = false,
+) {
   await page.addInitScript(
-    ({ fail, corrupt }) => {
+    ({ fail, corrupt, allocationFailure }) => {
       const stats = (window.geometryWorkerStats = {
         inputs32: 0,
         inputs64: 0,
@@ -13,7 +18,29 @@ export async function observeGeometryWorker(page, forceFailure = false, corruptW
         detached: 0,
         corrupted: false,
         retired: false,
+        copyFailure: null,
       });
+      if (allocationFailure) {
+        for (const ArrayType of [Float32Array, Float64Array]) {
+          const originalSlice = ArrayType.prototype.slice;
+          ArrayType.prototype.slice = function (...args) {
+            const core = window.lab?.core;
+            if (
+              !stats.copyFailure &&
+              core &&
+              this.buffer === core.memory.buffer &&
+              this.byteOffset ===
+                (ArrayType === Float64Array
+                  ? core.geometry_input_f64_ptr()
+                  : core.geometry_input_ptr())
+            ) {
+              stats.copyFailure = ArrayType.name;
+              throw new RangeError("Injected disposable worker-input allocation failure");
+            }
+            return originalSlice.apply(this, args);
+          };
+        }
+      }
       window.geometryWorkerRetired = false;
       const pending = new Set();
       const Original = window.Worker;
@@ -56,6 +83,6 @@ export async function observeGeometryWorker(page, forceFailure = false, corruptW
         }
       };
     },
-    { fail: forceFailure, corrupt: corruptWide },
+    { fail: forceFailure, corrupt: corruptWide, allocationFailure: failCopy },
   );
 }

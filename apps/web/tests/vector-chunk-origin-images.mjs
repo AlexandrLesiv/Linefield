@@ -23,6 +23,7 @@ try {
         page,
         process.env.LINEFIELD_FORCE_WORKER_FAILURE === "1",
         process.env.LINEFIELD_CORRUPT_WIDE_WORKER === "1",
+        process.env.LINEFIELD_FAIL_WORKER_COPY === "1",
       );
       page.on("pageerror", (error) => errors.push(error.message));
       await page.goto(process.env.LINEFIELD_PREVIEW_URL || "http://127.0.0.1:65307/");
@@ -120,7 +121,12 @@ try {
         throw Error("Worker transfer exceeded the shared bounds");
       if (worker.detached !== worker.inputs32 + worker.inputs64)
         throw Error("Worker input was copied instead of transferred");
-      if (!compact && process.env.LINEFIELD_FORCE_WORKER_FAILURE !== "1" && !worker.outputs64)
+      if (
+        !compact &&
+        process.env.LINEFIELD_FORCE_WORKER_FAILURE !== "1" &&
+        process.env.LINEFIELD_FAIL_WORKER_COPY !== "1" &&
+        !worker.outputs64
+      )
         throw Error("Wide worker path was not exercised");
       if (
         !compact &&
@@ -128,6 +134,11 @@ try {
         (!worker.corrupted || !worker.retired)
       )
         throw Error("Wrong-precision worker response did not retire the worker");
+      if (
+        process.env.LINEFIELD_FAIL_WORKER_COPY === "1" &&
+        (worker.copyFailure !== (compact ? "Float32Array" : "Float64Array") || !worker.retired)
+      )
+        throw Error("Worker-input allocation failure did not recover through retirement");
       results.push({
         extent,
         brush,

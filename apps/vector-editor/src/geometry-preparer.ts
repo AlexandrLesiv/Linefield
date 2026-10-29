@@ -71,14 +71,16 @@ export class GeometryPreparer {
       return false;
     }
     this.outputCapacity = core.geometry_output_capacity();
-    const input = wide
-      ? new Float64Array(core.memory.buffer, core.geometry_input_f64_ptr(), length).slice()
-      : new Float32Array(core.memory.buffer, core.geometry_input_ptr(), length).slice();
-    const id = ++this.sequence;
-    this.callbacks.set(id, callback);
-    if (wide) this.wideRequests.add(id);
-    if (!this.watchdog) this.armWatchdog();
     try {
+      // Copy only disposable derived input. Allocation failures must retire the
+      // optional worker and release pending jobs just like transfer failures.
+      const input = wide
+        ? new Float64Array(core.memory.buffer, core.geometry_input_f64_ptr(), length).slice()
+        : new Float32Array(core.memory.buffer, core.geometry_input_ptr(), length).slice();
+      const id = ++this.sequence;
+      this.callbacks.set(id, callback);
+      if (wide) this.wideRequests.add(id);
+      if (!this.watchdog) this.armWatchdog();
       this.worker.postMessage({ id, input, tolerance }, [input.buffer]);
     } catch {
       this.fail();

@@ -110,3 +110,7 @@ Preview 65319 isolates browser shortcut acquisition behind typed editor callback
 ## Latest selection performance fix
 
 Preview 65320 fixes a measured dense whole-Lasso regression in the shared predicate using conservative contact bounds. Three alternating 256-stroke comparisons show completion median/p95 153.1/159.1 ms versus approved reference 1144.4/1172.2 ms; previous integrated 65319 was ~2.46 s. The remaining ~150 ms completion stall is explicit, not accepted as universally responsive. Tangency/epsilon, regional transformed selection/image/raw checks pass (324 queries each). Read the task for all classes, memory and limitations. Optional workers remain deferred; broader architecture/regional/resource/review work remains.
+
+## Latest disposable-copy recovery checkpoint
+
+Preview 65321 catches disposable worker-input copy/allocation failure inside the existing fallback boundary. Twelve injected narrow/wide cases and12 normal worker cases preserve exact cropped images/Slice/history, with no uncaught errors; static/build checks pass. This is not general OOM recovery. Fresh full performance on65320 is comparable for drawing/pan/rotation but rapid zoom is modestly slower with one33.5ms frame interval; read the task for sample limits. Investigate same-region projection cost as a hypothesis, not a proven cause. All earlier previews remain frozen; final architecture/regional/resource/review work and optional worker experiments are unfinished.
