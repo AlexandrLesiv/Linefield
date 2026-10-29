@@ -7,8 +7,10 @@ type Entry = {
   pointerId?: number;
   pointerType?: string;
   buttons?: number;
+  button?: number;
   eventTime?: number;
   trusted?: boolean;
+  primary?: boolean;
   samples?: number;
   reason?: string;
 };
@@ -17,6 +19,34 @@ export class InputDiagnostics {
   private sequence = 0;
   private gesture = 0;
   private dropped = 0;
+  private state: () => unknown = () => null;
+  setState(read: () => unknown): void {
+    this.state = read;
+  }
+  observeDocument(canvas: HTMLCanvasElement): void {
+    let lastMove = "";
+    for (const kind of [
+      "pointerdown",
+      "pointerup",
+      "pointercancel",
+      "gotpointercapture",
+      "lostpointercapture",
+      "pointermove",
+    ] as const) {
+      document.addEventListener(
+        kind,
+        (event) => {
+          if (!["pen", "mouse"].includes(event.pointerType)) return;
+          const target = event.target === canvas ? "canvas" : "outside-canvas";
+          const transition = `${event.pointerId}:${event.pointerType}:${event.buttons}:${target}`;
+          if (kind === "pointermove" && transition === lastMove) return;
+          lastMove = kind === "pointermove" ? transition : "";
+          this.note(`document-${kind}`, event, undefined, target);
+        },
+        true,
+      );
+    }
+  }
   note(kind: string, event?: PointerEvent, samples?: number, reason?: string): void {
     if (kind === "begin") this.gesture++;
     if (this.entries.length === 256) {
@@ -33,8 +63,10 @@ export class InputDiagnostics {
             pointerId: event.pointerId,
             pointerType: event.pointerType,
             buttons: event.buttons,
+            button: event.button,
             eventTime: event.timeStamp,
             trusted: event.isTrusted,
+            primary: event.isPrimary,
           }
         : {}),
       samples,
@@ -46,6 +78,7 @@ export class InputDiagnostics {
       format: "linefield-input-lifecycle-v1",
       build: new URL(import.meta.url).pathname.split("/").pop(),
       dropped: this.dropped,
+      state: this.state(),
       entries: this.entries.map((entry) => ({ ...entry })),
     };
   }

@@ -1,21 +1,30 @@
 /** Host event ordering only. Rust remains the owner of stroke transactions. */
 export class PointerRelease {
+  private retired = new Set<number>();
+  private latest = 0;
   private contact: {
     id: number;
     source: string;
+    primary: boolean;
     started: number;
     pendingAt: number | null;
   } | null = null;
   begin(event: PointerEvent): void {
+    this.retired.clear();
+    this.latest = event.timeStamp;
     this.contact = {
       id: event.pointerId,
       source: event.pointerType,
+      primary: event.isPrimary,
       started: event.timeStamp,
       pendingAt: null,
     };
   }
   get pending(): boolean {
     return this.contact?.pendingAt !== null && this.contact !== null;
+  }
+  get identityRecovery() {
+    return { retired: this.retired.size, limitReached: this.retired.size >= 64 };
   }
   matches(event: PointerEvent): boolean {
     const contact = this.contact;
@@ -39,7 +48,46 @@ export class PointerRelease {
   canRelease(event: PointerEvent): boolean {
     return this.matches(event) && event.button >= 0 && event.buttons === 0;
   }
+  isNewContact(event: PointerEvent): boolean {
+    const contact = this.contact;
+    return (
+      !!contact &&
+      contact.primary &&
+      ["pen", "mouse"].includes(contact.source) &&
+      event.pointerType === contact.source &&
+      event.isPrimary &&
+      event.button === 0 &&
+      event.buttons === 1 &&
+      event.timeStamp > this.latest
+    );
+  }
+  observe(event: PointerEvent): void {
+    if (this.matches(event)) this.latest = Math.max(this.latest, event.timeStamp);
+  }
+  transitionPen(event: PointerEvent): boolean {
+    const contact = this.contact;
+    if (
+      !contact ||
+      contact.source !== "pen" ||
+      !contact.primary ||
+      this.pending ||
+      event.pointerType !== "pen" ||
+      !event.isPrimary ||
+      (event.buttons & 1) === 0 ||
+      event.pointerId === contact.id ||
+      this.retired.has(event.pointerId) ||
+      this.retired.size >= 64 ||
+      event.timeStamp <= this.latest
+    )
+      return false;
+    this.retired.add(contact.id);
+    contact.id = event.pointerId;
+    contact.started = event.timeStamp;
+    this.latest = event.timeStamp;
+    return true;
+  }
   clear(): void {
     this.contact = null;
+    this.retired.clear();
   }
 }
