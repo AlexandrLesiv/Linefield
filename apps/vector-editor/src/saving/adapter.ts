@@ -1,10 +1,10 @@
 import { storageClient } from "./client";
 import type { Identity, Loaded, Context, Part, Receipt } from "./types";
-export async function storage() {
+export async function storage(document: string) {
   let client = storageClient();
   const grant = crypto.randomUUID();
   let identity: Identity;
-  const open = async () => client.call<Identity>("open", { grant });
+  const open = async () => client.call<Identity>("open", { grant, document });
   try {
     identity = await open();
   } catch (error) {

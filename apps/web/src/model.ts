@@ -3,19 +3,12 @@ export interface Drawing {
   name: string;
   image: string | null;
   deleted: boolean;
+  updated?: number;
 }
-export function sampleDrawings(): Drawing[] {
-  return [
-    "Coastal house",
-    "Morning objects",
-    "Mountain study",
-    "Garden leaves",
-    "City corners",
-    "Untitled",
-  ].map((name, index) => ({
-    id: "sample-" + index,
-    name,
-    image: "/artwork/drawing-" + (index + 1) + ".png",
-    deleted: false,
-  }));
-}
+export const savedDrawing = (entry: { id: string; title: string; updated: number }): Drawing => ({
+  id: entry.id,
+  name: entry.title,
+  updated: entry.updated,
+  image: null,
+  deleted: false,
+});

@@ -1,7 +1,14 @@
-import { readFileSync, mkdirSync, copyFileSync, existsSync } from "node:fs";
+import { readFileSync, mkdirSync, copyFileSync, existsSync, writeFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
+import { spawnSync } from "node:child_process";
 const root = fileURLToPath(new URL("../", import.meta.url));
+const checked = spawnSync(
+  process.execPath,
+  [root + "scripts/save-catalog-contract.ts", "--check"],
+  { stdio: "inherit" },
+);
+if (checked.status !== 0) throw Error("Catalog contract drift");
 const output = root + "apps/vector-editor/public/saving/";
 mkdirSync(output, { recursive: true });
 const vendor = root + ".build-cache/browser-storage/sqlite-wasm-3540100/jswasm/";
@@ -20,5 +27,21 @@ for (const [name, hash] of Object.entries(pinned)) {
     throw Error("Pinned SQLite artifact mismatch");
   copyFileSync(vendor + name, output + name);
 }
-for (const name of ["worker.js", "admission.js", "database.js", "staging.js"])
+for (const name of [
+  "worker.js",
+  "admission.js",
+  "database.js",
+  "staging.js",
+  "pools.js",
+  "catalog.js",
+  "library-worker.js",
+])
   copyFileSync(root + "apps/vector-editor/src/saving/" + name, output + name);
+
+writeFileSync(
+  output + "catalog-generated.js",
+  readFileSync(root + "apps/vector-editor/src/saving/catalog-generated.js", "utf8").replace(
+    /^export /gm,
+    "",
+  ),
+);

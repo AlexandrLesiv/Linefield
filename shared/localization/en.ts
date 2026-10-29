@@ -1,5 +1,18 @@
 import type { Translation } from "./catalog.ts";
 export const en = {
+  "library.recovery":
+    "Some drawings need recovery. Reload the gallery to retry; existing data is preserved.",
+  "library.back": "Return to gallery",
+  "library.more": "Load more drawings",
+  "library.loading": "Loading saved drawings…",
+  "library.failed": "Could not load saved drawings. Existing data has not been replaced.",
+  "library.retry": "Retry",
+  "library.missing":
+    "This saved drawing is unavailable. Return to the gallery to choose another drawing.",
+  "library.creating": "Creating drawing…",
+  "library.created": "Drawing created.",
+  "library.createFailed": "Could not create drawing. Retry to finish the same creation.",
+  "library.modified": "Modified {date}",
   "save.capacity": "Saving limit reached. Latest changes remain open and are not saved.",
   "save.openInUse": "This drawing is open in another tab. Close that tab, then retry.",
 
@@ -17,7 +30,7 @@ export const en = {
   "save.retryOpen": "Retry opening",
   "save.leaving": "Saving before leaving…",
   "save.cancelLeave": "Stay in drawing",
-  "save.local": "One local drawing · stored in this browser, not backed up",
+  "save.local": "Drawings stored in this browser · not backed up",
   "save.waitStroke": "Finish the current stroke before leaving",
 
   "vector.adjustPressure": "Adjust the width response for new strokes.",
