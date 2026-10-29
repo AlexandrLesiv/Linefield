@@ -1,3 +1,4 @@
+import { gestureCases } from "./vector-gesture-cases.mjs";
 import { panToRegionalOrigin } from "./vector-regional-navigation.mjs";
 import { chromium } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -77,22 +78,9 @@ try {
           lab.core.raw_point(0, i, 2),
         ]),
       );
-      for (const [kind, amount, snap] of sourceExtent
-        ? [
-            ["rotate", 0.31, false],
-            ["rotate", -0.31, false],
-            ["resize", 1 + 40 / sourceExtent, false],
-            ["resize", 1 - 40 / sourceExtent, false],
-          ]
-        : [
-            ["rotate", 0.31, false],
-            ["rotate", -0.41, true],
-            ["rotate", 0.41, true],
-            ["resize", 1.5, false],
-            ["resize", 0.5, false],
-          ]) {
+      for (const [kind, amount, snap] of gestureCases(sourceExtent)) {
         const transform = await frame.evaluate(
-          ({ kind: mode, amount: value, snap: snapping }) => {
+          ({ kind: mode, amount: value, snap: snapping, far }) => {
             if (lab.selection().length !== 1) throw Error("Selection missing");
             const corner = (i) => {
               const el = document.querySelector(`#selection-corner-${i}`);
@@ -113,6 +101,7 @@ try {
                 cy + dx * Math.sin(value) + dy * Math.cos(value),
               ];
             } else {
+              if (far) [a[0], a[1], b[0], b[1]] = [b[0], b[1], a[0], a[1]];
               start = b;
               end = [a[0] + (b[0] - a[0]) * value, a[1] + (b[1] - a[1]) * value];
             }
@@ -128,7 +117,7 @@ try {
               ),
             );
           },
-          { kind, amount, snap },
+          { kind, amount, snap, far: process.env.LINEFIELD_FAR_CORNER === "1" },
         );
         const pixels = await captureDrawing(frame);
         if (JSON.stringify(pixels) === JSON.stringify(original))

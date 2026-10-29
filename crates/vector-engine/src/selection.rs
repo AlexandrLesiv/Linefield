@@ -118,7 +118,8 @@ impl Engine {
                 py + b * (t[2] - px) + a * (t[3] - py) + dy,
             ]
         };
-        // Validate the whole group before changing any stroke.
+        // Validate the whole group before changing any stroke. Regional address
+        // bounds replace the donor flat-coordinate placement cap.
         if self.moving.iter().any(|c| {
             let t = compose(self.strokes[c.id].source_anchor, c.before);
             let size = t[0].hypot(t[1]);
@@ -126,9 +127,7 @@ impl Engine {
                 || self.layers[self.strokes[c.id].layer].locked
                 || !t.iter().all(|v| v.is_finite())
                 || !(0.001..=1000.0).contains(&size)
-                || t[2].abs() > 1.0e9
                 || self.strokes[c.id].source_anchor[0].offset(t[2]).is_none()
-                || t[3].abs() > 1.0e9
                 || self.strokes[c.id].source_anchor[1].offset(t[3]).is_none()
         }) {
             return false;
