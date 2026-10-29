@@ -19,6 +19,12 @@ pub(super) struct Replacement {
     pub original: usize,
     pub fragments: Vec<usize>,
 }
+#[cfg(feature = "save-checkpoint")]
+impl Gesture {
+    pub(super) fn save_projection(&self) -> (&[usize], &[usize]) {
+        (&self.originals, &self.created)
+    }
+}
 const EPS: f64 = 1e-8;
 type Curve = [[f64; 2]; 4];
 fn eval(c: Curve, t: f64) -> [f64; 2] {

@@ -1,6 +1,10 @@
 use std::{cell::RefCell, rc::Rc};
 mod boundary_generated;
 mod geometry;
+#[cfg(feature = "save-checkpoint")]
+mod save_checkpoint;
+#[cfg(feature = "save-checkpoint")]
+mod save_metadata;
 mod geometry_wide;
 pub mod geometry_wide_transport;
 pub mod geometry_wide_snapshot;
