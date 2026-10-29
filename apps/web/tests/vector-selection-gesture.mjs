@@ -1,3 +1,4 @@
+import { panToRegionalOrigin } from "./vector-regional-navigation.mjs";
 import { chromium } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 import { captureDrawing } from "./vector-drawing-capture.mjs";
@@ -5,6 +6,9 @@ const output = process.env.LINEFIELD_EVIDENCE_DIR || ".build-cache/restart/selec
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 const results = [];
+const origin = Number(process.env.LINEFIELD_PARITY_ORIGIN || 0);
+if (!Number.isFinite(origin) || !Number.isInteger(origin) || BigInt(origin) % 196608n !== 0n)
+  throw Error("Origin must preserve regional paper/grid periods");
 try {
   for (const variant of ["previous", "shared"]) {
     for (let brush = 0; brush < 3; brush++) {
@@ -24,6 +28,8 @@ try {
       await host.locator("#brush").selectOption(String(brush));
       const frame = page.frames().find((f) => f.url().includes("/vector-editor/"));
       await frame.waitForFunction(() => !!window.lab);
+      if (variant === "shared" && origin) await panToRegionalOrigin(frame, origin);
+      await host.locator("#pen").click();
       await frame.evaluate(() => {
         const canvas = document.querySelector("canvas"),
           rect = canvas.getBoundingClientRect();
@@ -62,6 +68,8 @@ try {
       await captureDrawing(frame);
       const raw = await frame.evaluate(() =>
         Array.from({ length: lab.core.raw_length(0) }, (_, i) => [
+          String(lab.core.raw_region(0, i, 0)),
+          String(lab.core.raw_region(0, i, 1)),
           lab.core.raw_local(0, i, 0),
           lab.core.raw_local(0, i, 1),
           lab.core.raw_point(0, i, 2),
@@ -102,7 +110,14 @@ try {
             window.dragEvent("pointerdown", ...start, snapping);
             window.dragEvent("pointermove", ...end, snapping);
             window.dragEvent("pointerup", ...end, snapping);
-            return Array.from({ length: 4 }, (_, k) => lab.core.stroke_transform(0, k));
+            return Array.from({ length: 4 }, (_, k) =>
+              lab.core.stroke_transform_relative(
+                0,
+                k,
+                BigInt(lab.viewOrigin()[0]),
+                BigInt(lab.viewOrigin()[1]),
+              ),
+            );
           },
           { kind, amount, snap },
         );
@@ -114,6 +129,8 @@ try {
             JSON.stringify(expectedRaw) ===
             JSON.stringify(
               Array.from({ length: lab.core.raw_length(0) }, (_, i) => [
+                String(lab.core.raw_region(0, i, 0)),
+                String(lab.core.raw_region(0, i, 1)),
                 lab.core.raw_local(0, i, 0),
                 lab.core.raw_local(0, i, 1),
                 lab.core.raw_point(0, i, 2),
@@ -130,7 +147,16 @@ try {
           throw Error("Transform Redo differs");
         await host.locator("#undo").click();
         await captureDrawing(frame);
-        results.push({ variant, brush, kind, amount, snap, transform, pixels });
+        results.push({
+          origin: variant === "shared" ? origin : 0,
+          variant,
+          brush,
+          kind,
+          amount,
+          snap,
+          transform,
+          pixels,
+        });
       }
       if (errors.length) throw Error(errors.join("; "));
       await page.close();

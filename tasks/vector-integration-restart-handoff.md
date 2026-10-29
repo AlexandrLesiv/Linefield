@@ -130,3 +130,7 @@ Verified preview65323 isolates PointerSamples browser acquisition while Rust ret
 ## Latest shared transform checkpoint
 
 Verified preview65324 moves rotation snapping and proportional-resize policy into Rust (110-function ABI). All120 approved checks and15 previous/current actual-handle scenarios pass exact artwork/raw/history comparison. Browser retains handle hit targets and input gestures. See latest task entry and selection-gesture evidence. Remaining gaps are numerical/resource breadth, session-selection ownership/architecture review and later worker experiments; do not call integration complete.
+
+## Latest regional transform evidence and next ownership item
+
+Unchanged65324 passes15 actual-handle scenarios at each of x=+3×2^76 and−3×2^76 against the near-origin prior preview: exact artwork/history and canonical regional sample preservation. This is compact far-origin coverage only. Next bounded architecture item is engine-owned selected-stroke membership/order/pruning, with unchanged host overlays/gestures and dense-selection performance checks. See the task for explicit responsibilities and remaining acceptance gates.
