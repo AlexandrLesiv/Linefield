@@ -1,3 +1,4 @@
+import { panToRegionalOrigin } from "./vector-regional-navigation.mjs";
 import { chromium } from "@playwright/test";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
@@ -12,7 +13,10 @@ try {
     ["editing-checks", 0],
     ["editing-checks", 1],
     ["editing-checks", 2],
-  ]) {
+  ].filter(
+    ([fixtureName]) =>
+      !process.env.LINEFIELD_REGIONAL_EDITING_ONLY || fixtureName === "editing-checks",
+  )) {
     const page = await browser.newPage({
       viewport: { width: 1440, height: 1000 },
       deviceScaleFactor: 2,
@@ -27,6 +31,11 @@ try {
       await host.locator("#brush").waitFor();
       const frame = page.frames().find((candidate) => candidate.url().includes("/vector-editor/"));
       await frame.waitForFunction(() => !!window.lab);
+      const origin = Number(process.env.LINEFIELD_PARITY_ORIGIN || 0);
+      if (origin) {
+        await panToRegionalOrigin(frame, origin);
+        await host.locator("#pen").click();
+      }
       await host.locator("#brush").selectOption(String(brush));
       const source = await readFile(
         new URL(`./fixtures/approved-vector/${fixture}.js`, import.meta.url),
@@ -49,7 +58,14 @@ try {
     await writeFile(
       `${output}/results.json`,
       JSON.stringify(
-        { browser: browser.version(), viewport: [1440, 1000], dpr: 2, results },
+        {
+          initialOrigin: process.env.LINEFIELD_PARITY_ORIGIN || "0",
+          editingOnly: !!process.env.LINEFIELD_REGIONAL_EDITING_ONLY,
+          browser: browser.version(),
+          viewport: [1440, 1000],
+          dpr: 2,
+          results,
+        },
         null,
         2,
       ),

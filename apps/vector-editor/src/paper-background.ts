@@ -167,8 +167,6 @@ export class PaperBackground {
 		const gl = this.gl;
 		const u = this.locations;
 		const [x, y] = camera.screenToWorld(0, 0);
-		const phase = (value: number, period: number) =>
-			((value % period) + period) % period;
 		gl.activeTexture(gl.TEXTURE0);
 		// Bind a complete sampler even in grid-only mode; allocation stays bounded.
 		this.ensureTexture();
@@ -197,8 +195,8 @@ export class PaperBackground {
 			Math.sin(camera.rotation),
 		);
 		gl.uniform1f(u.zoom, camera.zoom);
-		gl.uniform2f(u.paperOrigin, phase(x, SIZE), phase(y, SIZE));
-		gl.uniform2f(u.gridOrigin, phase(x, GRID), phase(y, GRID));
+		gl.uniform2f(u.paperOrigin, camera.phase(0, x, SIZE), camera.phase(1, y, SIZE));
+		gl.uniform2f(u.gridOrigin, camera.phase(0, x, GRID), camera.phase(1, y, GRID));
 		gl.uniform1i(
 			u.paperStyle,
 			settings.texture === "warm" ? 1 : settings.texture === "white" ? 2 : 0,

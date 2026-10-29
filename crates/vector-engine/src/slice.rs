@@ -5,6 +5,7 @@ use std::collections::HashMap;
 use std::rc::Rc;
 
 pub(super) struct Gesture {
+    origin: [super::regional::Address; 2],
     radius: f64,
     layer: Option<usize>,
     path: Vec<[f64; 2]>,
@@ -155,8 +156,8 @@ fn surviving(stroke: &Stroke, gesture: &Gesture) -> Option<Vec<[f64; 2]>> {
     let project = |p: [f32; 3]| {
         let [a, b] = stroke.basis;
         [
-            a * p[0] as f64 - b * p[1] as f64 + stroke.legacy_offset(0),
-            b * p[0] as f64 + a * p[1] as f64 + stroke.legacy_offset(1),
+            a * p[0] as f64 - b * p[1] as f64 + (stroke.source_anchor[0].relative_to(gesture.origin[0]) + stroke.offset[0]),
+            b * p[0] as f64 + a * p[1] as f64 + (stroke.source_anchor[1].relative_to(gesture.origin[1]) + stroke.offset[1]),
         ]
     };
     if lo == hi {
@@ -219,6 +220,7 @@ impl Engine {
             return false;
         }
         self.slicing = Some(Gesture {
+            origin: [super::regional::Address { region: 0, local: 0.0 }; 2],
             radius: width * 0.5,
             layer: active_only.then_some(self.active_layer),
             path: vec![],
@@ -642,4 +644,14 @@ mod tests {
         e.redo();
         assert!(live.iter().all(|&id| e.stroke_visible(id)));
     }
+}
+
+#[cfg_attr(target_arch = "wasm32", no_mangle)]
+pub extern "C" fn slice_begin_regional(width: f64, active_only: u32, rx: i64, ry: i64) -> u32 {
+    ENGINE.with(|e| {
+        let mut e = e.borrow_mut();
+        if !e.begin_slice(width, active_only != 0) { return 0; }
+        e.slicing.as_mut().unwrap().origin = [rx, ry].map(|region| super::regional::Address { region, local: 0.0 });
+        1
+    })
 }

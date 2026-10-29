@@ -272,6 +272,11 @@ impl Engine {
         if self.strokes[id].points.is_empty() {
             let anchor = [point.x.source_anchor(), point.y.source_anchor()];
             self.strokes[id].source_anchor = anchor;
+            // A host may have observed the empty stroke before its first point.
+            // Publish the now-frozen source placement before deriving geometry.
+            if anchor.iter().any(|axis| axis.region != 0) {
+                self.transform_revision = self.transform_revision.wrapping_add(1);
+            }
         }
         Rc::get_mut(&mut self.strokes[id].points)
             .expect("active ink is unshared")

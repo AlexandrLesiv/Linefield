@@ -8,8 +8,10 @@ export type Core = {
   brush(id: number): number;
   camera_map(x: number, y: number, cx: number, cy: number, zoom: number, angle: number): number;
   camera_normalize(angle: number): number;
+  camera_origin_region(axis: number): bigint;
   camera_output_ptr(): number;
   camera_push(x: number, y: number, cx: number, cy: number, zoom: number, angle: number, rx: bigint, ry: bigint, pressure: number): number;
+  camera_rebase(rx: bigint, ry: bigint, cx: number, cy: number, zoom: number, angle: number): number;
   camera_rotate(x: number, y: number, cx: number, cy: number, zoom: number, angle: number, next: number): number;
   camera_zoom(x: number, y: number, cx: number, cy: number, zoom: number, next: number): number;
   can_draw(): number;
@@ -65,6 +67,7 @@ export type Core = {
   redo(): void;
   regional_normalize(region: bigint, local: number): number;
   regional_offset(region: bigint, local: number, delta: number): number;
+  regional_phase(region: bigint, local: number, period: number): number;
   regional_result_local(): number;
   regional_result_region(): bigint;
   render_chunk(id: number, chunk: number, tolerance: number): number;
@@ -72,6 +75,7 @@ export type Core = {
   render_snapshot(length: number, tolerance: number): number;
   set_active_brush(kind: number): void;
   slice_begin(width: number, active_only: number): number;
+  slice_begin_regional(width: number, active_only: number, rx: bigint, ry: bigint): number;
   slice_commit(): number;
   slice_push(x: number, y: number): number;
   stroke_blend_group(id: number): number;
@@ -101,8 +105,10 @@ export const coreExportArity = {
   "brush": 1,
   "camera_map": 6,
   "camera_normalize": 1,
+  "camera_origin_region": 1,
   "camera_output_ptr": 0,
   "camera_push": 9,
+  "camera_rebase": 6,
   "camera_rotate": 7,
   "camera_zoom": 6,
   "can_draw": 0,
@@ -158,6 +164,7 @@ export const coreExportArity = {
   "redo": 0,
   "regional_normalize": 2,
   "regional_offset": 3,
+  "regional_phase": 3,
   "regional_result_local": 0,
   "regional_result_region": 0,
   "render_chunk": 3,
@@ -165,6 +172,7 @@ export const coreExportArity = {
   "render_snapshot": 2,
   "set_active_brush": 1,
   "slice_begin": 2,
+  "slice_begin_regional": 4,
   "slice_commit": 0,
   "slice_push": 2,
   "stroke_blend_group": 1,
@@ -184,4 +192,4 @@ export const coreExportArity = {
   "visible": 1
 } as const;
 
-export const coreAbiFingerprint = [987879235,1323853148,449842392,160141923,1403655987,177929244,4126101787,2862871474] as const;
+export const coreAbiFingerprint = [2346280281,1176016575,2702216646,2586493622,3109023205,2775598921,3054140812,3756704042] as const;

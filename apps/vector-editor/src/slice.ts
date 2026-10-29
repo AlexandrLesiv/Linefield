@@ -70,7 +70,7 @@ export function createSlice(
 	function down(e: PointerEvent) {
 		lastPoint = null;
 		gestureSize = size;
-		drawing = !!core.slice_begin(gestureSize, Number(activeLayer.checked));
+		drawing = !!core.slice_begin_regional(gestureSize, Number(activeLayer.checked), camera.regionX, camera.regionY);
 		status.textContent = t("vector.slicing");
 		if (drawing) append(e);
 	}

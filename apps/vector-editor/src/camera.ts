@@ -4,6 +4,9 @@ import { ViewProjection } from "./view-projection";
 
 /** Host state adapter; shared Rust owns mapping and anchored camera arithmetic. */
 export class Camera extends ViewProjection {
+  regionX = 0n;
+  regionY = 0n;
+  originRevision = 0;
   private output: Float64Array | undefined;
   constructor(private core: Core) {
     super();
@@ -15,12 +18,44 @@ export class Camera extends ViewProjection {
       this.output = new Float64Array(this.core.memory.buffer, this.core.camera_output_ptr(), 3);
     return this.output;
   }
+  rebase(): boolean {
+    if (
+      !this.core.camera_rebase(
+        this.regionX,
+        this.regionY,
+        this.cx,
+        this.cy,
+        this.zoom,
+        this.rotation,
+      )
+    )
+      return false;
+    const out = this.read(1);
+    this.cx = out[0];
+    this.cy = out[1];
+    this.regionX = this.core.camera_origin_region(0);
+    this.regionY = this.core.camera_origin_region(1);
+    this.originRevision++;
+    return true;
+  }
+  override reset() {
+    super.reset();
+    this.regionX = this.regionY = 0n;
+    this.originRevision++;
+  }
+  phase(axis: number, local: number, period: number) {
+    return this.core.regional_phase(axis === 0 ? this.regionX : this.regionY, local, period);
+  }
+  transform(px: number, py: number, scale: number, angle: number) {
+    return this.regionX === 0n && this.regionY === 0n
+      ? this.core.transform_update(px, py, scale, angle, 0, 0)
+      : this.core.transform_update_regional(this.regionX, px, this.regionY, py, scale, angle, 0, 0);
+  }
   normalizeRotation(angle: number) {
     return this.core.camera_normalize(angle);
   }
   appendSample(x: number, y: number, pressure: number): boolean {
-    // The existing renderer still has origin zero. Introduce origin switching
-    // only with query/cache/GPU rebasing; input must share its displayed frame.
+    // Input uses the same origin as query/cache/GPU projection.
     return !!this.core.camera_push(
       x,
       y,
@@ -28,8 +63,8 @@ export class Camera extends ViewProjection {
       this.cy,
       this.zoom,
       this.rotation,
-      0n,
-      0n,
+      this.regionX,
+      this.regionY,
       pressure,
     );
   }

@@ -100,3 +100,12 @@ pub extern "C" fn regional_result_region() -> i64 {
 pub extern "C" fn regional_result_local() -> f64 {
     RESULT.with(|result| result.get().local)
 }
+
+/// Periodic presentation phase without flattening a large regional origin.
+#[cfg_attr(target_arch = "wasm32", no_mangle)]
+pub extern "C" fn regional_phase(region: i64, local: f64, period: u32) -> f64 {
+    if period == 0 || !local.is_finite() { return f64::NAN; }
+    let p = f64::from(period);
+    let base = (i128::from(region) * 65536).rem_euclid(i128::from(period)) as f64;
+    ((base + local % p) % p + p) % p
+}

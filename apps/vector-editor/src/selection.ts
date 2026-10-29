@@ -252,7 +252,7 @@ export function createSelection(
 						),
 					);
 				}
-				accepted = core.transform_update(px, py, scale, angle, 0, 0);
+				accepted = camera.transform(px, py, scale, angle);
 				if (accepted) orientation = drag.orientation + angle;
 			}
 			pending = true;

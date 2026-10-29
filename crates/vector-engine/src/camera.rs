@@ -89,3 +89,24 @@ pub extern "C" fn camera_push(
     let [wx, wy] = mapped(x, y, cx, cy, zoom, angle);
     super::push_regional(rx, wx, ry, wy, pressure)
 }
+
+thread_local! { static ORIGIN: RefCell<[i64; 2]> = const { RefCell::new([0, 0]) }; }
+/// Rebase only after the local camera exceeds four regions. Output is published
+/// atomically; hosts adopt it together with derived rendering/query state.
+#[cfg_attr(target_arch = "wasm32", no_mangle)]
+pub extern "C" fn camera_rebase(rx: i64, ry: i64, cx: f64, cy: f64, zoom: f64, angle: f64) -> u32 {
+    if !valid(&[cx, cy, zoom, angle], zoom) { return 0; }
+    let [x, y] = mapped(0.0, 0.0, cx, cy, zoom, angle);
+    if x.abs().max(y.abs()) < 262144.0 { return 0; }
+    let (Some(x), Some(y)) = (super::regional::Address::normalized(rx, x), super::regional::Address::normalized(ry, y)) else { return 0; };
+    let dx = (i128::from(x.region) - i128::from(rx)) as f64 * 65536.0;
+    let dy = (i128::from(y.region) - i128::from(ry)) as f64 * 65536.0;
+    let c = angle.cos(); let s = angle.sin();
+    if publish([cx + zoom * (c * dx - s * dy), cy + zoom * (s * dx + c * dy), zoom]) == 0 { return 0; }
+    ORIGIN.with(|origin| *origin.borrow_mut() = [x.region, y.region]);
+    1
+}
+#[cfg_attr(target_arch = "wasm32", no_mangle)]
+pub extern "C" fn camera_origin_region(axis: usize) -> i64 {
+    ORIGIN.with(|origin| origin.borrow().get(axis).copied().unwrap_or(0))
+}

@@ -3,6 +3,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { cpus, platform, release, totalmem } from "node:os";
 const output = process.env.LINEFIELD_EVIDENCE_DIR || ".build-cache/restart/performance-baseline";
 const workload = {
+  regionalTransitions: process.env.LINEFIELD_REGIONAL_TRANSITIONS === "1",
   strokes: Number(process.env.LINEFIELD_STROKES || 24),
   samplesPerStroke: Number(process.env.LINEFIELD_SAMPLES_PER_STROKE || 129),
 };
@@ -172,6 +173,18 @@ try {
           if (sampleCount !== scenario.strokes * scenario.samplesPerStroke)
             throw Error(`Accepted sample count mismatch: ${sampleCount}`);
           const saved = JSON.stringify(rawBefore());
+          if (scenario.regionalTransitions && typeof lab.viewOrigin === "function") {
+            await phase("regional-origin-roundtrips-integrated-only", async () => {
+              document.querySelector("#pan").click();
+              pointer("pointerdown", 700, 450);
+              for (let i = 0; i < 12; i++) {
+                pointer("pointermove", 700 - (i % 2 ? 0 : 4294901760), 450);
+                await next();
+                await settled();
+              }
+              pointer("pointerup", 700, 450);
+            });
+          }
           await phase("warm-continuous-pan", async () => {
             document.querySelector("#pan").click();
             pointer("pointerdown", 700, 450);

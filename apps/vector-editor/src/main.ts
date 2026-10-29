@@ -59,7 +59,8 @@ const gl = canvas.getContext("webgl2", {
 if (!gl)
 	throw new Error("WebGL2 is required; please use a browser with GPU support.");
 const gpu = gl;
-const cache = new GeometryCache(gpu, core);
+const camera = new Camera(core);
+const cache = new GeometryCache(gpu, core, () => [camera.regionX, camera.regionY]);
 cache.setBackgroundPreparation(true);
 const reportGpuError = (error: number) => cache.reportGpuError(error);
 const noteGpuMutation = (bytes: number) => cache.noteGpuMutation(bytes);
@@ -127,7 +128,6 @@ let deviceViewportLoc = loc("deviceViewport"),
 	routeSpanLoc = loc("routeSpan"),
 	atlasRoutesLoc = loc("atlasRoutes");
 type Tool = "draw" | "select" | "slice" | "pan" | "rotate";
-const camera = new Camera(core);
 const selection = createSelection(core, cache, camera, canvas);
 const slice = createSlice(core, cache, camera, canvas, () => {
 	selection.clear();
@@ -263,7 +263,15 @@ const layers = createLayers(core, (change) => {
 	dirty = true;
 	return result;
 });
+let originRevision = camera.originRevision;
 function prepare() {
+	if (gesture === null || gesture === "pan" || gesture === "rotate") camera.rebase();
+	if (originRevision !== camera.originRevision) {
+		cache.syncTransforms();
+		compositeCache.invalidate();
+		originRevision = camera.originRevision;
+		dirty = true;
+	}
 	if (transformRevision !== core.transform_revision()) {
 		cache.syncTransforms();
 		transformRevision = core.transform_revision();
@@ -1009,6 +1017,7 @@ Object.assign(window, {
 		selection: () => selection.ids(),
 		layers,
 		view: () => camera.state(),
+		viewOrigin: () => [String(camera.regionX), String(camera.regionY)],
 		prepared: () => cache.size,
 		cacheState: () => cache.state(),
 		samples: () => gpu.getParameter(gpu.SAMPLES),

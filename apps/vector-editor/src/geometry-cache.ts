@@ -243,6 +243,7 @@ export class GeometryCache {
 	constructor(
 		gl: WebGL2RenderingContext,
 		private core: Core,
+		private origin: () => readonly [bigint, bigint] = () => [0n, 0n],
 	) {
 		this.arena = new GpuArena(gl);
 	}
@@ -277,7 +278,7 @@ export class GeometryCache {
 				seen: 0,
 				next: 0,
 				chunks: new Map(),
-				transform: readTransform(this.core, id),
+				transform: readTransform(this.core, id, ...this.origin()),
 			});
 		this.changed.add(id);
 		this.epoch++;
@@ -290,7 +291,7 @@ export class GeometryCache {
 	/** Called only after GPU admission. Reuses tessellation and buffer slots. */
 	syncTransforms() {
 		for (const [id, stroke] of this.strokes) {
-			const transform = readTransform(this.core, id);
+			const transform = readTransform(this.core, id, ...this.origin());
 			if (transform.every((v, k) => v === stroke.transform[k])) continue;
 			for (const c of stroke.chunks.values()) {
 				c.bounds = transformBounds(transform, c.localBounds);
@@ -366,7 +367,7 @@ export class GeometryCache {
 		for (const id of ids) {
 			const s = this.strokes.get(id);
 			if (!s) continue;
-			const t = readTransform(this.core, id);
+			const t = readTransform(this.core, id, ...this.origin());
 			// Project directly into selection coordinates; don't rebox world AABBs.
 			const local: StrokeTransform = [
 				cos * t[0] + sin * t[1],
@@ -416,7 +417,7 @@ export class GeometryCache {
 				b.id - a.id,
 		);
 		for (const { id, stroke } of candidates) {
-			const transform = readTransform(this.core, id),
+			const transform = readTransform(this.core, id, ...this.origin()),
 				scale = transformScale(transform);
 			for (const c of stroke.chunks.values()) {
 				const b = c.localBounds,
@@ -483,7 +484,7 @@ export class GeometryCache {
 				(activeLayerOnly && layer !== this.core.layer_active())
 			)
 				continue;
-			const transform = readTransform(this.core, id),
+			const transform = readTransform(this.core, id, ...this.origin()),
 				scale = transformScale(transform);
 			let hit = false,
 				enclosed = true;
@@ -625,9 +626,9 @@ export class GeometryCache {
 		this.needsQuery = true;
 	}
 	private query() {
-		const b = this.view.bounds;
+		const viewBounds = this.view.bounds;
 		const found = new Set<Chunk>();
-		const [x0, y0, x1, y1] = b.map((v) => Math.floor(v / 512));
+		const [x0, y0, x1, y1] = viewBounds.map((v) => Math.floor(v / 512));
 		if ((x1 - x0 + 1) * (y1 - y0 + 1) > 4096) {
 			for (const s of this.strokes.values())
 				for (const c of s.chunks.values()) found.add(c);
@@ -647,7 +648,7 @@ export class GeometryCache {
 				blends.set(c.id, this.core.stroke_blend_group?.(c.id) ?? c.id);
 			}
 		this.visible = [...found]
-			.filter((c) => this.core.visible(c.id) && intersects(c.bounds, b))
+			.filter((c) => this.core.visible(c.id) && intersects(c.bounds, viewBounds))
 			.sort(
 				(a, b) =>
 					ranks.get(a.id)! - ranks.get(b.id)! ||

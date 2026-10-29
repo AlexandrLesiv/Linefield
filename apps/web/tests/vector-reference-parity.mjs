@@ -1,7 +1,16 @@
+import { captureDrawing } from "./vector-drawing-capture.mjs";
+import { panToRegionalOrigin } from "./vector-regional-navigation.mjs";
 import { chromium } from "@playwright/test";
 
 import { mkdir, writeFile } from "node:fs/promises";
 
+const regionalOrigin = Number(process.env.LINEFIELD_PARITY_ORIGIN || 0);
+if (
+  !Number.isFinite(regionalOrigin) ||
+  !Number.isInteger(regionalOrigin) ||
+  BigInt(regionalOrigin) % 196608n !== 0n
+)
+  throw Error("Origin must preserve paper/grid periods");
 const sparse = process.env.LINEFIELD_PARITY_SPARSE === "1";
 const output = process.env.LINEFIELD_EVIDENCE_DIR || ".build-cache/restart/parity";
 await mkdir(output, { recursive: true });
@@ -24,51 +33,13 @@ async function capture(url, integrated, variant) {
   await frame.waitForFunction(() => !!window.lab, {}, { timeout: 15000 });
   const canvasLocator = host.locator("canvas");
   const box = await canvasLocator.boundingBox();
+  if (integrated && regionalOrigin) await panToRegionalOrigin(frame, regionalOrigin);
   const images = {};
   async function settled(label) {
     await frame.waitForFunction(() => !window.lab.renderPending(), {}, { timeout: 30000 });
     const png = await canvasLocator.screenshot();
     // Compare the actual drawing buffer, excluding host controls over the canvas.
-    const pixels = await frame.evaluate(async () => {
-      const canvas = document.querySelector("canvas"),
-        gl = canvas.getContext("webgl2");
-      const methods = ["drawArrays", "drawArraysInstanced"];
-      const descriptors = methods.map((name) => Object.getOwnPropertyDescriptor(gl, name));
-      let latest;
-      const restore = () =>
-        methods.forEach((name, index) =>
-          descriptors[index]
-            ? Object.defineProperty(gl, name, descriptors[index])
-            : delete gl[name],
-        );
-      try {
-        for (const name of methods) {
-          const draw = gl[name].bind(gl);
-          gl[name] = (...args) => {
-            const result = draw(...args);
-            if (gl.getParameter(gl.DRAW_FRAMEBUFFER_BINDING) === null) {
-              const read = gl.getParameter(gl.READ_FRAMEBUFFER_BINDING);
-              gl.bindFramebuffer(gl.READ_FRAMEBUFFER, null);
-              latest = new Uint8Array(canvas.width * canvas.height * 4);
-              gl.readPixels(0, 0, canvas.width, canvas.height, gl.RGBA, gl.UNSIGNED_BYTE, latest);
-              gl.bindFramebuffer(gl.READ_FRAMEBUFFER, read);
-            }
-            return result;
-          };
-        }
-        lab.requestRedraw();
-        for (let tries = 0; tries < 240; tries++) {
-          await new Promise((resolve) => requestAnimationFrame(resolve));
-          if (!lab.renderPending() && latest) {
-            if (gl.getError()) throw Error("readback failed");
-            return Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", latest)));
-          }
-        }
-        throw Error("readback timeout");
-      } finally {
-        restore();
-      }
-    });
+    const pixels = await captureDrawing(frame);
     images[label] = Buffer.from(pixels).toString("hex");
     await writeFile(`${output}/${variant}-${label}.png`, png);
   }
@@ -159,22 +130,38 @@ async function capture(url, integrated, variant) {
   await settled("undo");
   await host.locator("#redo").click();
   await settled("redo");
-  const state = await frame.evaluate(() => {
-    const core = window.lab.core;
-    const strokes = Array.from({ length: core.count() }, (_, id) => ({
-      brush: core.brush(id),
-      visible: core.visible(id),
-      opacity: core.opacity(id),
-      raw: Array.from({ length: core.raw_length(id) }, (unused, index) =>
-        [0, 1, 2].map((field) => core.raw_point(id, index, field)),
-      ),
-    }));
-    return {
-      strokes,
-      camera: window.lab.view(),
-      dimensions: [document.querySelector("canvas").width, document.querySelector("canvas").height],
-    };
-  });
+  const state = await frame.evaluate(
+    (origin) => {
+      const core = window.lab.core;
+      const strokes = Array.from({ length: core.count() }, (_, id) => ({
+        brush: core.brush(id),
+        visible: core.visible(id),
+        opacity: core.opacity(id),
+        raw: Array.from({ length: core.raw_length(id) }, (unused, index) =>
+          [0, 1, 2].map((field) =>
+            origin && field < 2
+              ? Math.fround(
+                  Number(
+                    core.raw_region(id, index, field) - (field === 0 ? BigInt(origin / 65536) : 0n),
+                  ) *
+                    65536 +
+                    core.raw_local(id, index, field),
+                )
+              : core.raw_point(id, index, field),
+          ),
+        ),
+      }));
+      return {
+        strokes,
+        camera: window.lab.view(),
+        dimensions: [
+          document.querySelector("canvas").width,
+          document.querySelector("canvas").height,
+        ],
+      };
+    },
+    integrated ? regionalOrigin : 0,
+  );
   await page.close();
   if (errors.length) throw Error(errors.join("\n"));
   return { state, images };
@@ -191,6 +178,7 @@ try {
     "integrated",
   );
   const result = {
+    regionalOrigin,
     workload: sparse ? "four-separated-regions-held-pan-and-full-zoom-range" : "nearby-brushes",
     browser: browser.version(),
     dpr: 2,
