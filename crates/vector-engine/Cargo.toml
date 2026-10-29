@@ -4,6 +4,9 @@ version = "0.1.0"
 edition = "2021"
 publish = false
 
+[features]
+save-checkpoint = []
+
 [lib]
 name = "vector_core"
 crate-type = ["cdylib", "rlib", "staticlib"]
