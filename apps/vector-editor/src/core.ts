@@ -15,6 +15,7 @@ export type Core = {
   can_redo(): number;
   can_undo(): number;
   cancel(): void;
+  canonical_sample_bytes(): number;
   color(id: number): number;
   commit(): void;
   count(): number;
@@ -52,10 +53,14 @@ export type Core = {
   opacity(id: number): number;
   point(id: number, i: number, field: number): number;
   push(x: number, y: number, p: number): void;
+  push_precise(x: number, y: number, pressure: number): number;
+  push_regional(rx: bigint, x: number, ry: bigint, y: number, pressure: number): number;
   raw_chunk_bounds(id: number, chunk: number, field: number): number;
   raw_chunk_bounds_ptr(id: number, chunk: number): number;
   raw_length(id: number): number;
+  raw_local(id: number, index: number, axis: number): number;
   raw_point(id: number, index: number, field: number): number;
+  raw_region(id: number, index: number, axis: number): bigint;
   redo(): void;
   regional_normalize(region: bigint, local: number): number;
   regional_offset(region: bigint, local: number, delta: number): number;
@@ -98,6 +103,7 @@ export const coreExportArity = {
   "can_redo": 0,
   "can_undo": 0,
   "cancel": 0,
+  "canonical_sample_bytes": 0,
   "color": 1,
   "commit": 0,
   "count": 0,
@@ -135,10 +141,14 @@ export const coreExportArity = {
   "opacity": 1,
   "point": 3,
   "push": 3,
+  "push_precise": 3,
+  "push_regional": 5,
   "raw_chunk_bounds": 3,
   "raw_chunk_bounds_ptr": 2,
   "raw_length": 1,
+  "raw_local": 3,
   "raw_point": 3,
+  "raw_region": 3,
   "redo": 0,
   "regional_normalize": 2,
   "regional_offset": 3,
@@ -164,4 +174,4 @@ export const coreExportArity = {
   "visible": 1
 } as const;
 
-export const coreAbiFingerprint = [3633692780,3279131765,3300548261,2885193494,1783934287,2558398501,2374718301,2816146068] as const;
+export const coreAbiFingerprint = [3542297534,1147519326,1209739696,2536409168,2323499510,3752424767,2089266827,2825409226] as const;

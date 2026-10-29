@@ -1,15 +1,20 @@
 //! Canonical one-axis address arithmetic. Hosts transport regions as i64/BigInt,
-//! never flattening them to a JavaScript number. Document adoption is separate.
+//! never flattening them to a JavaScript number. Canonical samples use these
+//! addresses; regional view and rendering adoption remains separate.
 use std::cell::Cell;
 
 const REGION_SIZE: f64 = 65536.0;
 #[derive(Clone, Copy)]
-struct Address {
-    region: i64,
-    local: f64,
+pub(crate) struct Address {
+    pub(crate) region: i64,
+    pub(crate) local: f64,
 }
 impl Address {
-    fn normalized(region: i64, local: f64) -> Option<Self> {
+    /// Transitional compatibility projection, never canonical storage.
+    pub(crate) fn legacy_f32(self) -> f32 {
+        (self.region as f64 * REGION_SIZE + self.local) as f32
+    }
+    pub(crate) fn normalized(region: i64, local: f64) -> Option<Self> {
         if !local.is_finite() {
             return None;
         }

@@ -106,9 +106,41 @@ try {
   await host.locator("#redo").click();
   const visible = await frame.evaluate(() => lab.core.count() === 1 && lab.core.visible(0) === 1);
   if (!visible || errors.length) throw Error(`Drawing/history failed: ${errors.join("; ")}`);
+  const canonical = await frame.evaluate(() => {
+    const core = lab.core;
+    const rx = (1n << 62n) + 17n,
+      ry = -(1n << 61n) + 9n;
+    const id = core.begin_fixed_width(8, 0, 1);
+    for (const local of [0.125, 0.1875, 0.25])
+      if (!lab.regional.append({ region: rx, local }, { region: ry, local: 4.5 }, 0.75))
+        throw Error("Canonical regional input rejected");
+    if (lab.regional.append({ region: 1n << 63n, local: 0 }, { region: 0n, local: 0 }, 1))
+      throw Error("Canonical host transport wrapped out-of-range address");
+    core.commit();
+    const read = () =>
+      Array.from({ length: core.raw_length(id) }, (_, index) => [
+        String(core.raw_region(id, index, 0)),
+        core.raw_local(id, index, 0),
+        String(core.raw_region(id, index, 1)),
+        core.raw_local(id, index, 1),
+        core.raw_point(id, index, 2),
+      ]);
+    const expected = [0.125, 0.1875, 0.25].map((x) => [String(rx), x, String(ry), 4.5, 0.75]);
+    if (JSON.stringify(read()) !== JSON.stringify(expected))
+      throw Error("Full-range canonical address changed");
+    core.undo();
+    core.redo();
+    if (JSON.stringify(read()) !== JSON.stringify(expected))
+      throw Error("History changed full-range canonical address");
+    return { addresses: read(), sampleBytes: core.canonical_sample_bytes() };
+  });
   await writeFile(
     `${output}/results.json`,
-    JSON.stringify({ browser: browser.version(), ...result, drawingAndHistory: true }, null, 2),
+    JSON.stringify(
+      { browser: browser.version(), ...result, canonical, drawingAndHistory: true },
+      null,
+      2,
+    ),
   );
   console.log(
     `PASS ${result.cases.length} regional Wasm checks, typed region boundary, drawing/history`,

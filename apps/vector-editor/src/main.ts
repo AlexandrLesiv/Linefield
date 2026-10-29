@@ -655,11 +655,14 @@ setInterval(() => {
 let lastSampleX = 0,
 	lastSampleY = 0,
 	lastPressure = 1;
+function appendSample(x: number, y: number, pressure: number) {
+    if (core.push_precise(x, y, pressure)) metrics.accepted++;
+    else runtimeFailure = "Input position or pressure is outside the supported range; existing accepted samples are retained.";
+}
 function sample(e: PointerEvent) {
 	const r = canvas.getBoundingClientRect();
 	const [x, y] = camera.screenToWorld(e.clientX - r.left, e.clientY - r.top);
-	core.push(x, y, e.pointerType === "pen" ? e.pressure : 1);
-	metrics.accepted++;
+	appendSample(x, y, e.pointerType === "pen" ? e.pressure : 1);
 	lastSampleX = e.clientX;
 	lastSampleY = e.clientY;
 	lastPressure = e.pointerType === "pen" ? e.pressure : 1;
@@ -772,8 +775,7 @@ canvas.addEventListener("pointerup", (e) => {
 				e.clientX - r.left,
 				e.clientY - r.top,
 			);
-			core.push(x, y, lastPressure);
-			metrics.accepted++;
+			appendSample(x, y, lastPressure);
 			if (active !== null) cache.note(active);
 		}
 		core.commit();

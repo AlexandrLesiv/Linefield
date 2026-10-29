@@ -87,7 +87,54 @@ try {
               ),
             ),
           );
+          let canonical = null;
+          if (typeof lab.core.raw_region === "function") {
+            const read = () =>
+              Array.from({ length: lab.core.raw_length(0) }, (_, i) =>
+                [0, 1].map((axis) => ({
+                  region: String(lab.core.raw_region(0, i, axis)),
+                  local: lab.core.raw_local(0, i, axis),
+                })),
+              );
+            const addresses = read();
+            document.querySelector("#undo").click();
+            document.querySelector("#redo").click();
+            if (JSON.stringify(addresses) !== JSON.stringify(read()))
+              throw Error("History changed canonical addresses");
+            // This bounded audit uses origins <= 2^32, exactly representable in f64.
+            // Production transport must keep arbitrary region/local pairs separate.
+            const positions = addresses.map((pair) =>
+              pair.map((p) => Number(BigInt(p.region)) * 65536 + p.local),
+            );
+            const screenError =
+              Math.max(
+                ...positions.map((p, i) =>
+                  Math.max(Math.abs(p[0] - expected[i][0]), Math.abs(p[1] - expected[i][1])),
+                ),
+              ) * view.zoom;
+            canonical = {
+              addresses,
+              unique: new Set(positions.map((p) => p[0])).size,
+              screenError,
+              sampleBytes: lab.core.canonical_sample_bytes(),
+            };
+            if (canonical.unique !== 65 || screenError !== 0)
+              throw Error("Canonical input lost precision");
+          }
+          if (canonical) {
+            const acceptedBefore = lab.metrics.accepted;
+            send("pointerdown", 200, 400);
+            send("pointermove", 1e30, 400);
+            send("pointerup", 220, 400);
+            if (
+              lab.core.count() !== 2 ||
+              lab.core.raw_length(1) !== 2 ||
+              lab.metrics.accepted !== acceptedBefore + 2
+            )
+              throw Error("Invalid input lost accepted samples or polluted accepted counts");
+          }
           return {
+            canonical,
             view,
             expected,
             actual,
@@ -123,6 +170,11 @@ try {
         measurement.expectedUnique,
         "screen error",
         measurement.maxScreenError,
+        "canonical",
+        measurement.canonical && {
+          unique: measurement.canonical.unique,
+          screenError: measurement.canonical.screenError,
+        },
       );
     }
 } finally {

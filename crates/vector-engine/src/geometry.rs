@@ -350,7 +350,7 @@ mod tests {
     fn stroke(samples: &[[f32; 3]]) -> Stroke {
         let mut points = Points::default();
         for &[x, y, pressure] in samples {
-            points.push(Point { x, y, pressure });
+            points.push(Point::from_precise(f64::from(x), f64::from(y), pressure).unwrap());
         }
         Stroke {
             layer: 0,
@@ -388,7 +388,7 @@ mod tests {
         let before: Vec<_> = (0..stroke.points.len())
             .map(|i| {
                 let p = stroke.points[i];
-                [p.x.to_bits(), p.y.to_bits(), p.pressure.to_bits()]
+                p.canonical_bits()
             })
             .collect();
         let mut scratch = Scratch::default();
@@ -407,7 +407,7 @@ mod tests {
         }
         for (i, bits) in before.iter().enumerate() {
             let p = stroke.points[i];
-            assert_eq!([p.x.to_bits(), p.y.to_bits(), p.pressure.to_bits()], *bits);
+            assert_eq!(p.canonical_bits(), *bits);
         }
     }
     #[test]
@@ -492,11 +492,11 @@ mod tests {
         let old_tail = span(&stroke, 127);
         std::rc::Rc::get_mut(&mut stroke.points)
             .unwrap()
-            .push(Point {
-                x: 128.0 * 0.6,
-                y: (128.0_f32 * 0.055).sin() * 12.0,
-                pressure: 0.5,
-            });
+            .push(Point::from_precise(
+                f64::from(128.0_f32 * 0.6),
+                f64::from((128.0_f32 * 0.055).sin() * 12.0),
+                0.5,
+            ).unwrap());
         assert_eq!(stable, span(&stroke, 126));
         assert_ne!(old_tail, span(&stroke, 127));
         let mut scratch = Scratch::default();

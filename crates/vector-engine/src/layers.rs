@@ -340,11 +340,11 @@ mod tests {
         e.commit();
         id
     }
-    fn raw(e: &Engine, id: usize) -> Vec<[u32; 3]> {
+    fn raw(e: &Engine, id: usize) -> Vec<[u64; 5]> {
         (0..e.strokes[id].points.len())
             .map(|i| {
                 let p = e.strokes[id].points[i];
-                [p.x.to_bits(), p.y.to_bits(), p.pressure.to_bits()]
+                p.canonical_bits()
             })
             .collect()
     }

@@ -1,15 +1,18 @@
 use std::{cell::RefCell, rc::Rc};
-mod geometry;
 mod boundary_generated;
+mod geometry;
 /// Generated scalar ABI shape identity, checked once by host and worker loaders.
 /// This is not a trust signature or a document-format version.
 #[cfg_attr(target_arch = "wasm32", no_mangle)]
 pub extern "C" fn boundary_fingerprint_word(index: usize) -> u32 {
-    boundary_generated::ABI_FINGERPRINT.get(index).copied().unwrap_or(0)
+    boundary_generated::ABI_FINGERPRINT
+        .get(index)
+        .copied()
+        .unwrap_or(0)
 }
 pub mod camera;
-pub mod regional;
 pub mod layers;
+pub mod regional;
 pub mod selection;
 pub mod slice;
 use layers::{Command, Layer};
@@ -17,9 +20,34 @@ use layers::{Command, Layer};
 pub mod native;
 #[derive(Clone, Copy)]
 struct Point {
-    x: f32,
-    y: f32,
+    x: regional::Address,
+    y: regional::Address,
     pressure: f32,
+}
+impl Point {
+    #[cfg(test)]
+    fn canonical_bits(self) -> [u64; 5] {
+        [
+            self.x.region as u64,
+            self.x.local.to_bits(),
+            self.y.region as u64,
+            self.y.local.to_bits(),
+            u64::from(self.pressure.to_bits()),
+        ]
+    }
+    fn from_precise(x: f64, y: f64, pressure: f32) -> Option<Self> {
+        if !pressure.is_finite() {
+            return None;
+        }
+        Some(Self {
+            x: regional::Address::normalized(0, x)?,
+            y: regional::Address::normalized(0, y)?,
+            pressure: pressure.clamp(0.0, 1.0),
+        })
+    }
+    fn legacy(self) -> [f32; 3] {
+        [self.x.legacy_f32(), self.y.legacy_f32(), self.pressure]
+    }
 }
 /// Each stroke snapshots its response; accepted pressure samples stay unchanged.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -128,8 +156,8 @@ impl Stroke {
     fn source_point(&self, index: usize) -> [f32; 3] {
         let p = self.points[index];
         [
-            p.x,
-            p.y,
+            p.x.legacy_f32(),
+            p.y.legacy_f32(),
             self.width * 0.5 * self.pressure_curve.diameter_fraction(p.pressure),
         ]
     }
@@ -215,17 +243,22 @@ impl Engine {
         id
     }
     fn push(&mut self, x: f32, y: f32, p: f32) {
-        if x.is_finite() && y.is_finite() && p.is_finite() {
-            if let Some(id) = self.active {
-                Rc::get_mut(&mut self.strokes[id].points)
-                    .expect("active ink is unshared")
-                    .push(Point {
-                        x,
-                        y,
-                        pressure: p.clamp(0.0, 1.0),
-                    });
-            }
-        }
+        self.push_precise(f64::from(x), f64::from(y), p);
+    }
+    fn push_precise(&mut self, x: f64, y: f64, p: f32) -> bool {
+        let Some(point) = Point::from_precise(x, y, p) else {
+            return false;
+        };
+        self.push_point(point)
+    }
+    fn push_point(&mut self, point: Point) -> bool {
+        let Some(id) = self.active else {
+            return false;
+        };
+        Rc::get_mut(&mut self.strokes[id].points)
+            .expect("active ink is unshared")
+            .push(point);
+        true
     }
     fn cancel(&mut self) {
         self.cancel_slice();
@@ -470,7 +503,7 @@ pub extern "C" fn geometry_snapshot(id: usize, chunk: usize) -> usize {
             for (index, source) in (first..end).enumerate() {
                 let p = stroke.points[source];
                 let at = SNAPSHOT_HEADER + index * 3;
-                input[at..at + 3].copy_from_slice(&[p.x, p.y, p.pressure]);
+                input[at..at + 3].copy_from_slice(&p.legacy());
             }
         });
         SNAPSHOT_HEADER + (end - first) * 3
@@ -517,11 +550,8 @@ pub extern "C" fn render_snapshot(length: usize, tolerance: f32) -> usize {
         }
         let mut points = Points::default();
         for p in input[SNAPSHOT_HEADER..length].as_chunks::<3>().0 {
-            points.push(Point {
-                x: p[0],
-                y: p[1],
-                pressure: p[2],
-            });
+            // This worker snapshot is derived geometry, not owning raw data.
+            points.push(Point::from_precise(f64::from(p[0]), f64::from(p[1]), p[2]).unwrap());
         }
         let stroke = Stroke {
             points: Rc::new(points),
@@ -575,7 +605,7 @@ pub extern "C" fn raw_chunk_bounds_ptr(id: usize, chunk: usize) -> *const f32 {
         scratch.as_ptr()
     })
 }
-// Canonical coordinates and accepted pressure, unaffected by rendering detail.
+// Legacy f32 inspection/projection. Use raw_region/raw_local for canonical coordinates.
 #[cfg_attr(target_arch = "wasm32", no_mangle)]
 pub extern "C" fn raw_point(id: usize, index: usize, field: u32) -> f32 {
     ENGINE.with(|engine| {
@@ -587,8 +617,74 @@ pub extern "C" fn raw_point(id: usize, index: usize, field: u32) -> f32 {
             return f32::NAN;
         }
         let point = stroke.points[index];
-        [point.x, point.y, point.pressure][field as usize]
+        point.legacy()[field as usize]
     })
+}
+/// Canonical coordinate inspection: axis 0 = x, 1 = y. Validate raw_length first.
+#[cfg_attr(target_arch = "wasm32", no_mangle)]
+pub extern "C" fn raw_region(id: usize, index: usize, axis: u32) -> i64 {
+    ENGINE.with(|engine| {
+        let engine = engine.borrow();
+        let Some(stroke) = engine.strokes.get(id) else {
+            return 0;
+        };
+        if index >= stroke.points.len() || axis > 1 {
+            return 0;
+        }
+        let point = stroke.points[index];
+        if axis == 0 {
+            point.x.region
+        } else {
+            point.y.region
+        }
+    })
+}
+#[cfg_attr(target_arch = "wasm32", no_mangle)]
+pub extern "C" fn raw_local(id: usize, index: usize, axis: u32) -> f64 {
+    ENGINE.with(|engine| {
+        let engine = engine.borrow();
+        let Some(stroke) = engine.strokes.get(id) else {
+            return f64::NAN;
+        };
+        if index >= stroke.points.len() || axis > 1 {
+            return f64::NAN;
+        }
+        let point = stroke.points[index];
+        if axis == 0 {
+            point.x.local
+        } else {
+            point.y.local
+        }
+    })
+}
+/// Transitional f64 input mapping. Regional camera adoption will replace flat input.
+#[cfg_attr(target_arch = "wasm32", no_mangle)]
+pub extern "C" fn push_precise(x: f64, y: f64, pressure: f32) -> u32 {
+    ENGINE.with(|engine| engine.borrow_mut().push_precise(x, y, pressure) as u32)
+}
+/// Explicit canonical input. Carry/borrow is normalized in the owning engine.
+#[cfg_attr(target_arch = "wasm32", no_mangle)]
+pub extern "C" fn push_regional(rx: i64, x: f64, ry: i64, y: f64, pressure: f32) -> u32 {
+    let (Some(x), Some(y)) = (
+        regional::Address::normalized(rx, x),
+        regional::Address::normalized(ry, y),
+    ) else {
+        return 0;
+    };
+    if !pressure.is_finite() {
+        return 0;
+    }
+    ENGINE.with(|engine| {
+        engine.borrow_mut().push_point(Point {
+            x,
+            y,
+            pressure: pressure.clamp(0.0, 1.0),
+        }) as u32
+    })
+}
+#[cfg_attr(target_arch = "wasm32", no_mangle)]
+pub extern "C" fn canonical_sample_bytes() -> usize {
+    std::mem::size_of::<Point>()
 }
 #[cfg(test)]
 mod tests {

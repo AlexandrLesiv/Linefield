@@ -23,6 +23,15 @@ export function createRegionalAddressAdapter(core: Core) {
     });
   }
   return {
+    append(x: RegionalAddress, y: RegionalAddress, pressure: number): boolean {
+      if (
+        !validTransport(x.region, x.local) ||
+        !validTransport(y.region, y.local) ||
+        !Number.isFinite(pressure)
+      )
+        return false;
+      return !!core.push_regional(x.region, x.local, y.region, y.local, pressure);
+    },
     normalize(region: bigint, local: number): RegionalAddress | null {
       if (!validTransport(region, local)) return null;
       return copyResult(core.regional_normalize(region, local));
