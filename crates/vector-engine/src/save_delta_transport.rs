@@ -16,6 +16,10 @@ pub extern "C" fn delta_status() -> u32 {
 }
 #[cfg_attr(target_arch = "wasm32", no_mangle)]
 pub extern "C" fn delta_prepare() -> u32 {
+    #[cfg(feature = "save-idle")]
+    if super::save_idle::owned() {
+        return 0;
+    }
     JOURNAL.with(|j| {
         let mut j = j.borrow_mut();
         if j.overflow || j.batch.is_some() || j.operations == 0 {

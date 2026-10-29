@@ -5,6 +5,7 @@ let database,
   pool,
   release,
   receiptReady,
+  idleReady,
   dispatching = false;
 const sql = (text) => database.exec({ sql: text, rowMode: "array", returnValue: "resultRows" });
 async function dispatch(message) {
@@ -55,12 +56,18 @@ async function dispatch(message) {
         })
         .catch(reject);
     });
-  if (message.kind.startsWith("receipt-")) {
+  if (message.kind.startsWith("idle-") || message.kind.startsWith("receipt-")) {
     if (!receiptReady) {
       importScripts("/receipts.js");
       receiptReady = true;
     }
-    return receiptCommand(database, message);
+    if (message.kind.startsWith("idle-") && !idleReady) {
+      importScripts("/idle-storage.js");
+      idleReady = true;
+    }
+    return message.kind.startsWith("idle-")
+      ? idleStorage(database, message)
+      : receiptCommand(database, message);
   }
   if (message.kind === "sql") return sql(message.sql);
   if (message.kind === "commit-lost-reply") {

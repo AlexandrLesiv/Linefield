@@ -88,5 +88,8 @@ adds incremental completed-edit journaling, revision-bound batches, body-bound s
 and staged reload. These default-off experiments do not adopt a production schema or ABI.
 Current checkpoint Rust checks token/base/result; the trusted fixture adapter checks the full
 receipt identity/body. Moving the complete contract into shared Rust remains a production gate.
-Large initial batches and retirement still stall despite cheap steady-state deltas. Existing
-previews and production saving remain unchanged until returned results are reviewed.
+SAVE-03 large initial batches and retirement stalled despite cheap steady-state deltas.
+[SAVE-04](../../tasks/SAVE-04.md) splits preparation and retirement into bounded units and tests
+revision-specific idle/exit flushing. Its measured largest task was2.61 ms, not a hard1 ms
+guarantee; full application/device acceptance remains pending. Existing previews and production
+saving remain unchanged until returned results are reviewed.

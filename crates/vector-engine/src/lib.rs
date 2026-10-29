@@ -15,6 +15,12 @@ mod save_delta_transport;
 mod save_replay;
 #[cfg(feature = "save-incremental")]
 mod save_replay_model;
+#[cfg(feature = "save-idle")]
+mod save_idle;
+#[cfg(feature = "save-idle")]
+mod save_idle_stream;
+#[cfg(feature = "save-idle")]
+mod save_idle_retire;
 #[cfg(feature = "save-incremental")]
 mod save_decode;
 mod geometry_wide;
