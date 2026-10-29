@@ -29,7 +29,15 @@ try {
         wide: 0,
       };
       window.Worker = class extends Original {
+        constructor(url, options) {
+          super(url, options);
+          this.geometry = String(url).includes("geometry-worker");
+        }
         set onmessage(callback) {
+          if (!this.geometry || !callback) {
+            super.onmessage = callback;
+            return;
+          }
           super.onmessage = (event) => {
             const state = window.heldGeometry;
             if (event.data?.output instanceof Float64Array) state.wide++;
@@ -41,7 +49,7 @@ try {
           };
         }
         terminate() {
-          window.heldGeometry.retired = true;
+          if (this.geometry) window.heldGeometry.retired = true;
           super.terminate();
         }
       };

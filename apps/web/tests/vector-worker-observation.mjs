@@ -47,6 +47,7 @@ export async function observeGeometryWorker(
       window.Worker = class extends Original {
         constructor(...args) {
           super(...args);
+          this.geometry = String(args[0]).includes("geometry-worker");
           this.addEventListener("message", (event) => {
             if (event.data?.ready && fail)
               this.postMessage({ id: 999999, input: null, tolerance: 1 });
@@ -78,7 +79,7 @@ export async function observeGeometryWorker(
           if (geometry && input.buffer.byteLength === 0) stats.detached++;
         }
         terminate() {
-          window.geometryWorkerRetired = stats.retired = true;
+          if (this.geometry) window.geometryWorkerRetired = stats.retired = true;
           super.terminate();
         }
       };

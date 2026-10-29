@@ -1,3 +1,5 @@
+import { prepareGeometry, preparationBuffers } from "./geometry-preparation";
+import type { StrokeTransform } from "./stroke-transform";
 import { loadCore } from "./load-core";
 
 const scope = globalThis as unknown as {
@@ -8,6 +10,7 @@ const scope = globalThis as unknown as {
           id: number;
           input: Float32Array | Float64Array;
           tolerance: number;
+          transform: StrokeTransform;
         }>,
       ) => void)
     | null;
@@ -15,9 +18,12 @@ const scope = globalThis as unknown as {
 async function initialize() {
   const core = await loadCore();
   scope.onmessage = ({ data }) => {
-    const { id, input, tolerance } = data ?? {};
+    const { id, input, tolerance, transform } = data ?? {};
     try {
       if (
+        !Array.isArray(transform) ||
+        transform.length !== 4 ||
+        !transform.every(Number.isFinite) ||
         !Number.isSafeInteger(id) ||
         id <= 0 ||
         !(input instanceof Float32Array || input instanceof Float64Array) ||
@@ -41,7 +47,8 @@ async function initialize() {
       const output = wide
         ? new Float64Array(core.memory.buffer, core.render_chunk_f64_ptr(), count * 6).slice()
         : new Float32Array(core.memory.buffer, core.render_chunk_ptr(), count * 6).slice();
-      scope.postMessage({ id, output }, [output.buffer]);
+      const prepared = prepareGeometry(output, transform);
+      scope.postMessage({ id, output, prepared }, preparationBuffers(output, prepared));
     } catch (error) {
       scope.postMessage({ id, error: String(error) });
     }

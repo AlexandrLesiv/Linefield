@@ -10,7 +10,7 @@ try {
     window.Worker = class extends Original {
       constructor(...args) {
         super(...args);
-        const record = { worker: this, ready: false, terminated: false };
+        const record = { worker: this, url: String(args[0]), ready: false, terminated: false };
         window.workerObservations.push(record);
         this.addEventListener("message", (e) => {
           if (e.data?.ready) record.ready = true;
@@ -28,11 +28,20 @@ try {
   const host = page.frameLocator("iframe");
   await host.locator("#brush").waitFor();
   const frame = page.frames().find((candidate) => candidate.url().includes("/vector-editor/"));
-  await frame.waitForFunction(() => window.workerObservations.some((record) => record.ready));
-  await frame.evaluate(() =>
-    window.workerObservations[0].worker.postMessage({ id: 123456, input: null, tolerance: 1 }),
+  await frame.waitForFunction(() =>
+    window.workerObservations.some(
+      (record) => record.url.includes("geometry-worker") && record.ready && !record.terminated,
+    ),
   );
-  await frame.waitForFunction(() => window.workerObservations[0].terminated);
+  await frame.evaluate(() => {
+    const record = window.workerObservations.find(
+      (item) => item.url.includes("geometry-worker") && item.ready && !item.terminated,
+    );
+    if (!record) throw Error("No live geometry worker for injection");
+    window.faultedGeometry = record;
+    record.worker.postMessage({ id: 123456, input: null, tolerance: 1 });
+  });
+  await frame.waitForFunction(() => window.faultedGeometry.terminated);
   const box = await host.locator("canvas").boundingBox();
   await page.mouse.move(box.x + 200, box.y + 300);
   await page.mouse.down();
