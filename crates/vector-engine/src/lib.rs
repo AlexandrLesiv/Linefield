@@ -8,6 +8,7 @@ pub extern "C" fn boundary_fingerprint_word(index: usize) -> u32 {
     boundary_generated::ABI_FINGERPRINT.get(index).copied().unwrap_or(0)
 }
 pub mod camera;
+pub mod regional;
 pub mod layers;
 pub mod selection;
 pub mod slice;

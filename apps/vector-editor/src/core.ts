@@ -56,6 +56,10 @@ export type Core = {
   raw_length(id: number): number;
   raw_point(id: number, index: number, field: number): number;
   redo(): void;
+  regional_normalize(region: bigint, local: number): number;
+  regional_offset(region: bigint, local: number, delta: number): number;
+  regional_result_local(): number;
+  regional_result_region(): bigint;
   render_chunk(id: number, chunk: number, tolerance: number): number;
   render_chunk_ptr(): number;
   render_snapshot(length: number, tolerance: number): number;
@@ -134,6 +138,10 @@ export const coreExportArity = {
   "raw_length": 1,
   "raw_point": 3,
   "redo": 0,
+  "regional_normalize": 2,
+  "regional_offset": 3,
+  "regional_result_local": 0,
+  "regional_result_region": 0,
   "render_chunk": 3,
   "render_chunk_ptr": 0,
   "render_snapshot": 2,
@@ -154,4 +162,4 @@ export const coreExportArity = {
   "visible": 1
 } as const;
 
-export const coreAbiFingerprint = [1669665423,211497131,3354424982,106357598,2240725964,3595572660,1452783999,204453359] as const;
+export const coreAbiFingerprint = [1621469704,2731221609,1278485615,3631813388,2802020106,3931751842,3683445956,1922634979] as const;
