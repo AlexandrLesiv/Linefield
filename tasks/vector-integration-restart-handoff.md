@@ -7,7 +7,7 @@ This remains a draft integration, not completed M1–M9 adoption. The owner auth
 - Worktree: `/Users/oleksandr/.codex/worktrees/vector-integration-restart/linefield`
 - Branch: `codex/vector-integration-restart`; draft PR https://github.com/AlexandrLesiv/Linefield/pull/21.
 - Last verified integrated main: `b101a7e`. Check remote state before integration changes. The restart reverted discarded PR16; PR17–20 are closed.
-- Latest adopted application preview: http://127.0.0.1:65330/ (New drawing), frozen under `.build-cache/restart/status-announcements-preview`. Check Git HEAD for latest source/evidence commit.
+- Latest adopted application preview: http://127.0.0.1:65331/ (New drawing), frozen under `.build-cache/restart/nearest-rebase-preview`. Check Git HEAD for latest source/evidence commit.
 - Preserve reference65280, initial65281, owner sessions including65294, and every other existing preview. Candidate65308–65310 and65322 were rejected; do not adopt their production changes.
 - Authoritative donor: `/Users/oleksandr/Documents/Codex/2026-10-20/files-pasted-by-the-user-build/outputs/linefield-handoff/source-app/`. Verified77-file manifest SHA256 `474873d88d00f498105fc2fbb8eed754cc01ba93f6a3f9bcde7dfd78a853ca1d`. Never substitute current vector-canvas-lab HEAD or modify it.
 - Detailed decisions/evidence: `tasks/vector-integration-restart.md`; current boundary semantics: `crates/vector-engine/README.md`.
@@ -43,6 +43,13 @@ The editor surface is retained in a same-origin iframe within the existing galle
 - Host keyboard focus65329: Space on focused buttons preserves native activation; Space on canvas still pans. EN/UK button/history checks and previous/current shortcut/text/IME/cancellation suite pass. Baseline65328 failed focused Undo activation. Rendering evidence remains65328 for this two-line input-routing-only change; full accessibility review is still open.
 
 - Host status65330: visible counters are no longer a live announcement region; deduplicated errors/warnings use a separate polite region. EN/UK DOM checks preserve drawing/history, and startup missing-export/fingerprint Retry cases pass. No manual screen-reader acceptance claim. Rendering evidence remains65328; production change is host announcement presentation only.
+
+
+## Rotated/zoomed regional pan round-trip correction
+
+Preview65330 reproduced a genuine origin-selection mismatch: at rotation0.31 and zoom0.125, returning from a regional pan selected origin−1/−1 instead of0/0. Floor-only rebasing inflated local GPU coordinates, changing523 pixels by one channel level. Rust camera_rebase now selects the nearest valid region, with higher-region half ties and checked signed-i64 bounds. The four-region trigger, atomic publication, host frame lifecycle, caches and canonical samples are unchanged.
+
+Frozen preview65331 (.build-cache/restart/nearest-rebase-preview) passes all six actual-event cases: Ink/Hard/Soft at zoom0.125 and8, exact full images before the pan, during the held return and after release, with unchanged raw samples. Browser application-Wasm boundary checks cover ties, both signed-i64 edges and four atomic invalid-input rejections. All120 approved feature checks, exact approved-reference pixels/raw, regional offscreen held-pan/material phases and reversed pending-worker Undo/rebase/Redo checks pass on65331. Production/web builds, root static checks and native test compilation pass. Evidence: nearest-rebase-{e2e,boundary,acceptance,parity,regional-view,worker,static,native}. Source review checked finite validation, checked rounding, i128 region subtraction and publication ordering. This is author source/contract review; final independent/design acceptance remains open. No performance speedup or arbitrary-span precision claim. Owner preview65330 and all earlier previews remain unchanged.
 
 ## Concrete remaining gates, in order
 

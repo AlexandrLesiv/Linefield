@@ -99,11 +99,15 @@ pub extern "C" fn camera_rebase(rx: i64, ry: i64, cx: f64, cy: f64, zoom: f64, a
     let [x, y] = mapped(0.0, 0.0, cx, cy, zoom, angle);
     if x.abs().max(y.abs()) < 262144.0 { return 0; }
     let (Some(x), Some(y)) = (super::regional::Address::normalized(rx, x), super::regional::Address::normalized(ry, y)) else { return 0; };
-    let dx = (i128::from(x.region) - i128::from(rx)) as f64 * 65536.0;
-    let dy = (i128::from(y.region) - i128::from(ry)) as f64 * 65536.0;
+    // Nearest valid region keeps local GPU coordinates small on round trips.
+    // Floor-only rebasing sends a slightly negative view back to region -1.
+    let nearest = |a: super::regional::Address| if a.local >= 32768.0 { a.region.checked_add(1).unwrap_or(a.region) } else { a.region };
+    let nx = nearest(x); let ny = nearest(y);
+    let dx = (i128::from(nx) - i128::from(rx)) as f64 * 65536.0;
+    let dy = (i128::from(ny) - i128::from(ry)) as f64 * 65536.0;
     let c = angle.cos(); let s = angle.sin();
     if publish([cx + zoom * (c * dx - s * dy), cy + zoom * (s * dx + c * dy), zoom]) == 0 { return 0; }
-    ORIGIN.with(|origin| *origin.borrow_mut() = [x.region, y.region]);
+    ORIGIN.with(|origin| *origin.borrow_mut() = [nx, ny]);
     1
 }
 #[cfg_attr(target_arch = "wasm32", no_mangle)]
