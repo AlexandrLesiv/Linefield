@@ -15,7 +15,9 @@ export type Core = {
   delete_add(id: number): void;
   delete_begin(): void;
   delete_commit(): number;
+  geometry_input_capacity(): number;
   geometry_input_ptr(): number;
+  geometry_output_capacity(): number;
   geometry_snapshot(id: number, chunk: number): number;
   layer_active(): number;
   layer_at(rank: number): number;
@@ -85,7 +87,9 @@ export const coreExportArity = {
   "delete_add": 1,
   "delete_begin": 0,
   "delete_commit": 0,
+  "geometry_input_capacity": 0,
   "geometry_input_ptr": 0,
+  "geometry_output_capacity": 0,
   "geometry_snapshot": 2,
   "layer_active": 0,
   "layer_at": 1,

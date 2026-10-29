@@ -402,6 +402,16 @@ pub extern "C" fn raw_chunk_bounds(id: usize, chunk: usize, field: u32) -> f32 {
 const SNAPSHOT_HEADER: usize = 6;
 const SNAPSHOT_CAPACITY: usize = SNAPSHOT_HEADER + geometry::CHUNK_POINTS * 12;
 thread_local! {static GEOMETRY_INPUT:RefCell<[f32;SNAPSHOT_CAPACITY]>=const { RefCell::new([0.0;SNAPSHOT_CAPACITY]) };}
+/// Float counts for the copied derived-geometry transport. These are not
+/// document limits. Hosts must copy results before the next geometry call.
+#[cfg_attr(target_arch = "wasm32", no_mangle)]
+pub extern "C" fn geometry_input_capacity() -> usize {
+    SNAPSHOT_CAPACITY
+}
+#[cfg_attr(target_arch = "wasm32", no_mangle)]
+pub extern "C" fn geometry_output_capacity() -> usize {
+    geometry::MAX_CHUNK_SEGMENTS * 6
+}
 #[cfg_attr(target_arch = "wasm32", no_mangle)]
 pub extern "C" fn geometry_input_ptr() -> *mut f32 {
     GEOMETRY_INPUT.with(|input| input.borrow_mut().as_mut_ptr())
