@@ -17,6 +17,7 @@ pub mod camera;
 pub mod layers;
 pub mod regional;
 pub mod selection;
+pub mod selection_query;
 pub mod picking;
 pub mod lasso;
 mod lasso_math;

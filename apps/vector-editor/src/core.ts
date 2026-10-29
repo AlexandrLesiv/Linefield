@@ -86,6 +86,8 @@ export type Core = {
   render_chunk_ptr(): number;
   render_snapshot(length: number, tolerance: number): number;
   render_snapshot_f64(length: number, tolerance: number): number;
+  selection_eligible(id: number, active_layer_only: number): number;
+  selection_precedes(a: number, b: number): number;
   set_active_brush(kind: number): void;
   slice_begin(width: number, active_only: number): number;
   slice_begin_regional(width: number, active_only: number, rx: bigint, ry: bigint): number;
@@ -196,6 +198,8 @@ export const coreExportArity = {
   "render_chunk_ptr": 0,
   "render_snapshot": 2,
   "render_snapshot_f64": 2,
+  "selection_eligible": 2,
+  "selection_precedes": 2,
   "set_active_brush": 1,
   "slice_begin": 2,
   "slice_begin_regional": 4,
@@ -218,4 +222,4 @@ export const coreExportArity = {
   "visible": 1
 } as const;
 
-export const coreAbiFingerprint = [1987769705,3831785183,2863214032,1928711756,3976175976,2668562143,1493033479,2460351306] as const;
+export const coreAbiFingerprint = [1328134680,2098787124,2176745162,1120942540,2585111314,689259665,776899536,3483104817] as const;

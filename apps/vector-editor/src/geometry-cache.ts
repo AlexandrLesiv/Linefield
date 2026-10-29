@@ -401,25 +401,12 @@ export class GeometryCache {
 		pad: number,
 		activeLayerOnly = false,
 	): number | null {
-		const candidates: { id: number; rank: number; stroke: Stroke }[] = [];
+		const candidates: { id: number; stroke: Stroke }[] = [];
 		for (const [id, stroke] of this.strokes) {
-			if (
-				!this.core.visible(id) ||
-				this.core.layer_locked(this.core.stroke_layer(id)) ||
-				Math.round(this.core.opacity(id) * 255) === 0 ||
-				(activeLayerOnly &&
-					this.core.stroke_layer(id) !== this.core.layer_active())
-			)
-				continue;
-			candidates.push({ id, rank: this.core.stroke_layer_rank(id), stroke });
+			if (this.core.selection_eligible(id, Number(activeLayerOnly)))
+				candidates.push({ id, stroke });
 		}
-		candidates.sort(
-			(a, b) =>
-				b.rank - a.rank ||
-				(this.core.stroke_order?.(b.id) ?? b.id) -
-					(this.core.stroke_order?.(a.id) ?? a.id) ||
-				b.id - a.id,
-		);
+		candidates.sort((a, b) => a.id === b.id ? 0 : this.core.selection_precedes(a.id, b.id) ? -1 : 1);
 		for (const { id, stroke } of candidates) {
 			const transform = readTransform(this.core, id, ...this.origin()),
 				scale = transformScale(transform);
@@ -458,14 +445,7 @@ export class GeometryCache {
 			found: number[] = [];
 		try {
 			for (const [id, stroke] of this.strokes) {
-				const layer = this.core.stroke_layer(id);
-				if (
-					!this.core.visible(id) ||
-					this.core.layer_locked(layer) ||
-					Math.round(this.core.opacity(id) * 255) === 0 ||
-					(activeLayerOnly && layer !== this.core.layer_active())
-				)
-					continue;
+				if (!this.core.selection_eligible(id, Number(activeLayerOnly))) continue;
 				const transform = readTransform(this.core, id, ...this.origin());
 				let hit = false,
 					enclosed = true;

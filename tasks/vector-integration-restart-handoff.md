@@ -86,3 +86,7 @@ Preview 65314 moves the Pick capsule-distance predicate into bounded Rust batche
 ## Latest shared Lasso checkpoint
 
 Preview 65315 also moves Lasso closure/containment/capsule predicates into Rust; the duplicate TS distance implementation is removed. All 216 actual-input query comparisons, 120 approved checks and exact reference artwork/raw parity pass. ABI now has 106 functions. The long-gesture comparison shows a small completion cost (p95 1.5–1.7 ms versus 0.9–1.2 ms), recorded rather than claimed as a speedup. Host candidate enumeration, geometry-cache selection and edit orchestration still need factoring; remaining regional/resource/review gaps are unchanged. All earlier previews remain frozen.
+
+## Latest selection-policy checkpoint
+
+Preview 65316 delegates selection eligibility and Pick precedence to Rust; the 108-function ABI replaces host copies of those rules. All 48 layer-policy scenarios and 120 approved behavior checks pass. Host cache enumeration and selection gesture orchestration remain distinct from canonical query policy; final host factoring, broader regional/resource evidence and reviews are still pending. No worker experiment or merge.

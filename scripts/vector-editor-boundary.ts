@@ -9,6 +9,7 @@ const sources = [
   "lib",
   "layers",
   "selection",
+  "selection_query",
   "picking",
   "lasso",
   "slice",
