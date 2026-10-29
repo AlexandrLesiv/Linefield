@@ -8,6 +8,8 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 # Task board
 
+Current owner-authorized saving checkpoint: [SAVE-01](SAVE-01.md), shared web/native saving contract and isolated transport comparison. Production saving is gated on returned performance/recovery results; existing integration previews remain unchanged.
+
 See the [approved product backlog](BACKLOG.md) for the owner-confirmed order of upcoming functionality.
 Those priorities do not mark the milestones below complete or waive implementation gates.
 [P05-L01](P05-L01.md) prepares the first saved-drawing slice; production work remains gated,
