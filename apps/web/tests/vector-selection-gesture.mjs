@@ -6,6 +6,8 @@ const output = process.env.LINEFIELD_EVIDENCE_DIR || ".build-cache/restart/selec
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 const results = [];
+const sourceExtent = Number(process.env.LINEFIELD_SOURCE_EXTENT || 0);
+if (![0, 1048576, 4294967296].includes(sourceExtent)) throw Error("Unsupported source extent");
 const origin = Number(process.env.LINEFIELD_PARITY_ORIGIN || 0);
 if (!Number.isFinite(origin) || !Number.isInteger(origin) || BigInt(origin) % 196608n !== 0n)
   throw Error("Origin must preserve regional paper/grid periods");
@@ -30,7 +32,7 @@ try {
       await frame.waitForFunction(() => !!window.lab);
       if (variant === "shared" && origin) await panToRegionalOrigin(frame, origin);
       await host.locator("#pen").click();
-      await frame.evaluate(() => {
+      await frame.evaluate((extent) => {
         const canvas = document.querySelector("canvas"),
           rect = canvas.getBoundingClientRect();
         canvas.setPointerCapture = () => {};
@@ -53,17 +55,17 @@ try {
         for (let i = 0; i <= 40; i++)
           window.dragEvent(
             i ? "pointermove" : "pointerdown",
-            300 + i * 5,
+            i === 0 && extent ? 300 - extent : 300 + i * 5,
             300 + Math.sin(i / 10) * 30,
           );
         window.dragEvent("pointerup", 500, 300 + Math.sin(4) * 30);
-      });
+      }, sourceExtent);
       const original = await captureDrawing(frame);
       await frame.evaluate(() => {
         document.querySelector("#select").click();
         document.querySelector("#selection-pick-mode").click();
-        window.dragEvent("pointerdown", 300, 300);
-        window.dragEvent("pointerup", 300, 300);
+        window.dragEvent("pointerdown", 400, 300 + Math.sin(2) * 30);
+        window.dragEvent("pointerup", 400, 300 + Math.sin(2) * 30);
       });
       await captureDrawing(frame);
       const raw = await frame.evaluate(() =>
@@ -75,13 +77,20 @@ try {
           lab.core.raw_point(0, i, 2),
         ]),
       );
-      for (const [kind, amount, snap] of [
-        ["rotate", 0.31, false],
-        ["rotate", -0.41, true],
-        ["rotate", 0.41, true],
-        ["resize", 1.5, false],
-        ["resize", 0.5, false],
-      ]) {
+      for (const [kind, amount, snap] of sourceExtent
+        ? [
+            ["rotate", 0.31, false],
+            ["rotate", -0.31, false],
+            ["resize", 1 + 40 / sourceExtent, false],
+            ["resize", 1 - 40 / sourceExtent, false],
+          ]
+        : [
+            ["rotate", 0.31, false],
+            ["rotate", -0.41, true],
+            ["rotate", 0.41, true],
+            ["resize", 1.5, false],
+            ["resize", 0.5, false],
+          ]) {
         const transform = await frame.evaluate(
           ({ kind: mode, amount: value, snap: snapping }) => {
             if (lab.selection().length !== 1) throw Error("Selection missing");
@@ -104,8 +113,8 @@ try {
                 cy + dx * Math.sin(value) + dy * Math.cos(value),
               ];
             } else {
-              start = a;
-              end = [b[0] + (a[0] - b[0]) * value, b[1] + (a[1] - b[1]) * value];
+              start = b;
+              end = [a[0] + (b[0] - a[0]) * value, a[1] + (b[1] - a[1]) * value];
             }
             window.dragEvent("pointerdown", ...start, snapping);
             window.dragEvent("pointermove", ...end, snapping);
@@ -123,7 +132,16 @@ try {
         );
         const pixels = await captureDrawing(frame);
         if (JSON.stringify(pixels) === JSON.stringify(original))
-          throw Error("Transform had no visible effect");
+          throw Error(
+            JSON.stringify({
+              failure: "Transform had no visible effect",
+              variant,
+              brush,
+              kind,
+              amount,
+              transform,
+            }),
+          );
         const unchanged = await frame.evaluate(
           (expectedRaw) =>
             JSON.stringify(expectedRaw) ===
@@ -148,6 +166,7 @@ try {
         await host.locator("#undo").click();
         await captureDrawing(frame);
         results.push({
+          sourceExtent,
           origin: variant === "shared" ? origin : 0,
           variant,
           brush,
