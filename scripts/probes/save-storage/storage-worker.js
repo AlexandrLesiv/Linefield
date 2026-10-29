@@ -1,7 +1,11 @@
 globalThis.sqlite3ApiConfig = { disable: { vfs: { opfs: true, "opfs-wl": true } } };
 importScripts("/vendor/sqlite3.js", "/admission.js");
 const ready = sqlite3InitModule({ print: () => {}, printErr: () => {} });
-let database, pool, release;
+let database,
+  pool,
+  release,
+  receiptReady,
+  dispatching = false;
 const sql = (text) => database.exec({ sql: text, rowMode: "array", returnValue: "resultRows" });
 async function dispatch(message) {
   const name = message.pool || "canary";
@@ -51,6 +55,13 @@ async function dispatch(message) {
         })
         .catch(reject);
     });
+  if (message.kind.startsWith("receipt-")) {
+    if (!receiptReady) {
+      importScripts("/receipts.js");
+      receiptReady = true;
+    }
+    return receiptCommand(database, message);
+  }
   if (message.kind === "sql") return sql(message.sql);
   if (message.kind === "commit-lost-reply") {
     sql("COMMIT");
@@ -127,9 +138,16 @@ async function dispatch(message) {
   throw Error("unknown fixture command");
 }
 onmessage = async ({ data }) => {
+  if (dispatching) {
+    postMessage({ id: data.id, error: "busy" });
+    return;
+  }
+  dispatching = true;
   try {
     postMessage({ id: data.id, value: await dispatch(data) });
   } catch (error) {
     postMessage({ id: data.id, error: String(error) });
+  } finally {
+    dispatching = false;
   }
 };

@@ -79,3 +79,14 @@ Browser5second watchdog retires failed checkpoint consumers; it never marks data
 - Whole-app input/render latency, save completion and actual process memory during large saves. Synthetic rAF and worker checksums do not certify physical input, GPU, disk or power-loss durability.
 
 Existing previews and PR21 remain unaffected. Return checkpoint results and obtain production direction before adding saving to the editor.
+
+## Subsequent isolated checkpoint direction
+
+The owner selected transferred buffers as the initial baseline after SAVE-01. SAVE-02 tested
+retained Rust source capture and guarded disposable storage; [SAVE-03](../../tasks/SAVE-03.md)
+adds incremental completed-edit journaling, revision-bound batches, body-bound storage receipts
+and staged reload. These default-off experiments do not adopt a production schema or ABI.
+Current checkpoint Rust checks token/base/result; the trusted fixture adapter checks the full
+receipt identity/body. Moving the complete contract into shared Rust remains a production gate.
+Large initial batches and retirement still stall despite cheap steady-state deltas. Existing
+previews and production saving remain unchanged until returned results are reviewed.

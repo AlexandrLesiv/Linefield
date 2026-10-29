@@ -47,6 +47,8 @@ impl Engine {
         })
     }
     pub(super) fn record(&mut self, command: Command) {
+        #[cfg(feature = "save-incremental")]
+        super::save_delta::completed(self, &command);
         for abandoned in self.redo.drain(..) {
             // Only abandoned stroke creation loses its redo-owned samples.
             // Undoing a layer deletion/hide never makes its ink disposable.
@@ -183,6 +185,10 @@ impl Engine {
         after.rank = None;
         self.change_layer(id, after, active_after)
     }
+}
+#[cfg(feature = "save-incremental")]
+impl LayerChange {
+    pub(super) fn save_id(&self) -> usize { self.id }
 }
 
 #[cfg_attr(target_arch = "wasm32", no_mangle)]

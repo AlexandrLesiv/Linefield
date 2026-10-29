@@ -41,7 +41,7 @@ export function client() {
   };
   worker.onmessageerror = terminate;
   return {
-    call(kind, options = {}) {
+    call(kind, options = {}, transfer = []) {
       return new Promise((resolve, reject) => {
         const id = ++next,
           timer = setTimeout(() => {
@@ -52,7 +52,7 @@ export function client() {
           }, 15000);
         pending.set(id, { resolve, reject, timer });
         try {
-          worker.postMessage({ id, kind, ...options });
+          worker.postMessage({ id, kind, ...options }, transfer);
         } catch (error) {
           clearTimeout(timer);
           pending.delete(id);

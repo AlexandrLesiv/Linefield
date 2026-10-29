@@ -17,7 +17,15 @@ const wasm = await readFile(
   ),
 );
 const root = new URL("./", import.meta.url);
-const allowed = ["probe.js", "checks.js", "fixture.js", "worker.js", "limits.js"];
+const allowed = [
+  "probe.js",
+  "checks.js",
+  "fixture.js",
+  "worker.js",
+  "limits.js",
+  "incremental.js",
+  "incremental-checks.js",
+];
 const server = createServer(async (request, response) => {
   const file = request.url?.slice(1);
   response.setHeader("Cache-Control", "no-store");
@@ -45,11 +53,19 @@ try {
   page.on("pageerror", (error: Error) => errors.push(error.message));
   await page.goto(`http://127.0.0.1:${address.port}/`);
   await page.waitForFunction("!!window.checkpoint");
-  const checks = await page.evaluate("checkpoint.checks()");
+  const incremental = process.env.LINEFIELD_INCREMENTAL === "1";
+  const checks = await page.evaluate(
+    incremental ? "checkpoint.incrementalChecks()" : "checkpoint.checks()",
+  );
   const limits =
     process.env.LINEFIELD_LIMITS === "1" ? await page.evaluate("checkpoint.limits()") : null;
   const runs = [];
-  if (process.env.LINEFIELD_CHECKS_ONLY !== "1") {
+  const incrementalRuns = [];
+  if (incremental && process.env.LINEFIELD_CHECKS_ONLY !== "1") {
+    for (const count of [1000, 10000, 100000])
+      incrementalRuns.push(await page.evaluate(`checkpoint.incrementalMeasure(${count})`));
+  }
+  if (!incremental && process.env.LINEFIELD_CHECKS_ONLY !== "1") {
     await page.evaluate("checkpoint.measure(1000)");
     for (const count of [1000, 100000, 1000000]) {
       for (let repeat = 0; repeat < 5; repeat++) {
@@ -67,6 +83,12 @@ try {
     "regional.rs",
     "save_metadata.rs",
     "save_checkpoint.rs",
+    "save_delta.rs",
+    "save_delta_wire.rs",
+    "save_delta_transport.rs",
+    "save_decode.rs",
+    "save_replay.rs",
+    "save_replay_model.rs",
   ];
   const sources = [
     ...allowed,
@@ -82,6 +104,7 @@ try {
   const report = {
     sourceHashes,
     checks,
+    incrementalRuns,
     limits,
     runs,
     wasmSha256: createHash("sha256").update(wasm).digest("hex"),
@@ -90,7 +113,7 @@ try {
   };
   await writeFile(`${output}/report.json`, JSON.stringify(report, null, 2));
   console.log(
-    `PASS ${checks.length} browser assertions; ${runs.length} measured captures. ${output}/report.json`,
+    `PASS ${incremental ? checks.checks.length : checks.length} browser assertions; ${runs.length + incrementalRuns.length} measured captures. ${output}/report.json`,
   );
 } finally {
   await browser.close();

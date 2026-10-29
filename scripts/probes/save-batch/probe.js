@@ -1,9 +1,12 @@
 import { checks } from "./checks.js";
 import { limits } from "./limits.js";
+import { incrementalChecks, incrementalMeasure } from "./incremental-checks.js";
 import { ink } from "./fixture.js";
 const module = await WebAssembly.compileStreaming(fetch("/engine.wasm"));
 const load = async () => (await WebAssembly.instantiate(module)).exports;
 window.checkpoint = {
+  incrementalChecks: () => incrementalChecks(load),
+  incrementalMeasure: (count) => incrementalMeasure(load, count),
   checks: () => checks(load),
   limits: () => limits(load),
   async measure(count) {
