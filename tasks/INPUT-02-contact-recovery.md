@@ -47,3 +47,27 @@ pending-contact protection; both addressed and covered by browser cases.
 Physical Wacom verification remains required. Automated pen events validate host ordering,
 not a claim to reproduce the operating system's missing pointer release. If no further
 state evidence arrives, there is intentionally no timer manufacturing a release.
+
+## Primary-pen identity continuity
+
+The owner supplied a second log showing pressed primary-pen moves under a replacement ID
+without a new down event, then approved continuous identity recovery on 2026-10-30.
+Only an active drawing owned by a primary pen may transition on a canvas-targeted pressed
+primary-pen move newer than the last owner event. A pending terminal release excludes
+transition. Retire old IDs for the stroke; never accept their late moves/releases as a
+handover back. Set the new owner generation before releasing old capture. Do not start or
+commit a Rust stroke at handover. Preserve the delivered coalesced sample batch.
+
+Matching document moves/releases continue if replacement capture reports NotFoundError;
+matching outside cancellation retains ordinary cancellation semantics. Foreign mouse/touch,
+secondary pen, hover and stale moves cannot take ownership. Queued release events preceding
+takeover cannot finish the replacement owner. The retired-ID set is bounded to 64 per stroke;
+exhaustion refuses further identity adoption and is exposed as identityRecovery.limitReached
+in exported diagnostics. It never evicts IDs or changes accepted document data.
+
+E2E apps/web/tests/vector-pen-identity.mjs covers two consecutive transitions with and without
+capture, exclusions, stale replacement release, late retired events, coalesced tip/barrel,
+outside move/up/cancel, exact samples, single Undo/Redo, and durable reload. Both scenarios
+pass without page errors. The16 existing recovery/save-failure cases and22 lifecycle cases
+pass on frozen65363. Independent source/interaction review has no remaining blocking findings.
+Physical Wacom testing remains outstanding; no rendering-quality or persistence-format change.
