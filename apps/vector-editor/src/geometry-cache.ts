@@ -365,7 +365,7 @@ export class GeometryCache {
 			this.epoch++;
 		}
 	}
-	selectionBounds(ids: ReadonlySet<number>, orientation = 0): Bounds | null {
+	selectionBounds(ids: Iterable<number>, orientation = 0): Bounds | null {
 		const bounds: Bounds = [Infinity, Infinity, -Infinity, -Infinity];
 		const cos = Math.cos(orientation),
 			sin = Math.sin(orientation);

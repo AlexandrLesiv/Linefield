@@ -134,3 +134,7 @@ Verified preview65324 moves rotation snapping and proportional-resize policy int
 ## Latest regional transform evidence and next ownership item
 
 Unchanged65324 passes15 actual-handle scenarios at each of x=+3×2^76 and−3×2^76 against the near-origin prior preview: exact artwork/history and canonical regional sample preservation. This is compact far-origin coverage only. Next bounded architecture item is engine-owned selected-stroke membership/order/pruning, with unchanged host overlays/gestures and dense-selection performance checks. See the task for explicit responsibilities and remaining acceptance gates.
+
+## Latest engine-owned selection checkpoint
+
+Preview65325 owns selected IDs/order/pruning in Rust (117-function ABI), with a checked revision-cached host presentation snapshot. All120 approved checks,48 layer-policy cases,15 handle comparisons, lifecycle and96-stroke/160-toggle/Back-Resume tests pass. Three alternating dense comparisons show no material regression (whole dense150/161ms median/p95 versus153/162ms); remaining completion stall is not solved. See current task/README for ownership, memory and evidence. Prior previews unchanged. Next: consolidate architecture/precision/resource acceptance and review; optional worker research remains deferred.

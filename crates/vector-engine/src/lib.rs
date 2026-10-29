@@ -18,6 +18,7 @@ pub mod layers;
 pub mod regional;
 pub mod selection;
 pub mod selection_query;
+pub mod session_selection;
 pub mod picking;
 pub mod lasso;
 mod lasso_math;
@@ -193,6 +194,7 @@ struct Engine {
     layer_revision: u32,
     layer_render_revision: u32,
     transform_revision: u32,
+    selected: session_selection::Selection,
     moving: Vec<selection::Translation>,
     deleting: Vec<usize>,
     slicing: Option<slice::Gesture>,
@@ -210,6 +212,7 @@ impl Default for Engine {
             layer_revision: 0,
             layer_render_revision: 0,
             transform_revision: 0,
+            selected: session_selection::Selection::default(),
             moving: Vec::new(),
             deleting: Vec::new(),
             slicing: None,

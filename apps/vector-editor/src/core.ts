@@ -90,6 +90,13 @@ export type Core = {
   selection_drag_scale(x: number, y: number, sx: number, sy: number): number;
   selection_eligible(id: number, active_layer_only: number): number;
   selection_precedes(a: number, b: number): number;
+  session_selection_clear(): void;
+  session_selection_has(id: number): number;
+  session_selection_prune(): void;
+  session_selection_revision(): number;
+  session_selection_set(id: number, selected: number): number;
+  session_selection_snapshot(): number;
+  session_selection_snapshot_ptr(): number;
   set_active_brush(kind: number): void;
   slice_begin(width: number, active_only: number): number;
   slice_begin_regional(width: number, active_only: number, rx: bigint, ry: bigint): number;
@@ -204,6 +211,13 @@ export const coreExportArity = {
   "selection_drag_scale": 4,
   "selection_eligible": 2,
   "selection_precedes": 2,
+  "session_selection_clear": 0,
+  "session_selection_has": 1,
+  "session_selection_prune": 0,
+  "session_selection_revision": 0,
+  "session_selection_set": 2,
+  "session_selection_snapshot": 0,
+  "session_selection_snapshot_ptr": 0,
   "set_active_brush": 1,
   "slice_begin": 2,
   "slice_begin_regional": 4,
@@ -226,4 +240,4 @@ export const coreExportArity = {
   "visible": 1
 } as const;
 
-export const coreAbiFingerprint = [368725570,515936820,569236010,740051334,3433959889,84697194,1791787881,3035962497] as const;
+export const coreAbiFingerprint = [585890792,2682795806,3144958076,4151866297,1713447454,2761114992,2041182698,3166117175] as const;

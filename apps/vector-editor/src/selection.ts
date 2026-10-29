@@ -1,3 +1,4 @@
+import { SessionSelection } from "./session-selection";
 import { t } from "../../web/src/locale";
 import type { Camera } from "./camera";
 import type { Core } from "./core";
@@ -10,7 +11,7 @@ export function createSelection(
 	camera: Camera,
 	canvas: HTMLCanvasElement,
 ) {
-	const ids = new Set<number>();
+	const ids = new SessionSelection(core);
 	const overlay = document.querySelector<SVGSVGElement>("#selection-overlay")!;
 	const outline = overlay.querySelector<SVGPathElement>("#selection-outline")!;
 	const lassoPath = overlay.querySelector<SVGPathElement>("#selection-lasso")!;
@@ -54,15 +55,7 @@ export function createSelection(
 		const r = canvas.getBoundingClientRect();
 		return [e.clientX - r.left, e.clientY - r.top];
 	};
-	function prune() {
-		for (const id of ids)
-			if (
-				!core.visible(id) ||
-				!core.length(id) ||
-				core.layer_locked(core.stroke_layer(id))
-			)
-				ids.delete(id);
-	}
+	function prune() { ids.prune(); }
 	function cancel() {
 		if (drag) orientation = drag.orientation;
 		core.move_cancel();
