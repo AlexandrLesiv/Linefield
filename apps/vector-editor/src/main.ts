@@ -623,8 +623,12 @@ function frame() {
 		}
 		record(metrics.frameMs, performance.now() - t);
 	}
-	selection.render(tool === "select");
-	slice.render(tool === "slice" && !space && !rotateHeld, gesture === "slice");
+	try {
+		selection.render(tool === "select");
+		slice.render(tool === "slice" && !space && !rotateHeld, gesture === "slice");
+	} catch (e) {
+		error = String(e);
+	}
 	requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);

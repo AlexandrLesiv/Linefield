@@ -287,7 +287,7 @@ export function createSelection(
 		forceLasso = false;
 		pending = true;
 	}
-	function render(enabled: boolean) {
+	function renderNow(enabled: boolean) {
 		const key = [
 			enabled,
 			camera.cx,
@@ -360,6 +360,17 @@ export function createSelection(
 			lasso?.moved ? `${screenPath(lasso.points)} Z` : "",
 		);
 	}
+	function render(enabled: boolean) {
+		try {
+			renderNow(enabled);
+		} catch (error) {
+			// A failed disposable snapshot must retry, not freeze stale handles.
+			pending = true;
+			overlay.style.display = "none";
+			throw error;
+		}
+	}
+
 	lassoButton.addEventListener("click", () => {
 		cancel();
 		mode = "lasso";
