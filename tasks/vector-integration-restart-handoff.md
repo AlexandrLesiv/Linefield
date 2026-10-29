@@ -114,3 +114,7 @@ Preview 65320 fixes a measured dense whole-Lasso regression in the shared predic
 ## Latest disposable-copy recovery checkpoint
 
 Preview 65321 catches disposable worker-input copy/allocation failure inside the existing fallback boundary. Twelve injected narrow/wide cases and12 normal worker cases preserve exact cropped images/Slice/history, with no uncaught errors; static/build checks pass. This is not general OOM recovery. Fresh full performance on65320 is comparable for drawing/pan/rotation but rapid zoom is modestly slower with one33.5ms frame interval; read the task for sample limits. Investigate same-region projection cost as a hypothesis, not a proven cause. All earlier previews remain frozen; final architecture/regional/resource/review work and optional worker experiments are unfinished.
+
+## Latest performance decision
+
+Same-region arithmetic candidate65322 was rejected: three alternating four-cycle comparisons did not show a repeatable rapid-zoom benefit. Production arithmetic is restored;65321 remains the adopted preview. The performance runner now supports integrated-versus-integrated comparison and bounded repeated zoom cycles. See latest task entry for measurements and ignored evidence. Continue broader wide/transformed correctness and architecture acceptance; do not treat candidate65322 as adopted.

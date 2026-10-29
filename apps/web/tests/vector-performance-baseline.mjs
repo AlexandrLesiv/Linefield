@@ -2,7 +2,9 @@ import { chromium } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 import { cpus, platform, release, totalmem } from "node:os";
 const output = process.env.LINEFIELD_EVIDENCE_DIR || ".build-cache/restart/performance-baseline";
+const referenceIntegrated = process.env.LINEFIELD_REFERENCE_INTEGRATED === "1";
 const workload = {
+  zoomCycles: Number(process.env.LINEFIELD_ZOOM_CYCLES || 1),
   selectionOnly: process.env.LINEFIELD_SELECTION_ONLY === "1",
   regionalTransitions: process.env.LINEFIELD_REGIONAL_TRANSITIONS === "1",
   strokes: Number(process.env.LINEFIELD_STROKES || 24),
@@ -17,14 +19,17 @@ if (
   workload.samplesPerStroke > 16385
 )
   throw Error("Workload must contain 1–1024 strokes and 2–16385 samples per stroke");
+if (!Number.isInteger(workload.zoomCycles) || workload.zoomCycles < 1 || workload.zoomCycles > 8)
+  throw Error("Zoom cycles must be 1–8");
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 const results = [];
 try {
   for (let repeat = 0; repeat < 3; repeat++)
     for (const integrated of repeat % 2 ? [true, false] : [false, true]) {
+      const embedded = integrated || referenceIntegrated;
       const page = await browser.newPage({
-        viewport: { width: 1440, height: integrated ? 1000 : 948 },
+        viewport: { width: 1440, height: embedded ? 1000 : 948 },
         deviceScaleFactor: 2,
       });
       const errors = [];
@@ -35,10 +40,10 @@ try {
           ? process.env.LINEFIELD_PREVIEW_URL || "http://127.0.0.1:65283/"
           : process.env.LINEFIELD_REFERENCE_URL || "http://127.0.0.1:65280/",
       );
-      if (integrated) await page.locator(".new-tile").click();
-      const host = integrated ? page.frameLocator("iframe") : page;
+      if (embedded) await page.locator(".new-tile").click();
+      const host = embedded ? page.frameLocator("iframe") : page;
       await host.locator("#brush").waitFor();
-      const frame = integrated
+      const frame = embedded
         ? page.frames().find((candidate) => candidate.url().includes("/vector-editor/"))
         : page.mainFrame();
       await frame.waitForFunction(() => !!window.lab, {}, { timeout: 30000 });
@@ -242,17 +247,20 @@ try {
               );
             });
             await phase("rapid-zoom", async () => {
-              for (const zoom of [0.05, 0.1, 0.5, 1, 4, 16, 8, 1, 0.05, 1]) {
-                canvas.dispatchEvent(
-                  new WheelEvent("wheel", {
-                    bubbles: true,
-                    cancelable: true,
-                    clientX: rect.x + 700,
-                    clientY: rect.y + 400,
-                    deltaY: -Math.log(zoom / lab.view().zoom) / 0.001,
-                  }),
-                );
-                await next();
+              for (let cycle = 0; cycle < scenario.zoomCycles; cycle++) {
+                for (const zoom of [0.05, 0.1, 0.5, 1, 4, 16, 8, 1, 0.05, 1]) {
+                  canvas.dispatchEvent(
+                    new WheelEvent("wheel", {
+                      bubbles: true,
+                      cancelable: true,
+                      clientX: rect.x + 700,
+                      clientY: rect.y + 400,
+                      deltaY: -Math.log(zoom / lab.view().zoom) / 0.001,
+                    }),
+                  );
+                  await next();
+                }
+                if (scenario.zoomCycles > 1) await settled();
               }
             });
             await phase("continuous-rotation", async () => {
@@ -309,6 +317,7 @@ try {
         JSON.stringify(
           {
             workload,
+            referenceIntegrated,
             hardware: {
               cpu: cpus()[0]?.model,
               logicalCpus: cpus().length,
