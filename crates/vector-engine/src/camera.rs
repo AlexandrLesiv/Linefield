@@ -76,3 +76,16 @@ pub extern "C" fn camera_rotate(
         rotation,
     ])
 }
+
+/// Acquire one screen-local sample relative to an explicit regional render origin.
+/// Mapping and canonical admission occur in one owning-engine call: hosts never
+/// flatten the origin into a floating-point world coordinate.
+#[cfg_attr(target_arch = "wasm32", no_mangle)]
+pub extern "C" fn camera_push(
+    x: f64, y: f64, cx: f64, cy: f64, zoom: f64, angle: f64,
+    rx: i64, ry: i64, pressure: f32,
+) -> u32 {
+    if !valid(&[x, y, cx, cy, zoom, angle], zoom) { return 0; }
+    let [wx, wy] = mapped(x, y, cx, cy, zoom, angle);
+    super::push_regional(rx, wx, ry, wy, pressure)
+}

@@ -18,6 +18,21 @@ export class Camera extends ViewProjection {
   normalizeRotation(angle: number) {
     return this.core.camera_normalize(angle);
   }
+  appendSample(x: number, y: number, pressure: number): boolean {
+    // The existing renderer still has origin zero. Introduce origin switching
+    // only with query/cache/GPU rebasing; input must share its displayed frame.
+    return !!this.core.camera_push(
+      x,
+      y,
+      this.cx,
+      this.cy,
+      this.zoom,
+      this.rotation,
+      0n,
+      0n,
+      pressure,
+    );
+  }
   screenToWorld(x: number, y: number): [number, number] {
     const out = this.read(this.core.camera_map(x, y, this.cx, this.cy, this.zoom, this.rotation));
     return [out[0], out[1]];

@@ -9,6 +9,7 @@ export type Core = {
   camera_map(x: number, y: number, cx: number, cy: number, zoom: number, angle: number): number;
   camera_normalize(angle: number): number;
   camera_output_ptr(): number;
+  camera_push(x: number, y: number, cx: number, cy: number, zoom: number, angle: number, rx: bigint, ry: bigint, pressure: number): number;
   camera_rotate(x: number, y: number, cx: number, cy: number, zoom: number, angle: number, next: number): number;
   camera_zoom(x: number, y: number, cx: number, cy: number, zoom: number, next: number): number;
   can_draw(): number;
@@ -100,6 +101,7 @@ export const coreExportArity = {
   "camera_map": 6,
   "camera_normalize": 1,
   "camera_output_ptr": 0,
+  "camera_push": 9,
   "camera_rotate": 7,
   "camera_zoom": 6,
   "can_draw": 0,
@@ -180,4 +182,4 @@ export const coreExportArity = {
   "visible": 1
 } as const;
 
-export const coreAbiFingerprint = [2047841399,1437659534,3089878497,3793320327,4058918903,3852407371,759777596,3782202194] as const;
+export const coreAbiFingerprint = [1668760111,1524237007,843679206,3878099073,3537410067,1325207648,4293810238,4187219599] as const;

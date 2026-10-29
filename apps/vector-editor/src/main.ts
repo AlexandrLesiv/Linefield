@@ -656,13 +656,12 @@ let lastSampleX = 0,
 	lastSampleY = 0,
 	lastPressure = 1;
 function appendSample(x: number, y: number, pressure: number) {
-    if (core.push_precise(x, y, pressure)) metrics.accepted++;
+    if (camera.appendSample(x, y, pressure)) metrics.accepted++;
     else runtimeFailure = "Input position or pressure is outside the supported range; existing accepted samples are retained.";
 }
 function sample(e: PointerEvent) {
 	const r = canvas.getBoundingClientRect();
-	const [x, y] = camera.screenToWorld(e.clientX - r.left, e.clientY - r.top);
-	appendSample(x, y, e.pointerType === "pen" ? e.pressure : 1);
+	appendSample(e.clientX - r.left, e.clientY - r.top, e.pointerType === "pen" ? e.pressure : 1);
 	lastSampleX = e.clientX;
 	lastSampleY = e.clientY;
 	lastPressure = e.pointerType === "pen" ? e.pressure : 1;
@@ -771,11 +770,7 @@ canvas.addEventListener("pointerup", (e) => {
 		// Preserve a changed release position with the last valid pressure.
 		if (e.clientX !== lastSampleX || e.clientY !== lastSampleY) {
 			const r = canvas.getBoundingClientRect();
-			const [x, y] = camera.screenToWorld(
-				e.clientX - r.left,
-				e.clientY - r.top,
-			);
-			appendSample(x, y, lastPressure);
+			appendSample(e.clientX - r.left, e.clientY - r.top, lastPressure);
 			if (active !== null) cache.note(active);
 		}
 		core.commit();
@@ -1009,7 +1004,7 @@ Object.assign(window, {
 			dirty = true;
 		},
 		core,
-		// Foundation diagnostics only; document adoption is still pending.
+		// Checked regional boundary diagnostics; view-origin adoption remains pending.
 		regional: createRegionalAddressAdapter(core),
 		selection: () => selection.ids(),
 		layers,

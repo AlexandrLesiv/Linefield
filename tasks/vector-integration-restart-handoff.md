@@ -9,7 +9,7 @@ This is an intermediate implementation, not completed M1–M9 adoption. Use the 
 - Draft PR: https://github.com/AlexandrLesiv/Linefield/pull/21 — open, not merged.
 - Verified remote main: `b101a7e`. The restart explicitly reverts the discarded PR16 documentation, then integrates the approved source.
 - Current application: regional source/placement checkpoint following `41fd0cd`; inspect branch HEAD for the saved revision.
-- Latest preview: http://127.0.0.1:65300/ — choose New drawing. Reference 65280, initial integration 65281 and all other existing previews remain unchanged.
+- Latest preview: http://127.0.0.1:65301/ — choose New drawing. Reference 65280, initial integration 65281 and all other existing previews remain unchanged.
 - Authoritative reference: `/Users/oleksandr/Documents/Codex/2026-10-20/files-pasted-by-the-user-build/outputs/linefield-handoff/source-app/`, verified 77-file source set `474873d88d00f498105fc2fbb8eed754cc01ba93f6a3f9bcde7dfd78a853ca1d`. Do not substitute current vector-canvas-lab HEAD.
 - Detailed chronology, evidence paths and limitations: `tasks/vector-integration-restart.md`.
 
@@ -21,7 +21,7 @@ Rust owns the imported document, accepted samples, editing, layers/history and a
 
 The host has shared themes and EN/UK controls, including default layer names distinguished from user names by Rust metadata. Back/Resume retains the same session; leaving mid-gesture cancels it. Startup failures support safe Retry before a document exists; runtime failure feedback preserves the current session. The drawing is explicitly temporary and not saved.
 
-Generated scalar ABI declarations and a signature fingerprint are checked at startup. Geometry transport capacities come from Rust; invalid worker messages retire the worker through the existing fallback. Regional i64/f64 normalization/displacement and a checked BigInt adapter are implemented. Canonical drawing samples now use regional addresses; screen input uses a transitional f64 bridge. Placement/history now retain regional anchors plus bounded displacements, including full-range fractional movement and atomic overflow rejection. A checked regional rotation/resize pivot boundary now exists and passes full-range history checks. The selection UI still uses legacy pivot transport; camera, queries and rendering still need regional adoption.
+Generated scalar ABI declarations and a signature fingerprint are checked at startup. Geometry transport capacities come from Rust; invalid worker messages retire the worker through the existing fallback. Regional i64/f64 normalization/displacement and a checked BigInt adapter are implemented. Canonical drawing samples now use regional addresses; actual screen input now maps and enters canonical storage inside one Rust call. Its origin remains zero until rendering/query rebasing is implemented together. Placement/history now retain regional anchors plus bounded displacements, including full-range fractional movement and atomic overflow rejection. A checked regional rotation/resize pivot boundary now exists and passes full-range history checks. The selection UI still uses legacy pivot transport; camera, queries and rendering still need regional adoption.
 
 ## What is still required
 
@@ -33,7 +33,7 @@ Generated scalar ABI declarations and a signature fingerprint are checked at sta
 
 ## Verified evidence and its limits
 
-- All 120 approved browser checks pass on 65300: 22 paper-contact behavior, eight rendering/recovery, and 30 editing checks per brush.
+- All 120 approved browser checks pass on 65301: 22 paper-contact behavior, eight rendering/recovery, and 30 editing checks per brush.
 - Exact artwork/raw comparison passes for brush overlap, pan, rotated drawing, zoom and history. An expanded run on the preceding equivalent rendering pipeline compared 18 captures across four separated regions, including held-pointer panning before mouseup and the full zoom range. Readback waits for settlement; this does not establish per-frame latency. Only camera f64 roundoff has a documented allowance; no new artwork tolerance was added.
 - EN/UK checks verify authored/default layer names, no-op rename, history, drawing, layer visibility and persistent error feedback. Session lifecycle, startup retry, worker failure recovery and live themes have passed at recorded checkpoints.
 - 125 regional primitive cases and additional adapter transport/type/copy checks pass. These are not canonical drawing precision acceptance.
