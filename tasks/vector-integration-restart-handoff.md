@@ -90,3 +90,7 @@ Preview 65315 also moves Lasso closure/containment/capsule predicates into Rust;
 ## Latest selection-policy checkpoint
 
 Preview 65316 delegates selection eligibility and Pick precedence to Rust; the 108-function ABI replaces host copies of those rules. All 48 layer-policy scenarios and 120 approved behavior checks pass. Host cache enumeration and selection gesture orchestration remain distinct from canonical query policy; final host factoring, broader regional/resource evidence and reviews are still pending. No worker experiment or merge.
+
+## Distant transformed-selection evidence
+
+Unchanged preview 65316 passes actual-input group move/15-degree rotation and Lasso comparisons at origin zero versus x=3×2^76. All 216 queries, settled artwork hashes and canonical position/pressure preservation pass across three brushes. This covers compact distant drawings, not arbitrary-span source geometry. Next priorities are the explicit host/session boundary and UI factoring, broader regional/resource checks and final reviews; optional workers remain deferred.
