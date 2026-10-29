@@ -8,8 +8,8 @@ This is an intermediate implementation, not completed M1–M9 adoption. Use the 
 - Branch: `codex/vector-integration-restart`
 - Draft PR: https://github.com/AlexandrLesiv/Linefield/pull/21 — open, not merged.
 - Verified remote main: `b101a7e`. The restart explicitly reverts the discarded PR16 documentation, then integrates the approved source.
-- Current application: coupled regional view-origin checkpoint; inspect branch HEAD for the saved revision.
-- Latest preview: http://127.0.0.1:65304/ — choose New drawing. Reference 65280, initial integration 65281 and all other existing previews remain unchanged.
+- Current application: regional view-origin plus GPU program ownership/startup recovery checkpoint; inspect branch HEAD for the saved revision.
+- Latest preview: http://127.0.0.1:65307/ — choose New drawing. Reference 65280, initial integration 65281 and all other existing previews remain unchanged.
 - Authoritative reference: `/Users/oleksandr/Documents/Codex/2026-10-20/files-pasted-by-the-user-build/outputs/linefield-handoff/source-app/`, verified 77-file source set `474873d88d00f498105fc2fbb8eed754cc01ba93f6a3f9bcde7dfd78a853ca1d`. Do not substitute current vector-canvas-lab HEAD.
 - Detailed chronology, evidence paths and limitations: `tasks/vector-integration-restart.md`.
 
@@ -58,3 +58,7 @@ Evidence is under `.build-cache/restart/` and ignored by Git. Preserve failures 
 ## Renewed autonomous continuation
 
 The owner renewed autonomous implementation after the earlier deadline and requested five-minute continuations. The existing automation was reactivated with that interval, without duplicating it. The old deadline is no longer active; continue until completion or an owner pause. Prioritize bounding long-source geometry and broadening regional transition/failure evidence, then host architecture, before the five optional worker experiments. Keep every existing preview frozen. See the latest task entry for canonical storage evidence and its memory cost; the current distant visual claim is limited to the actual image/held-pan cases recorded in the latest task entry.
+
+## Latest bounded host factoring
+
+Ink shader/program resource ownership now lives in a separate browser module. Shader algorithms and rendering lifecycle are unchanged. Actual-app compile/link fault injection verifies cleanup and startup Retry; all 120 approved checks and exact reference artwork/raw parity pass on 65307. No new performance improvement or final architecture acceptance is claimed. Continue with the numerical and architectural gaps listed above.

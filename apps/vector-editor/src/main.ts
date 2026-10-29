@@ -11,7 +11,7 @@ import { CoverageRenderer } from "./coverage-renderer";
 import { type Bounds, type DrawPlan, GeometryCache } from "./geometry-cache";
 import { INSTANCE_BYTES } from "./gpu-arena";
 import { GpuPassTimers } from "./gpu-pass-timers";
-import { inkFragment, inkVertex } from "./ink-shaders";
+import { createInkProgram } from "./ink-program";
 import { createLayers } from "./layers";
 import {
 	type GridStyle,
@@ -47,7 +47,9 @@ const core = await loadCore().catch((error: unknown) => {
 	throw error;
 });
 let runtimeFailure = "";
+let startupComplete = false;
 window.addEventListener("error", (e) => {
+	if (!startupComplete) { showStartupFailure(status); return; }
 	runtimeFailure = e.message;
 	status.textContent = hostMessage("vector.engineFailure", {detail: runtimeFailure});
 });
@@ -96,37 +98,13 @@ let hierarchicalPlanning = true;
 let projectionReuse = true;
 let routeReuse = true;
 let liveOverlayEnabled = true;
-function shader(type: number, source: string) {
-	const s = gpu.createShader(type)!;
-	gpu.shaderSource(s, source);
-	gpu.compileShader(s);
-	if (!gpu.getShaderParameter(s, gpu.COMPILE_STATUS))
-		throw Error(gpu.getShaderInfoLog(s)!);
-	return s;
+let ink: ReturnType<typeof createInkProgram>;
+try {
+	ink = createInkProgram(gpu);
+} catch (error) {
+	showStartupFailure(status);
+	throw error;
 }
-function createProgram() {
-	const program = gpu.createProgram()!;
-	gpu.attachShader(program, shader(gpu.VERTEX_SHADER, inkVertex));
-	gpu.attachShader(program, shader(gpu.FRAGMENT_SHADER, inkFragment));
-	gpu.linkProgram(program);
-	if (!gpu.getProgramParameter(program, gpu.LINK_STATUS))
-		throw Error(gpu.getProgramInfoLog(program)!);
-	return program;
-}
-let program = createProgram();
-const loc = (name: string) => gpu.getUniformLocation(program, name);
-let pencilGrainLoc = loc("pencilGrain");
-let pencilParticlesLoc = loc("pencilParticles");
-let cameraLoc = loc("camera"),
-	viewportLoc = loc("viewport"),
-	rotationLoc = loc("rotation"),
-	pixelWorldLoc = loc("pixelWorld");
-let deviceViewportLoc = loc("deviceViewport"),
-	rasterHeightLoc = loc("rasterHeight"),
-	routeCountLoc = loc("routeCount"),
-	routeBaseLoc = loc("routeBase"),
-	routeSpanLoc = loc("routeSpan"),
-	atlasRoutesLoc = loc("atlasRoutes");
 type Tool = "draw" | "select" | "slice" | "pan" | "rotate";
 const selection = createSelection(core, cache, camera, canvas);
 const slice = createSlice(core, cache, camera, canvas, () => {
@@ -328,19 +306,19 @@ function draw() {
 	coverageRenderer.begin(w, h);
 	paperBackground.stats.draws = 0;
 	sparseCoverage.resetStats();
-	gpu.useProgram(program);
-	gpu.uniform2f(viewportLoc, rect.width, rect.height);
-	gpu.uniform2f(deviceViewportLoc, w, h);
-	gpu.uniform1i(atlasRoutesLoc, 1);
+	gpu.useProgram(ink.program);
+	gpu.uniform2f(ink.viewport, rect.width, rect.height);
+	gpu.uniform2f(ink.deviceViewport, w, h);
+	gpu.uniform1i(ink.atlasRoutes, 1);
 	pencilGrain.bind();
-	gpu.uniform1i(pencilGrainLoc, 2);
-	gpu.uniform1i(pencilParticlesLoc, 3);
-	gpu.uniform1i(routeCountLoc, 0);
-	gpu.uniform1f(rasterHeightLoc, h);
-	gpu.uniform3f(cameraLoc, camera.cx, camera.cy, camera.zoom);
-	gpu.uniform1f(pixelWorldLoc, 1 / (camera.zoom * dpr));
+	gpu.uniform1i(ink.pencilGrain, 2);
+	gpu.uniform1i(ink.pencilParticles, 3);
+	gpu.uniform1i(ink.routeCount, 0);
+	gpu.uniform1f(ink.rasterHeight, h);
+	gpu.uniform3f(ink.camera, camera.cx, camera.cy, camera.zoom);
+	gpu.uniform1f(ink.pixelWorld, 1 / (camera.zoom * dpr));
 	gpu.uniform2f(
-		rotationLoc,
+		ink.rotation,
 		Math.cos(camera.rotation),
 		Math.sin(camera.rotation),
 	);
@@ -506,9 +484,9 @@ function draw() {
 					drawInstances,
 					(bounds) => {
 						coverageRenderer.startRun(deviceBounds(bounds));
-						gpu.useProgram(program);
-						gpu.uniform1i(routeCountLoc, 0);
-						gpu.uniform1f(rasterHeightLoc, h);
+						gpu.useProgram(ink.program);
+						gpu.uniform1i(ink.routeCount, 0);
+						gpu.uniform1f(ink.rasterHeight, h);
 					},
 					() => coverageRenderer.finishRun(),
 					worldClip,
@@ -563,11 +541,11 @@ function draw() {
 							h,
 							(routed, base) => {
 								const { record: geometryRecord, routeCount, spanSize, first, count } = routed;
-								gpu.useProgram(program);
-								gpu.uniform1i(routeCountLoc, routeCount);
-								gpu.uniform1i(routeSpanLoc, spanSize);
-								gpu.uniform1i(routeBaseLoc, base);
-								gpu.uniform1f(rasterHeightLoc, ATLAS_SIZE);
+								gpu.useProgram(ink.program);
+								gpu.uniform1i(ink.routeCount, routeCount);
+								gpu.uniform1i(ink.routeSpan, spanSize);
+								gpu.uniform1i(ink.routeBase, base);
+								gpu.uniform1f(ink.rasterHeight, ATLAS_SIZE);
 								const slot = geometryRecord.entry.allocation;
 								const instances = count * routeCount;
 								drawInstances(
@@ -597,9 +575,9 @@ function draw() {
 			drawInstances,
 			(bounds) => {
 				coverageRenderer.startRun(deviceBounds(bounds));
-				gpu.useProgram(program);
-				gpu.uniform1i(routeCountLoc, 0);
-				gpu.uniform1f(rasterHeightLoc, h);
+				gpu.useProgram(ink.program);
+				gpu.uniform1i(ink.routeCount, 0);
+				gpu.uniform1f(ink.rasterHeight, h);
 			},
 			() => coverageRenderer.finishRun(),
 		);
@@ -967,9 +945,7 @@ canvas.addEventListener("webglcontextrestored", () => {
 	);
 	paperBackground = new PaperBackground(gpu);
 	pencilGrain = new PencilGrain(gpu);
-	program = createProgram();
-	pencilGrainLoc = loc("pencilGrain");
-	pencilParticlesLoc = loc("pencilParticles");
+	ink = createInkProgram(gpu);
 	coverageRenderer = new CoverageRenderer(gpu, reportGpuError, gpuTimings);
 	compositeCache = new CompositeCache(gpu, reportGpuError);
 	sparseCoverage = new SparseCoverage(
@@ -978,16 +954,6 @@ canvas.addEventListener("webglcontextrestored", () => {
 		noteGpuMutation,
 		gpuTimings,
 	);
-	cameraLoc = loc("camera");
-	viewportLoc = loc("viewport");
-	rotationLoc = loc("rotation");
-	pixelWorldLoc = loc("pixelWorld");
-	deviceViewportLoc = loc("deviceViewport");
-	rasterHeightLoc = loc("rasterHeight");
-	routeCountLoc = loc("routeCount");
-	routeBaseLoc = loc("routeBase");
-	routeSpanLoc = loc("routeSpan");
-	atlasRoutesLoc = loc("atlasRoutes");
 	cache.contextLost();
 	lost = false;
 	dirty = true;
@@ -1074,3 +1040,5 @@ Object.assign(window, {
 	},
 });
 status.textContent = "Ready · drawings are not saved";
+
+startupComplete = true;
