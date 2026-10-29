@@ -3,7 +3,7 @@ import type { Core } from "./core";
 import { GeometryPreparer } from "./geometry-preparer";
 import { type Allocation, GpuArena, INSTANCE_BYTES } from "./gpu-arena";
 import { type LassoPoint, LassoRegion } from "./lasso";
-import { capsuleDistance } from "./stroke-hit";
+import { pickCapsules } from "./picking";
 import {
 	inversePoint,
 	readTransform,
@@ -444,21 +444,7 @@ export class GeometryCache {
 					data = readGeometry(this.core, id, c.chunk, 2 ** transformedDetailLevel(this.level, transform));
 					stride = 6;
 				}
-				for (let i = 0; i + 5 < data.length; i += stride)
-					if (
-						Math.max(data[i + 2], data[i + 5]) > 0 &&
-						capsuleDistance(
-							px,
-							py,
-							data[i],
-							data[i + 1],
-							data[i + 2],
-							data[i + 3],
-							data[i + 4],
-							data[i + 5],
-						) <= localPad
-					)
-						return id;
+				if (pickCapsules(this.core, data, stride, px, py, localPad)) return id;
 			}
 		}
 		return null;

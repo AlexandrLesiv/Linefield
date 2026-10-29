@@ -78,3 +78,7 @@ Adaptive wide derived geometry is now integrated. The original f32 fast path rem
 ## Actual worker validation
 
 The current actual-app image runner confirms real Float64 worker responses and detached transfer inputs, and injects a wrong-precision response to verify worker retirement plus exact-image synchronous recovery. Both 12-scene runs pass on unchanged preview 65313. See the task record for bounded workloads and evidence; this adds correctness coverage, not performance or full-range acceptance.
+
+## Latest shared Pick checkpoint
+
+Preview 65314 moves the Pick capsule-distance predicate into bounded Rust batches while retaining existing host cache lookup and candidate ordering. All 120 approved checks, exact reference artwork/raw parity and three alternating actual-input Pick comparisons pass. ABI now has 102 functions. Lasso and full selection candidate ownership remain unfinished; see the task for scope, measurements and limitations. All previous previews remain frozen.

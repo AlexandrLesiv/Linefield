@@ -57,6 +57,8 @@ export type Core = {
   move_commit(): void;
   move_update(dx: number, dy: number): number;
   opacity(id: number): number;
+  pick_capsules(count: number, x: number, y: number, pad: number): number;
+  pick_input_ptr(): number;
   point(id: number, i: number, field: number): number;
   push(x: number, y: number, p: number): void;
   push_precise(x: number, y: number, pressure: number): number;
@@ -161,6 +163,8 @@ export const coreExportArity = {
   "move_commit": 0,
   "move_update": 2,
   "opacity": 1,
+  "pick_capsules": 4,
+  "pick_input_ptr": 0,
   "point": 3,
   "push": 3,
   "push_precise": 3,
@@ -206,4 +210,4 @@ export const coreExportArity = {
   "visible": 1
 } as const;
 
-export const coreAbiFingerprint = [1210411482,774140585,726818142,1061990403,556524722,801949696,3250351098,249452508] as const;
+export const coreAbiFingerprint = [1676949129,593451290,1620931195,295646055,1116985966,241945917,2977790432,1564221469] as const;

@@ -17,6 +17,7 @@ pub mod camera;
 pub mod layers;
 pub mod regional;
 pub mod selection;
+pub mod picking;
 pub mod slice;
 use layers::{Command, Layer};
 #[cfg(not(target_arch = "wasm32"))]
