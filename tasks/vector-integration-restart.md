@@ -507,3 +507,20 @@ Final candidate validation: all120 approved feature/rendering checks pass on6532
 Extended the maintained curve-Slice browser fixture with configurable integrated URL, period-preserving regional origin and widths0/12. Actual input draws and slices385-sample curves for Ink/Hard/Soft; original source region/local/pressure fields are checked unchanged after Slice/Undo/Redo, with exact original/restored and sliced/redone images and no browser errors. At+3×2^76 with width0 and−3×2^76 with width12, all three brushes exactly match the approved near-origin65280 reference before and after Slice. Evidence: regional-slice-zero-canonical and regional-slice-wide-canonical; current application65328. Earlier runs checked compatibility raw_point values and were strengthened to canonical regional fields rather than treating those lossy projections as preservation evidence.
 
 The remaining±1e9 guard in Slice is on coordinates relative to the captured regional gesture origin, unlike the removed source-placement cap. The host passes camera-local positions to slice_push after slice_begin_regional; no evidence here warrants removing the local-input bound. No production change, no new preview and no arbitrary-span source/fractional precision claim. Root static checks and scoped lint/format pass.
+
+## Current candidate/reference performance consolidation
+
+Compared frozen65328 with approved65280 using three alternating runs,256 mixed-brush strokes×129 accepted samples (33024), four rapid-zoom cycles, warm continuous pan, rotation and history. Apple M2Pro12 logical CPUs/16GiB, macOS Darwin27, Chrome156.0.8078.48 headless, ANGLE Metal, DPR2 and2880×1632 drawing buffers on both. No concurrent test/build workload. Evidence: .build-cache/restart/current-reference-performance/{results,summary,memory-summary}.json. All raw-preservation and browser-error checks pass.
+
+CPU frame-work values below are median of three per-run medians and range of per-run p95s, not pooled percentiles or GPU durations:
+
+| Phase | Reference median / p95 range ms | Integrated median / p95 range ms |
+| --- | --- | --- |
+| Mixed drawing |3.1 /4.6–4.8 |3.2 /4.6–5.0 |
+| Warm pan |2.3 /3.1–3.4 |2.2 /3.1–4.0 |
+| Rapid zoom |0.1 /14.4–16.2 |0.1 /13.3–15.2 |
+| Rotation |4.8 /6.4–6.8 |4.5 /6.2–6.5 |
+
+Zoom medians include cheap settling frames and are not a typical expensive redraw cost. Both builds show occasional33.4ms rAF intervals during zoom; other measured phases max16.8ms. No≥50ms long tasks were observed in these phases. Input-handler timing is quantized at roughly0.1ms, not physical pen/display latency. Only4–5 history frames/run make its median unstable; history p95 range5.7–6.0ms reference versus5.6–6.2ms integrated is descriptive only, not reliable tail acceptance. Pending-state settlement after history ranged9.7–33.6ms versus33.1–35.2ms; this is not time until correct displayed pixels. No measurable regression claim is supported for ordinary drawing/pan/rotation here; no speedup claim either.
+
+Per-run cache totals are identical: derived CPU6,322,176B; logical GPU geometry6,930,432B; allocated GPU geometry9,453,568B; material22,369,600B. These are reported allocations, not total browser/GPU memory. Wasm capacity is1,966,080B reference versus3,801,088B integrated, consistent with larger canonical regional representation and shared modules; do not claim identical total memory or attribute all increase to one structure. Existing~150ms dense whole-Lasso limitation remains outside this workload. No production or preview changes.
