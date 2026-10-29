@@ -131,3 +131,28 @@ Required implementation sequence before regional acceptance:
 4. Run near-origin exact image checks, boundary-crossing/negative-address/overflow browser scenarios, far-origin continuity and roundtrip checks, and repeated performance/memory comparison before adopting. Do not silently narrow the approved prototype's 5–1600% view range to older schema defaults.
 
 No storage migration or native application is introduced by this sequence. This numerical work is still pending, and the audit is deliberately not represented as a completed M01 gate.
+
+## 2026-10-29 denser-document and sample-heavy baseline
+
+Extended the browser comparison runner with bounded, recorded stroke/sample counts and an explicit assertion that every requested stroke and accepted sample reached the owning engine. Ran three alternating-order repeats per side against frozen reference 65280 and integration 65289. No application or preview changed. Environment remains M2 Pro / Chrome 156 / DPR 2 / 2880×1632 backing store, GPU duration queries off.
+
+Two additional workloads: 256 overlapping mixed opaque/translucent strokes × 129 samples (33,024 accepted samples), and 24 mixed strokes × 4,097 samples (98,328 accepted samples). The latter increases sample density along the same shape; it is not evidence for a long geographically distributed stroke. Both include drawing, continuous pan, rapid 5–1600% zoom, continuous rotation and Undo/Redo. All twelve page runs completed without uncaught errors; camera/history preserved raw data and all requested samples were present.
+
+Median across three repeats of per-run CPU render median / p95, in milliseconds:
+
+| Workload / phase | Reference | Integrated |
+| --- | --- | --- |
+| 256 strokes: drawing | 2.6 / 4.1 | 2.5 / 4.0 |
+| 256 strokes: pan | 1.9 / 3.0 | 2.0 / 2.8 |
+| 256 strokes: zoom | 9.3 / 14.4 | 8.8 / 14.5 |
+| 256 strokes: rotation | 4.4 / 5.5 | 4.3 / 5.0 |
+| 256 strokes: history | 5.5 / 5.5 | 5.6 / 5.6 |
+| 4,097 samples/stroke: drawing | 1.6 / 4.9 | 0.9 / 3.4 |
+| 4,097 samples/stroke: pan | 0.8 / 1.7 | 0.8 / 1.7 |
+| 4,097 samples/stroke: zoom | 8.2 / 11.5 | 8.1 / 11.1 |
+| 4,097 samples/stroke: rotation | 2.8 / 3.2 | 2.7 / 3.6 |
+| 4,097 samples/stroke: history | 3.2 / 3.2 | 3.1 / 3.1 |
+
+Observed rAF p95 stayed at 16.7–16.8 ms; no phase long tasks were recorded. History contains only two render samples per run, not a meaningful tail distribution. Main owning Wasm memory was identical across sides: 1,966,080 bytes for the 256-stroke scene and 2,424,832 bytes for the sample-heavy scene. This excludes JS, worker, GPU and driver allocations; detailed material/cache counters remain in the results. Timings show no clear integration regression in these bounded scenes, not a claimed optimization or GPU speedup. The lower sample-heavy drawing time is not assigned to an architectural improvement.
+
+Evidence: .build-cache/restart/performance-dense-256/results.json and performance-long-4097/results.json, with adjacent log files. Reproduce with LINEFIELD_STROKES=256, or LINEFIELD_STROKES=24 LINEFIELD_SAMPLES_PER_STROKE=4097, plus LINEFIELD_PREVIEW_URL and a fresh LINEFIELD_EVIDENCE_DIR. These timings do not prove displayed-image correctness or physical input latency; existing image-parity evidence covers its separate bounded workload. Sparse distant regions, broader large-document cases, displayed-correct-image timing and the five worker experiments remain pending. Regional coordinate authority and final host factoring remain implementation gaps.

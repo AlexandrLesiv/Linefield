@@ -2,6 +2,19 @@ import { chromium } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 import { cpus, platform, release, totalmem } from "node:os";
 const output = process.env.LINEFIELD_EVIDENCE_DIR || ".build-cache/restart/performance-baseline";
+const workload = {
+  strokes: Number(process.env.LINEFIELD_STROKES || 24),
+  samplesPerStroke: Number(process.env.LINEFIELD_SAMPLES_PER_STROKE || 129),
+};
+if (
+  !Number.isInteger(workload.strokes) ||
+  workload.strokes < 1 ||
+  workload.strokes > 1024 ||
+  !Number.isInteger(workload.samplesPerStroke) ||
+  workload.samplesPerStroke < 2 ||
+  workload.samplesPerStroke > 16385
+)
+  throw Error("Workload must contain 1–1024 strokes and 2–16385 samples per stroke");
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 const results = [];
@@ -28,7 +41,7 @@ try {
         : page.mainFrame();
       await frame.waitForFunction(() => !!window.lab, {}, { timeout: 30000 });
       const readinessMs = performance.now() - started;
-      const measurement = await frame.evaluate(async () => {
+      const measurement = await frame.evaluate(async (scenario) => {
         const canvas = document.querySelector("canvas"),
           rect = canvas.getBoundingClientRect();
         const gl = canvas.getContext("webgl2"),
@@ -130,16 +143,18 @@ try {
           );
         try {
           await phase("cold-mixed-drawing", async () => {
-            for (let stroke = 0; stroke < 24; stroke++) {
+            for (let stroke = 0; stroke < scenario.strokes; stroke++) {
               control("brush", stroke % 3);
               control("width", 24);
               control("opacity", stroke % 2 ? 55 : 100);
               pointer("pointerdown", 180, 240 + (stroke % 8) * 18);
-              for (let i = 1; i <= 128; i++)
+              for (let i = 1; i < scenario.samplesPerStroke; i++)
                 pointer(
                   "pointermove",
-                  180 + i * 7,
-                  240 + (stroke % 8) * 18 + Math.round(Math.sin(i * 0.1) * 60),
+                  180 + (i * 896) / (scenario.samplesPerStroke - 1),
+                  240 +
+                    (stroke % 8) * 18 +
+                    Math.round(Math.sin((i * 12.8) / (scenario.samplesPerStroke - 1)) * 60),
                   0.2 + (0.8 * (i % 31)) / 30,
                 );
               pointer(
@@ -151,6 +166,11 @@ try {
               await next();
             }
           });
+          if (lab.core.count() !== scenario.strokes)
+            throw Error("Input workload did not commit every stroke");
+          const sampleCount = rawBefore().reduce((sum, points) => sum + points.length, 0);
+          if (sampleCount !== scenario.strokes * scenario.samplesPerStroke)
+            throw Error(`Accepted sample count mismatch: ${sampleCount}`);
           const saved = JSON.stringify(rawBefore());
           await phase("warm-continuous-pan", async () => {
             document.querySelector("#pan").click();
@@ -223,13 +243,14 @@ try {
               : delete canvas[key],
           );
         }
-      });
+      }, workload);
       results.push({ repeat, integrated, readinessMs, errors, measurement });
       await page.close();
       await writeFile(
         `${output}/results.json`,
         JSON.stringify(
           {
+            workload,
             hardware: {
               cpu: cpus()[0]?.model,
               logicalCpus: cpus().length,
