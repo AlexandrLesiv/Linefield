@@ -18,6 +18,8 @@ pub mod layers;
 pub mod regional;
 pub mod selection;
 pub mod picking;
+pub mod lasso;
+mod lasso_math;
 pub mod slice;
 use layers::{Command, Layer};
 #[cfg(not(target_arch = "wasm32"))]

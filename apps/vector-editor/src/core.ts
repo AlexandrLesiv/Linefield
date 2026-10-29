@@ -32,6 +32,10 @@ export type Core = {
   geometry_requires_f64(id: number, chunk: number): number;
   geometry_snapshot(id: number, chunk: number): number;
   geometry_snapshot_f64(id: number, chunk: number): number;
+  lasso_append(count: number): number;
+  lasso_capsules(count: number, partial: number): number;
+  lasso_finish(): number;
+  lasso_reset(): void;
   layer_active(): number;
   layer_at(rank: number): number;
   layer_count(): number;
@@ -138,6 +142,10 @@ export const coreExportArity = {
   "geometry_requires_f64": 2,
   "geometry_snapshot": 2,
   "geometry_snapshot_f64": 2,
+  "lasso_append": 1,
+  "lasso_capsules": 2,
+  "lasso_finish": 0,
+  "lasso_reset": 0,
   "layer_active": 0,
   "layer_at": 1,
   "layer_count": 0,
@@ -210,4 +218,4 @@ export const coreExportArity = {
   "visible": 1
 } as const;
 
-export const coreAbiFingerprint = [1676949129,593451290,1620931195,295646055,1116985966,241945917,2977790432,1564221469] as const;
+export const coreAbiFingerprint = [1987769705,3831785183,2863214032,1928711756,3976175976,2668562143,1493033479,2460351306] as const;

@@ -64,3 +64,7 @@ The verified numerical cases extend to 2^32 source displacement at 1/16-unit tai
 ## Bounded Pick geometry boundary
 
 `pick_input_ptr` exposes 1536 borrowed f64 values (12288 bytes), independent of render scratch. Copy up to 256 source-local six-value capsules, then call `pick_capsules(count, x, y, pad)`: 0 means miss, 1 means hit, 2 means invalid input. The owning Rust predicate checks count, finiteness and nonnegative radii/padding. Input scratch is synchronous and disposable; it must not become authoritative stroke data. The host retains cache selection, candidate order and coordinate adaptation for now. Lasso has not yet moved to this boundary.
+
+## Lasso query boundary
+
+`lasso_reset` begins/ends a synchronous disposable query and frees its edge allocation. Write up to 768 finite xy pairs at `pick_input_ptr`, then call `lasso_append`; repeat without dropping accepted points. `lasso_finish` closes the polygon. Append/finish return 1 on success, 0 on rejection/allocation failure. Reacquire the Wasm memory view after calls that may allocate. For each batch of up to 256 view-local capsules, `lasso_capsules(count, partial)` returns flags: 1 has nonzero ink, 2 any matching capsule, 4 any nonmatching capsule, 8 invalid state/input. Whole-stroke containment must inspect all relevant chunks unless a miss rejects it; partial selection can stop on a match. Always reset in cleanup. Edges use 64 bytes each plus Vec capacity; allocation is scoped to the query, not retained document memory. This boundary shares the Pick scratch and is synchronous/non-reentrant.

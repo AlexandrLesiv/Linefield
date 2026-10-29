@@ -11,7 +11,6 @@ import {
 	transformBounds,
 	transformCapsules,
 	transformedDetailLevel,
-	transformPoint,
 	transformScale,
 } from "./stroke-transform";
 export const RAW_CHUNK = 128;
@@ -455,67 +454,55 @@ export class GeometryCache {
 		activeLayerOnly: boolean,
 	): number[] {
 		if (points.length < 2) return [];
-		const region = new LassoRegion(points),
+		const region = new LassoRegion(this.core, points),
 			found: number[] = [];
-		for (const [id, stroke] of this.strokes) {
-			const layer = this.core.stroke_layer(id);
-			if (
-				!this.core.visible(id) ||
-				this.core.layer_locked(layer) ||
-				Math.round(this.core.opacity(id) * 255) === 0 ||
-				(activeLayerOnly && layer !== this.core.layer_active())
-			)
-				continue;
-			const transform = readTransform(this.core, id, ...this.origin()),
-				scale = transformScale(transform);
-			let hit = false,
-				enclosed = true;
-			// Include unregistered/offscreen chunks in whole-stroke containment.
-			const count = Math.ceil(this.core.length(id) / RAW_CHUNK);
-			for (let k = 0; k < count; k++) {
-				const c = stroke.chunks.get(k);
-				let bounds: readonly number[];
-				if (c) bounds = c.localBounds;
-				else {
-					bounds = readGeometryBounds(this.core, id, k);
-				}
-				if (partial && !region.overlaps(transformBounds(transform, bounds)))
+		try {
+			for (const [id, stroke] of this.strokes) {
+				const layer = this.core.stroke_layer(id);
+				if (
+					!this.core.visible(id) ||
+					this.core.layer_locked(layer) ||
+					Math.round(this.core.opacity(id) * 255) === 0 ||
+					(activeLayerOnly && layer !== this.core.layer_active())
+				)
 					continue;
-				const e = c ? this.selected(c) : undefined;
-				let data: GeometryData, stride: number;
-				if (e?.capsules) {
-					data = e.localCapsules ?? e.capsules;
-					stride = e.capsuleStride ?? 6;
-				} else {
-					data = readGeometry(this.core, id, k, 2 ** transformedDetailLevel(this.level, transform));
-					stride = 6;
-				}
-				for (let i = 0; i + 5 < data.length; i += stride) {
-					if (Math.max(data[i + 2], data[i + 5]) <= 0) continue;
-					const matches = region.capsule(
-						...transformPoint(transform, data[i], data[i + 1]),
-						data[i + 2] * scale,
-						...transformPoint(transform, data[i + 3], data[i + 4]),
-						data[i + 5] * scale,
-						partial,
-					);
-					if (partial && matches) {
-						hit = true;
-						break;
+				const transform = readTransform(this.core, id, ...this.origin());
+				let hit = false,
+					enclosed = true;
+				// Include unregistered/offscreen chunks in whole-stroke containment.
+				const count = Math.ceil(this.core.length(id) / RAW_CHUNK);
+				for (let k = 0; k < count; k++) {
+					const c = stroke.chunks.get(k);
+					let bounds: readonly number[];
+					if (c) bounds = c.localBounds;
+					else {
+						bounds = readGeometryBounds(this.core, id, k);
 					}
-					if (!partial) {
-						hit = true;
-						if (!matches) {
-							enclosed = false;
-							break;
-						}
+					if (partial && !region.overlaps(transformBounds(transform, bounds)))
+						continue;
+					const e = c ? this.selected(c) : undefined;
+					let data: GeometryData, stride: number;
+					if (e?.capsules) {
+						data = e.localCapsules ?? e.capsules;
+						stride = e.capsuleStride ?? 6;
+					} else {
+						data = readGeometry(this.core, id, k, 2 ** transformedDetailLevel(this.level, transform));
+						stride = 6;
 					}
+					const flags = region.capsules(data, stride, transform, partial);
+					if (partial) hit = Boolean(flags & 2);
+					else {
+						hit ||= Boolean(flags & 1);
+						if (flags & 4) enclosed = false;
+					}
+					if ((partial && hit) || !enclosed) break;
 				}
-				if ((partial && hit) || !enclosed) break;
+				if (hit && (partial || enclosed)) found.push(id);
 			}
-			if (hit && (partial || enclosed)) found.push(id);
+			return found;
+		} finally {
+			region.dispose();
 		}
-		return found;
 	}
 	setLimit(n: number) {
 		this.limit = Math.max(256, n);

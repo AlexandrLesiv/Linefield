@@ -3,14 +3,14 @@
 use std::cell::RefCell;
 const VALUES: usize = 256 * 6;
 thread_local! {
-    static INPUT: RefCell<[f64; VALUES]> = const { RefCell::new([0.0; VALUES]) };
+    pub(super) static INPUT: RefCell<[f64; VALUES]> = const { RefCell::new([0.0; VALUES]) };
 }
 #[cfg_attr(target_arch = "wasm32", no_mangle)]
 pub extern "C" fn pick_input_ptr() -> *mut f64 {
     INPUT.with(|input| input.borrow_mut().as_mut_ptr())
 }
 /// Same tapered-disc distance and tie conditions as the approved prototype.
-fn capsule_distance(x: f64, y: f64, c: &[f64]) -> f64 {
+pub(super) fn capsule_distance(x: f64, y: f64, c: &[f64]) -> f64 {
     let [ax, ay, ar, bx, by, br] = [c[0], c[1], c[2], c[3], c[4], c[5]];
     let dx = bx - ax;
     let dy = by - ay;

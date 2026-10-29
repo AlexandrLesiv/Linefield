@@ -10,6 +10,7 @@ const sources = [
   "layers",
   "selection",
   "picking",
+  "lasso",
   "slice",
   "camera",
   "regional",

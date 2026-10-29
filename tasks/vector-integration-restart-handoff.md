@@ -82,3 +82,7 @@ The current actual-app image runner confirms real Float64 worker responses and d
 ## Latest shared Pick checkpoint
 
 Preview 65314 moves the Pick capsule-distance predicate into bounded Rust batches while retaining existing host cache lookup and candidate ordering. All 120 approved checks, exact reference artwork/raw parity and three alternating actual-input Pick comparisons pass. ABI now has 102 functions. Lasso and full selection candidate ownership remain unfinished; see the task for scope, measurements and limitations. All previous previews remain frozen.
+
+## Latest shared Lasso checkpoint
+
+Preview 65315 also moves Lasso closure/containment/capsule predicates into Rust; the duplicate TS distance implementation is removed. All 216 actual-input query comparisons, 120 approved checks and exact reference artwork/raw parity pass. ABI now has 106 functions. The long-gesture comparison shows a small completion cost (p95 1.5–1.7 ms versus 0.9–1.2 ms), recorded rather than claimed as a speedup. Host candidate enumeration, geometry-cache selection and edit orchestration still need factoring; remaining regional/resource/review gaps are unchanged. All earlier previews remain frozen.
