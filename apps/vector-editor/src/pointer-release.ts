@@ -3,6 +3,7 @@ export class PointerRelease {
   private contact: {
     id: number;
     source: string;
+    primary: boolean;
     started: number;
     pendingAt: number | null;
   } | null = null;
@@ -10,6 +11,7 @@ export class PointerRelease {
     this.contact = {
       id: event.pointerId,
       source: event.pointerType,
+      primary: event.isPrimary,
       started: event.timeStamp,
       pendingAt: null,
     };
@@ -38,6 +40,19 @@ export class PointerRelease {
   }
   canRelease(event: PointerEvent): boolean {
     return this.matches(event) && event.button >= 0 && event.buttons === 0;
+  }
+  isNewContact(event: PointerEvent): boolean {
+    const contact = this.contact;
+    return (
+      !!contact &&
+      contact.primary &&
+      ["pen", "mouse"].includes(contact.source) &&
+      event.pointerType === contact.source &&
+      event.isPrimary &&
+      event.button === 0 &&
+      event.buttons === 1 &&
+      event.timeStamp > contact.started
+    );
   }
   clear(): void {
     this.contact = null;

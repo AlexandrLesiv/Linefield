@@ -89,6 +89,28 @@ export function installEditorPanels() {
       window as Window & { lab?: { downloadInputDiagnostics(): void } }
     ).lab?.downloadInputDiagnostics();
   developer.dialog.append(exportLog);
+  // Temporary diagnostic preview: export without opening a modal or releasing a stuck pen.
+  const quickExport = exportLog.cloneNode(true) as HTMLButtonElement;
+  quickExport.id = "input-diagnostics-export";
+  quickExport.onclick = (event) => {
+    if (event.detail === 0)
+      (
+        window as Window & { lab?: { downloadInputDiagnostics(): void } }
+      ).lab?.downloadInputDiagnostics();
+  };
+  header.append(quickExport);
+  window.addEventListener(
+    "pointerdown",
+    (event) => {
+      if (event.target !== quickExport) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      (
+        window as Window & { lab?: { downloadInputDiagnostics(): void } }
+      ).lab?.downloadInputDiagnostics();
+    },
+    true,
+  );
   window.addEventListener(
     "keydown",
     (event) => {

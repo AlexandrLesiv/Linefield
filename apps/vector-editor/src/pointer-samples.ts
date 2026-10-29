@@ -34,4 +34,11 @@ export class PointerSamples {
     const bounds = this.canvas.getBoundingClientRect();
     this.append(event.clientX - bounds.left, event.clientY - bounds.top, this.lastPressure);
   }
+  endedContact(event: PointerEvent, matches: (sample: PointerEvent) => boolean): void {
+    const bounds = this.canvas.getBoundingClientRect();
+    for (const sample of event.getCoalescedEvents?.() ?? []) {
+      if (matches(sample) && (sample.buttons & 1) !== 0 && sample.timeStamp <= event.timeStamp)
+        this.sample(sample, bounds);
+    }
+  }
 }
