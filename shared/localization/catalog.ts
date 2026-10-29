@@ -229,6 +229,16 @@ export const catalog = {
       context: "Vector editor host controls and feedback",
       arguments: {},
     },
+    "vector.engineFailure": {
+      kind: "plain",
+      context: "Runtime drawing failure, keeping the existing in-memory session available",
+      arguments: { detail: "string" },
+    },
+    "vector.defaultLayer": {
+      kind: "plain",
+      context: "Display name of a layer that has not been renamed by the user",
+      arguments: { number: "integer" },
+    },
     "vector.layersCount": {
       kind: "plain",
       context: "Vector editor host controls and feedback",

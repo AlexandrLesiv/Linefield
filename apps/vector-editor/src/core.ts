@@ -33,6 +33,7 @@ export type Core = {
   layer_locked(id: number): number;
   layer_move(id: number, rank: number): number;
   layer_name_input_ptr(): number;
+  layer_name_is_default(id: number): number;
   layer_name_len(id: number): number;
   layer_name_ptr(id: number): number;
   layer_rename(id: number, len: number): number;
@@ -115,6 +116,7 @@ export const coreExportArity = {
   "layer_locked": 1,
   "layer_move": 2,
   "layer_name_input_ptr": 0,
+  "layer_name_is_default": 1,
   "layer_name_len": 1,
   "layer_name_ptr": 1,
   "layer_rename": 2,
@@ -162,4 +164,4 @@ export const coreExportArity = {
   "visible": 1
 } as const;
 
-export const coreAbiFingerprint = [1621469704,2731221609,1278485615,3631813388,2802020106,3931751842,3683445956,1922634979] as const;
+export const coreAbiFingerprint = [3633692780,3279131765,3300548261,2885193494,1783934287,2558398501,2374718301,2816146068] as const;

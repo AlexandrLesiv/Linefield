@@ -1,4 +1,5 @@
 import "./style.css";
+import { t as hostMessage } from "../../web/src/locale";
 import { installHostTheme } from "./host-theme";
 import { installHostLocale } from "./host-locale";
 import { showStartupFailure } from "./startup-failure";
@@ -45,8 +46,10 @@ const core = await loadCore().catch((error: unknown) => {
 	showStartupFailure(status);
 	throw error;
 });
+let runtimeFailure = "";
 window.addEventListener("error", (e) => {
-	status.textContent = `Engine error: ${e.message}. Keep this tab open; session data may remain in memory.`;
+	runtimeFailure = e.message;
+	status.textContent = hostMessage("vector.engineFailure", {detail: runtimeFailure});
 });
 const gl = canvas.getContext("webgl2", {
 	alpha: false,
@@ -358,7 +361,7 @@ function draw() {
 		}
 		return { records, groups };
 	};
-	const plan = overlay ? partition(false) : completePlan;
+	const scenePlan = overlay ? partition(false) : completePlan;
 	const livePlan = overlay ? partition(true) : null;
 	const compositeView = {
 		width: w,
@@ -369,7 +372,7 @@ function draw() {
 		dpr,
 		...camera.state(),
 	};
-	const frame = compositeCache.prepare(compositeView, plan.records, camera);
+	const compositeFrame = compositeCache.prepare(compositeView, scenePlan.records, camera);
 	gpuTimings.end();
 	const deviceBounds = camera.deviceBoundsProjector(
 		w / rect.width,
@@ -417,7 +420,7 @@ function draw() {
 		gpu.vertexAttribDivisor(3, divisor);
 		gpu.drawArraysInstanced(gpu.TRIANGLES, 0, 6, count);
 	};
-	const regions = frame?.regions ?? [[0, 0, w, h] as Bounds];
+	const regions = compositeFrame?.regions ?? [[0, 0, w, h] as Bounds];
 	const atlasInstancesPerRegion = Math.max(
 		1,
 		Math.floor(ATLAS_FRAME_INSTANCE_BUDGET / Math.max(1, regions.length)),
@@ -450,7 +453,7 @@ function draw() {
 				b[1] <= region[3]
 			);
 		};
-		if (frame) coverageRenderer.setRegion(frame.framebuffer, region);
+		if (compositeFrame) coverageRenderer.setRegion(compositeFrame.framebuffer, region);
 		paperBackground.draw(
 			{ texture: selectedPaper(), grid: selectedGrid() },
 			camera,
@@ -458,7 +461,7 @@ function draw() {
 			h,
 			rect.width,
 			rect.height,
-			frame?.framebuffer ?? null,
+			compositeFrame?.framebuffer ?? null,
 			region,
 		);
 		const corners = [
@@ -520,13 +523,13 @@ function draw() {
 						spanBounds:
 							metrics.zoomSettling && camera.zoom * dpr < 4
 								? undefined
-								: (record, first, count, out) =>
+								: (geometryRecord, first, count, out) =>
 										capsuleBounds(
-											record.entry.capsules!,
+											geometryRecord.entry.capsules!,
 											first,
 											count,
 											out,
-											record.entry.capsuleStride,
+											geometryRecord.entry.capsuleStride,
 										),
 						maxWork: atlasWorkPerRegion,
 						maxRouteWork: atlasRouteWorkPerRegion,
@@ -546,18 +549,18 @@ function draw() {
 					else
 						sparseCoverage.render(
 							step,
-							frame?.framebuffer ?? null,
+							compositeFrame?.framebuffer ?? null,
 							region,
 							w,
 							h,
 							(routed, base) => {
-								const { record, routeCount, spanSize, first, count } = routed;
+								const { record: geometryRecord, routeCount, spanSize, first, count } = routed;
 								gpu.useProgram(program);
 								gpu.uniform1i(routeCountLoc, routeCount);
 								gpu.uniform1i(routeSpanLoc, spanSize);
 								gpu.uniform1i(routeBaseLoc, base);
 								gpu.uniform1f(rasterHeightLoc, ATLAS_SIZE);
-								const slot = record.entry.allocation;
+								const slot = geometryRecord.entry.allocation;
 								const instances = count * routeCount;
 								drawInstances(
 									slot.buffer,
@@ -565,16 +568,16 @@ function draw() {
 									instances,
 									routeCount,
 								);
-								cache.markDrawn(record, instances);
+								cache.markDrawn(geometryRecord, instances);
 							},
 						);
 				}
 			} else drawLegacy();
 		};
-		drawRegular(plan);
+		drawRegular(scenePlan);
 	}
 	coverageRenderer.end();
-	if (frame) {
+	if (compositeFrame) {
 		gpuTimings.begin("cache");
 		compositeCache.present();
 		gpuTimings.end();
@@ -644,8 +647,8 @@ function frame() {
 }
 requestAnimationFrame(frame);
 setInterval(() => {
-	status.textContent =
-		error ||
+	const failure = runtimeFailure || error;
+	status.textContent = failure ? hostMessage("vector.engineFailure", {detail: failure}) :
 		cache.warning ||
 		`${Math.round(camera.zoom * 100)}% · ${metrics.accepted.toLocaleString()} samples · ${metrics.backlog} chunks pending · ${(metrics.gpuBytes / 1048576).toFixed(1)} MB geometry · ${(metrics.coverageBytes / 1048576).toFixed(1)} MB coverage · ${(metrics.compositeCacheBytes / 1048576).toFixed(1)} MB region cache · Antialiased · Rust/Wasm + WebGL2`;
 }, 250);

@@ -4,6 +4,7 @@ use std::cell::RefCell;
 #[derive(Clone, Debug, PartialEq)]
 pub(super) struct Layer {
     pub name: String,
+    pub default_name: bool,
     pub visible: bool,
     pub locked: bool,
     pub rank: Option<usize>,
@@ -12,6 +13,7 @@ impl Layer {
     pub fn new(name: String) -> Self {
         Self {
             name,
+            default_name: true,
             visible: true,
             locked: false,
             rank: Some(0),
@@ -292,6 +294,10 @@ pub extern "C" fn layer_name_ptr(id: usize) -> *const u8 {
     })
 }
 #[cfg_attr(target_arch = "wasm32", no_mangle)]
+pub extern "C" fn layer_name_is_default(id: usize) -> u32 {
+    ENGINE.with(|e| e.borrow().layers.get(id).is_some_and(|l| l.default_name) as u32)
+}
+#[cfg_attr(target_arch = "wasm32", no_mangle)]
 pub extern "C" fn layer_name_len(id: usize) -> usize {
     ENGINE.with(|e| e.borrow().layers.get(id).map_or(0, |l| l.name.len()))
 }
@@ -314,7 +320,12 @@ pub extern "C" fn layer_rename(id: usize, len: usize) -> u32 {
         if name.is_empty() {
             return 0;
         }
-        ENGINE.with(|e| e.borrow_mut().edit_layer(id, |l| l.name = name) as u32)
+        ENGINE.with(|e| {
+            e.borrow_mut().edit_layer(id, |l| {
+                l.name = name;
+                l.default_name = false;
+            }) as u32
+        })
     })
 }
 

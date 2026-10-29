@@ -13,8 +13,9 @@ export function createLayers(
 	const decoder = new TextDecoder();
 	const encoder = new TextEncoder();
 	let renaming = false;
-	const name = (id: number) =>
-		decoder.decode(
+	const name = (id: number) => core.layer_name_is_default(id)
+		? t("vector.defaultLayer", { number: id + 1 })
+		: decoder.decode(
 			new Uint8Array(
 				core.memory.buffer,
 				core.layer_name_ptr(id),
@@ -157,7 +158,8 @@ export function createLayers(
 			button(t("vector.rename"), t("vector.rename"), () => {
 				const input = document.createElement("input");
 				input.type = "text";
-				input.value = name(layer.id);
+				const initialName = name(layer.id);
+				input.value = initialName;
 				input.maxLength = 128;
 				input.setAttribute("aria-label", t("vector.nameFor", {name: name(layer.id)}));
 				select.replaceWith(input);
@@ -174,7 +176,7 @@ export function createLayers(
 					"blur",
 					() => {
 						input.replaceWith(select);
-						if (!canceled) actions.rename(layer.id, input.value);
+						if (!canceled && input.value !== initialName) actions.rename(layer.id, input.value);
 						else refresh();
 					},
 					{ once: true },

@@ -52,6 +52,9 @@ export const en = {
   "vector.opacity": "Opacity",
   "vector.paper": "Paper",
   "vector.grid": "Grid",
+  "vector.engineFailure":
+    "Drawing problem: {detail}. Keep this tab open; the drawing may still be in memory.",
+  "vector.defaultLayer": "Layer {number}",
   "vector.layersCount": "Layers · {count}",
   "vector.drawingOn": "Drawing on {name}",
   "vector.hiddenLayer": "{name} is hidden. Show it or select another layer to draw.",

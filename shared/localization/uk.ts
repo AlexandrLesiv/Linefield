@@ -53,6 +53,9 @@ export const uk = {
   "vector.opacity": "Непрозорість",
   "vector.paper": "Папір",
   "vector.grid": "Сітка",
+  "vector.engineFailure":
+    "Проблема з малюванням: {detail}. Не закривайте цю вкладку — малюнок може залишатися в пам’яті.",
+  "vector.defaultLayer": "Шар {number}",
   "vector.layersCount": "Шари · {count}",
   "vector.drawingOn": "Малювання на шарі «{name}»",
   "vector.hiddenLayer":
