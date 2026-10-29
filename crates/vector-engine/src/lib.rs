@@ -5,6 +5,18 @@ mod geometry;
 mod save_checkpoint;
 #[cfg(feature = "save-checkpoint")]
 mod save_metadata;
+#[cfg(feature = "save-incremental")]
+mod save_delta;
+#[cfg(feature = "save-incremental")]
+mod save_delta_wire;
+#[cfg(feature = "save-incremental")]
+mod save_delta_transport;
+#[cfg(feature = "save-incremental")]
+mod save_replay;
+#[cfg(feature = "save-incremental")]
+mod save_replay_model;
+#[cfg(feature = "save-incremental")]
+mod save_decode;
 mod geometry_wide;
 pub mod geometry_wide_transport;
 pub mod geometry_wide_snapshot;
@@ -122,6 +134,7 @@ impl std::ops::Index<usize> for Points {
         &self.blocks[i / 256][i % 256]
     }
 }
+#[cfg_attr(feature = "save-incremental", derive(Clone))]
 struct Stroke {
     points: Rc<Points>,
     // Slice fragments share immutable accepted samples and a curve interval.
@@ -319,6 +332,8 @@ impl Engine {
         self.cancel();
         if let Some(command) = self.undo.pop() {
             self.apply(&command, false);
+            #[cfg(feature = "save-incremental")]
+            save_delta::completed(self, &command);
             self.redo.push(command);
         }
     }
@@ -326,6 +341,8 @@ impl Engine {
         self.cancel();
         if let Some(command) = self.redo.pop() {
             self.apply(&command, true);
+            #[cfg(feature = "save-incremental")]
+            save_delta::completed(self, &command);
             self.undo.push(command);
         }
     }
