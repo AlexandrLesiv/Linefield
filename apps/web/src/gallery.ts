@@ -1,6 +1,6 @@
 import { creationClearance } from "./memory/creation-clearance.ts";
 import { resumeIcon } from "./memory/view.css.ts";
-import { hasTemporary } from "./memory/document.ts";
+import { hasVectorSession as hasTemporary } from "./vector-editor.ts";
 import { drawingIcon } from "./drawing-icons.ts";
 import { newCell, mobileCreate, newTile, newLabel } from "./gallery-creation.css.ts";
 import { removed, empty } from "./states.css.ts";

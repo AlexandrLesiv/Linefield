@@ -1,0 +1,9 @@
+[package]
+name = "linefield-vector-engine"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+name = "vector_core"
+crate-type = ["cdylib", "rlib", "staticlib"]

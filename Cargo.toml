@@ -1,8 +1,16 @@
 [workspace]
-members = ["crates/editor-engine", "apps/web/wasm"]
+members = ["crates/editor-engine", "apps/web/wasm", "crates/vector-engine"]
 resolver = "3"
 
 [profile.release]
 lto = true
 opt-level = "s"
 panic = "abort"
+
+# Preserve the approved donor's throughput-focused build independently of the
+# existing editor's size-focused release profile. No renderer policy change.
+[profile.vector-editor]
+inherits = "release"
+opt-level = 3
+lto = true
+panic = "unwind"

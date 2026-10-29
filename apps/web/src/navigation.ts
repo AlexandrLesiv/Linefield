@@ -1,4 +1,4 @@
-import { attachMemory } from "./memory/document.ts";
+import { createVectorShell } from "./vector-editor.ts";
 import { drawingOpen } from "./styles.css.ts";
 import { away } from "./states.css.ts";
 import { drawingSurface, canvasArt } from "./canvas.css.ts";
@@ -9,9 +9,9 @@ import { artworkBounds, moveSurface } from "./surface-motion.ts";
 import type { Drawing } from "./model.ts";
 import { record } from "./diagnostics.ts";
 export function createNavigation(gallery: HTMLElement, onReturn: (restoreFocus: boolean) => void) {
-  let detachMemory: (() => void) | undefined;
   let surface: HTMLElement | null = null;
-  let chrome: ReturnType<typeof createDrawingShell> | null = null;
+  let chrome: ReturnType<typeof createDrawingShell> | ReturnType<typeof createVectorShell> | null =
+    null;
   let origin: HTMLElement | null = null;
   let generation = 0;
   let closing = false;
@@ -77,14 +77,13 @@ export function createNavigation(gallery: HTMLElement, onReturn: (restoreFocus: 
         surface.append(image);
       }
       const foundation = drawing.id === "preview-new";
-      chrome = createDrawingShell(drawing.name, requestBack, foundation);
+      chrome = foundation
+        ? createVectorShell(drawing.name, requestBack)
+        : createDrawingShell(drawing.name, requestBack);
       chrome.setReady(false);
       surface.append(chrome.root);
       document.body.append(surface);
-      if (foundation) {
-        detachMemory = attachMemory(surface);
-        chrome.setReady(true);
-      }
+
       const current = surface;
       const previousFocus = document.activeElement;
       let focusChanged = false;
@@ -113,8 +112,6 @@ export function createNavigation(gallery: HTMLElement, onReturn: (restoreFocus: 
     async close(): Promise<void> {
       if (!surface || !origin || closing) return;
       closing = true;
-      detachMemory?.();
-      detachMemory = undefined;
       const current = surface;
       const rect = current.getBoundingClientRect();
       const imageRect = current.querySelector(".canvas-art")?.getBoundingClientRect() ?? null;
