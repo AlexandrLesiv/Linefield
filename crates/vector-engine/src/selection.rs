@@ -172,19 +172,27 @@ pub extern "C" fn stroke_offset(id: usize, axis: usize) -> f64 {
 /// (a*x-b*y+tx, b*x+a*y+ty). Radii scale by hypot(a,b).
 #[cfg_attr(target_arch = "wasm32", no_mangle)]
 pub extern "C" fn stroke_transform(id: usize, component: usize) -> f64 {
+    stroke_transform_relative(id, component, 0, 0)
+}
+/// Disposable projection relative to a regional render origin. Subtract integer
+/// regions before conversion; never subtract two flattened absolute positions.
+#[cfg_attr(target_arch = "wasm32", no_mangle)]
+pub extern "C" fn stroke_transform_relative(id: usize, component: usize, rx: i64, ry: i64) -> f64 {
     ENGINE.with(|e| {
         let e = e.borrow();
-        e.strokes
-            .get(id)
-            .map(|s| {
-                [s.basis[0], s.basis[1], s.legacy_offset(0), s.legacy_offset(1)]
-                    .get(component)
-                    .copied()
-                    .unwrap_or(0.0)
-            })
-            .unwrap_or(if component == 0 { 1.0 } else { 0.0 })
+        let Some(s) = e.strokes.get(id) else { return if component == 0 { 1.0 } else { 0.0 }; };
+        match component {
+            0 | 1 => s.basis[component],
+            2 | 3 => {
+                let axis = component - 2;
+                let origin = super::regional::Address { region: [rx, ry][axis], local: 0.0 };
+                s.source_anchor[axis].relative_to(origin) + s.offset[axis]
+            }
+            _ => 0.0,
+        }
     })
 }
+
 #[cfg_attr(target_arch = "wasm32", no_mangle)]
 pub extern "C" fn transform_update(
     px: f64,

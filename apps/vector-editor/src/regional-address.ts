@@ -23,6 +23,21 @@ export function createRegionalAddressAdapter(core: Core) {
     });
   }
   return {
+    projection(id: number, regionX: bigint, regionY: bigint): readonly number[] | null {
+      if (
+        !Number.isSafeInteger(id) ||
+        id < 0 ||
+        id >= core.count() ||
+        !validTransport(regionX, 0) ||
+        !validTransport(regionY, 0)
+      )
+        return null;
+      return Object.freeze(
+        [0, 1, 2, 3].map((component) =>
+          core.stroke_transform_relative(id, component, regionX, regionY),
+        ),
+      );
+    },
     transform(
       x: RegionalAddress,
       y: RegionalAddress,

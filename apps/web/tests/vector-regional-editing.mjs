@@ -84,6 +84,27 @@ try {
           pivotY - b * pivotX - a * pivotY + dy,
         ];
         const actual = relative();
+        for (const shift of [-1n, 0n, 1n]) {
+          const projection = lab.regional.projection(id, rx + shift, ry - shift);
+          if (!projection || !Object.isFrozen(projection))
+            throw Error("Projection transport not immutable");
+          const wanted = [
+            a,
+            b,
+            expected[0] - Number(shift) * 65536,
+            expected[1] + Number(shift) * 65536,
+          ];
+          for (let k = 0; k < 4; k++)
+            if (Math.abs(projection[k] - wanted[k]) > 1e-10)
+              throw Error("Relative projection flattened regional origin");
+        }
+        for (const [badId, badRegion] of [
+          [-1, rx],
+          [core.count(), rx],
+          [id, 1n << 63n],
+        ])
+          if (lab.regional.projection(badId, badRegion, ry) !== null)
+            throw Error("Invalid projection transport accepted");
         for (let axis = 0; axis < 2; axis++)
           if (Math.abs(actual[axis] - expected[axis]) > 1e-10)
             throw Error(`Regional composition mismatch: ${actual} vs ${expected}`);

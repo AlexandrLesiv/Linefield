@@ -11,7 +11,7 @@ export type StrokeTransform = readonly [
 export const transformScale = (t: StrokeTransform) => Math.hypot(t[0], t[1]);
 export function readTransform(core: Core, id: number): StrokeTransform {
 	return [0, 1, 2, 3].map((k) =>
-		core.stroke_transform(id, k),
+		core.stroke_transform_relative(id, k, 0n, 0n),
 	) as unknown as StrokeTransform;
 }
 export function transformPoint(
