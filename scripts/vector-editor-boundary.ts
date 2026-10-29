@@ -18,18 +18,23 @@ for (const source of sources) {
   for (const match of text.matchAll(
     /pub extern "C" fn (\w+)\s*\(([^)]*)\)\s*(?:->\s*([^{]+))?\s*\{/g,
   )) {
+    const functionName = match[1],
+      parameters = match[2],
+      returnType = match[3];
+    if (!functionName || parameters === undefined) throw Error("Malformed vector ABI signature");
     rustSignatures.push(
-      `${match[1]}(${match[2].replace(/\s+/g, "")})->${(match[3] || "()").replace(/\s+/g, "")}`,
+      `${functionName}(${parameters.replace(/\s+/g, "")})->${(returnType || "()").replace(/\s+/g, "")}`,
     );
-    const args = match[2]
+    const args = parameters
       .split(",")
       .map((part) => part.trim())
       .filter(Boolean)
       .map((part) => {
         const [name, type] = part.split(":");
+        if (!name || !type) throw Error(`Malformed vector ABI argument: ${part}`);
         return `${name.trim()}: ${scalar(type)}`;
       });
-    signatures.push({ name: match[1], args, result: match[3] ? scalar(match[3]) : "void" });
+    signatures.push({ name: functionName, args, result: returnType ? scalar(returnType) : "void" });
   }
 }
 signatures.sort((a, b) => a.name.localeCompare(b.name));
