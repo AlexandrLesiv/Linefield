@@ -1,3 +1,4 @@
+import { checkWideCamera } from "./vector-wide-camera.mjs";
 import { checkWideTranslation } from "./vector-wide-transform.mjs";
 import { observeGeometryWorker } from "./vector-worker-observation.mjs";
 import { chromium } from "@playwright/test";
@@ -117,6 +118,10 @@ try {
       const restored = await captureDrawing(frame, clip);
       if (JSON.stringify(restored) !== JSON.stringify(before))
         throw Error("Slice Undo changed tail pixels");
+      const rotated =
+        process.env.LINEFIELD_WIDE_CAMERA === "1"
+          ? await checkWideCamera(page, frame, clip, before)
+          : null;
       const worker = await frame.evaluate(() => window.geometryWorkerStats);
       if (
         worker.maximumPending > 8 ||
@@ -145,6 +150,7 @@ try {
       )
         throw Error("Worker-input allocation failure did not recover through retirement");
       results.push({
+        rotated,
         moved,
         extent,
         brush,
@@ -161,6 +167,8 @@ try {
       await page.close();
     }
     const pair = results.slice(-2);
+    if (JSON.stringify(pair[0].rotated) !== JSON.stringify(pair[1].rotated))
+      throw Error(`Compact and long-source rotated tail images differ at ${extent}`);
     if (JSON.stringify(pair[0].moved) !== JSON.stringify(pair[1].moved))
       throw Error(`Compact and long-source translated images differ at ${extent}`);
     if (JSON.stringify(pair[0].before) !== JSON.stringify(pair[1].before))
