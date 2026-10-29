@@ -11,7 +11,7 @@ function scalar(type: string): string {
   throw Error(`Unsupported vector ABI type: ${type}`);
 }
 for (const source of sources) {
-  const text = readFileSync(`${root}apps/vector-editor/core/src/${source}.rs`, "utf8");
+  const text = readFileSync(`${root}crates/vector-engine/src/${source}.rs`, "utf8");
   for (const match of text.matchAll(
     /pub extern "C" fn (\w+)\s*\(([^)]*)\)\s*(?:->\s*([^{]+))?\s*\{/g,
   )) {

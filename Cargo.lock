@@ -54,6 +54,10 @@ name = "linefield-editor-engine"
 version = "0.1.0"
 
 [[package]]
+name = "linefield-vector-engine"
+version = "0.1.0"
+
+[[package]]
 name = "linefield-web-memory"
 version = "0.1.0"
 dependencies = [

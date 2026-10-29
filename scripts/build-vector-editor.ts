@@ -11,15 +11,16 @@ run(process.execPath, [root + "scripts/vector-editor-boundary.ts", "--check"]);
 run("cargo", [
   "build",
   "--locked",
-  "--manifest-path",
-  "apps/vector-editor/core/Cargo.toml",
+  "--package",
+  "linefield-vector-engine",
   "--target",
   "wasm32-unknown-unknown",
-  "--release",
+  "--profile",
+  "vector-editor",
 ]);
 mkdirSync(root + "apps/vector-editor/public", { recursive: true });
 copyFileSync(
-  root + "apps/vector-editor/core/target/wasm32-unknown-unknown/release/vector_core.wasm",
+  root + "target/wasm32-unknown-unknown/vector-editor/vector_core.wasm",
   root + "apps/vector-editor/public/core.wasm",
 );
 run(process.execPath, [
