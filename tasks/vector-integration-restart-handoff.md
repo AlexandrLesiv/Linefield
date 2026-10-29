@@ -62,3 +62,7 @@ The owner renewed autonomous implementation after the earlier deadline and reque
 ## Latest bounded host factoring
 
 Ink shader/program resource ownership now lives in a separate browser module. Shader algorithms and rendering lifecycle are unchanged. Actual-app compile/link fault injection verifies cleanup and startup Retry; all 120 approved checks and exact reference artwork/raw parity pass on 65307. No new performance improvement or final architecture acceptance is claimed. Continue with the numerical and architectural gaps listed above.
+
+## Next numerical implementation gate
+
+The long-source gap is now reproducible with apps/web/tests/vector-long-source-audit.mjs (intentionally fails on current production). Twenty actual-app Wasm cases preserve canonical/history and worker equality, but six noncompact cases lose fine source geometry. At 2^20 displacement, 128 tail positions collapse to 65 and a straight chunk grows from one to 96 capsules. Read the latest task entry for the coupled Rust/host implementation requirements; do not fix only snapshots, camera transforms or GPU buffers. Existing preview 65307 remains the latest verified application. No production changes were made in this audit checkpoint.
