@@ -157,6 +157,12 @@ pub extern "C" fn idle_target(token: u32) -> u64 {
 /// Exact trusted-host receipt only. Busy retirement leaves this batch retained.
 #[cfg_attr(target_arch = "wasm32", no_mangle)]
 pub extern "C" fn idle_ack(token: u32, base: u64, result: u64) -> u32 {
+    if cfg!(feature = "save-app") {
+        return 0;
+    }
+    acknowledge(token, base, result)
+}
+pub(super) fn acknowledge(token: u32, base: u64, result: u64) -> u32 {
     IDLE.with(|s| {
         let mut s = s.borrow_mut();
         if s.retired.is_some()

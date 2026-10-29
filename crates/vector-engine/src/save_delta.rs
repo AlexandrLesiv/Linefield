@@ -73,6 +73,13 @@ impl Journal {
         let mut ids = vec![];
         let mut out = vec![];
         match command {
+            #[cfg(feature = "save-app")]
+            Command::Settings(_, _) => {
+                out.push(5);
+                for value in e.settings {
+                    wire::word(&mut out, value as usize);
+                }
+            }
             Command::Stroke(id) => ids.push(*id),
             Command::Move(moves) => ids.extend(moves.iter().map(|m| m.id)),
             Command::Delete(deleted) => ids.extend(deleted),

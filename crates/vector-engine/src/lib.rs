@@ -21,6 +21,14 @@ mod save_idle;
 mod save_idle_stream;
 #[cfg(feature = "save-idle")]
 mod save_idle_retire;
+#[cfg(feature = "save-app")]
+mod save_authority;
+#[cfg(feature = "save-app")]
+mod save_seal;
+#[cfg(feature = "save-app")]
+mod save_settings;
+#[cfg(feature = "save-app")]
+mod save_boundary_generated;
 #[cfg(feature = "save-incremental")]
 mod save_decode;
 mod geometry_wide;
@@ -207,6 +215,8 @@ impl Stroke {
     }
 }
 struct Engine {
+    #[cfg(feature = "save-app")]
+    settings: [u32; 2],
     strokes: Vec<Stroke>,
     active: Option<usize>,
     undo: Vec<Command>,
@@ -225,6 +235,8 @@ struct Engine {
 impl Default for Engine {
     fn default() -> Self {
         Self {
+            #[cfg(feature = "save-app")]
+            settings: [1, 0],
             strokes: Vec::new(),
             active: None,
             undo: Vec::new(),

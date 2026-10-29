@@ -22,6 +22,8 @@ impl Layer {
 }
 // History holds small metadata changes and stable stroke IDs, never sample copies.
 pub(super) enum Command {
+    #[cfg(feature = "save-app")]
+    Settings([u32; 2], [u32; 2]),
     Stroke(usize),
     Move(Vec<super::selection::Translation>),
     Delete(Vec<usize>),
@@ -68,6 +70,8 @@ impl Engine {
     }
     pub(super) fn apply(&mut self, command: &Command, forward: bool) {
         match command {
+            #[cfg(feature = "save-app")]
+            Command::Settings(before, after) => self.settings = if forward { *after } else { *before },
             Command::Stroke(id) => self.strokes[*id].visible = forward,
             Command::Move(changes) => self.apply_translations(changes, forward),
             Command::Delete(ids) => {

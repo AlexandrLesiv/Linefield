@@ -93,3 +93,15 @@ SAVE-03 large initial batches and retirement stalled despite cheap steady-state 
 revision-specific idle/exit flushing. Its measured largest task was2.61 ms, not a hard1 ms
 guarantee; full application/device acceptance remains pending. Existing previews and production
 saving remain unchanged until returned results are reviewed.
+
+
+## Full-app browser adoption — SAVE-05
+
+The owner authorized actual-app integration after SAVE-04. [SAVE-05](../../tasks/SAVE-05.md)
+implements the bounded transferred-buffer path, complete Rust receipt identity/body validation,
+paper/grid settings history and guarded worker storage in a separate preview. The app uses the
+save-app feature and independently generated saving boundary; default engine consumers retain
+their existing ABI. Rust capture overflow remains a visible blocked-save condition without
+rejecting accepted drawing input. The single local document and append-only bounded journal
+are an initial integration, not adoption of a complete gallery/database/native design. Exact
+limits, recovery/performance evidence and remaining compaction/platform gates are in SAVE-05.

@@ -20,7 +20,7 @@ let drawings = sampleDrawings();
 let currentId: string | null = null;
 const blankPreview: Drawing = {
   id: "preview-new",
-  name: t("memory.title"),
+  name: t("save.title"),
   image: null,
   deleted: false,
 };
@@ -53,7 +53,7 @@ function creationOrigin(): HTMLElement | null {
 }
 function render(): void {
   renderGallery(gallery, drawings, actions);
-  if (hasVectorSession()) notice.textContent = t("memory.retained");
+  if (hasVectorSession()) notice.textContent = t("save.local");
 }
 function open(drawing: Drawing, origin: HTMLElement): void {
   if (navigation.active) return;
@@ -107,7 +107,10 @@ async function syncRoute(): Promise<void> {
         (id === blankPreview.id ? blankPreview : undefined);
       if (navigation.active && drawing?.id === currentId) break;
       if (navigation.active) {
-        await navigation.close();
+        if (!(await navigation.close())) {
+          if (currentId) openRoute(currentId);
+          break;
+        }
         continue;
       }
       const source =
@@ -124,9 +127,7 @@ async function syncRoute(): Promise<void> {
   }
 }
 window.addEventListener("popstate", () => void syncRoute());
-const unavailable = drawingRoute() === blankPreview.id;
-initializeRoute(drawings.map((drawing) => drawing.id));
-if (unavailable) notice.textContent = t("memory.unavailable");
+initializeRoute([...drawings.map((drawing) => drawing.id), blankPreview.id]);
 render();
 void syncRoute();
 

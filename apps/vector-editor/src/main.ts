@@ -1,3 +1,7 @@
+import { createSaving } from "./saving";
+import { checkedSaveCore } from "./saving/types";
+import { createSaveStatus } from "./save-status";
+import { saveLifecycle } from "./save-lifecycle";
 import { preparePaperContact, materialPreparation } from "./paper-contact-preparation";
 import "./style.css";
 import { buildGpuResources, installGpuRecovery } from "./gpu-restore";
@@ -49,6 +53,14 @@ const core = await loadCore().catch((error: unknown) => {
 	showStartupFailure(status);
 	throw error;
 });
+const saveUi = createSaveStatus();
+saveUi.set("loading");
+const saving = await createSaving(core).catch((error: unknown) => {
+  saveUi.set(error instanceof Error && error.message === "in-use" ? "openInUse" : "openFailed", () => location.reload());
+  document.querySelector("main")!.inert = true;
+  throw error;
+});
+const saveCore = checkedSaveCore(core);
 let runtimeFailure = "";
 let startupComplete = false;
 window.addEventListener("error", (e) => {
@@ -81,17 +93,20 @@ let sparseCoverage = new SparseCoverage(
 let paperBackground = new PaperBackground(gpu);
 let pencilGrain = new PencilGrain(gpu);
 const paperStyle = document.querySelector<HTMLSelectElement>("#paper-style")!;
+paperStyle.value = ["none", "warm", "white"][saveCore.document_paper()] ?? "warm";
 const selectedPaper = (): PaperStyle =>
 	paperStyle.value === "warm" || paperStyle.value === "white"
 		? paperStyle.value
 		: "none";
 const gridStyle = document.querySelector<HTMLSelectElement>("#grid-style")!;
+gridStyle.value = ["none", "notebook", "dots"][saveCore.document_grid()] ?? "none";
 const selectedGrid = (): GridStyle =>
 	gridStyle.value === "notebook" || gridStyle.value === "dots"
 		? gridStyle.value
 		: "none";
 for (const control of [paperStyle, gridStyle]) {
 	control.addEventListener("change", () => {
+    saveCore.document_settings(["none","warm","white"].indexOf(paperStyle.value), ["none","notebook","dots"].indexOf(gridStyle.value));
 		compositeCache.invalidate();
 		dirty = true;
 	});
@@ -246,6 +261,12 @@ const layers = createLayers(core, (change) => {
 });
 let originRevision = camera.originRevision;
 function prepare() {
+  const settings = saveCore;
+  const paper = ["none","warm","white"][settings.document_paper()] ?? "warm";
+  const grid = ["none","notebook","dots"][settings.document_grid()] ?? "none";
+  if (paperStyle.value !== paper || gridStyle.value !== grid) {
+    paperStyle.value = paper; gridStyle.value = grid; compositeCache.invalidate(); dirty = true;
+  }
 	if (gesture === null || gesture === "pan" || gesture === "rotate") camera.rebase();
 	if (originRevision !== camera.originRevision) {
 		cache.syncTransforms();
@@ -603,6 +624,7 @@ function draw() {
 }
 let error = "";
 function frame() {
+  savingLifecycle.tick();
 	brushControls.render();
 	if (!lost) {
 		const t = performance.now();
@@ -683,7 +705,7 @@ function selectionInput(action: () => void): boolean {
 }
 canvas.addEventListener("pointerdown", (e) => {
 	if (pointerRelease.pending) cancel("new-contact-before-release");
-	if (lost || pointer !== null || e.button !== 0) return;
+	if (savingLifecycle.leaving || lost || pointer !== null || e.button !== 0) return;
 	e.preventDefault();
 	canvas.focus();
 	if (!space && !rotateHeld && tool === "draw" && !core.can_draw()) return;
@@ -807,7 +829,9 @@ function suspendInput() {
 	space = rotateHeld = false;
 	cancel("session-blur-or-hidden");
 }
-installEditorSession(suspendInput);
+const savingLifecycle = saveLifecycle(Object.assign({}, core, saveCore), saving, saveUi, () => pointer !== null, canvas);
+saving.subscribe(() => savingLifecycle.update());
+installEditorSession(suspendInput, savingLifecycle);
 window.addEventListener("blur", suspendInput);
 document.addEventListener("visibilitychange", () => {
 	if (document.hidden) suspendInput();
@@ -933,6 +957,7 @@ installGpuRecovery(canvas, () => {
 Object.assign(window, {
 	lab: {
 		metrics,
+    saving,
 		inputDiagnostics: () => inputDiagnostics.snapshot(),
 		downloadInputDiagnostics: () => inputDiagnostics.download(),
 		brushStats: () => ({ textureBytes: pencilGrain.textureBytes, materialPreparation: { ...materialPreparation } }),
@@ -1013,6 +1038,6 @@ Object.assign(window, {
 		},
 	},
 });
-status.textContent = "Ready · drawings are not saved";
+status.textContent = "Ready";
 
 startupComplete = true;

@@ -109,8 +109,10 @@ export function createNavigation(gallery: HTMLElement, onReturn: (restoreFocus: 
           chrome?.back.focus({ preventScroll: true });
       }
     },
-    async close(): Promise<void> {
-      if (!surface || !origin || closing) return;
+    async close(): Promise<boolean> {
+      if (!surface || !origin || closing) return false;
+      if (chrome && "requestLeave" in chrome && !(await chrome.requestLeave())) return false;
+      if (!surface || !origin || closing) return false;
       closing = true;
       const current = surface;
       const rect = current.getBoundingClientRect();
@@ -127,7 +129,7 @@ export function createNavigation(gallery: HTMLElement, onReturn: (restoreFocus: 
       await move(rect, origin.getBoundingClientRect(), imageRect);
       document.removeEventListener("focusin", trackFocus);
       window.removeEventListener("blur", trackFocus);
-      if (surface !== current) return;
+      if (surface !== current) return false;
       current.remove();
       origin.style.visibility = "";
       surface = null;
@@ -137,6 +139,7 @@ export function createNavigation(gallery: HTMLElement, onReturn: (restoreFocus: 
       document.body.classList.remove("drawing-open", drawingOpen);
       record("returned");
       onReturn(!focusChanged);
+      return true;
     },
   };
 }

@@ -9,6 +9,8 @@ use std::{
 };
 #[derive(Clone)]
 pub(super) struct Model {
+    #[cfg(feature = "save-app")]
+    settings: [u32; 2],
     pub revision: u64,
     pub sources: BTreeMap<usize, Rc<Points>>,
     strokes: BTreeMap<usize, Stroke>,
@@ -19,6 +21,8 @@ pub(super) struct Model {
 impl Default for Model {
     fn default() -> Self {
         Self {
+            #[cfg(feature = "save-app")]
+            settings: [1, 0],
             revision: 0,
             sources: BTreeMap::new(),
             strokes: BTreeMap::new(),
@@ -100,6 +104,8 @@ impl Model {
     }
     fn record(&mut self, r: &mut Read<'_>) -> Option<()> {
         match r.byte()? {
+            #[cfg(feature = "save-app")]
+            5 => self.settings = super::save_settings::decode(r)?,
             1 => {
                 let (id, s) = decode::stroke(r, &self.sources)?;
                 self.high = self.high.max(id + 1);
@@ -153,6 +159,10 @@ impl Model {
     }
     pub fn engine(&self) -> Option<Engine> {
         let mut e = Engine::default();
+        #[cfg(feature = "save-app")]
+        {
+            e.settings = self.settings;
+        }
         let max = self.layers.keys().next_back().copied()?;
         e.layers = (0..=max)
             .map(|id| {

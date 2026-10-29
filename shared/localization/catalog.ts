@@ -3,6 +3,62 @@ export const catalog = {
   version: 1,
   sourceLanguage: "en",
   messages: {
+    "save.capacity": { kind: "plain", context: "Saving failure condition", arguments: {} },
+    "save.openInUse": { kind: "plain", context: "Saving failure condition", arguments: {} },
+
+    "save.title": { kind: "plain", context: "Single local drawing preview entry", arguments: {} },
+    "save.open": { kind: "plain", context: "Single local drawing preview entry", arguments: {} },
+
+    "save.loading": {
+      kind: "plain",
+      context: "Local drawing saving state or action",
+      arguments: {},
+    },
+    "save.saved": { kind: "plain", context: "Local drawing saving state or action", arguments: {} },
+    "save.pending": {
+      kind: "plain",
+      context: "Local drawing saving state or action",
+      arguments: {},
+    },
+    "save.saving": {
+      kind: "plain",
+      context: "Local drawing saving state or action",
+      arguments: {},
+    },
+    "save.failed": {
+      kind: "plain",
+      context: "Local drawing saving state or action",
+      arguments: {},
+    },
+    "save.openFailed": {
+      kind: "plain",
+      context: "Local drawing saving state or action",
+      arguments: {},
+    },
+    "save.now": { kind: "plain", context: "Local drawing saving state or action", arguments: {} },
+    "save.retry": { kind: "plain", context: "Local drawing saving state or action", arguments: {} },
+    "save.retryOpen": {
+      kind: "plain",
+      context: "Local drawing saving state or action",
+      arguments: {},
+    },
+    "save.leaving": {
+      kind: "plain",
+      context: "Local drawing saving state or action",
+      arguments: {},
+    },
+    "save.cancelLeave": {
+      kind: "plain",
+      context: "Local drawing saving state or action",
+      arguments: {},
+    },
+    "save.local": { kind: "plain", context: "Local drawing saving state or action", arguments: {} },
+    "save.waitStroke": {
+      kind: "plain",
+      context: "Local drawing saving state or action",
+      arguments: {},
+    },
+
     "vector.adjustPressure": {
       kind: "plain",
       context: "Vector editor panel explanation or accessible label",

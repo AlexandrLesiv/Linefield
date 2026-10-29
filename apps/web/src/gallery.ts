@@ -26,7 +26,7 @@ interface Actions {
 }
 export function renderGallery(root: HTMLElement, drawings: Drawing[], actions: Actions): void {
   root.replaceChildren();
-  const createLabel = t(hasTemporary() ? "memory.resume" : "drawing.create");
+  const createLabel = t("save.open");
   const grid = element("div", `drawing-grid ${drawingGrid}`);
   grid.setAttribute("aria-label", t("gallery.label"));
   {
