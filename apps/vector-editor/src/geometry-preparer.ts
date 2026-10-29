@@ -1,6 +1,3 @@
-import { preparedGeometry, preparedByteLengths, preparationBuffers } from "./geometry-preparation";
-import { validPreparation } from "./geometry-preparation-validation";
-import type { StrokeTransform } from "./stroke-transform";
 import type { GeometryData } from "./derived-geometry";
 import type { Core } from "./core";
 /** One bounded independent Wasm engine. Canonical samples never leave ownership
@@ -46,19 +43,6 @@ export class GeometryPreparer {
         callback?.(null);
         return;
       }
-      if (!validPreparation(data.prepared, data.output)) {
-        this.fail();
-        callback(null);
-        return;
-      }
-      preparedGeometry.set(data.output, data.prepared);
-      preparedByteLengths.set(
-        data.output,
-        preparationBuffers(data.output, data.prepared).reduce(
-          (sum, buffer) => sum + buffer.byteLength,
-          0,
-        ),
-      );
       if (this.callbacks.size) this.armWatchdog();
       callback?.(data.output);
       this.changed();
@@ -74,7 +58,6 @@ export class GeometryPreparer {
     stroke: number,
     chunk: number,
     tolerance: number,
-    transform: StrokeTransform,
     callback: (data: GeometryData | null) => void,
   ) {
     if (!this.available) return false;
@@ -98,7 +81,7 @@ export class GeometryPreparer {
       this.callbacks.set(id, callback);
       if (wide) this.wideRequests.add(id);
       if (!this.watchdog) this.armWatchdog();
-      this.worker.postMessage({ id, input, tolerance, transform }, [input.buffer]);
+      this.worker.postMessage({ id, input, tolerance }, [input.buffer]);
     } catch {
       this.fail();
       return false;

@@ -14,8 +14,8 @@ import {
 	transformScale,
 } from "./stroke-transform";
 export const RAW_CHUNK = 128;
-import { COVERAGE_SPAN, COVERAGE_BLOCK_ROWS, retainCapsules, coverageBlocks, geometrySpans, preparedGeometry, preparedByteLengths } from "./geometry-preparation";
-export { COVERAGE_SPAN, COVERAGE_BLOCK_ROWS, retainCapsules, coverageBlocks } from "./geometry-preparation";
+export const COVERAGE_SPAN = 2;
+export const COVERAGE_BLOCK_ROWS = 16;
 export type Bounds = [number, number, number, number];
 export type CoverageSpans = Float64Array | { bounds: Bounds }[];
 export type View = { bounds: Bounds; level: number; settling: boolean };
@@ -78,6 +78,52 @@ type Stroke = {
 const intersects = (a: Bounds, b: Bounds) =>
 	a[2] >= b[0] && a[0] <= b[2] && a[3] >= b[1] && a[1] <= b[3];
 
+/** Most completed geometry is one connected chain. Store each shared endpoint
+ * once, preserving its Float32 bits; discontinuous future brush geometry keeps
+ * the original six-float segment format. Both paths own their scratch copy. */
+export function retainCapsules(data: Float32Array): {capsules: Float32Array; capsuleStride: 3 | 6};
+export function retainCapsules(data: Float64Array): {capsules: Float64Array; capsuleStride: 3 | 6};
+export function retainCapsules(data: GeometryData): {capsules: GeometryData; capsuleStride: 3 | 6};
+export function retainCapsules(data: GeometryData): {capsules: GeometryData; capsuleStride: 3 | 6} {
+	if (!data.length || data.length % 6)
+		return { capsules: data.slice(), capsuleStride: 6 as const };
+	const words = data.BYTES_PER_ELEMENT / 4;
+	const bits = new Uint32Array(data.buffer, data.byteOffset, data.length * words);
+	for (let i = 6 * words; i < bits.length; i += 6 * words)
+		for (let k = 0; k < 3 * words; k++)
+			if (bits[i + k] !== bits[i - 3 * words + k])
+				return { capsules: data.slice(), capsuleStride: 6 as const };
+	const capsules = data instanceof Float64Array ? new Float64Array(data.length / 2 + 3) : new Float32Array(data.length / 2 + 3);
+	const output = new Uint32Array(capsules.buffer);
+	output.set(bits.subarray(0, 3 * words));
+	for (let i = 0; i < data.length / 6; i++)
+		for (let k = 0; k < 3 * words; k++) output[(i + 1) * 3 * words + k] = bits[(i * 6 + 3) * words + k];
+	return { capsules, capsuleStride: 3 as const };
+}
+
+/** Build a bounded second level over existing derived span bounds. */
+export function coverageBlocks(spans: Float64Array) {
+	const blocks = new Float64Array(
+		Math.ceil(spans.length / (4 * COVERAGE_BLOCK_ROWS)) * 4,
+	);
+	for (let row = 0; row < spans.length / 4; row += COVERAGE_BLOCK_ROWS) {
+		const at = Math.floor(row / COVERAGE_BLOCK_ROWS) * 4;
+		blocks[at] = blocks[at + 1] = Infinity;
+		blocks[at + 2] = blocks[at + 3] = -Infinity;
+		for (
+			let i = row * 4;
+			i < Math.min(spans.length, (row + COVERAGE_BLOCK_ROWS) * 4);
+			i += 4
+		) {
+			blocks[at] = Math.min(blocks[at], spans[i]);
+			blocks[at + 1] = Math.min(blocks[at + 1], spans[i + 1]);
+			blocks[at + 2] = Math.max(blocks[at + 2], spans[i + 2]);
+			blocks[at + 3] = Math.max(blocks[at + 3], spans[i + 3]);
+		}
+	}
+	return blocks;
+}
+
 /** Disposable geometry only. Rust remains the owner of accepted samples and curve policy. */
 export class GeometryCache {
 	private preparer: GeometryPreparer | null = null;
@@ -119,8 +165,8 @@ export class GeometryCache {
 		// than forcing one draw for every small batch of otherwise cheap chunks.
 		let readyBytes = 0;
 		for (const job of this.jobs.values())
-			readyBytes += job.data ? (preparedByteLengths.get(job.data) ?? job.data.byteLength) : 0;
-		const outstandingBytes = 5 * 8 * this.core.geometry_output_capacity() * Float64Array.BYTES_PER_ELEMENT;
+			readyBytes += job.data?.byteLength ?? 0;
+		const outstandingBytes = 8 * this.core.geometry_output_capacity() * Float64Array.BYTES_PER_ELEMENT;
 		const until = performance.now() + 0.5;
 		for (const c of this.rebuilding) {
 			if (
@@ -140,7 +186,6 @@ export class GeometryCache {
 					c.id,
 					c.chunk,
 					2 ** this.levelFor(c),
-          this.strokes.get(c.id)!.transform,
 					(data) => {
 						if (this.jobs.get(c) !== job) return;
 						if (
@@ -150,10 +195,7 @@ export class GeometryCache {
 							this.levelFor(c) !== job.level
 						)
 							this.jobs.delete(c);
-						else {
-              this.stats.geometryWorkerReceivedBytes += preparedByteLengths.get(data) ?? data.byteLength;
-              this.jobs.set(c, { ...job, data });
-            }
+						else this.jobs.set(c, { ...job, data });
 					},
 				)
 			)
@@ -188,9 +230,6 @@ export class GeometryCache {
 		gpuBytes: 0,
 		backlog: 0,
 		geometryBuilds: 0,
-    extendedGeometryBuilds: 0,
-    extendedGeometryStaleTransforms: 0,
-    geometryWorkerReceivedBytes: 0,
 		evictions: 0,
 		lodLevel: -2,
 		visibleChunks: 0,
@@ -665,13 +704,9 @@ export class GeometryCache {
 		}
 		this.jobs.delete(c);
 		const transform = this.strokes.get(c.id)!.transform;
-    const offered = preparedGeometry.get(data);
-    const prepared = offered?.transform.every((value, index) => value === transform[index]) ? offered : undefined;
-		if (offered && !prepared) this.stats.extendedGeometryStaleTransforms++;
 		let localCapsules: GeometryData | undefined;
 		let localStride: 3 | 6 | undefined;
-    if (prepared) { data = prepared.projected; localCapsules = prepared.local; localStride = prepared.capsuleStride; }
-		else if (data instanceof Float64Array || transform[0] !== 1 || transform[1] || transform[2] || transform[3]) {
+		if (data instanceof Float64Array || transform[0] !== 1 || transform[1] || transform[2] || transform[3]) {
 			const local = retainCapsules(data);
 			localCapsules = local.capsules;
 			localStride = local.capsuleStride;
@@ -715,20 +750,39 @@ export class GeometryCache {
 		this.geometryBytes += bytes - (old?.bytes ?? 0);
 		// Packed double-precision hulls avoid per-span objects without rounding
 		// conservative bounds inward. Only derived geometry is indexed here.
-		const spans = prepared?.spans ?? geometrySpans(data);
+		const spans = new Float64Array(Math.ceil(count / COVERAGE_SPAN) * 4);
+		for (let first = 0; first < count; first += COVERAGE_SPAN) {
+			let left = Infinity,
+				top = Infinity,
+				right = -Infinity,
+				bottom = -Infinity;
+			for (let i = first; i < Math.min(count, first + COVERAGE_SPAN); i++) {
+				const k = i * 6;
+				const radius = Math.max(data[k + 2], data[k + 5]);
+				left = Math.min(left, data[k] - radius, data[k + 3] - radius);
+				top = Math.min(top, data[k + 1] - radius, data[k + 4] - radius);
+				right = Math.max(right, data[k] + radius, data[k + 3] + radius);
+				bottom = Math.max(bottom, data[k + 1] + radius, data[k + 4] + radius);
+			}
+			const at = (first / COVERAGE_SPAN) * 4;
+			spans[at] = left;
+			spans[at + 1] = top;
+			spans[at + 2] = right;
+			spans[at + 3] = bottom;
+		}
 
 		// Preserve the local layout: rounding transformed endpoints can make two
 		// distinct local endpoints look connected in world-space Float32.
-		const retained = prepared ? { capsules: prepared.capsules, capsuleStride: prepared.capsuleStride } : (
+		const retained =
 			localCapsules && localStride
 				? {
 						capsules: new Float32Array(localCapsules.length),
 						capsuleStride: localStride,
 					}
-				: retainCapsules(data));
-		if (localCapsules && !prepared)
+				: retainCapsules(data);
+		if (localCapsules)
 			transformCapsules(localCapsules, retained.capsules, transform);
-		const spanBlocks = prepared?.spanBlocks ?? coverageBlocks(spans);
+		const spanBlocks = coverageBlocks(spans);
 		const cpuBytes =
 			spans.byteLength +
 			spanBlocks.byteLength +
@@ -751,7 +805,6 @@ export class GeometryCache {
 			version: c.version,
 		});
 		this.stats.geometryBuilds++;
-    if (prepared) this.stats.extendedGeometryBuilds++;
 		// Retain current detail plus the finest fresh alternative, at most two
 		// entries under the shared byte limit. Repeated settled coarse views must
 		// not evict an expensive fine curve needed for the next zoom-in.
