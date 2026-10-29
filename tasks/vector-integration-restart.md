@@ -44,3 +44,21 @@ Moved the complete unchanged Rust implementation from the web application direct
 Preview 65283 uses its own frozen build; previous previews remain untouched. Rebuilt Wasm hash is f2c0b7ea0ee3d29aaec9922f327fc30101b728c640eabe317e316093c79e203e (package/path/profile relocation changes the binary). Exact image/raw reference comparison and all 120 browser acceptance checks pass again. Both TypeScript checks, scoped lint and diff checks pass. Evidence: .build-cache/restart/shared-engine-parity and shared-engine-acceptance. No new performance claim.
 
 This establishes shared crate location/build ownership, not final coordinate/ownership semantics. Regional precision and checked arguments/buffers remain pending, as do replacing the temporary embedded UI, localized/themed controls, performance baselines and the five worker experiments. The inherited native adapter mentions a header absent from the donor handoff; it is not a completed native integration contract.
+
+## 2026-10-29 bounded performance baseline
+
+Added a reproducible browser benchmark comparing untouched reference 65280 with shared-engine preview 65283, alternating order across three repeats each. Apple M2 Pro / 12 logical CPUs / 16 GiB, macOS Darwin 27, Chrome 156.0.8078.48 headless, ANGLE Metal, DPR 2, matching 2880×1632 backing stores. The workload uses 24 mixed opaque/translucent Ink/Hard/Soft strokes and 3,096 accepted raw samples, continuous pan, 5–1600% zoom changes, continuous rotation and Undo/Redo. Raw data survives the camera/history phases; no uncaught errors. Existing previews and production source unchanged.
+
+Median across three runs of per-phase CPU rendering median / p95 (milliseconds):
+
+| Phase | Reference | Integrated |
+| --- | --- | --- |
+| Mixed drawing | 0.6 / 2.8 | 0.8 / 3.3 |
+| Continuous pan | 0.6 / 1.3 | 0.4 / 0.9 |
+| Rapid zoom | 2.1 / 7.4 | 2.2 / 7.3 |
+| Continuous rotation | 0.9 / 1.2 | 1.0 / 1.4 |
+| History (two render samples/run only) | 1.6 / 1.6 | 1.5 / 1.5 |
+
+Observed rAF cadence was approximately 16.7 ms; no long tasks were observed during these phases. This small workload establishes a baseline, not statistical equivalence or large-document acceptance. Integrated readiness was 927.3 ms versus 273.8 ms for standalone: the integrated measurement includes gallery navigation, click and shell transition and must not be attributed to engine loading. Wasm memory was 1,245,184 bytes on both sides; full cache/material counters are retained in the evidence.
+
+Evidence: .build-cache/restart/performance-baseline/results.json and performance-baseline.log. Historical evidence field `correctImageWaitMs` actually measured renderPending settlement, NOT correctness/readback/display; the runner now names it `renderSettledWaitMs` to prevent overclaiming. The zoom proxy was approximately 164 ms on both sides while rAF remained responsive. Physical mouse/Wacom latency, actual displayed-correct-image time, sparse/large dense workloads, GPU duration and worker transfer/turnaround remain unmeasured. GPU queries were disabled. No optimization decision is justified solely by these figures.
