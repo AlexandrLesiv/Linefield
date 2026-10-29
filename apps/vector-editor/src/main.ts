@@ -22,6 +22,7 @@ import {
 import { PencilGrain } from "./pencil-grain";
 import { releasePointer, tryCapturePointer } from "./pointer-capture";
 import { createBrushControls } from "./brush-controls";
+import { installKeyboardInput } from "./keyboard-input";
 import { createSelection } from "./selection";
 import { createSlice } from "./slice";
 import {
@@ -807,61 +808,21 @@ function history(redo: boolean) {
 	record(metrics.historyMs, performance.now() - t);
 	dirty = true;
 }
-window.addEventListener("keydown", (e) => {
-	if (e.defaultPrevented || e.isComposing) return;
-	if (e.key === "Escape") {
+installKeyboardInput({
+	selectionToolActive: () => tool === "select",
+	escape() {
 		space = rotateHeld = false;
 		cancel();
 		selection.clear();
-		return;
-	}
-	if (
-		e.target instanceof HTMLElement &&
-		(e.target.isContentEditable ||
-			e.target.closest("input, textarea, select, [role='textbox']"))
-	)
-		return;
-	if (
-		tool === "select" &&
-		(e.key === "Delete" || e.key === "Backspace") &&
-		!e.metaKey &&
-		!e.ctrlKey &&
-		!e.altKey
-	) {
-		e.preventDefault();
-		if (!e.repeat) {
-			cancel();
-			selection.remove();
-		}
-		return;
-	}
-	if (e.code === "KeyS" && !e.metaKey && !e.ctrlKey && !e.altKey) {
-		e.preventDefault();
-		document.querySelector<HTMLButtonElement>("#slice")!.click();
-	}
-	if (e.code === "KeyV" && !e.metaKey && !e.ctrlKey && !e.altKey) {
-		e.preventDefault();
-		document.querySelector<HTMLButtonElement>("#select")!.click();
-	}
-	if (e.code === "Space") {
-		e.preventDefault();
-		space = true;
-		updateCursor();
-	}
-	if (e.code === "KeyR" && !e.metaKey && !e.ctrlKey && !e.altKey) {
-		e.preventDefault();
-		rotateHeld = true;
-		updateCursor();
-	}
-	if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "z") {
-		e.preventDefault();
-		history(e.shiftKey);
-	}
-});
-window.addEventListener("keyup", (e) => {
-	if (e.code === "Space") space = false;
-	if (e.code === "KeyR") rotateHeld = false;
-	updateCursor();
+	},
+	deleteSelection() {
+		cancel();
+		selection.remove();
+	},
+	setPanHeld(held) { space = held; },
+	setRotationHeld(held) { rotateHeld = held; },
+	updateCursor,
+	history,
 });
 for (const mode of ["pen", "select", "slice", "pan", "rotate"])
 	document.querySelector(`#${mode}`)!.addEventListener("click", () => {

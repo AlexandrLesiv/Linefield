@@ -102,3 +102,7 @@ Preview 65317 replaces manufactured blur events on Back with a typed version-1 s
 ## Latest brush-control checkpoint
 
 Preview 65318 factors brush widgets/settings and pressure-panel delegation out of the drawing loop without changing style commands or rendering. The 120 approved checks, exact artwork/raw parity and held-contact style/raw-pressure/history comparison pass. All prior previews remain frozen. Broader UI/gesture architecture, regional/resource evidence and final reviews remain unfinished; optional workers remain deferred.
+
+## Latest keyboard-host checkpoint
+
+Preview 65319 isolates browser shortcut acquisition behind typed editor callbacks, preserving existing semantics. Actual keyboard/text/composition/selection/history/pan/cancellation comparison, retained-session lifecycle and exact reference artwork/raw parity pass. Static/build checks pass. Full 120-check acceptance was last run on 65318; affected behavior is rechecked here. All previous previews remain frozen; broader architecture/regional/resource/review gaps remain.
