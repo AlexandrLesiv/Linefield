@@ -22,6 +22,7 @@ import {
 import { PencilGrain } from "./pencil-grain";
 import { releasePointer, tryCapturePointer } from "./pointer-capture";
 import { createBrushControls } from "./brush-controls";
+import { PointerSamples } from "./pointer-samples";
 import { installKeyboardInput } from "./keyboard-input";
 import { createSelection } from "./selection";
 import { createSlice } from "./slice";
@@ -633,22 +634,11 @@ setInterval(() => {
 		cache.warning ||
 		`${Math.round(camera.zoom * 100)}% · ${metrics.accepted.toLocaleString()} samples · ${metrics.backlog} chunks pending · ${(metrics.gpuBytes / 1048576).toFixed(1)} MB geometry · ${(metrics.coverageBytes / 1048576).toFixed(1)} MB coverage · ${(metrics.compositeCacheBytes / 1048576).toFixed(1)} MB region cache · Antialiased · Rust/Wasm + WebGL2`;
 }, 250);
-let lastSampleX = 0,
-	lastSampleY = 0,
-	lastPressure = 1;
-function appendSample(x: number, y: number, pressure: number) {
+const pointerSamples = new PointerSamples(canvas, (x, y, pressure) => {
     if (camera.appendSample(x, y, pressure)) metrics.accepted++;
     else runtimeFailure = "Input position or pressure is outside the supported range; existing accepted samples are retained.";
-}
-function sample(e: PointerEvent) {
-	const r = canvas.getBoundingClientRect();
-	appendSample(e.clientX - r.left, e.clientY - r.top, e.pointerType === "pen" ? e.pressure : 1);
-	lastSampleX = e.clientX;
-	lastSampleY = e.clientY;
-	lastPressure = e.pointerType === "pen" ? e.pressure : 1;
-	brushControls.receive(e.pointerType === "pen" ? e.pressure : null);
-	if (active !== null) cache.note(active);
-}
+    if (active !== null) cache.note(active);
+}, (pressure) => brushControls.receive(pressure));
 function cancel() {
 	const releasedPointer = pointer;
 	pointer = null;
@@ -702,7 +692,7 @@ canvas.addEventListener("pointerdown", (e) => {
 				);
 		core.set_active_brush(settings.brush);
 		cache.note(active);
-		sample(e);
+		pointerSamples.sample(e);
 		inputAt = performance.now();
 	}
 	dirty = true;
@@ -727,10 +717,7 @@ canvas.addEventListener("pointermove", (e) => {
 		updateCursor();
 		if (!moved) return;
 	} else if (gesture === "draw") {
-		for (const s of e.getCoalescedEvents?.().length
-			? e.getCoalescedEvents()
-			: [e])
-			sample(s);
+		pointerSamples.move(e);
 	}
 	inputAt ||= t;
 	dirty = true;
@@ -740,12 +727,7 @@ canvas.addEventListener("pointerup", (e) => {
 	if (e.pointerId !== pointer) return;
 	brushControls.receive(null);
 	if (gesture === "draw") {
-		// Preserve a changed release position with the last valid pressure.
-		if (e.clientX !== lastSampleX || e.clientY !== lastSampleY) {
-			const r = canvas.getBoundingClientRect();
-			appendSample(e.clientX - r.left, e.clientY - r.top, lastPressure);
-			if (active !== null) cache.note(active);
-		}
+		pointerSamples.release(e);
 		core.commit();
 		cache.historyChanged();
 	}

@@ -122,3 +122,7 @@ Same-region arithmetic candidate65322 was rejected: three alternating four-cycle
 ## Latest wide-edit evidence
 
 Actual mouse Pick/translation, exact compact-versus-wide moved-tail images, canonical position/pressure preservation and Undo/Redo pass for12 scenes at2^20/2^32 across all brushes; all12 also pass with worker failure. Existing Slice/history remains passing afterward. Production remains65321. Wide rotation/resize, broader resource evidence, architecture/review acceptance and later worker experiments remain open.
+
+## Latest browser input checkpoint
+
+Verified preview65323 isolates PointerSamples browser acquisition while Rust retains sample validation, mapping, geometry/history authority. All120 approved checks, exact reference artwork/raw, session cancellation and targeted coalesced mouse/pen/release/style/history comparisons pass. See latest task entry and pointer-host evidence. Previous previews unchanged; no performance claim. Remaining architecture/regional/resource/review acceptance and optional worker experiments are not complete.
