@@ -11,8 +11,16 @@ pub(crate) struct Address {
 }
 impl Address {
     /// Transitional compatibility projection, never canonical storage.
-    pub(crate) fn legacy_f32(self) -> f32 {
-        (self.region as f64 * REGION_SIZE + self.local) as f32
+    pub(crate) fn legacy_f32(self) -> f32 { self.legacy_f64() as f32 }
+    pub(crate) fn legacy_f64(self) -> f64 { self.region as f64 * REGION_SIZE + self.local }
+    pub(crate) fn relative_to(self, origin: Self) -> f64 {
+        (i128::from(self.region) - i128::from(origin.region)) as f64 * REGION_SIZE + (self.local - origin.local)
+    }
+    pub(crate) fn source_anchor(self) -> Self {
+        // Preserve the approved near-origin arithmetic; elsewhere use a stable
+        // regional anchor chosen once when the source stroke accepts its first point.
+        let region = if (-1..=0).contains(&self.region) { 0 } else { self.region };
+        Self { region, local: 0.0 }
     }
     pub(crate) fn normalized(region: i64, local: f64) -> Option<Self> {
         if !local.is_finite() {

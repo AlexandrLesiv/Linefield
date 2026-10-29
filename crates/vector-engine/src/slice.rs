@@ -285,6 +285,7 @@ impl Engine {
                     brush: s.brush,
                     visible: true,
                     layer: s.layer,
+                    source_anchor: s.source_anchor,
                     offset: s.offset,
                     basis: s.basis,
                 };

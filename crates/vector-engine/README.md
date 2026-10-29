@@ -36,3 +36,7 @@ Rust records whether a layer still has its generated default name. `layer_name_i
 
 
 `raw_region` and `raw_local` expose canonical coordinates; `raw_length` validates indices. `raw_point` remains a legacy f32 inspection/render projection, not a canonical-coordinate API. Raw pressure retains the approved f32 representation. `canonical_sample_bytes()` reports 40 bytes per stored sample on the checked targets versus the donor's 12, before block capacity and allocator/page overhead. There is one owning sample representation, not a second shadow document. Geometry worker snapshots remain disposable f32 data in the existing bounded transport. Future origin-relative geometry must remove the lossy legacy projection without changing the renderer's scheduling/blending/cache behavior.
+
+## Source-relative geometry
+
+A source anchor is selected once at the first accepted point and retained through Slice fragments. `source_point`, chunk geometry and worker snapshots subtract that anchor in Rust before f32 narrowing. The zero anchor is retained for the original near-origin reference range. Existing transform output includes the source placement, so hosts must continue applying it exactly once. This does not provide final regional GPU projection: world-space transformed capsule uploads, flat placement/view interfaces and very long source spans remain integration gaps. Source anchor changes never rewrite canonical samples or add a history command.

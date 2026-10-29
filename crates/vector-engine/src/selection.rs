@@ -111,8 +111,8 @@ impl Engine {
                 || self.layers[self.strokes[c.id].layer].locked
                 || !t.iter().all(|v| v.is_finite())
                 || !(0.001..=1000.0).contains(&size)
-                || t[2].abs() > 1.0e9
-                || t[3].abs() > 1.0e9
+                || (t[2] - self.strokes[c.id].source_anchor[0].legacy_f64()).abs() > 1.0e9
+                || (t[3] - self.strokes[c.id].source_anchor[1].legacy_f64()).abs() > 1.0e9
         }) {
             return false;
         }

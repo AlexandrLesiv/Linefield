@@ -354,6 +354,7 @@ mod tests {
         }
         Stroke {
             layer: 0,
+            source_anchor: [crate::regional::Address::normalized(0, 0.0).unwrap(); 2],
             offset: [0.0; 2],
             basis: [1.0, 0.0],
             points: std::rc::Rc::new(points),

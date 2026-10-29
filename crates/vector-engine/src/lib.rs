@@ -124,10 +124,15 @@ struct Stroke {
     brush: u32,
     visible: bool,
     layer: usize,
+    source_anchor: [regional::Address; 2],
     offset: [f64; 2],
     basis: [f64; 2],
 }
 impl Stroke {
+    fn source_position(&self, point: Point) -> [f32; 2] {
+        [point.x.relative_to(self.source_anchor[0]) as f32,
+         point.y.relative_to(self.source_anchor[1]) as f32]
+    }
     fn sample_count(&self) -> usize {
         self.slice.map_or(self.points.len(), |[a, b]| {
             (b.ceil() - a.floor()) as usize + 1
@@ -155,9 +160,10 @@ impl Stroke {
     }
     fn source_point(&self, index: usize) -> [f32; 3] {
         let p = self.points[index];
+        let position = self.source_position(p);
         [
-            p.x.legacy_f32(),
-            p.y.legacy_f32(),
+            position[0],
+            position[1],
             self.width * 0.5 * self.pressure_curve.diameter_fraction(p.pressure),
         ]
     }
@@ -236,6 +242,7 @@ impl Engine {
             brush: 0,
             visible: true,
             layer: self.active_layer,
+            source_anchor: [regional::Address::normalized(0, 0.0).unwrap(); 2],
             offset: [0.0; 2],
             basis: [1.0, 0.0],
         });
@@ -255,6 +262,11 @@ impl Engine {
         let Some(id) = self.active else {
             return false;
         };
+        if self.strokes[id].points.is_empty() {
+            let anchor = [point.x.source_anchor(), point.y.source_anchor()];
+            self.strokes[id].source_anchor = anchor;
+            self.strokes[id].offset = anchor.map(|axis| axis.legacy_f64());
+        }
         Rc::get_mut(&mut self.strokes[id].points)
             .expect("active ink is unshared")
             .push(point);
@@ -503,7 +515,8 @@ pub extern "C" fn geometry_snapshot(id: usize, chunk: usize) -> usize {
             for (index, source) in (first..end).enumerate() {
                 let p = stroke.points[source];
                 let at = SNAPSHOT_HEADER + index * 3;
-                input[at..at + 3].copy_from_slice(&p.legacy());
+                let position = stroke.source_position(p);
+                input[at..at + 3].copy_from_slice(&[position[0], position[1], p.pressure]);
             }
         });
         SNAPSHOT_HEADER + (end - first) * 3
@@ -575,6 +588,7 @@ pub extern "C" fn render_snapshot(length: usize, tolerance: f32) -> usize {
             brush: 0,
             visible: true,
             layer: 0,
+            source_anchor: [regional::Address::normalized(0, 0.0).unwrap(); 2],
             offset: [0.0; 2],
             basis: [1.0, 0.0],
         };

@@ -97,6 +97,46 @@ try {
                 })),
               );
             const addresses = read();
+            const sourceUnique = new Set(
+              Array.from({ length: lab.core.raw_length(0) }, (_, i) => lab.core.point(0, i, 0)),
+            ).size;
+            if (sourceUnique !== 65) throw Error("Source geometry collapsed before placement");
+            const count = lab.core.render_chunk(0, 0, 0.1);
+            const direct = new Float32Array(
+              lab.core.memory.buffer,
+              lab.core.render_chunk_ptr(),
+              count * 6,
+            ).slice();
+            const length = lab.core.geometry_snapshot(0, 0);
+            const derivedCount = lab.core.render_snapshot(length, 0.1);
+            const derived = new Float32Array(
+              lab.core.memory.buffer,
+              lab.core.render_chunk_ptr(),
+              derivedCount * 6,
+            ).slice();
+            if (JSON.stringify([...direct]) !== JSON.stringify([...derived]))
+              throw Error("Anchored worker snapshot differs from owning engine geometry");
+            const beforeTransform = [0, 1, 2, 3].map((k) => lab.core.stroke_transform(0, k));
+            lab.core.move_begin();
+            if (!lab.core.move_add(0) || !lab.core.move_update(0.125, 0.25))
+              throw Error("Anchored stroke move rejected");
+            lab.core.move_commit();
+            const moved = [0, 1, 2, 3].map((k) => lab.core.stroke_transform(0, k));
+            if (moved[2] !== beforeTransform[2] + 0.125 || moved[3] !== beforeTransform[3] + 0.25)
+              throw Error("Anchored placement lost bounded movement");
+            lab.core.undo();
+            if (
+              JSON.stringify([0, 1, 2, 3].map((k) => lab.core.stroke_transform(0, k))) !==
+              JSON.stringify(beforeTransform)
+            )
+              throw Error("Anchored movement Undo failed");
+            lab.core.redo();
+            if (
+              JSON.stringify([0, 1, 2, 3].map((k) => lab.core.stroke_transform(0, k))) !==
+              JSON.stringify(moved)
+            )
+              throw Error("Anchored movement Redo failed");
+            lab.core.undo();
             document.querySelector("#undo").click();
             document.querySelector("#redo").click();
             if (JSON.stringify(addresses) !== JSON.stringify(read()))
@@ -114,6 +154,8 @@ try {
               ) * view.zoom;
             canonical = {
               addresses,
+              sourceUnique,
+              snapshotMatches: true,
               unique: new Set(positions.map((p) => p[0])).size,
               screenError,
               sampleBytes: lab.core.canonical_sample_bytes(),

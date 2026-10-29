@@ -9,7 +9,7 @@ This is an intermediate implementation, not completed M1–M9 adoption. Use the 
 - Draft PR: https://github.com/AlexandrLesiv/Linefield/pull/21 — open, not merged.
 - Verified remote main: `b101a7e`. The restart explicitly reverts the discarded PR16 documentation, then integrates the approved source.
 - Current application: regional canonical-sample checkpoint following `c774146`; inspect branch HEAD for the saved revision.
-- Latest preview: http://127.0.0.1:65297/ — choose New drawing. Reference 65280, initial integration 65281 and all other existing previews remain unchanged.
+- Latest preview: http://127.0.0.1:65298/ — choose New drawing. Reference 65280, initial integration 65281 and all other existing previews remain unchanged.
 - Authoritative reference: `/Users/oleksandr/Documents/Codex/2026-10-20/files-pasted-by-the-user-build/outputs/linefield-handoff/source-app/`, verified 77-file source set `474873d88d00f498105fc2fbb8eed754cc01ba93f6a3f9bcde7dfd78a853ca1d`. Do not substitute current vector-canvas-lab HEAD.
 - Detailed chronology, evidence paths and limitations: `tasks/vector-integration-restart.md`.
 
@@ -25,7 +25,7 @@ Generated scalar ABI declarations and a signature fingerprint are checked at sta
 
 ## What is still required
 
-1. **Regional camera/render/edit-coordinate adoption is the principal architecture gap.** Canonical samples now retain all 65 distinct intended positions at the audited distant origins, but the legacy rendering projection still collapses them. Migrate source/chunk anchors, placement, camera/query coordinates and origin-relative geometry together. Include origin/generation in derived-cache identity and retain paper grain phase. Do not flatten full i64 addresses into JS numbers or only change Point to f64 and declare success.
+1. **Regional camera/render/edit-coordinate adoption is the principal architecture gap.** Canonical samples now retain all 65 distinct intended positions at the audited distant origins, and source geometry now stays distinct using a stable regional anchor, but world-space GPU uploads still collapse distant positions. Finish per-chunk/view-relative projections, placement and camera/query coordinates together; the current single-source anchor does not bound arbitrary long strokes. Include origin/generation in derived-cache identity and retain paper grain phase. Do not flatten full i64 addresses into JS numbers or only change Point to f64 and declare success.
 2. **Finalize the host/session boundary.** The editor is temporarily a persistent same-origin iframe. Its donor control layout and module sizes remain intermediate; clean component/host factoring and final design/accessibility review are unfinished. Preserve the functioning renderer while doing this.
 3. **Complete the combined acceptance matrix.** Present evidence is bounded, not full LFV01–18/sign-off. Broader sparse/large workloads, presentation-correctness latency, physical Wacom validation, resource pressure/failure and repeated pending-job edits require further evidence. Independent/design review has not been completed for final adoption.
 4. **Run the five worker experiments after faithful integration is accepted.** None has started: material generation versus worker/prebuilt asset; extended completed geometry; visibility/overlap/tile planning; Lasso/Slice calculation; OffscreenCanvas rendering. Establish separate baselines, adopt only useful correct variants, and retain measured rejection/compatibility findings. Do not label the donor's existing worker as one of these completed experiments.
@@ -33,7 +33,7 @@ Generated scalar ABI declarations and a signature fingerprint are checked at sta
 
 ## Verified evidence and its limits
 
-- All 120 approved browser checks pass on 65297: 22 paper-contact behavior, eight rendering/recovery, and 30 editing checks per brush.
+- All 120 approved browser checks pass on 65298: 22 paper-contact behavior, eight rendering/recovery, and 30 editing checks per brush.
 - Exact artwork/raw comparison passes for brush overlap, pan, rotated drawing, zoom and history. An expanded run on the preceding equivalent rendering pipeline compared 18 captures across four separated regions, including held-pointer panning before mouseup and the full zoom range. Readback waits for settlement; this does not establish per-frame latency. Only camera f64 roundoff has a documented allowance; no new artwork tolerance was added.
 - EN/UK checks verify authored/default layer names, no-op rename, history, drawing, layer visibility and persistent error feedback. Session lifecycle, startup retry, worker failure recovery and live themes have passed at recorded checkpoints.
 - 125 regional primitive cases and additional adapter transport/type/copy checks pass. These are not canonical drawing precision acceptance.
