@@ -70,3 +70,11 @@ The existing geometry worker now gets scratch/input and output float capacities 
 New isolated preview: 65284. Older previews untouched. Browser fault injection into the actual geometry worker proves malformed input triggers worker retirement and usable synchronous drawing/Undo/Redo. Exact reference pixels/raw samples and all 120 approved browser checks pass on the new preview. Native cargo check, Wasm build, generated-boundary check, TypeScript and scoped lint pass. Evidence: .build-cache/restart/owned-buffers-parity and owned-buffers-acceptance.
 
 This closes only the derived-geometry message bounds/ownership subsection. Other command argument contracts, regional numerical semantics, integrated localized UI and the full performance matrix remain pending. No new worker experiment is considered adopted.
+
+## 2026-10-29 host theme checkpoint
+
+The integrated editor controls now consume Linefield shared semantic theme tokens, including live OS light/dark changes and visible keyboard focus. Artwork colors, paper materials, rendering/caching, camera and history are untouched. This adapts control colors only; the donor layout and English labels remain temporary, and localization/final Linefield controls are still pending. Preview 65285 is separate; all earlier preview builds remain frozen.
+
+Theme E2E checks verify token equality with the parent gallery, live mode changes, unchanged raw data/view/backing dimensions and usable Undo. Visual review caught low-contrast background selectors in dark mode; their selector specificity was fixed and the theme check repeated. Screenshots: .build-cache/restart/theme-dark.png and theme-light.png. TypeScript/build/scoped lint pass. All 120 approved browser checks pass on the themed integration.
+
+Reference parity now hashes actual WebGL RGBA readback, while retaining PNG screenshots for diagnostics. Previously canvas element screenshots included host controls layered above it, which cannot serve as artwork parity once controls are adapted. No drawing pixels are masked and no tolerance is added: exact RGBA hashes and raw samples pass across the bounded brush/pan/zoom/history workload. Readback is confined to the test runner, never production rendering. Evidence: .build-cache/restart/theme-parity and theme-acceptance.
