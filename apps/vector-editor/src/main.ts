@@ -1,6 +1,7 @@
 import "./style.css";
 import { installHostTheme } from "./host-theme";
 import { installHostLocale } from "./host-locale";
+import { showStartupFailure } from "./startup-failure";
 import { Camera } from "./camera";
 import { CompositeCache } from "./composite-cache";
 import { loadCore } from "./load-core";
@@ -39,12 +40,12 @@ opacityInput.addEventListener("input", () => {
 	opacityValue.textContent = `${opacityInput.value}%`;
 	opacityInput.setAttribute("aria-valuetext", `${opacityInput.value}%`);
 });
+const core = await loadCore().catch((error: unknown) => {
+	showStartupFailure(status);
+	throw error;
+});
 window.addEventListener("error", (e) => {
 	status.textContent = `Engine error: ${e.message}. Keep this tab open; session data may remain in memory.`;
-});
-const core = await loadCore().catch((error: unknown) => {
-	status.textContent = `Drawing engine could not start: ${error instanceof Error ? error.message : String(error)}. Reload to retry.`;
-	throw error;
 });
 const gl = canvas.getContext("webgl2", {
 	alpha: false,
