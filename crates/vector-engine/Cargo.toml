@@ -7,6 +7,7 @@ publish = false
 [features]
 save-checkpoint = []
 save-incremental = ["save-checkpoint"]
+save-idle = ["save-incremental"]
 
 [lib]
 name = "vector_core"

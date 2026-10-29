@@ -144,6 +144,10 @@ pub(super) fn completed(e: &Engine, command: &Command) {
     JOURNAL.with(|j| j.borrow_mut().record(e, command));
 }
 pub(super) fn reset(e: &Engine, revision: u64, sources: &BTreeMap<usize, Rc<Points>>) -> bool {
+    #[cfg(feature = "save-idle")]
+    if super::save_idle::owned() {
+        return false;
+    }
     JOURNAL.with(|j| {
         let mut j = j.borrow_mut();
         let Some(generation) = j.generation.checked_add(1) else {
