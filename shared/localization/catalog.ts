@@ -3,6 +3,25 @@ export const catalog = {
   version: 1,
   sourceLanguage: "en",
   messages: {
+    "library.back": {
+      kind: "plain",
+      context: "Return from missing drawing to gallery",
+      arguments: {},
+    },
+    "library.recovery": { kind: "plain", context: "Partial saved gallery recovery", arguments: {} },
+    "library.more": { kind: "plain", context: "Saved drawing pagination", arguments: {} },
+    "library.loading": { kind: "plain", context: "Saved drawing gallery", arguments: {} },
+    "library.failed": { kind: "plain", context: "Saved drawing gallery", arguments: {} },
+    "library.retry": { kind: "plain", context: "Saved drawing gallery", arguments: {} },
+    "library.missing": { kind: "plain", context: "Saved drawing gallery", arguments: {} },
+    "library.creating": { kind: "plain", context: "Saved drawing gallery", arguments: {} },
+    "library.created": { kind: "plain", context: "Saved drawing gallery", arguments: {} },
+    "library.createFailed": { kind: "plain", context: "Saved drawing gallery", arguments: {} },
+    "library.modified": {
+      kind: "plain",
+      context: "Saved drawing modification date",
+      arguments: { date: "string" },
+    },
     "save.capacity": { kind: "plain", context: "Saving failure condition", arguments: {} },
     "save.openInUse": { kind: "plain", context: "Saving failure condition", arguments: {} },
 

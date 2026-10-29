@@ -2,7 +2,6 @@ import { createVectorShell } from "./vector-editor.ts";
 import { drawingOpen } from "./styles.css.ts";
 import { away } from "./states.css.ts";
 import { drawingSurface, canvasArt } from "./canvas.css.ts";
-import { createDrawingShell } from "./drawing-shell.ts";
 import { attachCreationVisual, readSurfaceAppearance } from "./creation-motion.ts";
 import { element } from "./dom.ts";
 import { artworkBounds, moveSurface } from "./surface-motion.ts";
@@ -10,8 +9,7 @@ import type { Drawing } from "./model.ts";
 import { record } from "./diagnostics.ts";
 export function createNavigation(gallery: HTMLElement, onReturn: (restoreFocus: boolean) => void) {
   let surface: HTMLElement | null = null;
-  let chrome: ReturnType<typeof createDrawingShell> | ReturnType<typeof createVectorShell> | null =
-    null;
+  let chrome: Awaited<ReturnType<typeof createVectorShell>> | null = null;
   let origin: HTMLElement | null = null;
   let generation = 0;
   let closing = false;
@@ -61,6 +59,7 @@ export function createNavigation(gallery: HTMLElement, onReturn: (restoreFocus: 
     },
     async open(drawing: Drawing, source: HTMLElement, requestBack: () => void): Promise<void> {
       if (surface) return;
+      const nextChrome = await createVectorShell(drawing.id, drawing.name, requestBack);
       closing = false;
       origin = source;
       const rect = source.getBoundingClientRect();
@@ -76,10 +75,7 @@ export function createNavigation(gallery: HTMLElement, onReturn: (restoreFocus: 
         image.alt = "";
         surface.append(image);
       }
-      const foundation = drawing.id === "preview-new";
-      chrome = foundation
-        ? createVectorShell(drawing.name, requestBack)
-        : createDrawingShell(drawing.name, requestBack);
+      chrome = nextChrome;
       chrome.setReady(false);
       surface.append(chrome.root);
       document.body.append(surface);

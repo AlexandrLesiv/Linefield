@@ -1,5 +1,7 @@
 use std::{cell::RefCell, rc::Rc};
 mod boundary_generated;
+#[cfg(feature = "save-app")]
+pub mod catalog;
 mod geometry;
 #[cfg(feature = "save-checkpoint")]
 mod save_checkpoint;

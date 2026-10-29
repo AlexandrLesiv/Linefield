@@ -1,9 +1,9 @@
 // Pinned SQLite 3.54.1 SAH layout. Inspect bounded headers before SQLite can repair/open it.
-async function inspectDrawingPool() {
+async function inspectDrawingPool(directory = ".linefield-save-v1", filename = "/drawing.sqlite") {
   const root = await navigator.storage.getDirectory();
   let dir;
   try {
-    dir = await root.getDirectoryHandle(".linefield-save-v1");
+    dir = await root.getDirectoryHandle(directory);
   } catch (e) {
     if (e.name === "NotFoundError") return { fresh: true };
     throw e;
@@ -41,11 +41,11 @@ async function inspectDrawingPool() {
       continue;
     }
     const path = new TextDecoder("utf-8", { fatal: true }).decode(bytes.subarray(0, end));
-    if (!["/drawing.sqlite", "/drawing.sqlite-journal"].includes(path) || paths.has(path))
+    if (![filename, filename + "-journal"].includes(path) || paths.has(path))
       throw Error("storage-layout");
     paths.add(path);
   }
-  if (!files || !paths.has("/drawing.sqlite")) throw Error("storage-layout");
+  if (!files || !paths.has(filename)) throw Error("storage-layout");
   return { fresh: false };
 }
 globalThis.inspectDrawingPool = inspectDrawingPool;

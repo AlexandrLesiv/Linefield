@@ -7,7 +7,7 @@ const hashBytes = async (bytes) =>
   Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)), (b) =>
     b.toString(16).padStart(2, "0"),
   ).join("");
-function drawingDatabase(db, fresh, grant) {
+function drawingDatabase(db, fresh, grant, document = "drawing") {
   const sql = (query, bind = []) =>
     db.exec({ sql: query, bind, rowMode: "array", returnValue: "resultRows" });
   if (fresh) {
@@ -32,7 +32,7 @@ function drawingDatabase(db, fresh, grant) {
   }
   const h = sql("SELECT incarnation,revision FROM save_head WHERE singleton=1")[0];
   if (!h || !validId(h[0]) || !validRevision(h[1])) throw Error("storage-corrupt");
-  const identity = { document: "drawing", incarnation: h[0], grant };
+  const identity = { document, incarnation: h[0], grant };
   const context = (m) => {
     if (
       !m ||

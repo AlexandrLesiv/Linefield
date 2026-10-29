@@ -7,19 +7,21 @@ export interface EditorSession {
   suspendInput(): void;
   requestLeave?(): Promise<boolean>;
   hasUnsaved?(): boolean;
+  close?(): Promise<void>;
 }
 interface SessionWindow extends Window {
   linefieldEditorSession?: EditorSession;
 }
 export function installEditorSession(
   suspendInput: () => void,
-  saving?: Pick<EditorSession, "requestLeave" | "hasUnsaved">,
+  saving?: Pick<EditorSession, "requestLeave" | "hasUnsaved" | "close">,
 ): void {
   (window as SessionWindow).linefieldEditorSession = Object.freeze({
     version: 1,
     suspendInput,
     ...saving,
   });
+  reportEditorStartup("ready");
 }
 export function suspendEditorSession(target: Window | null): void {
   const session = (target as SessionWindow | null)?.linefieldEditorSession;
@@ -38,4 +40,12 @@ export function requestEditorLeave(target: Window | null): Promise<boolean> {
 }
 export function editorHasUnsaved(target: Window | null): boolean {
   return (target as SessionWindow | null)?.linefieldEditorSession?.hasUnsaved?.() ?? false;
+}
+
+export async function closeEditorSession(target: Window | null): Promise<void> {
+  await (target as SessionWindow | null)?.linefieldEditorSession?.close?.();
+}
+
+export function reportEditorStartup(state: "ready" | "failed"): void {
+  window.parent.postMessage({ kind: "linefield-editor-startup", state }, location.origin);
 }

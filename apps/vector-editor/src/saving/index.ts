@@ -5,7 +5,7 @@ import { scheduler } from "./scheduler";
 import { writeJson } from "./prepare";
 export async function createSaving(rawCore: unknown) {
   const core = checkedSaveCore(rawCore),
-    store = await storage();
+    store = await storage(new URL(location.href).searchParams.get("document") || "");
   try {
     await restore(core, await store.load());
     if (

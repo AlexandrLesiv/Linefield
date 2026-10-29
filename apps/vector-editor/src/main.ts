@@ -6,7 +6,7 @@ import { preparePaperContact, materialPreparation } from "./paper-contact-prepar
 import "./style.css";
 import { buildGpuResources, installGpuRecovery } from "./gpu-restore";
 import { installStatusAnnouncements } from "./status-announcements";
-import { installEditorSession } from "../../web/src/editor-session";
+import { installEditorSession, reportEditorStartup } from "../../web/src/editor-session";
 import { t as hostMessage } from "../../web/src/locale";
 import { installHostTheme } from "./host-theme";
 import { installHostLocale } from "./host-locale";
@@ -42,6 +42,9 @@ import {
 import { ATLAS_SIZE, SparseCoverage } from "./sparse-coverage";
 import { detailLevelFor, ZoomDetail } from "./zoom-detail";
 
+let sessionReady = false;
+window.addEventListener("error", () => { if (!sessionReady) reportEditorStartup("failed"); });
+window.addEventListener("unhandledrejection", () => { if (!sessionReady) reportEditorStartup("failed"); });
 installHostTheme();
 installHostLocale();
 const canvas = document.querySelector("canvas")!;
@@ -831,7 +834,8 @@ function suspendInput() {
 }
 const savingLifecycle = saveLifecycle(Object.assign({}, core, saveCore), saving, saveUi, () => pointer !== null, canvas);
 saving.subscribe(() => savingLifecycle.update());
-installEditorSession(suspendInput, savingLifecycle);
+installEditorSession(suspendInput, { ...savingLifecycle, close: () => saving.close() });
+sessionReady = true;
 window.addEventListener("blur", suspendInput);
 document.addEventListener("visibilitychange", () => {
 	if (document.hidden) suspendInput();
