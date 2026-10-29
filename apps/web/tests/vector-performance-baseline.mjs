@@ -3,6 +3,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { cpus, platform, release, totalmem } from "node:os";
 const output = process.env.LINEFIELD_EVIDENCE_DIR || ".build-cache/restart/performance-baseline";
 const workload = {
+  selectionOnly: process.env.LINEFIELD_SELECTION_ONLY === "1",
   regionalTransitions: process.env.LINEFIELD_REGIONAL_TRANSITIONS === "1",
   strokes: Number(process.env.LINEFIELD_STROKES || 24),
   samplesPerStroke: Number(process.env.LINEFIELD_SAMPLES_PER_STROKE || 129),
@@ -173,66 +174,109 @@ try {
           if (sampleCount !== scenario.strokes * scenario.samplesPerStroke)
             throw Error(`Accepted sample count mismatch: ${sampleCount}`);
           const saved = JSON.stringify(rawBefore());
-          if (scenario.regionalTransitions && typeof lab.viewOrigin === "function") {
-            await phase("regional-origin-roundtrips-integrated-only", async () => {
+          const selectionQueries = [];
+          if (scenario.selectionOnly) {
+            for (const partial of [true, false]) {
+              await phase(partial ? "partial-lasso" : "whole-lasso", async () => {
+                document.querySelector("#select").click();
+                document.querySelector("#selection-lasso-mode").click();
+                document.querySelector("#selection-partial").checked = partial;
+                const corners = [
+                  [120, 150],
+                  [1150, 150],
+                  [1150, 470],
+                  [120, 470],
+                  [120, 150],
+                ];
+                for (let query = 0; query < 12; query++) {
+                  document.querySelector("#selection-clear").click();
+                  pointer("pointerdown", ...corners[0]);
+                  const steps = query % 2 ? 320 : 1;
+                  for (let edge = 0; edge < 4; edge++)
+                    for (let i = 1; i <= steps; i++) {
+                      pointer(
+                        "pointermove",
+                        corners[edge][0] + ((corners[edge + 1][0] - corners[edge][0]) * i) / steps,
+                        corners[edge][1] + ((corners[edge + 1][1] - corners[edge][1]) * i) / steps,
+                      );
+                    }
+                  const start = performance.now();
+                  pointer("pointerup", ...corners.at(-1));
+                  const completionMs = performance.now() - start;
+                  const ids = lab.selection();
+                  if (ids.length !== scenario.strokes) throw Error("Lasso missed accepted strokes");
+                  selectionQueries.push({ partial, dense: steps > 1, completionMs, ids });
+                  await next();
+                }
+              });
+            }
+          }
+          if (!scenario.selectionOnly) {
+            if (scenario.regionalTransitions && typeof lab.viewOrigin === "function") {
+              await phase("regional-origin-roundtrips-integrated-only", async () => {
+                document.querySelector("#pan").click();
+                pointer("pointerdown", 700, 450);
+                for (let i = 0; i < 12; i++) {
+                  pointer("pointermove", 700 - (i % 2 ? 0 : 4294901760), 450);
+                  await next();
+                  await settled();
+                }
+                pointer("pointerup", 700, 450);
+              });
+            }
+            await phase("warm-continuous-pan", async () => {
               document.querySelector("#pan").click();
               pointer("pointerdown", 700, 450);
-              for (let i = 0; i < 12; i++) {
-                pointer("pointermove", 700 - (i % 2 ? 0 : 4294901760), 450);
+              for (let i = 1; i <= 60; i++) {
+                pointer(
+                  "pointermove",
+                  700 + Math.round(Math.sin(i * 0.1) * 180),
+                  450 + Math.round(Math.cos(i * 0.1) * 100),
+                );
                 await next();
-                await settled();
               }
-              pointer("pointerup", 700, 450);
+              pointer(
+                "pointerup",
+                700 + Math.round(Math.sin(6) * 180),
+                450 + Math.round(Math.cos(6) * 100),
+              );
+            });
+            await phase("rapid-zoom", async () => {
+              for (const zoom of [0.05, 0.1, 0.5, 1, 4, 16, 8, 1, 0.05, 1]) {
+                canvas.dispatchEvent(
+                  new WheelEvent("wheel", {
+                    bubbles: true,
+                    cancelable: true,
+                    clientX: rect.x + 700,
+                    clientY: rect.y + 400,
+                    deltaY: -Math.log(zoom / lab.view().zoom) / 0.001,
+                  }),
+                );
+                await next();
+              }
+            });
+            await phase("continuous-rotation", async () => {
+              document.querySelector("#rotate").click();
+              const cx = rect.width / 2,
+                cy = rect.height / 2;
+              pointer("pointerdown", cx + 180, cy);
+              for (let i = 1; i <= 60; i++) {
+                pointer(
+                  "pointermove",
+                  cx + Math.cos(i * 0.06) * 180,
+                  cy + Math.sin(i * 0.06) * 180,
+                );
+                await next();
+              }
+              pointer("pointerup", cx + Math.cos(3.6) * 180, cy + Math.sin(3.6) * 180);
+            });
+            await phase("history", async () => {
+              document.querySelector("#undo").click();
+              await next();
+              document.querySelector("#redo").click();
+              await next();
             });
           }
-          await phase("warm-continuous-pan", async () => {
-            document.querySelector("#pan").click();
-            pointer("pointerdown", 700, 450);
-            for (let i = 1; i <= 60; i++) {
-              pointer(
-                "pointermove",
-                700 + Math.round(Math.sin(i * 0.1) * 180),
-                450 + Math.round(Math.cos(i * 0.1) * 100),
-              );
-              await next();
-            }
-            pointer(
-              "pointerup",
-              700 + Math.round(Math.sin(6) * 180),
-              450 + Math.round(Math.cos(6) * 100),
-            );
-          });
-          await phase("rapid-zoom", async () => {
-            for (const zoom of [0.05, 0.1, 0.5, 1, 4, 16, 8, 1, 0.05, 1]) {
-              canvas.dispatchEvent(
-                new WheelEvent("wheel", {
-                  bubbles: true,
-                  cancelable: true,
-                  clientX: rect.x + 700,
-                  clientY: rect.y + 400,
-                  deltaY: -Math.log(zoom / lab.view().zoom) / 0.001,
-                }),
-              );
-              await next();
-            }
-          });
-          await phase("continuous-rotation", async () => {
-            document.querySelector("#rotate").click();
-            const cx = rect.width / 2,
-              cy = rect.height / 2;
-            pointer("pointerdown", cx + 180, cy);
-            for (let i = 1; i <= 60; i++) {
-              pointer("pointermove", cx + Math.cos(i * 0.06) * 180, cy + Math.sin(i * 0.06) * 180);
-              await next();
-            }
-            pointer("pointerup", cx + Math.cos(3.6) * 180, cy + Math.sin(3.6) * 180);
-          });
-          await phase("history", async () => {
-            document.querySelector("#undo").click();
-            await next();
-            document.querySelector("#redo").click();
-            await next();
-          });
           if (JSON.stringify(rawBefore()) !== saved) throw Error("Camera/history changed raw data");
           return {
             renderer,
@@ -241,6 +285,7 @@ try {
             strokes: lab.core.count(),
             rawSamples: rawBefore().reduce((sum, points) => sum + points.length, 0),
             phases,
+            selectionQueries,
             memory: {
               wasmBytes: lab.core.memory.buffer.byteLength,
               material: lab.brushStats(),

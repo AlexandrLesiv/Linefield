@@ -87,6 +87,7 @@ try {
               outer[e][0] + ((outer[e + 1][0] - outer[e][0]) * i) / 320,
               outer[e][1] + ((outer[e + 1][1] - outer[e][1]) * i) / 320,
             ]);
+        const radius = lab.core.point(0, 0, 2);
         const paths = [
           outer,
           [
@@ -119,6 +120,13 @@ try {
             [100, 100],
           ],
           dense,
+          ...[0, -5e-8, 5e-8].map((delta) => [
+            [200 - radius, 200 - radius + delta],
+            [600 + radius, 200 - radius + delta],
+            [600 + radius, 200 + radius],
+            [200 - radius, 200 + radius],
+            [200 - radius, 200 - radius + delta],
+          ]),
         ];
         const raw = () =>
           [0, 1, 2].map((id) =>
@@ -231,7 +239,7 @@ try {
   }
   await writeFile(`${output}/results.json`, JSON.stringify(results, null, 2));
   console.log(
-    "PASS actual-input Lasso parity: three brushes, six shapes, both containment modes, three repeats",
+    "PASS actual-input Lasso parity: three brushes, nine shapes including tangency, both containment modes, three repeats",
   );
 } finally {
   await browser.close();

@@ -6,12 +6,25 @@ pub(super) struct Edge {
     a: Point,
     b: Point,
     bounds: [f64; 4],
+    contact_margin: f64,
 }
 impl Edge {
     pub(super) fn new(a: Point, b: Point) -> Self {
         Self {
             a,
             b,
+            // Conservative roundoff allowance for endpoint interpolation.
+            // This only skips an impossible boundary-contact distance check;
+            // the even-odd crossing rule still visits every edge.
+            contact_margin: EPSILON
+                + 16.0
+                    * f64::EPSILON
+                    * a[0]
+                        .abs()
+                        .max(a[1].abs())
+                        .max(b[0].abs())
+                        .max(b[1].abs())
+                        .max(1.0),
             bounds: [
                 a[0].min(b[0]),
                 a[1].min(b[1]),
@@ -51,7 +64,14 @@ fn contains(edges: &[Edge], p: Point) -> bool {
     let mut inside = false;
     for edge in edges {
         let (a, b) = (edge.a, edge.b);
-        if distance(p, a, b) <= EPSILON {
+        let q = edge.bounds;
+        let margin = edge.contact_margin;
+        if p[0] >= q[0] - margin
+            && p[0] <= q[2] + margin
+            && p[1] >= q[1] - margin
+            && p[1] <= q[3] + margin
+            && distance(p, a, b) <= EPSILON
+        {
             return true;
         }
         if (a[1] > p[1]) != (b[1] > p[1])

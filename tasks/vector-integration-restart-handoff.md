@@ -106,3 +106,7 @@ Preview 65318 factors brush widgets/settings and pressure-panel delegation out o
 ## Latest keyboard-host checkpoint
 
 Preview 65319 isolates browser shortcut acquisition behind typed editor callbacks, preserving existing semantics. Actual keyboard/text/composition/selection/history/pan/cancellation comparison, retained-session lifecycle and exact reference artwork/raw parity pass. Static/build checks pass. Full 120-check acceptance was last run on 65318; affected behavior is rechecked here. All previous previews remain frozen; broader architecture/regional/resource/review gaps remain.
+
+## Latest selection performance fix
+
+Preview 65320 fixes a measured dense whole-Lasso regression in the shared predicate using conservative contact bounds. Three alternating 256-stroke comparisons show completion median/p95 153.1/159.1 ms versus approved reference 1144.4/1172.2 ms; previous integrated 65319 was ~2.46 s. The remaining ~150 ms completion stall is explicit, not accepted as universally responsive. Tangency/epsilon, regional transformed selection/image/raw checks pass (324 queries each). Read the task for all classes, memory and limitations. Optional workers remain deferred; broader architecture/regional/resource/review work remains.
