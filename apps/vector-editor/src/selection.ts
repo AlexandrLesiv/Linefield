@@ -240,17 +240,9 @@ export function createSelection(
 				let angle = 0,
 					scale = 1;
 				if (drag.kind === "rotate") {
-					angle = Math.atan2(y, x) - Math.atan2(sy, sx);
-					if (e.shiftKey)
-						angle = Math.round(angle / (Math.PI / 12)) * (Math.PI / 12);
+					angle = core.selection_drag_angle(x, y, sx, sy, e.shiftKey ? 1 : 0);
 				} else {
-					scale = Math.max(
-						0.01,
-						Math.min(
-							100,
-							(x * sx + y * sy) / Math.max(1e-20, sx * sx + sy * sy),
-						),
-					);
+					scale = core.selection_drag_scale(x, y, sx, sy);
 				}
 				accepted = camera.transform(px, py, scale, angle);
 				if (accepted) orientation = drag.orientation + angle;

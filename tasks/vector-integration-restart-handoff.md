@@ -126,3 +126,7 @@ Actual mouse Pick/translation, exact compact-versus-wide moved-tail images, cano
 ## Latest browser input checkpoint
 
 Verified preview65323 isolates PointerSamples browser acquisition while Rust retains sample validation, mapping, geometry/history authority. All120 approved checks, exact reference artwork/raw, session cancellation and targeted coalesced mouse/pen/release/style/history comparisons pass. See latest task entry and pointer-host evidence. Previous previews unchanged; no performance claim. Remaining architecture/regional/resource/review acceptance and optional worker experiments are not complete.
+
+## Latest shared transform checkpoint
+
+Verified preview65324 moves rotation snapping and proportional-resize policy into Rust (110-function ABI). All120 approved checks and15 previous/current actual-handle scenarios pass exact artwork/raw/history comparison. Browser retains handle hit targets and input gestures. See latest task entry and selection-gesture evidence. Remaining gaps are numerical/resource breadth, session-selection ownership/architecture review and later worker experiments; do not call integration complete.
