@@ -8,7 +8,7 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 # Task board
 
-Current owner-authorized saving checkpoint: [SAVE-04](SAVE-04.md), bounded idle preparation/cleanup and exit/recovery checks, following incremental [SAVE-03](SAVE-03.md) and [SAVE-02](SAVE-02.md) and the transferred-buffer baseline approved after [SAVE-01](SAVE-01.md). Production saving is gated on returned performance/recovery results; existing integration previews remain unchanged.
+Current owner-authorized saving integration: [SAVE-05](SAVE-05.md), full-app local saving, separate preview and responsiveness/recovery checks, following bounded [SAVE-04](SAVE-04.md), following incremental [SAVE-03](SAVE-03.md) and [SAVE-02](SAVE-02.md) and the transferred-buffer baseline approved after [SAVE-01](SAVE-01.md). Saving is enabled only in the separate integrated candidate pending owner review; existing integration previews remain unchanged.
 
 See the [approved product backlog](BACKLOG.md) for the owner-confirmed order of upcoming functionality.
 Those priorities do not mark the milestones below complete or waive implementation gates.

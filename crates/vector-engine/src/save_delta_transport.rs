@@ -17,7 +17,7 @@ pub extern "C" fn delta_status() -> u32 {
 #[cfg_attr(target_arch = "wasm32", no_mangle)]
 pub extern "C" fn delta_prepare() -> u32 {
     #[cfg(feature = "save-idle")]
-    if super::save_idle::owned() {
+    if cfg!(feature = "save-app") || super::save_idle::owned() {
         return 0;
     }
     JOURNAL.with(|j| {
@@ -119,6 +119,9 @@ pub extern "C" fn delta_chunk_ptr() -> *const u8 {
 }
 #[cfg_attr(target_arch = "wasm32", no_mangle)]
 pub extern "C" fn delta_ack(token: u32, base: u64, result: u64) -> u32 {
+    if cfg!(feature = "save-app") {
+        return 0;
+    }
     JOURNAL.with(|j| {
         let mut j = j.borrow_mut();
         if j.overflow

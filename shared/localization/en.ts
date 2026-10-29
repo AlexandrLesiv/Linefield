@@ -1,5 +1,25 @@
 import type { Translation } from "./catalog.ts";
 export const en = {
+  "save.capacity": "Saving limit reached. Latest changes remain open and are not saved.",
+  "save.openInUse": "This drawing is open in another tab. Close that tab, then retry.",
+
+  "save.title": "Local drawing",
+  "save.open": "Open local drawing",
+
+  "save.loading": "Opening saved drawing…",
+  "save.saved": "Saved in this browser",
+  "save.pending": "Changes not saved yet",
+  "save.saving": "Saving…",
+  "save.failed": "Could not save. Your drawing remains open.",
+  "save.openFailed": "Could not open saved drawing. Existing data has not been replaced.",
+  "save.now": "Save now",
+  "save.retry": "Retry saving",
+  "save.retryOpen": "Retry opening",
+  "save.leaving": "Saving before leaving…",
+  "save.cancelLeave": "Stay in drawing",
+  "save.local": "One local drawing · stored in this browser, not backed up",
+  "save.waitStroke": "Finish the current stroke before leaving",
+
   "vector.adjustPressure": "Adjust the width response for new strokes.",
   "vector.fixedWidth": "Fixed width for new strokes",
   "vector.pressureRecorded":

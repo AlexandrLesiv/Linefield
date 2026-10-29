@@ -9,6 +9,7 @@ function run(command: string, args: string[], cwd = root) {
 }
 run(process.execPath, [root + "scripts/localization.ts"]);
 run(process.execPath, [root + "scripts/vector-editor-boundary.ts", "--check"]);
+run(process.execPath, [root + "scripts/vector-editor-save-boundary.ts", "--check"]);
 run("cargo", [
   "build",
   "--locked",
@@ -18,6 +19,8 @@ run("cargo", [
   "wasm32-unknown-unknown",
   "--profile",
   "vector-editor",
+  "--features",
+  "save-app",
 ]);
 mkdirSync(root + "apps/vector-editor/public", { recursive: true });
 copyFileSync(
@@ -29,6 +32,7 @@ run(process.execPath, [
   "--project",
   "apps/vector-editor/tsconfig.json",
 ]);
+run(process.execPath, [root + "scripts/build-save-storage.ts"]);
 run(
   process.execPath,
   [root + "apps/web/node_modules/vite/bin/vite.js", "build"],

@@ -71,6 +71,8 @@ await writeNotices(
   output,
   run("cargo", [
     "metadata",
+    "--features",
+    "linefield-vector-engine/save-app",
     "--locked",
     "--offline",
     "--format-version",
