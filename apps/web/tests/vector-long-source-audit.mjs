@@ -16,6 +16,10 @@ try {
   await frame.waitForFunction(() => !!window.lab);
   const cases = await frame.evaluate(() => {
     const core = lab.core;
+    const placement = (id, chunk, component, rx, ry) =>
+      typeof core.chunk_transform_relative === "function"
+        ? core.chunk_transform_relative(id, chunk, component, rx, ry)
+        : core.stroke_transform_relative(id, component, rx, ry);
     const result = [];
     // One source starts near zero, then contains a fine tail in a later region.
     // A compact source at that same region is the translation-invariant control.
@@ -24,7 +28,7 @@ try {
         for (const compact of [false, true]) {
           const id = core.begin_fixed_width(0.25, 0, 1);
           const points = Array.from({ length: 385 }, (_, i) => {
-            const along = (compact || i > 0 ? extent : 0) + i / 16;
+            const along = (compact || i > 0 ? extent : 0.125) + i / 16;
             return axis === 0 ? [along, 100] : [100, along];
           });
           for (const [x, y] of points)
@@ -42,6 +46,15 @@ try {
           if (!canonicalEqual || JSON.stringify(points) !== JSON.stringify(raw()))
             throw Error("Canonical sample/history mismatch");
           const source = points.slice(256, 384).map((_, i) => core.point(id, i + 256, axis));
+          const firstCount = core.render_chunk(id, 0, 0.0001);
+          const firstData = new Float32Array(
+            core.memory.buffer,
+            core.render_chunk_ptr(),
+            firstCount * 6,
+          ).slice(0, 3);
+          const firstPlacement = placement(id, 0, axis + 2, 0n, 0n);
+          const firstProjected = firstData[axis] + firstPlacement;
+          const firstPrecise = firstProjected === points[0][axis];
           const count = core.render_chunk(id, 2, 0.0001);
           const direct = new Float32Array(
             core.memory.buffer,
@@ -57,6 +70,20 @@ try {
           ).slice();
           const workerEqual = JSON.stringify([...direct]) === JSON.stringify([...copied]);
           if (!workerEqual) throw Error("Worker/direct geometry disagreement");
+          const origin = BigInt(extent / 65536);
+          const transform = [0, 1, 2, 3].map((k) =>
+            placement(id, 2, k, axis === 0 ? origin : 0n, axis === 1 ? origin : 0n),
+          );
+          const projected = [...direct];
+          for (let i = 0; i < projected.length; i += 3) {
+            projected[i] += transform[2];
+            projected[i + 1] += transform[3];
+          }
+          const expected =
+            axis === 0
+              ? [255 / 16, 100, 0.25, 383 / 16, 100, 0.25]
+              : [100, 255 / 16, 0.25, 100, 383 / 16, 0.25];
+          const preciseGeometry = JSON.stringify(projected) === JSON.stringify(expected);
           result.push({
             extent,
             axis,
@@ -64,6 +91,13 @@ try {
             samples: points.length,
             canonicalEqual,
             tailExpectedUnique: 128,
+            preciseGeometry,
+            firstPrecise,
+            firstProjected,
+            firstExpected: points[0][axis],
+            projected,
+            expected,
+            transform,
             tailSourceUnique: new Set(source).size,
             tailFirst: source[0],
             tailLast: source.at(-1),
@@ -76,7 +110,7 @@ try {
     }
     return result;
   });
-  const unresolved = cases.filter((item) => item.tailSourceUnique !== item.tailExpectedUnique);
+  const unresolved = cases.filter((item) => !item.preciseGeometry || !item.firstPrecise);
   await writeFile(
     `${output}/results.json`,
     JSON.stringify(
