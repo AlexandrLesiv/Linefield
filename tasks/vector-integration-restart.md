@@ -110,3 +110,24 @@ Added localized Retry only when the owning engine fails to load, before input ca
 Expanded actual-app lifecycle E2E coverage verifies retained layer state, raw samples, camera and same engine instance across Back/Resume; gallery shortcuts cannot mutate the hidden session; leaving mid-stroke cancels that gesture without polluting the retained history. These checks pass. Build, TypeScript, scoped lint and diff checks pass. No renderer/numerical changes in this checkpoint, so the previously passed full renderer/parity suites were not redundantly rerun. New isolated preview 65289; earlier previews unchanged.
 
 Integration remains incomplete, especially regional coordinate precision and final component/session factoring. No worker research variant adopted.
+
+## 2026-10-29 coordinate precision audit and next numerical work
+
+Ran a browser-level audit through normal pan/zoom and pointer-event handlers, in separate fresh reference and integration documents. At 1600% zoom, 65 distinct intended X positions were drawn near four document origins. Both versions behaved identically:
+
+| Document X origin | Distinct stored X values / 65 | Maximum screen-space error |
+| --- | --- | --- |
+| 0 | 65 | about 0 |
+| 65,536 | 65 | about 0 |
+| 1,048,576 | 33 | about 1 CSS px |
+| 4,294,967,296 | 1 | about 264 CSS px |
+
+This is a retained donor limitation, not a new regression or an acceptance pass. Rust camera f64 arithmetic alone does not repair the owning engine's f32 raw storage. The audit preserves expected versus actual coordinates and browser errors in .build-cache/restart/coordinate-audit/results.json. Do not hide this by restricting camera motion, changing quality thresholds or calling the integrated editor regionally precise. Current previews remain unchanged.
+
+Required implementation sequence before regional acceptance:
+1. Canonical samples, immutable source anchors and placements must use signed i64 region plus normalized finite f64 local coordinates (region size 65,536), with checked carry/borrow in Rust. Pressure remains independently preserved. Expose typed region/local values; never silently flatten full addresses into JavaScript numbers. Account for the increased canonical storage cost explicitly.
+2. Derive bounded render coordinates relative to an explicit nearby origin in Rust, before f32 narrowing. Keep the donor's chunk/detail/cache/blending lifecycle. Include the origin in derived geometry/placement identity and reuse validity; carry actual source geometry through Slice and transforms without rewriting original samples. This cannot be implemented safely by only changing Point from f32 to f64.
+3. Match viewport/camera and selection/Slice queries to the same relative origin and generation. Host code acquires screen input and renders provided projections; it must not become the regional arithmetic authority. Paper/grain origin must stay stable across rebase.
+4. Run near-origin exact image checks, boundary-crossing/negative-address/overflow browser scenarios, far-origin continuity and roundtrip checks, and repeated performance/memory comparison before adopting. Do not silently narrow the approved prototype's 5–1600% view range to older schema defaults.
+
+No storage migration or native application is introduced by this sequence. This numerical work is still pending, and the audit is deliberately not represented as a completed M01 gate.
