@@ -3,6 +3,7 @@ import { installHostTheme } from "./host-theme";
 import { installHostLocale } from "./host-locale";
 import { showStartupFailure } from "./startup-failure";
 import { Camera } from "./camera";
+import { createRegionalAddressAdapter } from "./regional-address";
 import { CompositeCache } from "./composite-cache";
 import { loadCore } from "./load-core";
 import { CoverageRenderer } from "./coverage-renderer";
@@ -1003,6 +1004,8 @@ Object.assign(window, {
 			dirty = true;
 		},
 		core,
+		// Foundation diagnostics only; document adoption is still pending.
+		regional: createRegionalAddressAdapter(core),
 		selection: () => selection.ids(),
 		layers,
 		view: () => camera.state(),

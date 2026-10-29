@@ -67,7 +67,31 @@ try {
       rejectsNumber = error instanceof TypeError;
     }
     if (!rejectsNumber) throw Error("i64 region was silently accepted as a JS number");
+    const adapter = lab.regional;
+    const address = adapter.normalize(max - 1n, 0.125);
+    const moved = adapter.offset(address, 65536);
+    if (
+      !Object.isFrozen(address) ||
+      address.region !== max - 1n ||
+      address.local !== 0.125 ||
+      moved.region !== max ||
+      moved.local !== 0.125
+    )
+      throw Error("Regional adapter did not copy a precise immutable result");
+    const previous = read();
+    for (const region of [max + 1n, min - 1n, 0, NaN])
+      if (adapter.normalize(region, 0) !== null) throw Error("Out-of-range region crossed Wasm");
+    if (
+      adapter.offset({ region: max + 1n, local: 0 }, 1) !== null ||
+      adapter.offset(address, Infinity) !== null ||
+      adapter.normalize(0n, NaN) !== null
+    )
+      throw Error("Invalid regional transport accepted");
+    const after = read();
+    if (after[0] !== previous[0] || after[1] !== previous[1])
+      throw Error("Rejected host transport changed shared output");
     return {
+      adapterTransportChecked: true,
       cases,
       rejectsNumber,
       limitation: "Primitive boundary only; drawing still stores donor f32 samples.",
