@@ -23,6 +23,31 @@ export function createRegionalAddressAdapter(core: Core) {
     });
   }
   return {
+    transform(
+      x: RegionalAddress,
+      y: RegionalAddress,
+      scale: number,
+      angle: number,
+      dx = 0,
+      dy = 0,
+    ): boolean {
+      if (
+        !validTransport(x.region, x.local) ||
+        !validTransport(y.region, y.local) ||
+        ![scale, angle, dx, dy].every(Number.isFinite)
+      )
+        return false;
+      return !!core.transform_update_regional(
+        x.region,
+        x.local,
+        y.region,
+        y.local,
+        scale,
+        angle,
+        dx,
+        dy,
+      );
+    },
     append(x: RegionalAddress, y: RegionalAddress, pressure: number): boolean {
       if (
         !validTransport(x.region, x.local) ||

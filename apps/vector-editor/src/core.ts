@@ -84,6 +84,7 @@ export type Core = {
   stroke_width(id: number): number;
   transform_revision(): number;
   transform_update(px: number, py: number, scale: number, angle: number, dx: number, dy: number): number;
+  transform_update_regional(rx: bigint, x: number, ry: bigint, y: number, scale: number, angle: number, dx: number, dy: number): number;
   undo(): void;
   visible(id: number): number;
   memory: WebAssembly.Memory;
@@ -174,8 +175,9 @@ export const coreExportArity = {
   "stroke_width": 1,
   "transform_revision": 0,
   "transform_update": 6,
+  "transform_update_regional": 8,
   "undo": 0,
   "visible": 1
 } as const;
 
-export const coreAbiFingerprint = [1024646654,808431121,1506175196,436789344,3602969443,865313410,893306116,2422889613] as const;
+export const coreAbiFingerprint = [2047841399,1437659534,3089878497,3793320327,4058918903,3852407371,759777596,3782202194] as const;

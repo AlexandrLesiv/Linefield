@@ -85,6 +85,13 @@ impl Engine {
         dx: f64,
         dy: f64,
     ) -> bool {
+        self.update_transform_at(px, py, scale, angle, dx, dy, None)
+    }
+    fn update_transform_at(
+        &mut self,
+        px: f64, py: f64, scale: f64, angle: f64, dx: f64, dy: f64,
+        pivot: Option<[super::regional::Address; 2]>,
+    ) -> bool {
         if self.moving.is_empty()
             || ![px, py, scale, angle, dx, dy].iter().all(|v| v.is_finite())
             || scale <= 0.0
@@ -100,8 +107,10 @@ impl Engine {
             if scale == 1.0 && angle == 0.0 {
                 return [t[0], t[1], t[2] + dx, t[3] + dy];
             }
-            let px = px - anchor[0].legacy_f64();
-            let py = py - anchor[1].legacy_f64();
+            let [px, py] = pivot.map_or_else(
+                || [px - anchor[0].legacy_f64(), py - anchor[1].legacy_f64()],
+                |p| [p[0].relative_to(anchor[0]), p[1].relative_to(anchor[1])],
+            );
             [
                 a * t[0] - b * t[1],
                 b * t[0] + a * t[1],
@@ -514,4 +523,14 @@ pub extern "C" fn stroke_placement_region(id: usize, axis: usize) -> i64 {
 #[cfg_attr(target_arch = "wasm32", no_mangle)]
 pub extern "C" fn stroke_placement_local(id: usize, axis: usize) -> f64 {
     ENGINE.with(|e| e.borrow().strokes.get(id).and_then(|s| s.placement(axis)).map_or(0.0, |p| p.local))
+}
+
+/// Regional pivot stays precise before composition; validation is atomic for the group.
+#[cfg_attr(target_arch = "wasm32", no_mangle)]
+pub extern "C" fn transform_update_regional(
+    rx: i64, x: f64, ry: i64, y: f64, scale: f64, angle: f64, dx: f64, dy: f64,
+) -> u32 {
+    let Some(x) = super::regional::Address::normalized(rx, x) else { return 0; };
+    let Some(y) = super::regional::Address::normalized(ry, y) else { return 0; };
+    ENGINE.with(|e| e.borrow_mut().update_transform_at(0.0, 0.0, scale, angle, dx, dy, Some([x, y])) as u32)
 }
