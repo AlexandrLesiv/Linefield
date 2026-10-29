@@ -21,7 +21,7 @@ import {
 } from "./paper-background";
 import { PencilGrain } from "./pencil-grain";
 import { releasePointer, tryCapturePointer } from "./pointer-capture";
-import { createPressureControls } from "./pressure";
+import { createBrushControls } from "./brush-controls";
 import { createSelection } from "./selection";
 import { createSlice } from "./slice";
 import {
@@ -35,14 +35,7 @@ installHostTheme();
 installHostLocale();
 const canvas = document.querySelector("canvas")!;
 const status = document.querySelector<HTMLElement>("#status")!;
-const pressureControls = createPressureControls();
-const opacityInput = document.querySelector<HTMLInputElement>("#opacity")!;
-const opacityValue =
-	document.querySelector<HTMLOutputElement>("#opacity-value")!;
-opacityInput.addEventListener("input", () => {
-	opacityValue.textContent = `${opacityInput.value}%`;
-	opacityInput.setAttribute("aria-valuetext", `${opacityInput.value}%`);
-});
+const brushControls = createBrushControls();
 const core = await loadCore().catch((error: unknown) => {
 	showStartupFailure(status);
 	throw error;
@@ -600,7 +593,7 @@ function draw() {
 }
 let error = "";
 function frame() {
-	pressureControls.render();
+	brushControls.render();
 	if (!lost) {
 		const t = performance.now();
 		let drew = false;
@@ -652,7 +645,7 @@ function sample(e: PointerEvent) {
 	lastSampleX = e.clientX;
 	lastSampleY = e.clientY;
 	lastPressure = e.pointerType === "pen" ? e.pressure : 1;
-	pressureControls.receive(e.pointerType === "pen" ? e.pressure : null);
+	brushControls.receive(e.pointerType === "pen" ? e.pressure : null);
 	if (active !== null) cache.note(active);
 }
 function cancel() {
@@ -660,7 +653,7 @@ function cancel() {
 	pointer = null;
 	slice.cancel();
 	selection.cancel();
-	pressureControls.receive(null);
+	brushControls.receive(null);
 	core.cancel();
 	cache.historyChanged();
 	active = null;
@@ -695,26 +688,18 @@ canvas.addEventListener("pointerdown", (e) => {
 	if (gesture === "slice") slice.down(e);
 	if (gesture === "draw") {
 		zoomDetail.settle(camera.zoom * devicePixelRatio);
-		const response = pressureControls.settings();
-		const width = Number(
-			(document.querySelector("#width") as HTMLInputElement).value,
-		);
-		const color = Number.parseInt(
-			(document.querySelector("#color") as HTMLInputElement).value.slice(1),
-			16,
-		);
-		// The choice is frozen only for this new stroke. Keep incoming pressure
-		// intact in both modes; completed strokes never change their style.
-		active = document.querySelector<HTMLInputElement>("#fixed-width")!.checked
-			? core.begin_fixed_width(width, color, Number(opacityInput.value) / 100)
+		const settings = brushControls.read();
+		// Rust freezes style for this new stroke; accepted pressure stays intact.
+		active = settings.fixedWidth
+			? core.begin_fixed_width(settings.width, settings.color, settings.opacity)
 			: core.begin_with_style(
-					width,
-					color,
-					response.minimum,
-					response.gamma,
-					Number(opacityInput.value) / 100,
+					settings.width,
+					settings.color,
+					settings.minimum,
+					settings.gamma,
+					settings.opacity,
 				);
-		core.set_active_brush(Number(brushInput.value));
+		core.set_active_brush(settings.brush);
 		cache.note(active);
 		sample(e);
 		inputAt = performance.now();
@@ -752,7 +737,7 @@ canvas.addEventListener("pointermove", (e) => {
 });
 canvas.addEventListener("pointerup", (e) => {
 	if (e.pointerId !== pointer) return;
-	pressureControls.receive(null);
+	brushControls.receive(null);
 	if (gesture === "draw") {
 		// Preserve a changed release position with the last valid pressure.
 		if (e.clientX !== lastSampleX || e.clientY !== lastSampleY) {
@@ -905,22 +890,7 @@ document.querySelector("#reset")!.addEventListener("click", () => {
 	zoomDetail.settle(devicePixelRatio);
 	dirty = true;
 });
-const brushInput = document.querySelector<HTMLSelectElement>("#brush")!;
-const brushWidths = [6, 3, 12];
-let previousBrush = 0;
-brushInput.addEventListener("change", () => {
-	const width = document.querySelector<HTMLInputElement>("#width")!;
-	brushWidths[previousBrush] = Number(width.value);
-	previousBrush = Number(brushInput.value);
-	width.value = String(brushWidths[previousBrush] ?? 6);
-	width.dispatchEvent(new Event("input"));
-	document.querySelector<HTMLButtonElement>("#pen")!.click();
-});
-document.querySelector("#width")!.addEventListener("input", (e) => {
-	document.querySelector("#widthValue")!.textContent = (
-		e.target as HTMLInputElement
-	).value;
-});
+brushControls.connectTools();
 new ResizeObserver(() => {
 	dirty = true;
 }).observe(canvas);

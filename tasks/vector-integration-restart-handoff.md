@@ -98,3 +98,7 @@ Unchanged preview 65316 passes actual-input group move/15-degree rotation and La
 ## Latest browser lifecycle checkpoint
 
 Preview 65317 replaces manufactured blur events on Back with a typed version-1 session suspension endpoint. The editor keeps ownership and uses the same cancellation logic for true blur/visibility. Retained-session/active-input cancellation, startup-failure Retry/Back, exact reference images/raw and static/build checks pass. This does not remove the persistent iframe or complete broader UI/gesture architecture; those and regional/resource/review gaps remain. No worker experiment or merge.
+
+## Latest brush-control checkpoint
+
+Preview 65318 factors brush widgets/settings and pressure-panel delegation out of the drawing loop without changing style commands or rendering. The 120 approved checks, exact artwork/raw parity and held-contact style/raw-pressure/history comparison pass. All prior previews remain frozen. Broader UI/gesture architecture, regional/resource evidence and final reviews remain unfinished; optional workers remain deferred.
