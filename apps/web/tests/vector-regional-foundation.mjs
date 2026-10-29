@@ -94,7 +94,8 @@ try {
       adapterTransportChecked: true,
       cases,
       rejectsNumber,
-      limitation: "Primitive boundary only; drawing still stores donor f32 samples.",
+      limitation:
+        "Regional storage and placement boundary; full regional rendering remains pending.",
     };
   });
   const canvas = await host.locator("canvas").boundingBox();
@@ -132,7 +133,63 @@ try {
     core.redo();
     if (JSON.stringify(read()) !== JSON.stringify(expected))
       throw Error("History changed full-range canonical address");
-    return { addresses: read(), sampleBytes: core.canonical_sample_bytes() };
+    const placement = () => [
+      String(core.stroke_placement_region(id, 0)),
+      core.stroke_placement_local(id, 0),
+      String(core.stroke_placement_region(id, 1)),
+      core.stroke_placement_local(id, 1),
+    ];
+    const initial = placement();
+    core.move_begin();
+    core.move_add(id);
+    if (!core.move_update(0.125, -0.25)) throw Error("Full-range move rejected");
+    core.move_commit();
+    const moved = placement();
+    if (JSON.stringify(moved) !== JSON.stringify([String(rx), 0.125, String(ry - 1n), 65535.75]))
+      throw Error("Full-range placement flattened");
+    core.undo();
+    if (JSON.stringify(placement()) !== JSON.stringify(initial))
+      throw Error("Placement Undo changed address");
+    core.redo();
+    if (JSON.stringify(placement()) !== JSON.stringify(moved))
+      throw Error("Placement Redo changed address");
+    if (JSON.stringify(read()) !== JSON.stringify(expected))
+      throw Error("Move changed canonical samples");
+    core.move_begin();
+    core.move_add(id);
+    core.move_update(65536.5, 0.5);
+    core.move_cancel();
+    if (JSON.stringify(placement()) !== JSON.stringify(moved))
+      throw Error("Cancelled placement was retained");
+    const edge = core.begin_fixed_width(8, 0, 1);
+    if (
+      !lab.regional.append(
+        { region: (1n << 63n) - 1n, local: 0.125 },
+        { region: 0n, local: 0.5 },
+        1,
+      )
+    )
+      throw Error("Edge input rejected");
+    core.commit();
+    core.move_begin();
+    core.move_add(id);
+    core.move_add(edge);
+    const revision = core.transform_revision();
+    if (core.move_update(65536, 0) || core.transform_revision() !== revision)
+      throw Error("Overflowing group move was accepted");
+    if (
+      JSON.stringify(placement()) !== JSON.stringify(moved) ||
+      core.stroke_placement_local(edge, 0) !== 0
+    )
+      throw Error("Rejected group partially moved");
+    core.move_cancel();
+    return {
+      addresses: read(),
+      initial,
+      moved,
+      atomicOverflow: true,
+      sampleBytes: core.canonical_sample_bytes(),
+    };
   });
   await writeFile(
     `${output}/results.json`,

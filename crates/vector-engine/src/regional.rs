@@ -51,7 +51,7 @@ impl Address {
             local: if remainder == 0.0 { 0.0 } else { remainder },
         })
     }
-    fn offset(self, delta: f64) -> Option<Self> {
+    pub(crate) fn offset(self, delta: f64) -> Option<Self> {
         // Normalize delta before adding its remainder; adding a huge delta to
         // local directly would discard the address's fractional precision.
         if !delta.is_finite() {

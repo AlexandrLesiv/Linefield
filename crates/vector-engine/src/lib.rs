@@ -125,10 +125,17 @@ struct Stroke {
     visible: bool,
     layer: usize,
     source_anchor: [regional::Address; 2],
+    // Finite displacement from source_anchor; never an absolute flattened address.
     offset: [f64; 2],
     basis: [f64; 2],
 }
 impl Stroke {
+    fn placement(&self, axis: usize) -> Option<regional::Address> {
+        self.source_anchor.get(axis)?.offset(*self.offset.get(axis)?)
+    }
+    fn legacy_offset(&self, axis: usize) -> f64 {
+        self.source_anchor[axis].legacy_f64() + self.offset[axis]
+    }
     fn source_position(&self, point: Point) -> [f32; 2] {
         [point.x.relative_to(self.source_anchor[0]) as f32,
          point.y.relative_to(self.source_anchor[1]) as f32]
@@ -265,7 +272,6 @@ impl Engine {
         if self.strokes[id].points.is_empty() {
             let anchor = [point.x.source_anchor(), point.y.source_anchor()];
             self.strokes[id].source_anchor = anchor;
-            self.strokes[id].offset = anchor.map(|axis| axis.legacy_f64());
         }
         Rc::get_mut(&mut self.strokes[id].points)
             .expect("active ink is unshared")

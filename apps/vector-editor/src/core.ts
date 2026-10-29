@@ -78,6 +78,8 @@ export type Core = {
   stroke_layer_rank(id: number): number;
   stroke_offset(id: number, axis: number): number;
   stroke_order(id: number): number;
+  stroke_placement_local(id: number, axis: number): number;
+  stroke_placement_region(id: number, axis: number): bigint;
   stroke_transform(id: number, component: number): number;
   stroke_width(id: number): number;
   transform_revision(): number;
@@ -166,6 +168,8 @@ export const coreExportArity = {
   "stroke_layer_rank": 1,
   "stroke_offset": 2,
   "stroke_order": 1,
+  "stroke_placement_local": 2,
+  "stroke_placement_region": 2,
   "stroke_transform": 2,
   "stroke_width": 1,
   "transform_revision": 0,
@@ -174,4 +178,4 @@ export const coreExportArity = {
   "visible": 1
 } as const;
 
-export const coreAbiFingerprint = [3542297534,1147519326,1209739696,2536409168,2323499510,3752424767,2089266827,2825409226] as const;
+export const coreAbiFingerprint = [1024646654,808431121,1506175196,436789344,3602969443,865313410,893306116,2422889613] as const;

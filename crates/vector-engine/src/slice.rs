@@ -155,8 +155,8 @@ fn surviving(stroke: &Stroke, gesture: &Gesture) -> Option<Vec<[f64; 2]>> {
     let project = |p: [f32; 3]| {
         let [a, b] = stroke.basis;
         [
-            a * p[0] as f64 - b * p[1] as f64 + stroke.offset[0],
-            b * p[0] as f64 + a * p[1] as f64 + stroke.offset[1],
+            a * p[0] as f64 - b * p[1] as f64 + stroke.legacy_offset(0),
+            b * p[0] as f64 + a * p[1] as f64 + stroke.legacy_offset(1),
         ]
     };
     if lo == hi {

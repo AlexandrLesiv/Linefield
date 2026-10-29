@@ -95,7 +95,13 @@ impl Engine {
         let a = scale * cos;
         let b = scale * sin;
         // Compose against the gesture snapshot, never against the previous preview.
-        let compose = |t: [f64; 4]| {
+        let compose = |anchor: [super::regional::Address; 2], t: [f64; 4]| {
+            // Translation stays relative even at addresses beyond f64 integer precision.
+            if scale == 1.0 && angle == 0.0 {
+                return [t[0], t[1], t[2] + dx, t[3] + dy];
+            }
+            let px = px - anchor[0].legacy_f64();
+            let py = py - anchor[1].legacy_f64();
             [
                 a * t[0] - b * t[1],
                 b * t[0] + a * t[1],
@@ -105,21 +111,23 @@ impl Engine {
         };
         // Validate the whole group before changing any stroke.
         if self.moving.iter().any(|c| {
-            let t = compose(c.before);
+            let t = compose(self.strokes[c.id].source_anchor, c.before);
             let size = t[0].hypot(t[1]);
             !self.stroke_visible(c.id)
                 || self.layers[self.strokes[c.id].layer].locked
                 || !t.iter().all(|v| v.is_finite())
                 || !(0.001..=1000.0).contains(&size)
-                || (t[2] - self.strokes[c.id].source_anchor[0].legacy_f64()).abs() > 1.0e9
-                || (t[3] - self.strokes[c.id].source_anchor[1].legacy_f64()).abs() > 1.0e9
+                || t[2].abs() > 1.0e9
+                || self.strokes[c.id].source_anchor[0].offset(t[2]).is_none()
+                || t[3].abs() > 1.0e9
+                || self.strokes[c.id].source_anchor[1].offset(t[3]).is_none()
         }) {
             return false;
         }
         let mut changed = false;
         for c in &mut self.moving {
-            c.after = compose(c.before);
             let s = &mut self.strokes[c.id];
+            c.after = compose(s.source_anchor, c.before);
             changed |= [s.basis[0], s.basis[1], s.offset[0], s.offset[1]] != c.after;
             s.basis = [c.after[0], c.after[1]];
             s.offset = [c.after[2], c.after[3]];
@@ -146,7 +154,8 @@ pub extern "C" fn stroke_offset(id: usize, axis: usize) -> f64 {
         e.borrow()
             .strokes
             .get(id)
-            .and_then(|s| s.offset.get(axis).copied())
+            .filter(|_| axis < 2)
+            .map(|s| s.legacy_offset(axis))
             .unwrap_or(0.0)
     })
 }
@@ -159,7 +168,7 @@ pub extern "C" fn stroke_transform(id: usize, component: usize) -> f64 {
         e.strokes
             .get(id)
             .map(|s| {
-                [s.basis[0], s.basis[1], s.offset[0], s.offset[1]]
+                [s.basis[0], s.basis[1], s.legacy_offset(0), s.legacy_offset(1)]
                     .get(component)
                     .copied()
                     .unwrap_or(0.0)
@@ -495,4 +504,14 @@ mod tests {
         e.layers[0].visible = false;
         assert!(!e.add_move(a));
     }
+}
+
+/// Canonical placement transport; invalid ids/axes return zero, as scalar accessors do.
+#[cfg_attr(target_arch = "wasm32", no_mangle)]
+pub extern "C" fn stroke_placement_region(id: usize, axis: usize) -> i64 {
+    ENGINE.with(|e| e.borrow().strokes.get(id).and_then(|s| s.placement(axis)).map_or(0, |p| p.region))
+}
+#[cfg_attr(target_arch = "wasm32", no_mangle)]
+pub extern "C" fn stroke_placement_local(id: usize, axis: usize) -> f64 {
+    ENGINE.with(|e| e.borrow().strokes.get(id).and_then(|s| s.placement(axis)).map_or(0.0, |p| p.local))
 }
