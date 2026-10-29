@@ -27,6 +27,7 @@ export type SaveCore = {
   restore_batch_begin(token: number, count: number, base: bigint, result: bigint): number;
   restore_batch_end(token: number): number;
   restore_begin(): number;
+  restore_cancel(token: number): number;
   restore_input_ptr(): number;
   restore_publish(token: number): number;
   save_boundary_fingerprint(index: number): number;
@@ -37,6 +38,10 @@ export type SaveCore = {
   save_request_ptr(token: number): number;
   save_seal_begin(token: number): number;
   save_seal_step(token: number): number;
+  storage_hash_append(length: number): number;
+  storage_hash_begin(): void;
+  storage_hash_finish(): number;
+  storage_hash_input_ptr(): number;
   memory: WebAssembly.Memory;
 };
 export const saveArity = {
@@ -67,6 +72,7 @@ export const saveArity = {
   restore_batch_begin: 4,
   restore_batch_end: 1,
   restore_begin: 0,
+  restore_cancel: 1,
   restore_input_ptr: 0,
   restore_publish: 1,
   save_boundary_fingerprint: 1,
@@ -77,7 +83,11 @@ export const saveArity = {
   save_request_ptr: 1,
   save_seal_begin: 1,
   save_seal_step: 1,
+  storage_hash_append: 1,
+  storage_hash_begin: 0,
+  storage_hash_finish: 0,
+  storage_hash_input_ptr: 0,
 } as const;
 export const saveFingerprint = [
-  376003106, 4227565261, 2120825348, 2041121265, 1912343286, 12230632, 1041225779, 1261472658,
+  3986242056, 3016834820, 2629716453, 1582678436, 633267750, 3986221465, 3257820831, 3871905883,
 ] as const;

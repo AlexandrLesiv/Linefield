@@ -32,7 +32,10 @@ export async function storage(document: string) {
       );
     },
     async commit() {
-      const seal = await client.call<Receipt>("seal");
+      let seal: Receipt | { pending: true };
+      do {
+        seal = await client.call<Receipt | { pending: true }>("seal");
+      } while ("pending" in seal);
       if (
         !expected ||
         Object.keys(expected).some(
@@ -41,6 +44,12 @@ export async function storage(document: string) {
       )
         throw Error("save-seal");
       return client.call<Receipt>("commit");
+    },
+    async read(operation: string, stream: number, chunk: number) {
+      return client.call<{ bytes: Uint8Array<ArrayBuffer>; length: number; last: boolean }>(
+        "read",
+        { operation, stream, chunk },
+      );
     },
     async load() {
       return client.call<Loaded>("load");

@@ -28,6 +28,10 @@ mod save_authority;
 #[cfg(feature = "save-app")]
 mod save_seal;
 #[cfg(feature = "save-app")]
+mod save_storage_hash;
+#[cfg(feature = "save-app")]
+pub mod save_storage_sql;
+#[cfg(feature = "save-app")]
 mod save_settings;
 #[cfg(feature = "save-app")]
 mod save_boundary_generated;

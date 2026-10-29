@@ -9,6 +9,12 @@ const checked = spawnSync(
   { stdio: "inherit" },
 );
 if (checked.status !== 0) throw Error("Catalog contract drift");
+const storageContract = spawnSync(
+  process.execPath,
+  [root + "scripts/save-storage-contract.ts", "--check"],
+  { stdio: "inherit" },
+);
+if (storageContract.status !== 0) throw Error("Storage contract drift");
 const output = root + "apps/vector-editor/public/saving/";
 mkdirSync(output, { recursive: true });
 const vendor = root + ".build-cache/browser-storage/sqlite-wasm-3540100/jswasm/";
@@ -30,6 +36,15 @@ for (const [name, hash] of Object.entries(pinned)) {
 for (const name of [
   "worker.js",
   "admission.js",
+  "hash-boundary.js",
+  "worker-hash.js",
+  "chunk-generated.js",
+  "chunk-schema.js",
+  "chunk-reader.js",
+  "chunk-store.js",
+  "legacy-replay.js",
+  "legacy-validation.js",
+  "chunk-validation.js",
   "database.js",
   "staging.js",
   "pools.js",

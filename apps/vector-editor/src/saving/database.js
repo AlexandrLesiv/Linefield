@@ -1,37 +1,33 @@
 // Storage executor only: opaque Rust batches, transactional revision/head and exact retry receipts.
-const MAX_BYTES = 48 * 1024 * 1024;
 const validId = (s) => typeof s === "string" && /^[a-zA-Z0-9_-]{1,64}$/.test(s);
 const validRevision = (s) =>
   typeof s === "string" && /^(0|[1-9][0-9]{0,19})$/.test(s) && BigInt(s) <= 18446744073709551615n;
-const hashBytes = async (bytes) =>
-  Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)), (b) =>
-    b.toString(16).padStart(2, "0"),
-  ).join("");
-function drawingDatabase(db, fresh, grant, document = "drawing") {
+async function drawingDatabase(db, fresh, grant, document = "drawing", expectedIncarnation) {
   const sql = (query, bind = []) =>
     db.exec({ sql: query, bind, rowMode: "array", returnValue: "resultRows" });
   if (fresh) {
-    sql("BEGIN IMMEDIATE");
+    sql(storageSql.begin);
     try {
-      sql(
-        "CREATE TABLE save_head(singleton INTEGER PRIMARY KEY CHECK(singleton=1), incarnation TEXT NOT NULL, revision TEXT NOT NULL)",
-      );
-      sql(
-        "CREATE TABLE save_batches(sequence INTEGER PRIMARY KEY, operation TEXT UNIQUE NOT NULL, base TEXT NOT NULL, result TEXT NOT NULL, digest TEXT NOT NULL, payload BLOB NOT NULL)",
-      );
-      sql("INSERT INTO save_head VALUES(1,?,?)", [crypto.randomUUID(), "0"]);
-      sql("PRAGMA user_version=1");
-      sql("COMMIT");
-    } catch (e) {
-      sql("ROLLBACK");
-      throw e;
+      sql(storageSql.createHead);
+      sql(storageSql.createLegacyBatches);
+      sql(storageSql.insertHead, [crypto.randomUUID(), "0"]);
+      sql(storageSql.versionLegacy);
+      sql(storageSql.commit);
+    } catch (error) {
+      sql(storageSql.rollback);
+      throw error;
     }
-  } else {
-    if (sql("PRAGMA user_version")[0]?.[0] !== 1) throw Error("storage-version");
-    if (sql("PRAGMA quick_check")[0]?.[0] !== "ok") throw Error("storage-corrupt");
   }
-  const h = sql("SELECT incarnation,revision FROM save_head WHERE singleton=1")[0];
-  if (!h || !validId(h[0]) || !validRevision(h[1])) throw Error("storage-corrupt");
+  const version = sql(storageSql.version)[0]?.[0];
+  if (version !== 1 && version !== 2) throw Error("storage-version");
+  if (sql(storageSql.quickCheck)[0]?.[0] !== "ok") throw Error("storage-corrupt");
+  validateChunkSchema(sql, version);
+  const rows = sql(storageSql.head);
+  const h = rows[0];
+  if (rows.length !== 1 || !h || !validId(h[0]) || !validRevision(h[1]))
+    throw Error("storage-corrupt");
+  if (expectedIncarnation !== undefined && expectedIncarnation !== h[0])
+    throw Error("storage-conflict");
   const identity = { document, incarnation: h[0], grant };
   const context = (m) => {
     if (
@@ -51,72 +47,25 @@ function drawingDatabase(db, fresh, grant, document = "drawing") {
     )
       throw Error("storage-identity");
   };
-  const capacity = (extra) => {
-    const [count, bytes] = sql(
-      "SELECT count(*),coalesce(sum(length(payload)),0) FROM save_batches",
-    )[0];
-    if (count > 10000 || (extra > 0 && count >= 10000) || bytes + extra > MAX_BYTES)
-      throw Error("storage-capacity");
-  };
+  // Validate source bytes before a transactional schema extension; never rewrite v1 payloads.
+  if (version === 1) await validateLegacy(sql);
+  const chunks = chunkStore(sql, context, () => sql(storageSql.revision)[0][0]);
+  let initial = await validateChunks(chunks);
+  while (chunks.cleanup() > 0) await new Promise((resolve) => setTimeout(resolve, 0));
   return {
     identity,
     context,
-    async load() {
-      capacity(0);
-      const rows = sql(
-        "SELECT operation,base,result,digest,payload FROM save_batches ORDER BY sequence",
-      );
-      for (const row of rows) if (row[4] instanceof Uint8Array) row[4] = row[4].slice();
-      let revision = "0";
-      for (const [operation, base, result, digest, payload] of rows) {
-        if (
-          !validId(operation) ||
-          base !== revision ||
-          !validRevision(result) ||
-          BigInt(result) <= BigInt(base) ||
-          !(payload instanceof Uint8Array) ||
-          (await hashBytes(payload)) !== digest
-        )
-          throw Error("storage-corrupt");
-        revision = result;
-      }
-      if (revision !== sql("SELECT revision FROM save_head WHERE singleton=1")[0][0])
-        throw Error("storage-corrupt");
-      return { identity, revision, rows };
+    ...chunks,
+    commitChunks(...args) {
+      const receipt = chunks.commitChunks(...args);
+      initial = undefined;
+      return receipt;
     },
-    async commit(m, payload, digest) {
-      context(m);
-      if (digest !== m.digest) throw Error("storage-digest");
-      capacity(0);
-      sql("BEGIN IMMEDIATE");
-      try {
-        const old = sql("SELECT base,result,digest FROM save_batches WHERE operation=?", [
-          m.operation,
-        ])[0];
-        if (old) {
-          if (old[0] !== m.base || old[1] !== m.result || old[2] !== digest)
-            throw Error("storage-conflict");
-        } else {
-          if (sql("SELECT revision FROM save_head WHERE singleton=1")[0][0] !== m.base)
-            throw Error("storage-conflict");
-          capacity(payload.byteLength);
-          sql("INSERT INTO save_batches(operation,base,result,digest,payload) VALUES(?,?,?,?,?)", [
-            m.operation,
-            m.base,
-            m.result,
-            digest,
-            payload,
-          ]);
-          sql("UPDATE save_head SET revision=? WHERE singleton=1", [m.result]);
-        }
-        sql("COMMIT");
-      } catch (e) {
-        sql("ROLLBACK");
-        throw e;
-      }
-      return { ...m, digest, outcome: "committed" };
+    async load() {
+      const manifest = initial ?? (await validateChunks(chunks));
+      initial = undefined;
+      return { identity, ...manifest };
     },
   };
 }
 globalThis.drawingDatabase = drawingDatabase;
-globalThis.hashBytes = hashBytes;

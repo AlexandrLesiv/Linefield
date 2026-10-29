@@ -14,7 +14,14 @@ export type Part = { stream: number; bytes: Uint8Array<ArrayBuffer>; last: boole
 export type Loaded = {
   identity: Identity;
   revision: string;
-  rows: [string, string, string, string, Uint8Array<ArrayBuffer>][];
+  batches: {
+    operation: string;
+    base: string;
+    result: string;
+    digest: string;
+    streams: number;
+    bytes: number;
+  }[];
 };
 export type State = {
   phase: "saved" | "pending" | "saving" | "error" | "closed";

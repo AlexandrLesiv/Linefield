@@ -139,3 +139,18 @@ pub extern "C" fn restore_publish(token: u32) -> u32 {
         1
     })
 }
+/// Discard an unpublished decoder session. Never changes the editing Engine.
+#[cfg_attr(target_arch = "wasm32", no_mangle)]
+pub extern "C" fn restore_cancel(token: u32) -> u32 {
+    RESTORE.with(|s| {
+        let mut s = s.borrow_mut();
+        if token == 0 || s.generation != token {
+            return 0;
+        }
+        s.model = None;
+        s.streams = None;
+        s.expected = None;
+        s.failed = true;
+        1
+    })
+}

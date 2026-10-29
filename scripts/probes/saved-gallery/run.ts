@@ -11,7 +11,7 @@ const { chromium } = require("@playwright/test") as {
   chromium: { launch(options: object): Promise<Browser> };
 };
 const base = process.env.LINEFIELD_PREVIEW_URL ?? "http://127.0.0.1:65353";
-const output = ".build-cache/save06-app";
+const output = process.env.LINEFIELD_EVIDENCE_DIR ?? ".build-cache/save06-app";
 mkdirSync(output, { recursive: true });
 type Lab = {
   core: { count(): number; visible(id: number): number };
