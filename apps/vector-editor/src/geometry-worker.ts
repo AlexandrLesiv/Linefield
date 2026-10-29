@@ -1,4 +1,4 @@
-import type { Core } from "./core";
+import { loadCore } from "./load-core";
 
 const scope = globalThis as unknown as {
 	postMessage(message: unknown, transfer?: Transferable[]): void;
@@ -13,8 +13,7 @@ const scope = globalThis as unknown as {
 		| null;
 };
 async function initialize() {
-	const core = (await WebAssembly.instantiateStreaming(fetch("/vector-editor/core.wasm"), {}))
-		.instance.exports as unknown as Core;
+	const core = await loadCore();
 	scope.onmessage = ({ data: { id, input, tolerance } }) => {
 		try {
 			if (input.length > 1542) throw Error("Invalid bounded geometry snapshot");

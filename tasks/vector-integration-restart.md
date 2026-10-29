@@ -22,3 +22,9 @@ The complete approved donor renderer and Rust core now build from source under a
 Full production build and both TypeScript checks passed. Initial browser smoke verified three brush commits, Back/Resume retaining document/camera and no uncaught errors. Current checks are in apps/web/tests/vector-integration-smoke.mjs; evidence is local .build-cache/restart. No performance parity claim yet.
 
 Remaining: replace the isolation boundary with the final host adapter; map shared authoritative editing/geometry and regional precision without changing rendering behavior; localized/themed Linefield controls; complete feature/image/performance comparison; independently evaluate the five worker variants. Donor f32 coordinates and its diagnostic global are not final shipping contracts. No new worker experiment adopted.
+
+## 2026-10-29 checked boundary checkpoint
+
+Generated the 66 scalar browser ABI signatures from the existing Rust exports, with a build-time stale-generation check. Main and derived-geometry worker now share one loader that verifies memory, exported functions and argument counts once during startup; hot editing/rendering calls remain direct. Incompatible modules report a visible startup error without preventing return to the gallery. This checks export shape, not argument ranges, buffer ownership or regional coordinate semantics; those remain required. No renderer/shader/cache/geometry algorithms changed.
+
+The rebuilt Wasm SHA-256 remains efdc8c44a74e2bf43ea5064f8fc0df6cdbeedda7656c78055282d584e81862ea, identical to 65281. New isolated preview is 65282; 65280 and 65281 remain untouched. Build/type checks and browser brush/pan/history/retention checks run against 65282. Failure-path coverage uses a valid incompatible Wasm module. This is still intermediate architecture, not M01–M09 completion or performance adoption.

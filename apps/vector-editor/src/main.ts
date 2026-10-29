@@ -1,7 +1,7 @@
 import "./style.css";
 import { Camera, normalizeRotation } from "./camera";
 import { CompositeCache } from "./composite-cache";
-import type { Core } from "./core";
+import { loadCore } from "./load-core";
 import { CoverageRenderer } from "./coverage-renderer";
 import { type Bounds, type DrawPlan, GeometryCache } from "./geometry-cache";
 import { INSTANCE_BYTES } from "./gpu-arena";
@@ -38,8 +38,10 @@ opacityInput.addEventListener("input", () => {
 window.addEventListener("error", (e) => {
 	status.textContent = `Engine error: ${e.message}. Keep this tab open; session data may remain in memory.`;
 });
-const core = (await WebAssembly.instantiateStreaming(fetch("/vector-editor/core.wasm"), {}))
-	.instance.exports as unknown as Core;
+const core = await loadCore().catch((error: unknown) => {
+	status.textContent = `Drawing engine could not start: ${error instanceof Error ? error.message : String(error)}. Reload to retry.`;
+	throw error;
+});
 const gl = canvas.getContext("webgl2", {
 	alpha: false,
 	antialias: true,
