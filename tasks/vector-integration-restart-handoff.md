@@ -8,8 +8,8 @@ This is an intermediate implementation, not completed M1–M9 adoption. Use the 
 - Branch: `codex/vector-integration-restart`
 - Draft PR: https://github.com/AlexandrLesiv/Linefield/pull/21 — open, not merged.
 - Verified remote main: `b101a7e`. The restart explicitly reverts the discarded PR16 documentation, then integrates the approved source.
-- Current application: regional view-origin plus GPU program ownership/startup recovery checkpoint; inspect branch HEAD for the saved revision.
-- Latest preview: http://127.0.0.1:65307/ — choose New drawing. Reference 65280, initial integration 65281 and all other existing previews remain unchanged.
+- Current application: adaptive wide derived geometry plus regional view-origin checkpoint; inspect branch HEAD for the saved revision.
+- Latest preview: http://127.0.0.1:65313/ — choose New drawing. Reference 65280, initial integration 65281 and all other existing previews remain unchanged.
 - Authoritative reference: `/Users/oleksandr/Documents/Codex/2026-10-20/files-pasted-by-the-user-build/outputs/linefield-handoff/source-app/`, verified 77-file source set `474873d88d00f498105fc2fbb8eed754cc01ba93f6a3f9bcde7dfd78a853ca1d`. Do not substitute current vector-canvas-lab HEAD.
 - Detailed chronology, evidence paths and limitations: `tasks/vector-integration-restart.md`.
 
@@ -25,7 +25,7 @@ Generated scalar ABI declarations and a signature fingerprint are checked at sta
 
 ## What is still required
 
-1. **Finish bounded geometry and regional acceptance.** The screen now uses nonzero regional origins, with exact bounded image comparisons at far/full-range origins. The current single source anchor still does not bound arbitrary long strokes; finish chunk-local source geometry without changing curve shape or raw samples. Expand rotated/zoomed origin crossings, pending-job edits and resource-failure coverage. Rebase cost and extra retained endpoint memory are measured in the task; do not claim final performance acceptance from those bounded results.
+1. **Finish bounded geometry and regional acceptance.** The screen now uses nonzero regional origins, with exact bounded image comparisons at far/full-range origins. Adaptive f64 derived geometry now passes the two-ended source tests through 2^32 displacement; arbitrary i64-wide sources still need a defined precise treatment. Do not revive the rejected single-chunk-origin solution. Expand curved/crossing/transformed wide-source image and resource/performance coverage. Expand rotated/zoomed origin crossings, pending-job edits and resource-failure coverage. Rebase cost and extra retained endpoint memory are measured in the task; do not claim final performance acceptance from those bounded results.
 2. **Finalize the host/session boundary.** The editor is temporarily a persistent same-origin iframe. Its donor control layout and module sizes remain intermediate; clean component/host factoring and final design/accessibility review are unfinished. Preserve the functioning renderer while doing this.
 3. **Complete the combined acceptance matrix.** Present evidence is bounded, not full LFV01–18/sign-off. Broader sparse/large workloads, presentation-correctness latency, physical Wacom validation, resource pressure/failure and repeated pending-job edits require further evidence. Independent/design review has not been completed for final adoption.
 4. **Run the five worker experiments after faithful integration is accepted.** None has started: material generation versus worker/prebuilt asset; extended completed geometry; visibility/overlap/tile planning; Lasso/Slice calculation; OffscreenCanvas rendering. Establish separate baselines, adopt only useful correct variants, and retain measured rejection/compatibility findings. Do not label the donor's existing worker as one of these completed experiments.
@@ -33,7 +33,7 @@ Generated scalar ABI declarations and a signature fingerprint are checked at sta
 
 ## Verified evidence and its limits
 
-- All 120 approved browser checks pass on 65304: 22 paper-contact behavior, eight rendering/recovery, and 30 editing checks per brush.
+- All 120 approved browser checks pass on 65313: 22 paper-contact behavior, eight rendering/recovery, and 30 editing checks per brush.
 - Exact artwork/raw comparison passes for brush overlap, pan, rotated drawing, zoom and history. An expanded run on the preceding equivalent rendering pipeline compared 18 captures across four separated regions, including held-pointer panning before mouseup and the full zoom range. Readback waits for settlement; this does not establish per-frame latency. Only camera f64 roundoff has a documented allowance; no new artwork tolerance was added.
 - EN/UK checks verify authored/default layer names, no-op rename, history, drawing, layer visibility and persistent error feedback. Session lifecycle, startup retry, worker failure recovery and live themes have passed at recorded checkpoints.
 - 125 regional primitive cases and additional adapter transport/type/copy checks pass. These are not canonical drawing precision acceptance.
@@ -70,3 +70,7 @@ The long-source gap is now reproducible with apps/web/tests/vector-long-source-a
 ## Rejected chunk-origin candidate — continue from verified production
 
 Do not adopt the candidate in frozen experimental previews 65308–65310. Its local chunk frames fixed distant tails and passed ordinary images/120 checks, but the strengthened two-ended numerical gate proves four starting-endpoint regressions (0.125 becomes 0 at 2^24/2^32). Production changes were restored; 65307 remains latest verified. Candidate patch/module are ignored evidence under .build-cache/restart/chunk-origin-rejected. The tracked long-source audit now checks actual projected geometry and both ends; a new actual-input cropped-tail image/Slice/history test catches the existing baseline failure. Both remain explicit failing gates on production. Next implementation needs a precise wide-span path while retaining the ordinary fast path; see the task entry. No additional worker experiment has started.
+
+## Current adoption status — supersedes the preceding failed-gate status
+
+Adaptive wide derived geometry is now integrated. The original f32 fast path remains for ordinary strokes; Rust owns both instantiations of one curve/flattening policy, with f64 preparation, bounds and Slice for wide chunks. Typed worker transport and retained source endpoints stay wide until view-relative GPU projection. Both-end numerical gates through 2^32 and all-brush cropped tail/Slice/history images now pass, including forced worker fallback. The 120 approved checks, ordinary exact image parity, static/build checks and native compilation pass. Preview 65313 is the new verified bounded checkpoint. Read the latest task entry for measured ordinary performance and remaining full-range/curved-wide/resource/architecture/review gaps. This is not final M1–M9 acceptance; no optional worker experiment has begun.

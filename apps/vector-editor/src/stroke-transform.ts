@@ -49,7 +49,7 @@ export function transformBounds(
 	];
 }
 export function transformCapsules(
-	source: Float32Array,
+	source: Float32Array | Float64Array,
 	target: Float32Array,
 	t: StrokeTransform,
 ) {

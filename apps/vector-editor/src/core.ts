@@ -26,9 +26,12 @@ export type Core = {
   delete_begin(): void;
   delete_commit(): number;
   geometry_input_capacity(): number;
+  geometry_input_f64_ptr(): number;
   geometry_input_ptr(): number;
   geometry_output_capacity(): number;
+  geometry_requires_f64(id: number, chunk: number): number;
   geometry_snapshot(id: number, chunk: number): number;
+  geometry_snapshot_f64(id: number, chunk: number): number;
   layer_active(): number;
   layer_at(rank: number): number;
   layer_count(): number;
@@ -59,6 +62,7 @@ export type Core = {
   push_precise(x: number, y: number, pressure: number): number;
   push_regional(rx: bigint, x: number, ry: bigint, y: number, pressure: number): number;
   raw_chunk_bounds(id: number, chunk: number, field: number): number;
+  raw_chunk_bounds_f64_ptr(id: number, chunk: number): number;
   raw_chunk_bounds_ptr(id: number, chunk: number): number;
   raw_length(id: number): number;
   raw_local(id: number, index: number, axis: number): number;
@@ -71,8 +75,11 @@ export type Core = {
   regional_result_local(): number;
   regional_result_region(): bigint;
   render_chunk(id: number, chunk: number, tolerance: number): number;
+  render_chunk_f64(id: number, chunk: number, tolerance: number): number;
+  render_chunk_f64_ptr(): number;
   render_chunk_ptr(): number;
   render_snapshot(length: number, tolerance: number): number;
+  render_snapshot_f64(length: number, tolerance: number): number;
   set_active_brush(kind: number): void;
   slice_begin(width: number, active_only: number): number;
   slice_begin_regional(width: number, active_only: number, rx: bigint, ry: bigint): number;
@@ -123,9 +130,12 @@ export const coreExportArity = {
   "delete_begin": 0,
   "delete_commit": 0,
   "geometry_input_capacity": 0,
+  "geometry_input_f64_ptr": 0,
   "geometry_input_ptr": 0,
   "geometry_output_capacity": 0,
+  "geometry_requires_f64": 2,
   "geometry_snapshot": 2,
+  "geometry_snapshot_f64": 2,
   "layer_active": 0,
   "layer_at": 1,
   "layer_count": 0,
@@ -156,6 +166,7 @@ export const coreExportArity = {
   "push_precise": 3,
   "push_regional": 5,
   "raw_chunk_bounds": 3,
+  "raw_chunk_bounds_f64_ptr": 2,
   "raw_chunk_bounds_ptr": 2,
   "raw_length": 1,
   "raw_local": 3,
@@ -168,8 +179,11 @@ export const coreExportArity = {
   "regional_result_local": 0,
   "regional_result_region": 0,
   "render_chunk": 3,
+  "render_chunk_f64": 3,
+  "render_chunk_f64_ptr": 0,
   "render_chunk_ptr": 0,
   "render_snapshot": 2,
+  "render_snapshot_f64": 2,
   "set_active_brush": 1,
   "slice_begin": 2,
   "slice_begin_regional": 4,
@@ -192,4 +206,4 @@ export const coreExportArity = {
   "visible": 1
 } as const;
 
-export const coreAbiFingerprint = [2346280281,1176016575,2702216646,2586493622,3109023205,2775598921,3054140812,3756704042] as const;
+export const coreAbiFingerprint = [1210411482,774140585,726818142,1061990403,556524722,801949696,3250351098,249452508] as const;

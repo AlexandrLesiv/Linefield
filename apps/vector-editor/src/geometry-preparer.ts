@@ -1,12 +1,14 @@
+import type { GeometryData } from "./derived-geometry";
 import type { Core } from "./core";
 /** One bounded independent Wasm engine. Canonical samples never leave ownership
  * of the main engine: messages contain small disposable copies with neighbors. */
 export class GeometryPreparer {
   private worker: Worker;
   private sequence = 0;
+  private wideRequests = new Set<number>();
   private outputCapacity = 0;
   private watchdog: ReturnType<typeof setTimeout> | undefined;
-  private callbacks = new Map<number, (data: Float32Array | null) => void>();
+  private callbacks = new Map<number, (data: GeometryData | null) => void>();
   ready = false;
   failed = false;
   constructor(private changed: () => void) {
@@ -27,11 +29,12 @@ export class GeometryPreparer {
         return;
       }
       const callback = this.callbacks.get(data.id);
+      const wide = this.wideRequests.delete(data.id);
       this.callbacks.delete(data.id);
       if (
         !callback ||
         data.error ||
-        !(data.output instanceof Float32Array) ||
+        !(wide ? data.output instanceof Float64Array : data.output instanceof Float32Array) ||
         data.output.length === 0 ||
         data.output.length > this.outputCapacity ||
         data.output.length % 6
@@ -55,19 +58,25 @@ export class GeometryPreparer {
     stroke: number,
     chunk: number,
     tolerance: number,
-    callback: (data: Float32Array | null) => void,
+    callback: (data: GeometryData | null) => void,
   ) {
     if (!this.available) return false;
-    const length = core.geometry_snapshot(stroke, chunk);
+    const wide = core.geometry_requires_f64(stroke, chunk) !== 0;
+    const length = wide
+      ? core.geometry_snapshot_f64(stroke, chunk)
+      : core.geometry_snapshot(stroke, chunk);
     if (!length) return false;
     if (!Number.isSafeInteger(length) || length < 0 || length > core.geometry_input_capacity()) {
       this.fail();
       return false;
     }
     this.outputCapacity = core.geometry_output_capacity();
-    const input = new Float32Array(core.memory.buffer, core.geometry_input_ptr(), length).slice();
+    const input = wide
+      ? new Float64Array(core.memory.buffer, core.geometry_input_f64_ptr(), length).slice()
+      : new Float32Array(core.memory.buffer, core.geometry_input_ptr(), length).slice();
     const id = ++this.sequence;
     this.callbacks.set(id, callback);
+    if (wide) this.wideRequests.add(id);
     if (!this.watchdog) this.armWatchdog();
     try {
       this.worker.postMessage({ id, input, tolerance }, [input.buffer]);
@@ -93,6 +102,7 @@ export class GeometryPreparer {
     this.worker.terminate();
     const callbacks = [...this.callbacks.values()];
     this.callbacks.clear();
+    this.wideRequests.clear();
     for (const callback of callbacks) callback(null);
     this.changed();
   }
@@ -101,6 +111,7 @@ export class GeometryPreparer {
     this.failed = true;
     this.ready = false;
     this.callbacks.clear();
+    this.wideRequests.clear();
     this.worker.terminate();
   }
 }

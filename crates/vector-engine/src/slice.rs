@@ -173,7 +173,17 @@ fn surviving(stroke: &Stroke, gesture: &Gesture) -> Option<Vec<[f64; 2]>> {
     }
     let mut removed = Vec::new();
     for span in lo.floor() as usize..hi.ceil() as usize {
-        let curve = geometry::source_span(stroke, span + 1).map(project);
+        let wide = (span.saturating_sub(1)..=(span + 2).min(stroke.points.len() - 1)).any(|i| {
+            let p = stroke.points[i];
+            p.x.relative_to(stroke.source_anchor[0]).abs() > 65536.0 || p.y.relative_to(stroke.source_anchor[1]).abs() > 65536.0
+        });
+        let curve = if wide {
+            let [a,b] = stroke.basis;
+            crate::geometry_wide::source_span(stroke, span + 1).map(|p| [
+                a * p[0] - b * p[1] + stroke.source_anchor[0].relative_to(gesture.origin[0]) + stroke.offset[0],
+                b * p[0] + a * p[1] + stroke.source_anchor[1].relative_to(gesture.origin[1]) + stroke.offset[1],
+            ])
+        } else { geometry::source_span(stroke, span + 1).map(project) };
         for (i, &b) in gesture.path.iter().enumerate() {
             let a = gesture.path[i.saturating_sub(1)];
             for [a, b] in crossings(curve, a, b, gesture.radius) {

@@ -1,6 +1,9 @@
 use std::{cell::RefCell, rc::Rc};
 mod boundary_generated;
 mod geometry;
+mod geometry_wide;
+pub mod geometry_wide_transport;
+pub mod geometry_wide_snapshot;
 /// Generated scalar ABI shape identity, checked once by host and worker loaders.
 /// This is not a trust signature or a document-format version.
 #[cfg_attr(target_arch = "wasm32", no_mangle)]

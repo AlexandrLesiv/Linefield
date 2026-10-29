@@ -1,3 +1,4 @@
+import { readGeometry, readGeometryBounds, type GeometryData } from "./derived-geometry";
 import type { Core } from "./core";
 import { GeometryPreparer } from "./geometry-preparer";
 import { type Allocation, GpuArena, INSTANCE_BYTES } from "./gpu-arena";
@@ -27,7 +28,7 @@ type Entry = {
 	/** Owned disposable endpoints, bounded by the geometry cache lifetime. */
 	capsules?: Float32Array;
 	/** Immutable local geometry retained for transformed strokes. */
-	localCapsules?: Float32Array;
+	localCapsules?: GeometryData;
 	capsuleStride?: 3 | 6;
 	cpuBytes: number;
 	serial: number;
@@ -81,19 +82,23 @@ const intersects = (a: Bounds, b: Bounds) =>
 /** Most completed geometry is one connected chain. Store each shared endpoint
  * once, preserving its Float32 bits; discontinuous future brush geometry keeps
  * the original six-float segment format. Both paths own their scratch copy. */
-export function retainCapsules(data: Float32Array) {
+export function retainCapsules(data: Float32Array): {capsules: Float32Array; capsuleStride: 3 | 6};
+export function retainCapsules(data: Float64Array): {capsules: Float64Array; capsuleStride: 3 | 6};
+export function retainCapsules(data: GeometryData): {capsules: GeometryData; capsuleStride: 3 | 6};
+export function retainCapsules(data: GeometryData): {capsules: GeometryData; capsuleStride: 3 | 6} {
 	if (!data.length || data.length % 6)
 		return { capsules: data.slice(), capsuleStride: 6 as const };
-	const bits = new Uint32Array(data.buffer, data.byteOffset, data.length);
-	for (let i = 6; i < bits.length; i += 6)
-		for (let k = 0; k < 3; k++)
-			if (bits[i + k] !== bits[i - 3 + k])
+	const words = data.BYTES_PER_ELEMENT / 4;
+	const bits = new Uint32Array(data.buffer, data.byteOffset, data.length * words);
+	for (let i = 6 * words; i < bits.length; i += 6 * words)
+		for (let k = 0; k < 3 * words; k++)
+			if (bits[i + k] !== bits[i - 3 * words + k])
 				return { capsules: data.slice(), capsuleStride: 6 as const };
-	const capsules = new Float32Array(data.length / 2 + 3);
+	const capsules = data instanceof Float64Array ? new Float64Array(data.length / 2 + 3) : new Float32Array(data.length / 2 + 3);
 	const output = new Uint32Array(capsules.buffer);
-	output.set(bits.subarray(0, 3));
+	output.set(bits.subarray(0, 3 * words));
 	for (let i = 0; i < data.length / 6; i++)
-		for (let k = 0; k < 3; k++) output[(i + 1) * 3 + k] = bits[i * 6 + 3 + k];
+		for (let k = 0; k < 3 * words; k++) output[(i + 1) * 3 * words + k] = bits[(i * 6 + 3) * words + k];
 	return { capsules, capsuleStride: 3 as const };
 }
 
@@ -125,7 +130,7 @@ export class GeometryCache {
 	private preparer: GeometryPreparer | null = null;
 	private jobs = new Map<
 		Chunk,
-		{ version: number; level: number; data?: Float32Array }
+		{ version: number; level: number; data?: GeometryData }
 	>();
 	private active: number | null = null;
 	setBackgroundPreparation(enabled: boolean) {
@@ -162,12 +167,13 @@ export class GeometryCache {
 		let readyBytes = 0;
 		for (const job of this.jobs.values())
 			readyBytes += job.data?.byteLength ?? 0;
+		const outstandingBytes = 8 * this.core.geometry_output_capacity() * Float64Array.BYTES_PER_ELEMENT;
 		const until = performance.now() + 0.5;
 		for (const c of this.rebuilding) {
 			if (
 				!preparer.available ||
 				this.jobs.size >= 256 ||
-				readyBytes + 8 * 4096 * 24 > 8 * 1024 * 1024 ||
+				readyBytes + outstandingBytes > 8 * 1024 * 1024 ||
 				performance.now() >= until
 			)
 				break;
@@ -379,8 +385,7 @@ export class GeometryCache {
 			for (let k = 0; k < count; k++) {
 				let raw: readonly number[] | undefined = s.chunks.get(k)?.localBounds;
 				if (!raw) {
-					const ptr = this.core.raw_chunk_bounds_ptr(id, k);
-					raw = Array.from(new Float32Array(this.core.memory.buffer, ptr, 4));
+					raw = readGeometryBounds(this.core, id, k);
 				}
 				const b = transformBounds(local, raw);
 				bounds[0] = Math.min(bounds[0], b[0]);
@@ -431,21 +436,12 @@ export class GeometryCache {
 				)
 					continue;
 				const e = this.selected(c);
-				let data: Float32Array, stride: number;
+				let data: GeometryData, stride: number;
 				if (e?.capsules) {
 					data = e.localCapsules ?? e.capsules;
 					stride = e.capsuleStride ?? 6;
 				} else {
-					const count = this.core.render_chunk(
-						id,
-						c.chunk,
-						2 ** transformedDetailLevel(this.level, transform),
-					);
-					data = new Float32Array(
-						this.core.memory.buffer,
-						this.core.render_chunk_ptr(),
-						count * 6,
-					);
+					data = readGeometry(this.core, id, c.chunk, 2 ** transformedDetailLevel(this.level, transform));
 					stride = 6;
 				}
 				for (let i = 0; i + 5 < data.length; i += stride)
@@ -495,29 +491,17 @@ export class GeometryCache {
 				let bounds: readonly number[];
 				if (c) bounds = c.localBounds;
 				else {
-					const ptr = this.core.raw_chunk_bounds_ptr(id, k);
-					bounds = Array.from(
-						new Float32Array(this.core.memory.buffer, ptr, 4),
-					);
+					bounds = readGeometryBounds(this.core, id, k);
 				}
 				if (partial && !region.overlaps(transformBounds(transform, bounds)))
 					continue;
 				const e = c ? this.selected(c) : undefined;
-				let data: Float32Array, stride: number;
+				let data: GeometryData, stride: number;
 				if (e?.capsules) {
 					data = e.localCapsules ?? e.capsules;
 					stride = e.capsuleStride ?? 6;
 				} else {
-					const segments = this.core.render_chunk(
-						id,
-						k,
-						2 ** transformedDetailLevel(this.level, transform),
-					);
-					data = new Float32Array(
-						this.core.memory.buffer,
-						this.core.render_chunk_ptr(),
-						segments * 6,
-					);
+					data = readGeometry(this.core, id, k, 2 ** transformedDetailLevel(this.level, transform));
 					stride = 6;
 				}
 				for (let i = 0; i + 5 < data.length; i += stride) {
@@ -601,10 +585,7 @@ export class GeometryCache {
 		}
 		c.version++;
 		// One Rust traversal for the complete conservative hull, copied before scratch reuse.
-		const ptr = this.core.raw_chunk_bounds_ptr(id, k);
-		c.localBounds = Array.from(
-			new Float32Array(this.core.memory.buffer, ptr, 4),
-		) as Bounds;
+		c.localBounds = readGeometryBounds(this.core, id, k) as Bounds;
 		c.bounds = transformBounds(s.transform, c.localBounds);
 		this.index(c);
 		this.needsQuery = true;
@@ -750,7 +731,7 @@ export class GeometryCache {
 		);
 	}
 	private build(c: Chunk, background = false): boolean {
-		let data: Float32Array;
+		let data: GeometryData;
 		if (background && this.preparer && !this.preparer.failed) {
 			const job = this.jobs.get(c);
 			if (
@@ -762,23 +743,14 @@ export class GeometryCache {
 			data = job.data;
 			this.jobs.delete(c);
 		} else {
-			const count = this.core.render_chunk(
-				c.id,
-				c.chunk,
-				2 ** this.levelFor(c),
-			);
-			if (!count) return false;
-			data = new Float32Array(
-				this.core.memory.buffer,
-				this.core.render_chunk_ptr(),
-				count * 6,
-			);
+			data = readGeometry(this.core, c.id, c.chunk, 2 ** this.levelFor(c));
+			if (!data.length) return false;
 		}
 		this.jobs.delete(c);
 		const transform = this.strokes.get(c.id)!.transform;
-		let localCapsules: Float32Array | undefined;
+		let localCapsules: GeometryData | undefined;
 		let localStride: 3 | 6 | undefined;
-		if (transform[0] !== 1 || transform[1] || transform[2] || transform[3]) {
+		if (data instanceof Float64Array || transform[0] !== 1 || transform[1] || transform[2] || transform[3]) {
 			const local = retainCapsules(data);
 			localCapsules = local.capsules;
 			localStride = local.capsuleStride;
@@ -786,6 +758,7 @@ export class GeometryCache {
 			data = new Float32Array(source.length);
 			transformCapsules(source, data, transform);
 		}
+		if (!(data instanceof Float32Array)) throw Error("Geometry was not projected for GPU upload");
 		const count = data.length / 6;
 		const bytes = count * INSTANCE_BYTES;
 		const old = c.entries.get(this.levelFor(c));

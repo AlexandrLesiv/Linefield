@@ -21,6 +21,18 @@ try {
         ? core.chunk_transform_relative(id, chunk, component, rx, ry)
         : core.stroke_transform_relative(id, component, rx, ry);
     const result = [];
+    const wide = (id, chunk) =>
+      typeof core.geometry_requires_f64 === "function" &&
+      core.geometry_requires_f64(id, chunk) !== 0;
+    const render = (id, chunk) => {
+      const useWide = wide(id, chunk),
+        count = useWide
+          ? core.render_chunk_f64(id, chunk, 0.0001)
+          : core.render_chunk(id, chunk, 0.0001);
+      return useWide
+        ? new Float64Array(core.memory.buffer, core.render_chunk_f64_ptr(), count * 6).slice()
+        : new Float32Array(core.memory.buffer, core.render_chunk_ptr(), count * 6).slice();
+    };
     // One source starts near zero, then contains a fine tail in a later region.
     // A compact source at that same region is the translation-invariant control.
     for (const extent of [0, 65536, 1048576, 16777216, 4294967296]) {
@@ -46,28 +58,24 @@ try {
           if (!canonicalEqual || JSON.stringify(points) !== JSON.stringify(raw()))
             throw Error("Canonical sample/history mismatch");
           const source = points.slice(256, 384).map((_, i) => core.point(id, i + 256, axis));
-          const firstCount = core.render_chunk(id, 0, 0.0001);
-          const firstData = new Float32Array(
-            core.memory.buffer,
-            core.render_chunk_ptr(),
-            firstCount * 6,
-          ).slice(0, 3);
+          const firstData = render(id, 0).slice(0, 3);
           const firstPlacement = placement(id, 0, axis + 2, 0n, 0n);
           const firstProjected = firstData[axis] + firstPlacement;
           const firstPrecise = firstProjected === points[0][axis];
-          const count = core.render_chunk(id, 2, 0.0001);
-          const direct = new Float32Array(
-            core.memory.buffer,
-            core.render_chunk_ptr(),
-            count * 6,
-          ).slice();
-          const size = core.geometry_snapshot(id, 2);
-          const prepared = core.render_snapshot(size, 0.0001);
-          const copied = new Float32Array(
-            core.memory.buffer,
-            core.render_chunk_ptr(),
-            prepared * 6,
-          ).slice();
+          const direct = render(id, 2),
+            count = direct.length / 6;
+          const useWide = wide(id, 2);
+          const size = useWide ? core.geometry_snapshot_f64(id, 2) : core.geometry_snapshot(id, 2);
+          const prepared = useWide
+            ? core.render_snapshot_f64(size, 0.0001)
+            : core.render_snapshot(size, 0.0001);
+          const copied = useWide
+            ? new Float64Array(
+                core.memory.buffer,
+                core.render_chunk_f64_ptr(),
+                prepared * 6,
+              ).slice()
+            : new Float32Array(core.memory.buffer, core.render_chunk_ptr(), prepared * 6).slice();
           const workerEqual = JSON.stringify([...direct]) === JSON.stringify([...copied]);
           if (!workerEqual) throw Error("Worker/direct geometry disagreement");
           const origin = BigInt(extent / 65536);
@@ -102,6 +110,7 @@ try {
             tailFirst: source[0],
             tailLast: source.at(-1),
             segments: count,
+            wide: useWide,
             workerEqual,
             bounds: [0, 1, 2, 3].map((field) => core.raw_chunk_bounds(id, 2, field)),
           });

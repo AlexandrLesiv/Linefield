@@ -9,20 +9,42 @@ const browser = await chromium.launch({ channel: "chrome", headless: true });
 const results = [];
 const clip = { x: 0, y: 220, width: 100, height: 330 };
 try {
-  for (const extent of [1048576, 4294967296]) {
+  for (const [extent, brush] of [1048576, 4294967296].flatMap((value) =>
+    [0, 1, 2].map((tool) => [value, tool]),
+  )) {
     for (const compact of [true, false]) {
       const page = await browser.newPage({
         viewport: { width: 1440, height: 1000 },
         deviceScaleFactor: 2,
       });
       const errors = [];
+      if (process.env.LINEFIELD_FORCE_WORKER_FAILURE === "1")
+        await page.addInitScript(() => {
+          window.geometryWorkerRetired = false;
+          const Original = window.Worker;
+          window.Worker = class extends Original {
+            constructor(...args) {
+              super(...args);
+              this.addEventListener("message", (event) => {
+                if (event.data?.ready) this.postMessage({ id: 999999, input: null, tolerance: 1 });
+              });
+            }
+            terminate() {
+              window.geometryWorkerRetired = true;
+              super.terminate();
+            }
+          };
+        });
       page.on("pageerror", (error) => errors.push(error.message));
       await page.goto(process.env.LINEFIELD_PREVIEW_URL || "http://127.0.0.1:65307/");
       await page.locator(".new-tile").click();
       const host = page.frameLocator("iframe");
       await host.locator("#brush").waitFor();
+      await host.locator("#brush").selectOption(String(brush));
       const frame = page.frames().find((item) => item.url().includes("/vector-editor/"));
       await frame.waitForFunction(() => !!window.lab);
+      if (process.env.LINEFIELD_FORCE_WORKER_FAILURE === "1")
+        await frame.waitForFunction(() => window.geometryWorkerRetired);
       await panToRegionalOrigin(frame, extent);
       const blank = await captureDrawing(frame, clip);
       await frame.evaluate(
@@ -102,6 +124,7 @@ try {
         throw Error("Slice Undo changed tail pixels");
       results.push({
         extent,
+        brush,
         compact,
         before,
         after,

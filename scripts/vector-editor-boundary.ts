@@ -5,7 +5,16 @@ import { fileURLToPath } from "node:url";
 // This deliberately accepts only the donor's scalar C ABI. New compound types
 // must receive an explicit adapter rather than silently becoming JS numbers.
 const root = fileURLToPath(new URL("../", import.meta.url));
-const sources = ["lib", "layers", "selection", "slice", "camera", "regional"];
+const sources = [
+  "lib",
+  "layers",
+  "selection",
+  "slice",
+  "camera",
+  "regional",
+  "geometry_wide_transport",
+  "geometry_wide_snapshot",
+];
 const rustSignatures: string[] = [];
 const signatures: { name: string; args: string[]; result: string }[] = [];
 function scalar(type: string): string {
