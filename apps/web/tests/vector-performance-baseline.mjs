@@ -2,6 +2,8 @@ import { chromium } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 import { cpus, platform, release, totalmem } from "node:os";
 const output = process.env.LINEFIELD_EVIDENCE_DIR || ".build-cache/restart/performance-baseline";
+const freezeBoundsProbe = process.env.LINEFIELD_FREEZE_BOUNDS_PROBE === "1";
+const profileCpu = process.env.LINEFIELD_CPU_PROFILE === "1";
 const referenceIntegrated = process.env.LINEFIELD_REFERENCE_INTEGRATED === "1";
 const workload = {
   zoomCycles: Number(process.env.LINEFIELD_ZOOM_CYCLES || 1),
@@ -55,6 +57,16 @@ try {
         : page.mainFrame();
       await frame.waitForFunction(() => !!window.lab, {}, { timeout: 30000 });
       const readinessMs = performance.now() - started;
+      const profiler = profileCpu ? await page.context().newCDPSession(page) : null;
+      if (profiler) {
+        await profiler.send("Profiler.enable");
+        await profiler.send("Profiler.setSamplingInterval", { interval: 250 });
+        await profiler.send("Profiler.start");
+      }
+      const measurementWorkload = {
+        ...workload,
+        freezeInputBounds: freezeBoundsProbe && integrated,
+      };
       const measurement = await frame.evaluate(async (scenario) => {
         const canvas = document.querySelector("canvas"),
           rect = canvas.getBoundingClientRect();
@@ -84,7 +96,9 @@ try {
         const phases = [];
         let phaseTasks = [];
         const observer = new PerformanceObserver((list) => {
-          phaseTasks.push(...list.getEntries().map((e) => e.duration));
+          phaseTasks.push(
+            ...list.getEntries().map((e) => ({ startTime: e.startTime, duration: e.duration })),
+          );
         });
         observer.observe({ type: "longtask" });
         async function phase(name, action) {
@@ -115,7 +129,12 @@ try {
             actionMs,
             renderSettledWaitMs,
             rafIntervals: quantiles(frames),
-            longTasks: quantiles(phaseTasks),
+            longTasks: quantiles(
+              phaseTasks.filter((e) => e.startTime >= start).map((e) => e.duration),
+            ),
+            longTaskEntries: phaseTasks,
+            phaseStart: start,
+            phaseEnd: performance.now(),
             metrics,
           });
         }
@@ -156,30 +175,50 @@ try {
             ),
           );
         try {
-          await phase("cold-mixed-drawing", async () => {
-            for (let stroke = 0; stroke < scenario.strokes; stroke++) {
-              control("brush", stroke % 3);
-              control("width", 24);
-              control("opacity", stroke % 2 ? 55 : 100);
-              pointer("pointerdown", 180, 240 + (stroke % 8) * 18);
-              for (let i = 1; i < scenario.samplesPerStroke; i++)
+          const boundsDescriptor = Object.getOwnPropertyDescriptor(canvas, "getBoundingClientRect");
+          const readBounds = canvas.getBoundingClientRect.bind(canvas);
+          if (scenario.freezeInputBounds)
+            Object.defineProperty(canvas, "getBoundingClientRect", {
+              configurable: true,
+              value: () => rect,
+            });
+          try {
+            await phase("cold-mixed-drawing", async () => {
+              for (let stroke = 0; stroke < scenario.strokes; stroke++) {
+                control("brush", stroke % 3);
+                control("width", 24);
+                control("opacity", stroke % 2 ? 55 : 100);
+                if (scenario.freezeInputBounds) {
+                  const actual = readBounds();
+                  if (["x", "y", "width", "height"].some((key) => actual[key] !== rect[key]))
+                    throw Error("Bounds probe requires a static layout");
+                }
+                pointer("pointerdown", 180, 240 + (stroke % 8) * 18);
+                for (let i = 1; i < scenario.samplesPerStroke; i++)
+                  pointer(
+                    "pointermove",
+                    180 + (i * 896) / (scenario.samplesPerStroke - 1),
+                    240 +
+                      (stroke % 8) * 18 +
+                      Math.round(Math.sin((i * 12.8) / (scenario.samplesPerStroke - 1)) * 60),
+                    0.2 + (0.8 * (i % 31)) / 30,
+                  );
                 pointer(
-                  "pointermove",
-                  180 + (i * 896) / (scenario.samplesPerStroke - 1),
-                  240 +
-                    (stroke % 8) * 18 +
-                    Math.round(Math.sin((i * 12.8) / (scenario.samplesPerStroke - 1)) * 60),
-                  0.2 + (0.8 * (i % 31)) / 30,
+                  "pointerup",
+                  1076,
+                  240 + (stroke % 8) * 18 + Math.round(Math.sin(12.8) * 60),
+                  0,
                 );
-              pointer(
-                "pointerup",
-                1076,
-                240 + (stroke % 8) * 18 + Math.round(Math.sin(12.8) * 60),
-                0,
-              );
-              await next();
+                await next();
+              }
+            });
+          } finally {
+            if (scenario.freezeInputBounds) {
+              if (boundsDescriptor)
+                Object.defineProperty(canvas, "getBoundingClientRect", boundsDescriptor);
+              else delete canvas.getBoundingClientRect;
             }
-          });
+          }
           if (lab.core.count() !== scenario.strokes)
             throw Error("Input workload did not commit every stroke");
           const sampleCount = rawBefore().reduce((sum, points) => sum + points.length, 0);
@@ -320,7 +359,15 @@ try {
               : delete canvas[key],
           );
         }
-      }, workload);
+      }, measurementWorkload);
+      if (profiler) {
+        const { profile } = await profiler.send("Profiler.stop");
+        await writeFile(
+          `${output}/cpu-${repeat}-${integrated ? "integrated" : "reference"}.json`,
+          JSON.stringify(profile),
+        );
+        await profiler.detach();
+      }
       results.push({ repeat, integrated, readinessMs, errors, measurement });
       await page.close();
       await writeFile(
@@ -339,6 +386,8 @@ try {
             browser: browser.version(),
             headless: true,
             gpuQueries: false,
+            cpuProfileDiagnostic: profileCpu,
+            staticInputBoundsDiagnostic: freezeBoundsProbe,
             notes:
               "Synthetic DOM input; readiness includes navigation and shell animation. Frame submission and rAF are not physical input-to-display or GPU duration. Render settlement is the engine pending-state proxy, not measured time to correct displayed pixels. No worker transfer/turnaround instrumentation in this baseline.",
             results,

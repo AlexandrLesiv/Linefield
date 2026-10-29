@@ -59,6 +59,10 @@ Final65335 passes120 approved feature checks, exact approved-reference images/ra
 
 Wide-source evidence refreshed: six normal/delayed f64-worker sessions at2^32 preserve exact images/raw across Undo/regional rebase/Redo/new input with eight held messages maximum. Twelve actual small-handle rotation/resize cases per candidate on a diagonal2^32 source keep the endpoint visible and match65331 exactly with history/raw preservation. Curved wide-source strict hashes still differ in six fields by<=one pixel/one RGB level at2^32; all24 supplemental stages pass the declared envelope. Only twelve rotation stages include captured geometry; before/Slice geometry is explicitly not evaluated. No blanket tolerance or arbitrary-span claim.
 
+## Latest performance attribution (no production change)
+
+Optional CPU profiling and timestamped long-task attribution are now available in the existing performance fixture. Read the latest task entry before further optimization. Bounds reads are a measured opportunity: test-only frozen-layout65335 probe reduced six synchronous16k-sample-stroke phase median342.8→281.3ms, but still had83.4ms rAF gaps. Frozen bounds are not adopted; real layout must stay correct. A safe first candidate is one bounds read per coalesced input batch, with fresh reads between dispatched events and explicit layout/order/pressure E2E. This does not by itself resolve the single-event synthetic burst. Profiled dense zoom did not reproduce the56ms task; that does not close it. All current previews unchanged.
+
 ## Remaining work, in order
 
 1. Attribute the remaining measured latency tails before claiming complete performance acceptance: current three alternating65335/reference65280 runs show comparable ordinary CPU work and180 history commands per variant/workload, but one integrated dense-zoom run has56ms longtask/50ms rAF; synchronous16,385-sample bursts peak62ms longtask/100ms rAF versus52/66.7ms reference. This is not physical pen latency; retain all evidence. Read the final performance section in the task/review report.
