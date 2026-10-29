@@ -1,5 +1,14 @@
 import type { Translation } from "./catalog.ts";
 export const en = {
+  "editor.renderAttention": "Drawing needs attention",
+  "editor.shortcuts":
+    "Undo: Ctrl/⌘ + Z · Redo: Shift + Ctrl/⌘ + Z · Reset view: 0 · Reset rotation: Shift + 0",
+  "editor.saveAttention": "Saving needs attention",
+  "editor.exportLog": "Export input diagnostics",
+  "editor.settings": "Settings",
+  "editor.developer": "Developer tools",
+  "editor.closePanel": "Close panel",
+  "editor.developerShortcut": "Developer tools: Ctrl + Alt + D",
   "library.recovery":
     "Some drawings need recovery. Reload the gallery to retry; existing data is preserved.",
   "library.back": "Return to gallery",

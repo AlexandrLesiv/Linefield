@@ -1,3 +1,4 @@
+import { installEditorPanels } from "./editor-panels";
 import { createSaving } from "./saving";
 import { checkedSaveCore } from "./saving/types";
 import { createSaveStatus } from "./save-status";
@@ -47,6 +48,7 @@ window.addEventListener("error", () => { if (!sessionReady) reportEditorStartup(
 window.addEventListener("unhandledrejection", () => { if (!sessionReady) reportEditorStartup("failed"); });
 installHostTheme();
 installHostLocale();
+const editorPanels = installEditorPanels();
 const canvas = document.querySelector("canvas")!;
 const status = document.querySelector<HTMLElement>("#status")!;
 const announceStatus = installStatusAnnouncements(status);
@@ -665,8 +667,13 @@ function frame() {
 	requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
+let reportedPanelFailure = "";
 setInterval(() => {
 	const failure = runtimeFailure || error;
+  if (failure !== reportedPanelFailure) {
+    reportedPanelFailure = failure;
+    window.dispatchEvent(new CustomEvent("linefield-runtime-attention", { detail: !!failure }));
+  }
 	announceStatus(failure ? hostMessage("vector.engineFailure", {detail: failure}) : cache.warning || "");
 	status.textContent = failure ? hostMessage("vector.engineFailure", {detail: failure}) :
 		cache.warning ||
@@ -1044,4 +1051,5 @@ Object.assign(window, {
 });
 status.textContent = "Ready";
 
+editorPanels.setCanOpen(() => pointer === null);
 startupComplete = true;

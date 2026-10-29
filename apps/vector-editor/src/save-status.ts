@@ -59,6 +59,7 @@ export function createSaveStatus() {
       cancel = onCancel ?? (() => {});
       if (state !== previous && ["failed", "openFailed", "openInUse", "capacity"].includes(state))
         announcement.textContent = text.textContent;
+      window.dispatchEvent(new CustomEvent("linefield-save-attention", { detail: state }));
       previous = state;
     },
     announceSaved() {

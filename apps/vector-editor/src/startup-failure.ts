@@ -12,4 +12,5 @@ export function showStartupFailure(status: HTMLElement): void {
   retry.textContent = t("memory.retry");
   retry.addEventListener("click", () => location.reload());
   status.replaceChildren(message, retry);
+  window.dispatchEvent(new CustomEvent("linefield-render-attention", { detail: true }));
 }

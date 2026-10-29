@@ -1,0 +1,61 @@
+.editor-home {
+  font: inherit;
+  font-weight: 750;
+  border: 0;
+  padding-inline: 0;
+  margin-right: 12px;
+}
+#editor-settings-toggle {
+  margin-left: auto;
+  font-size: 20px;
+  line-height: 1;
+}
+.editor-panel {
+  width: min(520px, calc(100vw - 24px));
+  max-height: calc(100dvh - 24px);
+  overflow: auto;
+  padding: 20px;
+  border: 1px solid var(--editor-line);
+  border-radius: 10px;
+  background: var(--editor-panel);
+  color: var(--editor-text);
+}
+.editor-panel::backdrop {
+  background: #0004;
+}
+.editor-panel h2 {
+  margin: 0 40px 20px 0;
+  font-size: 18px;
+}
+.editor-panel-close {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+}
+.editor-panel #pressure-panel {
+  position: static;
+  width: 100%;
+  max-height: none;
+  margin: 12px 0;
+  box-shadow: none;
+}
+.editor-panel .background-controls {
+  position: static;
+  width: 100%;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+.editor-panel footer {
+  overflow-wrap: anywhere;
+  margin-top: 12px;
+}
+.editor-panel p {
+  font-size: 13px;
+  color: var(--editor-muted);
+}
+#editor-settings-toggle[data-attention]::after {
+  content: "!";
+  display: inline-block;
+  margin-left: 4px;
+  font-weight: 800;
+}

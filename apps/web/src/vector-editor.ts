@@ -4,7 +4,7 @@ import {
   editorHasUnsaved,
   closeEditorSession,
 } from "./editor-session.ts";
-import { element, button } from "./dom.ts";
+import { element } from "./dom.ts";
 import { t } from "./locale.ts";
 import * as styles from "./vector-editor.css.ts";
 let editor: HTMLIFrameElement | undefined;
@@ -62,10 +62,19 @@ export async function createVectorShell(id: string, name: string, back: () => vo
   }
   const frame = editor;
   const root = element("header", styles.header);
-  const control = button(t("navigation.back"), "", back);
-  const title = element("span", styles.title, name);
-  const disclosure = element("span", styles.disclosure, t("save.local"));
-  root.append(control, title, disclosure);
+  const control = frame;
+  const receiveGallery = (event: MessageEvent) => {
+    if (
+      event.origin === location.origin &&
+      event.source === frame.contentWindow &&
+      event.data?.kind === "linefield-gallery"
+    )
+      back();
+  };
+  window.addEventListener("message", receiveGallery);
+  frame.title = name;
+  root.style.display = "none";
+  frame.style.setProperty("--editor-header-height", "0px");
   const size = new ResizeObserver(() => {
     if (!root.hidden)
       frame.style.setProperty("--editor-header-height", `${root.getBoundingClientRect().height}px`);
@@ -81,6 +90,7 @@ export async function createVectorShell(id: string, name: string, back: () => vo
     },
     dispose() {
       size.disconnect();
+      window.removeEventListener("message", receiveGallery);
       suspendEditorSession(frame.contentWindow);
       frame.hidden = true;
     },

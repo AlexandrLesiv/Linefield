@@ -3,6 +3,18 @@ export const catalog = {
   version: 1,
   sourceLanguage: "en",
   messages: {
+    "editor.renderAttention": {
+      kind: "plain",
+      context: "Drawing diagnostics access",
+      arguments: {},
+    },
+    "editor.shortcuts": { kind: "plain", context: "Preserved keyboard controls", arguments: {} },
+    "editor.saveAttention": { kind: "plain", context: "Saving recovery access", arguments: {} },
+    "editor.exportLog": { kind: "plain", context: "Developer diagnostic export", arguments: {} },
+    "editor.settings": { kind: "plain", context: "Editor panels", arguments: {} },
+    "editor.developer": { kind: "plain", context: "Editor panels", arguments: {} },
+    "editor.closePanel": { kind: "plain", context: "Editor panels", arguments: {} },
+    "editor.developerShortcut": { kind: "plain", context: "Editor panels", arguments: {} },
     "library.back": {
       kind: "plain",
       context: "Return from missing drawing to gallery",

@@ -75,6 +75,7 @@ export function installGpuRecovery(
     retry.hidden = true;
     try {
       rebuild();
+      window.dispatchEvent(new CustomEvent("linefield-render-attention", { detail: false }));
       if (restoreFocus) canvas.focus({ preventScroll: true });
       restoreFocus = false;
     } catch (error) {
@@ -83,6 +84,7 @@ export function installGpuRecovery(
       if (attempts < 3) timer = setTimeout(attempt, attempts * 250);
       else {
         retry.hidden = false;
+        window.dispatchEvent(new CustomEvent("linefield-render-attention", { detail: true }));
         if (restoreFocus) retry.focus();
       }
     }

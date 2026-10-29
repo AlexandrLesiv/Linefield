@@ -1,5 +1,14 @@
 import type { Translation } from "./catalog.ts";
 export const uk = {
+  "editor.renderAttention": "Малювання потребує уваги",
+  "editor.shortcuts":
+    "Скасувати: Ctrl/⌘ + Z · Повторити: Shift + Ctrl/⌘ + Z · Скинути вигляд: 0 · Скинути обертання: Shift + 0",
+  "editor.saveAttention": "Збереження потребує уваги",
+  "editor.exportLog": "Експортувати діагностику введення",
+  "editor.settings": "Налаштування",
+  "editor.developer": "Інструменти розробника",
+  "editor.closePanel": "Закрити панель",
+  "editor.developerShortcut": "Інструменти розробника: Ctrl + Alt + D",
   "library.recovery":
     "Деякі малюнки потребують відновлення. Оновіть галерею, щоб повторити спробу; наявні дані збережено.",
   "library.back": "Повернутися до галереї",
