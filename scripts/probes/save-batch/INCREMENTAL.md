@@ -8,8 +8,8 @@ The separate save-recovery runner supplies actual SQLite persistence to `runIncr
 
 ## Completion ownership
 
-Fresh engines journal from their first completed command. Hooks run after `record(Command)`
-and Undo/Redo application; preview updates, cancellation and no-ops do not create revisions.
+Fresh engines journal from their first completed command. Hooks run in completed-command recording
+and after Undo/Redo application; preview updates, cancellation and no-ops do not create revisions.
 Each operation gets one checked u64 revision and ordered immutable metadata records. Sources
 are retained by Rc only when first encountered; geometry and raw samples are not serialized
 again for later transforms. A completed metadata index and per-layer membership index avoid
