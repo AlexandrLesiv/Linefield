@@ -74,3 +74,7 @@ Do not adopt the candidate in frozen experimental previews 65308–65310. Its lo
 ## Current adoption status — supersedes the preceding failed-gate status
 
 Adaptive wide derived geometry is now integrated. The original f32 fast path remains for ordinary strokes; Rust owns both instantiations of one curve/flattening policy, with f64 preparation, bounds and Slice for wide chunks. Typed worker transport and retained source endpoints stay wide until view-relative GPU projection. Both-end numerical gates through 2^32 and all-brush cropped tail/Slice/history images now pass, including forced worker fallback. The 120 approved checks, ordinary exact image parity, static/build checks and native compilation pass. Preview 65313 is the new verified bounded checkpoint. Read the latest task entry for measured ordinary performance and remaining full-range/curved-wide/resource/architecture/review gaps. This is not final M1–M9 acceptance; no optional worker experiment has begun.
+
+## Actual worker validation
+
+The current actual-app image runner confirms real Float64 worker responses and detached transfer inputs, and injects a wrong-precision response to verify worker retirement plus exact-image synchronous recovery. Both 12-scene runs pass on unchanged preview 65313. See the task record for bounded workloads and evidence; this adds correctness coverage, not performance or full-range acceptance.

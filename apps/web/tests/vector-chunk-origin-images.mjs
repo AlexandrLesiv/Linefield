@@ -1,3 +1,4 @@
+import { observeGeometryWorker } from "./vector-worker-observation.mjs";
 import { chromium } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 import { captureDrawing } from "./vector-drawing-capture.mjs";
@@ -18,23 +19,11 @@ try {
         deviceScaleFactor: 2,
       });
       const errors = [];
-      if (process.env.LINEFIELD_FORCE_WORKER_FAILURE === "1")
-        await page.addInitScript(() => {
-          window.geometryWorkerRetired = false;
-          const Original = window.Worker;
-          window.Worker = class extends Original {
-            constructor(...args) {
-              super(...args);
-              this.addEventListener("message", (event) => {
-                if (event.data?.ready) this.postMessage({ id: 999999, input: null, tolerance: 1 });
-              });
-            }
-            terminate() {
-              window.geometryWorkerRetired = true;
-              super.terminate();
-            }
-          };
-        });
+      await observeGeometryWorker(
+        page,
+        process.env.LINEFIELD_FORCE_WORKER_FAILURE === "1",
+        process.env.LINEFIELD_CORRUPT_WIDE_WORKER === "1",
+      );
       page.on("pageerror", (error) => errors.push(error.message));
       await page.goto(process.env.LINEFIELD_PREVIEW_URL || "http://127.0.0.1:65307/");
       await page.locator(".new-tile").click();
@@ -122,6 +111,23 @@ try {
       const restored = await captureDrawing(frame, clip);
       if (JSON.stringify(restored) !== JSON.stringify(before))
         throw Error("Slice Undo changed tail pixels");
+      const worker = await frame.evaluate(() => window.geometryWorkerStats);
+      if (
+        worker.maximumPending > 8 ||
+        worker.maximumInputBytes > 12336 ||
+        worker.maximumOutputBytes > 196608
+      )
+        throw Error("Worker transfer exceeded the shared bounds");
+      if (worker.detached !== worker.inputs32 + worker.inputs64)
+        throw Error("Worker input was copied instead of transferred");
+      if (!compact && process.env.LINEFIELD_FORCE_WORKER_FAILURE !== "1" && !worker.outputs64)
+        throw Error("Wide worker path was not exercised");
+      if (
+        !compact &&
+        process.env.LINEFIELD_CORRUPT_WIDE_WORKER === "1" &&
+        (!worker.corrupted || !worker.retired)
+      )
+        throw Error("Wrong-precision worker response did not retire the worker");
       results.push({
         extent,
         brush,
@@ -131,6 +137,7 @@ try {
         sliced,
         restored,
         samples: raw.length,
+        worker,
         errors,
       });
       if (errors.length) throw Error(errors.join("; "));
