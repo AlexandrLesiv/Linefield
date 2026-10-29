@@ -119,11 +119,12 @@ export function createLayers(
 				label: string,
 				action: () => void,
 				parent = controls,
+				key = label,
 			) => {
 				const b = document.createElement("button");
 				b.textContent = text;
 				b.setAttribute("aria-label", `${label} ${layer.name}`);
-				b.dataset.layerAction = `${layer.id}-${label}`;
+				b.dataset.layerAction = `${layer.id}-${key}`;
 				b.dataset.layerLabel = label;
 				b.addEventListener("click", action);
 				parent.append(b);
@@ -142,12 +143,14 @@ export function createLayers(
 				layer.visible ? t("vector.hide") : t("vector.show"),
 				() => actions.visible(layer.id, !layer.visible),
 				primary,
+				"visibility",
 			);
 			button(
 				layer.locked ? t("vector.unlock") : t("vector.lock"),
 				layer.locked ? t("vector.unlock") : t("vector.lock"),
 				() => actions.locked(layer.id, !layer.locked),
 				primary,
+				"locked",
 			);
 			button("↑", t("vector.moveUp"), () =>
 				actions.move(layer.id, layer.rank + 1),
@@ -165,6 +168,7 @@ export function createLayers(
 				select.replaceWith(input);
 				let canceled = false;
 				input.addEventListener("keydown", (event) => {
+					if (event.isComposing || event.keyCode === 229) return;
 					if (event.key === "Enter" || event.key === "Escape") {
 						event.preventDefault();
 						event.stopPropagation();
@@ -189,11 +193,10 @@ export function createLayers(
 			row.append(primary, controls);
 			list.append(row);
 		}
-		if (focus)
-			list.querySelectorAll<HTMLButtonElement>("button").forEach((button) => {
-				if (button.dataset.layerAction === focus && !button.disabled)
-					button.focus();
-			});
+		if (focus) {
+			const matching = Array.from(list.querySelectorAll<HTMLButtonElement>("button")).find(button => button.dataset.layerAction === focus && !button.disabled);
+			(matching ?? list.querySelector<HTMLButtonElement>(".layer-row.active .layer-name"))?.focus();
+		}
 	}
 	toggle.addEventListener("click", () => open(panel.hidden !== false));
 	toggle.addEventListener("keydown", (event) => {
@@ -207,6 +210,7 @@ export function createLayers(
 		.querySelector("#layer-add")!
 		.addEventListener("click", actions.create);
 	panel.addEventListener("keydown", (event) => {
+		if (event.isComposing || event.keyCode === 229) return;
 		if (event.code === "Space") event.stopPropagation();
 		if (event.key === "Escape") {
 			event.stopPropagation();

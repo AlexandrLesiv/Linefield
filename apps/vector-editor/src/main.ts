@@ -1,4 +1,5 @@
 import "./style.css";
+import { buildGpuResources, installGpuRecovery } from "./gpu-restore";
 import { installStatusAnnouncements } from "./status-announcements";
 import { installEditorSession } from "../../web/src/editor-session";
 import { t as hostMessage } from "../../web/src/locale";
@@ -865,31 +866,35 @@ canvas.addEventListener("webglcontextlost", (e) => {
 	error =
 		"GPU context lost. Accepted drawing data remains in memory; waiting for restoration.";
 });
-canvas.addEventListener("webglcontextrestored", () => {
-	const timingSettings = gpuTimings.snapshot();
-	gpuTimings.dispose();
-	gpuTimings = new GpuPassTimers(gpu);
-	gpuTimings.configure(
-		timingSettings.enabled,
-		timingSettings.sampleEvery,
-		timingSettings.mode,
-	);
-	paperBackground = new PaperBackground(gpu);
-	pencilGrain = new PencilGrain(gpu);
-	ink = createInkProgram(gpu);
-	coverageRenderer = new CoverageRenderer(gpu, reportGpuError, gpuTimings);
-	compositeCache = new CompositeCache(gpu, reportGpuError);
-	sparseCoverage = new SparseCoverage(
-		gpu,
-		reportGpuError,
-		noteGpuMutation,
-		gpuTimings,
-	);
-	cache.contextLost();
-	lost = false;
-	dirty = true;
-	error = "";
-});
+installGpuRecovery(canvas, () => {
+  const timingSettings = gpuTimings.snapshot();
+  const resources = buildGpuResources(gpu, () => {
+    const timers = new GpuPassTimers(gpu);
+    timers.configure(timingSettings.enabled, timingSettings.sampleEvery, timingSettings.mode);
+    return {
+      timers,
+      paper: new PaperBackground(gpu),
+      pencil: new PencilGrain(gpu),
+      ink: createInkProgram(gpu),
+      coverage: new CoverageRenderer(gpu, reportGpuError, timers),
+      composite: new CompositeCache(gpu, reportGpuError),
+      sparse: new SparseCoverage(gpu, reportGpuError, noteGpuMutation, timers),
+    };
+  });
+  gpuTimings.dispose();
+  gpuTimings = resources.timers;
+  paperBackground = resources.paper;
+  pencilGrain = resources.pencil;
+  ink = resources.ink;
+  coverageRenderer = resources.coverage;
+  compositeCache = resources.composite;
+  sparseCoverage = resources.sparse;
+  cache.contextLost();
+  lost = false;
+  dirty = true;
+  error = "";
+}, (message) => { error = message; });
+
 Object.assign(window, {
 	lab: {
 		metrics,

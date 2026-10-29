@@ -550,3 +550,32 @@ Frozen preview65330 (.build-cache/restart/status-announcements-preview). EN/UK b
 Preview65330 reproduced a genuine origin-selection mismatch: at rotation0.31 and zoom0.125, returning from a regional pan selected origin−1/−1 instead of0/0. Floor-only rebasing inflated local GPU coordinates, changing523 pixels by one channel level. Rust camera_rebase now selects the nearest valid region, with higher-region half ties and checked signed-i64 bounds. The four-region trigger, atomic publication, host frame lifecycle, caches and canonical samples are unchanged.
 
 Frozen preview65331 (.build-cache/restart/nearest-rebase-preview) passes all six actual-event cases: Ink/Hard/Soft at zoom0.125 and8, exact full images before the pan, during the held return and after release, with unchanged raw samples. Browser application-Wasm boundary checks cover ties, both signed-i64 edges and four atomic invalid-input rejections. All120 approved feature checks, exact approved-reference pixels/raw, regional offscreen held-pan/material phases and reversed pending-worker Undo/rebase/Redo checks pass on65331. Production/web builds, root static checks and native test compilation pass. Evidence: nearest-rebase-{e2e,boundary,acceptance,parity,regional-view,worker,static,native}. Source review checked finite validation, checked rounding, i128 region subtraction and publication ordering. This is author source/contract review; final independent/design acceptance remains open. No performance speedup or arbitrary-span precision claim. Owner preview65330 and all earlier previews remain unchanged.
+
+## Independent/design acceptance and recovery corrections
+
+The owner requested completion of remaining acceptance/reviews, preserving65331. Independent reviewer reproduced two P1s in65331: copying disposable geometry after publishing localCapsules aliases source/target on allocation failure, corrupting later Undo/Redo images; and restored-context construction throws on allocation failure, leaving input blocked indefinitely. Fixes publish the copy only after allocation and reconstruct GPU resources transactionally with cleanup, three automatic attempts then localized Retry, preserving the same Rust engine. Re-review additionally corrected Retry focus across failure cycles and respects newer deliberate focus.
+
+Designer reproduced clipped narrow unsaved-work disclosure, overlapping Pressure content, changing-label layer focus loss, composition-event interception and invisible canvas keyboard focus. Host fixes use measured responsive header height, correct panel stacking/scrolling, stable layer action keys/fallback, composition guards and an inset canvas focus ring. Layout fixes do not change drawing-buffer quality or renderer scheduling. Baseline22/28 design failures; final28/28 pass EN/UK at three sizes.
+
+Final frozen candidate65335 (.build-cache/restart/review-complete-preview), all older previews unchanged. Full120 approved checks and exact reference images/raw pass. Twelve all-brush reconstruction scenarios verify full canonical data/history, partial allocation deletion, bounded retry and same engine. Independent additional sequences verify repeated exhaustion, second-loss cancellation and newer-focus preservation. Copy-failure all-brush checks verify move/Undo/Redo/regional return exactness. Independent and design review findings are closed within their stated scopes; reports/evidence map in tasks/vector-integration-reviews.md. No actual systemOOM/native/manualdevice certification.
+
+Refreshed wide qualification preserves strict failures:24 stages pass narrow envelope, six2^32 strict fields differ by at most one pixel/one RGB level. Reporter no longer treats absent geometry as zero: only12 rotation stages have captured geometry. Pending real f64 worker responses at2^32 pass normal/reversed comparisons across history/rebase/newdrawing, max8 held. Visible diagonal2^32 endpoints pass12 actual small-handle transforms per build versus65331, exact images/history/raw; the first horizontal tiny-angle experiment was below the screen drag threshold and remains recorded as a fixture failure, with no product threshold change.
+
+The five owner-requested worker experiments remain next-phase work. `window.lab` is development-preview instrumentation and must be excluded before release. Keep PR21 draft, do not merge.
+
+## Final repeated performance checkpoint (65335 versus approved65280)
+
+Three alternating runs per build, AppleM2Pro/12 logical CPUs/16GiB, Darwin27, Chrome156.0.8078.48 headless ANGLE Metal, DPR2 and matching2880×1632 drawing buffers. Ordinary workload256×129 samples with four zoom cycles; stress workload6×16,385 samples, submitted synchronously per stroke. Both use30 settled Undo/Redo pairs per run (180 history commands per build per workload). Accepted samples and raw data are verified. Correctness readback/fault injection and other browser runs were not active during these measurements.
+
+| CPU frame work | Reference | Integrated |
+| --- | --- | --- |
+| Ordinary drawing median of run medians |3.0ms|2.6ms|
+| Ordinary pan median |2.1ms|1.8ms|
+| Ordinary rotation median |4.5ms|4.4ms|
+| Ordinary zoom run-p95 range |11.1–15.6ms|11.0–15.5ms|
+| Ordinary history frame run-p95 range |5.3–7.0ms|4.5–6.4ms|
+| Large-stroke history frame run-p95 range |2.6–2.8ms|2.6–4.0ms|
+
+Do not infer a GPU speedup or physical latency from these CPU/settlement proxies. History frame medians include cheap settling frames; command timings near0ms reflect timer resolution, not zero displayed latency. No global speedup claim.
+
+**Tail qualifications remain open:** one integrated dense-zoom run recorded a56ms main-thread long task and50ms rAF interval; reference maxima in this run set were16.8ms/no>=50ms long tasks. In the deliberately synchronous16,385-sample-per-stroke stress, reference peak longtask/rAF was52/66.7ms and integration62/100ms. Median whole drawing phase307.0vs343.4ms. This artificial burst is not paced Wacom input, but the worse peak cannot be hidden by warm medians. The dense-zoom outlier and burst admission cost need attribution before claiming full latency acceptance; no quality or accepted-input reduction is authorized as a shortcut. Evidence: `.build-cache/restart/review-performance` and `review-large-performance` (all six runs each, summaries and hardware/workload identities).

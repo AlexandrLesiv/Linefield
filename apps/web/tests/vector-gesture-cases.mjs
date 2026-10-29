@@ -8,10 +8,11 @@ export function gestureCases(sourceExtent) {
       ["resize", 1.5, false],
       ["resize", 0.5, false],
     ];
+  const angle = process.env.LINEFIELD_VISIBLE_TRANSFORM === "1" ? 40 / sourceExtent : 0.31;
   const far = process.env.LINEFIELD_FAR_CORNER === "1";
   return [
-    ["rotate", 0.31, false],
-    ["rotate", -0.31, false],
+    ["rotate", angle, false],
+    ["rotate", -angle, false],
     ["resize", far ? 1.5 : 1 + 40 / sourceExtent, false],
     ["resize", far ? 0.5 : 1 - 40 / sourceExtent, false],
   ];

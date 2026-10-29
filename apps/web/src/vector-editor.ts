@@ -16,9 +16,14 @@ export function createVectorShell(name: string, back: () => void) {
   const frame = editor;
   const root = element("header", styles.header);
   const control = button(t("navigation.back"), "", back);
-  const title = element("span", "", name);
-  const disclosure = element("span", "", t("memory.retained"));
+  const title = element("span", styles.title, name);
+  const disclosure = element("span", styles.disclosure, t("memory.retained"));
   root.append(control, title, disclosure);
+  const size = new ResizeObserver(() => {
+    if (!root.hidden)
+      frame.style.setProperty("--editor-header-height", `${root.getBoundingClientRect().height}px`);
+  });
+  size.observe(root);
   return {
     root,
     back: control,
@@ -27,6 +32,7 @@ export function createVectorShell(name: string, back: () => void) {
       frame.hidden = !ready;
     },
     dispose() {
+      size.disconnect();
       suspendEditorSession(frame.contentWindow);
       frame.hidden = true;
     },

@@ -3,6 +3,9 @@ import { t } from "../../web/src/locale";
 export function createPressureControls() {
 	const toggle = document.querySelector<HTMLButtonElement>("#pressure-toggle")!;
 	const panel = document.querySelector<HTMLElement>("#pressure-panel")!;
+	const fitPanel = () => panel.style.setProperty("--pressure-available-height", `${Math.max(80, window.innerHeight - panel.parentElement!.getBoundingClientRect().bottom - 16)}px`);
+	new ResizeObserver(fitPanel).observe(panel.parentElement!);
+	window.addEventListener("resize", fitPanel);
 	const curve = document.querySelector<HTMLInputElement>("#pressure-curve")!;
 	const minimum = document.querySelector<HTMLInputElement>("#pressure-min")!;
 	const curveValue = document.querySelector<HTMLOutputElement>(

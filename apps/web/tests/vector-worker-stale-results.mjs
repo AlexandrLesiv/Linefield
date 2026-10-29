@@ -5,6 +5,8 @@ const output = process.env.LINEFIELD_EVIDENCE_DIR || ".build-cache/restart/worke
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 const results = [];
+const sourceExtent = Number(process.env.LINEFIELD_SOURCE_EXTENT || 0);
+if (![0, 1048576, 4294967296].includes(sourceExtent)) throw Error("Unsupported source extent");
 try {
   for (const [brush, delayed] of [0, 1, 2].flatMap((tool) => [
     [tool, false],
@@ -18,11 +20,19 @@ try {
     page.on("pageerror", (e) => errors.push(e.message));
     await page.addInitScript((hold) => {
       const Original = Worker;
-      window.heldGeometry = { queue: [], total: 0, maximum: 0, holding: hold, retired: false };
+      window.heldGeometry = {
+        queue: [],
+        total: 0,
+        maximum: 0,
+        holding: hold,
+        retired: false,
+        wide: 0,
+      };
       window.Worker = class extends Original {
         set onmessage(callback) {
           super.onmessage = (event) => {
             const state = window.heldGeometry;
+            if (event.data?.output instanceof Float64Array) state.wide++;
             if (event.data?.output && state.holding) {
               state.queue.push(() => callback(event));
               state.total++;
@@ -47,7 +57,7 @@ try {
     await host.locator("#brush").selectOption(String(brush));
     const frame = page.frames().find((f) => f.url().includes("/vector-editor/"));
     await frame.waitForFunction(() => !!window.lab);
-    await frame.evaluate(() => {
+    await frame.evaluate((extent) => {
       const canvas = document.querySelector("canvas"),
         r = canvas.getBoundingClientRect();
       canvas.setPointerCapture = () => {};
@@ -63,7 +73,7 @@ try {
               button: 0,
               buttons: type === "pointerup" ? 0 : 1,
               pressure: 0.7,
-              clientX: r.x + 200 + i * 1.5,
+              clientX: r.x + 200 + i * 1.5 - (i === 0 ? extent : 0),
               clientY: r.y + 200 + offset + 20 * Math.sin(i / 12),
             }),
           );
@@ -72,7 +82,7 @@ try {
         send("pointerup", 384);
       };
       for (let i = 0; i < 12; i++) sendStroke(i * 25);
-    });
+    }, sourceExtent);
     if (delayed) await frame.waitForFunction(() => heldGeometry.total > 0, {}, { timeout: 3000 });
     // Invalidate document visibility and traverse a regional origin while actual
     // completed geometry responses remain held. No fabricated geometry is used.
@@ -114,6 +124,7 @@ try {
     const state = await frame.evaluate(() => ({
       origin: lab.viewOrigin(),
       held: heldGeometry.total,
+      wide: heldGeometry.wide,
       maximum: heldGeometry.maximum,
       retired: heldGeometry.retired,
       strokes: Array.from({ length: lab.core.count() }, (_, id) => ({
@@ -127,7 +138,7 @@ try {
         ]),
       })),
     }));
-    if (state.maximum > 8 || state.retired || errors.length)
+    if ((sourceExtent && !state.wide) || state.maximum > 8 || state.retired || errors.length)
       throw Error(
         JSON.stringify({
           held: state.held,
@@ -136,7 +147,7 @@ try {
           errors,
         }),
       );
-    results.push({ brush, delayed, undone, restored, added, ...state, errors });
+    results.push({ brush, delayed, sourceExtent, undone, restored, added, ...state, errors });
     await page.close();
   }
   for (let pair = 0; pair < results.length; pair += 2)

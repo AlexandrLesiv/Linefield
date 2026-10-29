@@ -29,7 +29,10 @@ for (const extent of [1048576, 4294967296]) {
         }
         if (difference) changed++;
       }
-      let geometryDelta = 0;
+      const geometryRequired = stage === "0.08" || stage === "-0.08";
+      if (geometryRequired && (!a.geometry || !b.geometry))
+        throw Error("Missing rotation geometry capture");
+      let geometryDelta = a.geometry && b.geometry ? 0 : null;
       if (a.geometry || b.geometry) {
         if (!a.geometry || !b.geometry || a.geometry.level !== b.geometry.level)
           throw Error("Geometry capture mismatch");
@@ -48,7 +51,7 @@ for (const extent of [1048576, 4294967296]) {
           for (let k = 0; k < left.projected.length; k++) {
             const delta = Math.abs(left.projected[k] - right.projected[k]);
             if (!Number.isFinite(delta)) throw Error("Nonfinite geometry");
-            geometryDelta = Math.max(geometryDelta, delta);
+            geometryDelta = Math.max(geometryDelta ?? 0, delta);
           }
         }
       }
@@ -57,7 +60,7 @@ for (const extent of [1048576, 4294967296]) {
         changed <= limit &&
         maximum <= limit &&
         alphaChanges === 0 &&
-        geometryDelta <= (limit ? 1 / 65536 : 0);
+        (geometryDelta === null ? !geometryRequired : geometryDelta <= (limit ? 1 / 65536 : 0));
       rows.push({
         extent,
         brush,
@@ -67,6 +70,7 @@ for (const extent of [1048576, 4294967296]) {
         maximum,
         alphaChanges,
         geometryDelta,
+        geometryEvaluated: geometryDelta !== null,
         passed,
       });
     }
@@ -79,7 +83,7 @@ await writeFile(
       profile: "wide-source-quantization-v1",
       exactParity: rows.every((r) => r.changed === 0),
       limits:
-        "2^20 exact; 2^32 at most one pixel/one RGB level, alpha exact; common projected geometry <=1/65536 unit",
+        "2^20 exact; 2^32 at most one pixel/one RGB level, alpha exact; captured rotation common projected geometry <=1/65536 unit; before/sliced geometry not evaluated",
       rows,
     },
     null,

@@ -33,34 +33,39 @@ try {
       await frame.waitForFunction(() => !!window.lab);
       if (variant === "shared" && origin) await panToRegionalOrigin(frame, origin);
       await host.locator("#pen").click();
-      await frame.evaluate((extent) => {
-        const canvas = document.querySelector("canvas"),
-          rect = canvas.getBoundingClientRect();
-        canvas.setPointerCapture = () => {};
-        canvas.hasPointerCapture = () => true;
-        canvas.releasePointerCapture = () => {};
-        window.dragEvent = (type, x, y, shiftKey = false) =>
-          canvas.dispatchEvent(
-            new PointerEvent(type, {
-              bubbles: true,
-              pointerId: 901,
-              pointerType: "pen",
-              button: 0,
-              buttons: type === "pointerup" ? 0 : 1,
-              pressure: 0.7,
-              shiftKey,
-              clientX: rect.left + x,
-              clientY: rect.top + y,
-            }),
-          );
-        for (let i = 0; i <= 40; i++)
-          window.dragEvent(
-            i ? "pointermove" : "pointerdown",
-            i === 0 && extent ? 300 - extent : 300 + i * 5,
-            300 + Math.sin(i / 10) * 30,
-          );
-        window.dragEvent("pointerup", 500, 300 + Math.sin(4) * 30);
-      }, sourceExtent);
+      const blank =
+        process.env.LINEFIELD_VISIBLE_TRANSFORM === "1" ? await captureDrawing(frame) : null;
+      await frame.evaluate(
+        ({ extent, diagonal }) => {
+          const canvas = document.querySelector("canvas"),
+            rect = canvas.getBoundingClientRect();
+          canvas.setPointerCapture = () => {};
+          canvas.hasPointerCapture = () => true;
+          canvas.releasePointerCapture = () => {};
+          window.dragEvent = (type, x, y, shiftKey = false) =>
+            canvas.dispatchEvent(
+              new PointerEvent(type, {
+                bubbles: true,
+                pointerId: 901,
+                pointerType: "pen",
+                button: 0,
+                buttons: type === "pointerup" ? 0 : 1,
+                pressure: 0.7,
+                shiftKey,
+                clientX: rect.left + x,
+                clientY: rect.top + y,
+              }),
+            );
+          for (let i = 0; i <= 40; i++)
+            window.dragEvent(
+              i ? "pointermove" : "pointerdown",
+              i === 0 && extent ? 300 - extent : 300 + i * 5,
+              300 + Math.sin(i / 10) * 30 - (i === 0 && diagonal ? extent : 0),
+            );
+          window.dragEvent("pointerup", 500, 300 + Math.sin(4) * 30);
+        },
+        { extent: sourceExtent, diagonal: process.env.LINEFIELD_VISIBLE_TRANSFORM === "1" },
+      );
       const original = await captureDrawing(frame);
       await frame.evaluate(() => {
         document.querySelector("#select").click();
@@ -120,6 +125,8 @@ try {
           { kind, amount, snap, far: process.env.LINEFIELD_FAR_CORNER === "1" },
         );
         const pixels = await captureDrawing(frame);
+        if (blank && JSON.stringify(pixels) === JSON.stringify(blank))
+          throw Error("Transformed endpoint left the viewport");
         if (JSON.stringify(pixels) === JSON.stringify(original))
           throw Error(
             JSON.stringify({

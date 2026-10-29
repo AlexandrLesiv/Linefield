@@ -35,6 +35,7 @@ export function installHostTheme(): void {
     button:focus-visible, select:focus-visible, input:focus-visible {
       outline: 2px solid var(--editor-focus); outline-offset: 2px;
     }
+    canvas:focus-visible { outline: 2px solid var(--editor-focus); outline-offset: -2px; }
     #pressure-panel p, #pressure-panel .pressure-example, .layers-help, #layer-message, #slice-help {
       color: var(--editor-muted);
     }

@@ -5,6 +5,7 @@ const output = process.env.LINEFIELD_EVIDENCE_DIR || ".build-cache/restart/perfo
 const referenceIntegrated = process.env.LINEFIELD_REFERENCE_INTEGRATED === "1";
 const workload = {
   zoomCycles: Number(process.env.LINEFIELD_ZOOM_CYCLES || 1),
+  historyCycles: Number(process.env.LINEFIELD_HISTORY_CYCLES || 1),
   selectionOnly: process.env.LINEFIELD_SELECTION_ONLY === "1",
   regionalTransitions: process.env.LINEFIELD_REGIONAL_TRANSITIONS === "1",
   strokes: Number(process.env.LINEFIELD_STROKES || 24),
@@ -21,6 +22,12 @@ if (
   throw Error("Workload must contain 1–1024 strokes and 2–16385 samples per stroke");
 if (!Number.isInteger(workload.zoomCycles) || workload.zoomCycles < 1 || workload.zoomCycles > 8)
   throw Error("Zoom cycles must be 1–8");
+if (
+  !Number.isInteger(workload.historyCycles) ||
+  workload.historyCycles < 1 ||
+  workload.historyCycles > 100
+)
+  throw Error("History cycles must be 1–100");
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 const results = [];
@@ -279,10 +286,14 @@ try {
               pointer("pointerup", cx + Math.cos(3.6) * 180, cy + Math.sin(3.6) * 180);
             });
             await phase("history", async () => {
-              document.querySelector("#undo").click();
-              await next();
-              document.querySelector("#redo").click();
-              await next();
+              for (let cycle = 0; cycle < scenario.historyCycles; cycle++) {
+                document.querySelector("#undo").click();
+                await next();
+                await settled();
+                document.querySelector("#redo").click();
+                await next();
+                await settled();
+              }
             });
           }
           if (JSON.stringify(rawBefore()) !== saved) throw Error("Camera/history changed raw data");

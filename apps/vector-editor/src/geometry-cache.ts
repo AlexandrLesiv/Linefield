@@ -304,8 +304,11 @@ export class GeometryCache {
 				for (const e of c.entries.values()) {
 					if (!e.capsules) continue;
 					if (!e.localCapsules) {
+						// Publish the retained source only after the disposable copy exists.
+						// A failed allocation must not make a retry transform its own source.
+						const projected = e.capsules.slice();
 						e.localCapsules = e.capsules;
-						e.capsules = e.capsules.slice();
+						e.capsules = projected;
 						e.cpuBytes += e.localCapsules.byteLength;
 						this.cpuGeometryBytes += e.localCapsules.byteLength;
 					}
