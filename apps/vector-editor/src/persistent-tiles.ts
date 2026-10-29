@@ -1,4 +1,4 @@
-import { Camera } from "./camera";
+import { ViewProjection } from "./view-projection";
 import type { CompositeView } from "./composite-cache";
 import type { Bounds, DrawRecord } from "./geometry-cache";
 
@@ -27,7 +27,7 @@ export class PersistentTiles {
 		this.checks = 0;
 		this.previousCount = oldRecords.length;
 		const make = (view: CompositeView, records: DrawRecord[]) => {
-			const camera = new Camera();
+			const camera = new ViewProjection();
 			Object.assign(camera, view);
 			const project = camera.deviceBoundsProjector(
 					view.width / view.cssWidth,

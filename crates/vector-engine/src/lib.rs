@@ -1,5 +1,6 @@
 use std::{cell::RefCell, rc::Rc};
 mod geometry;
+pub mod camera;
 pub mod layers;
 pub mod selection;
 pub mod slice;

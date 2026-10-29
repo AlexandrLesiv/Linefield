@@ -1,7 +1,7 @@
 import "./style.css";
 import { installHostTheme } from "./host-theme";
 import { installHostLocale } from "./host-locale";
-import { Camera, normalizeRotation } from "./camera";
+import { Camera } from "./camera";
 import { CompositeCache } from "./composite-cache";
 import { loadCore } from "./load-core";
 import { CoverageRenderer } from "./coverage-renderer";
@@ -122,7 +122,7 @@ let deviceViewportLoc = loc("deviceViewport"),
 	routeSpanLoc = loc("routeSpan"),
 	atlasRoutesLoc = loc("atlasRoutes");
 type Tool = "draw" | "select" | "slice" | "pan" | "rotate";
-const camera = new Camera();
+const camera = new Camera(core);
 const selection = createSelection(core, cache, camera, canvas);
 const slice = createSlice(core, cache, camera, canvas, () => {
 	selection.clear();
@@ -181,7 +181,7 @@ function rotate(e: PointerEvent) {
 	}
 	const angle = Math.atan2(dy, dx);
 	if (rotationDrag.pointerAngle !== null)
-		rotationDrag.angle += normalizeRotation(angle - rotationDrag.pointerAngle);
+		rotationDrag.angle += camera.normalizeRotation(angle - rotationDrag.pointerAngle);
 	rotationDrag.pointerAngle = angle;
 	const step = Math.PI / 12;
 	const target = e.shiftKey

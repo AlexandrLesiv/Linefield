@@ -92,6 +92,18 @@ async function capture(url, integrated, variant) {
   await page.mouse.move(box.x + 640, box.y + 410, { steps: 12 });
   await page.mouse.up();
   await settled("pan");
+  await host.locator("#rotate").click();
+  await page.mouse.move(box.x + box.width / 2 + 180, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2 + 120, box.y + box.height / 2 + 120, { steps: 12 });
+  await page.mouse.up();
+  await host.locator("#pen").click();
+  await page.mouse.move(box.x + 400, box.y + 450);
+  await page.mouse.down();
+  await page.mouse.move(box.x + 700, box.y + 550, { steps: 20 });
+  await page.mouse.up();
+  await settled("rotated-drawing");
+
   await page.mouse.wheel(0, 420);
   await frame.waitForFunction(() => window.lab.view().zoom < 1);
   await settled("zoom");
@@ -137,14 +149,33 @@ try {
     integrated,
     stateEqual: JSON.stringify(reference.state) === JSON.stringify(integrated.state),
     imagesEqual: JSON.stringify(reference.images) === JSON.stringify(integrated.images),
+    rawEqual: JSON.stringify(reference.state.strokes) === JSON.stringify(integrated.state.strokes),
+    dimensionsEqual:
+      JSON.stringify(reference.state.dimensions) === JSON.stringify(integrated.state.dimensions),
+    // Rust and browser trig implementations may differ at f64 roundoff. Keep
+    // exact-state reporting above; never apply this allowance to raw data/pixels.
+    cameraWithinRoundoff: ["cx", "cy", "zoom", "rotation"].every((key) => {
+      const a = reference.state.camera[key],
+        b = integrated.state.camera[key];
+      return (
+        Number.isFinite(a) &&
+        Number.isFinite(b) &&
+        Math.abs(a - b) <= 4 * Number.EPSILON * Math.max(1, Math.abs(a), Math.abs(b))
+      );
+    }),
   };
   await writeFile(`${output}/result.json`, JSON.stringify(result, null, 2));
-  if (!result.stateEqual || !result.imagesEqual)
+  if (
+    !result.rawEqual ||
+    !result.dimensionsEqual ||
+    !result.cameraWithinRoundoff ||
+    !result.imagesEqual
+  )
     throw Error(
       `Reference parity failed: state=${result.stateEqual}, images=${result.imagesEqual}; inspect ${output}`,
     );
   console.log(
-    "PASS exact reference pixels and raw samples: three translucent brushes, pan, zoom, Undo/Redo at DPR 2",
+    "PASS exact reference pixels and raw samples: three translucent brushes, pan, rotated drawing, zoom, Undo/Redo at DPR 2",
   );
 } finally {
   await browser.close();

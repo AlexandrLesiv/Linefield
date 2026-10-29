@@ -4,10 +4,10 @@ import { fileURLToPath } from "node:url";
 // This deliberately accepts only the donor's scalar C ABI. New compound types
 // must receive an explicit adapter rather than silently becoming JS numbers.
 const root = fileURLToPath(new URL("../", import.meta.url));
-const sources = ["lib", "layers", "selection", "slice"];
+const sources = ["lib", "layers", "selection", "slice", "camera"];
 const signatures: { name: string; args: string[]; result: string }[] = [];
 function scalar(type: string): string {
-  if (/^(?:u32|usize|f32|f64|\*(?:const|mut) (?:f32|u8))$/.test(type.trim())) return "number";
+  if (/^(?:u32|usize|f32|f64|\*(?:const|mut) (?:f32|f64|u8))$/.test(type.trim())) return "number";
   throw Error(`Unsupported vector ABI type: ${type}`);
 }
 for (const source of sources) {

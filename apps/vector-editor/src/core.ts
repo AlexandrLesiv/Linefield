@@ -5,6 +5,11 @@ export type Core = {
   begin_with_pressure(w: number, c: number, minimum: number, gamma: number): number;
   begin_with_style(w: number, c: number, minimum: number, gamma: number, opacity: number): number;
   brush(id: number): number;
+  camera_map(x: number, y: number, cx: number, cy: number, zoom: number, angle: number): number;
+  camera_normalize(angle: number): number;
+  camera_output_ptr(): number;
+  camera_rotate(x: number, y: number, cx: number, cy: number, zoom: number, angle: number, next: number): number;
+  camera_zoom(x: number, y: number, cx: number, cy: number, zoom: number, next: number): number;
   can_draw(): number;
   can_redo(): number;
   can_undo(): number;
@@ -77,6 +82,11 @@ export const coreExportArity = {
   "begin_with_pressure": 4,
   "begin_with_style": 5,
   "brush": 1,
+  "camera_map": 6,
+  "camera_normalize": 1,
+  "camera_output_ptr": 0,
+  "camera_rotate": 7,
+  "camera_zoom": 6,
   "can_draw": 0,
   "can_redo": 0,
   "can_undo": 0,
