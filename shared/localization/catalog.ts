@@ -3,6 +3,186 @@ export const catalog = {
   version: 1,
   sourceLanguage: "en",
   messages: {
+    "vector.brush": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: {},
+    },
+    "vector.width": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: {},
+    },
+    "vector.color": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: {},
+    },
+    "vector.opacity": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: {},
+    },
+    "vector.paper": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: {},
+    },
+    "vector.grid": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: {},
+    },
+    "vector.layersCount": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: { count: "integer" },
+    },
+    "vector.drawingOn": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: { name: "string" },
+    },
+    "vector.hiddenLayer": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: { name: "string" },
+    },
+    "vector.lockedLayer": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: { name: "string" },
+    },
+    "vector.hide": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: {},
+    },
+    "vector.show": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: {},
+    },
+    "vector.lock": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: {},
+    },
+    "vector.unlock": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: {},
+    },
+    "vector.moveUp": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: {},
+    },
+    "vector.moveDown": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: {},
+    },
+    "vector.rename": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: {},
+    },
+    "vector.delete": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: {},
+    },
+    "vector.nameFor": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: { name: "string" },
+    },
+    "vector.slicing": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: {},
+    },
+    "vector.cutCount": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: { count: "integer" },
+    },
+    "vector.noCuts": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: {},
+    },
+    "vector.lassoRelease": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: {},
+    },
+    "vector.lassoAgain": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: {},
+    },
+    "vector.selectedCount": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: { count: "integer" },
+    },
+    "vector.lassoHelp": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: {},
+    },
+    "vector.pickHelp": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: {},
+    },
+    "vector.pressureExample": {
+      kind: "plain",
+      context: "Vector editor host controls and feedback",
+      arguments: { value: "integer" },
+    },
+
+    "vector.pen": { kind: "plain", context: "Approved vector editor control", arguments: {} },
+    "vector.select": { kind: "plain", context: "Approved vector editor control", arguments: {} },
+    "vector.slice": { kind: "plain", context: "Approved vector editor control", arguments: {} },
+    "vector.pan": { kind: "plain", context: "Approved vector editor control", arguments: {} },
+    "vector.rotate": { kind: "plain", context: "Approved vector editor control", arguments: {} },
+    "vector.pressure": { kind: "plain", context: "Approved vector editor control", arguments: {} },
+    "vector.undo": { kind: "plain", context: "Approved vector editor control", arguments: {} },
+    "vector.redo": { kind: "plain", context: "Approved vector editor control", arguments: {} },
+    "vector.ink": { kind: "plain", context: "Approved vector editor control", arguments: {} },
+    "vector.hard": { kind: "plain", context: "Approved vector editor control", arguments: {} },
+    "vector.soft": { kind: "plain", context: "Approved vector editor control", arguments: {} },
+    "vector.paperNone": { kind: "plain", context: "Approved vector editor control", arguments: {} },
+    "vector.paperWarm": { kind: "plain", context: "Approved vector editor control", arguments: {} },
+    "vector.paperWhite": {
+      kind: "plain",
+      context: "Approved vector editor control",
+      arguments: {},
+    },
+    "vector.gridNone": { kind: "plain", context: "Approved vector editor control", arguments: {} },
+    "vector.gridNotebook": {
+      kind: "plain",
+      context: "Approved vector editor control",
+      arguments: {},
+    },
+    "vector.gridDots": { kind: "plain", context: "Approved vector editor control", arguments: {} },
+    "vector.background": {
+      kind: "plain",
+      context: "Approved vector editor control",
+      arguments: {},
+    },
+    "vector.notSaved": { kind: "plain", context: "Approved vector editor control", arguments: {} },
+    "vector.pressureTitle": {
+      kind: "plain",
+      context: "Approved vector editor control",
+      arguments: {},
+    },
+    "vector.steeper": { kind: "plain", context: "Approved vector editor control", arguments: {} },
+    "vector.original": { kind: "plain", context: "Approved vector editor control", arguments: {} },
+
     "memory.navigationUnavailable": {
       kind: "plain",
       context: "In-memory navigation failure",

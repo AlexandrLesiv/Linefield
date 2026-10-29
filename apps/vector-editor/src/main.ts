@@ -1,5 +1,6 @@
 import "./style.css";
 import { installHostTheme } from "./host-theme";
+import { installHostLocale } from "./host-locale";
 import { Camera, normalizeRotation } from "./camera";
 import { CompositeCache } from "./composite-cache";
 import { loadCore } from "./load-core";
@@ -27,6 +28,7 @@ import { ATLAS_SIZE, SparseCoverage } from "./sparse-coverage";
 import { detailLevelFor, ZoomDetail } from "./zoom-detail";
 
 installHostTheme();
+installHostLocale();
 const canvas = document.querySelector("canvas")!;
 const status = document.querySelector<HTMLElement>("#status")!;
 const pressureControls = createPressureControls();

@@ -1,3 +1,4 @@
+import { t } from "../../web/src/locale";
 import type { Core } from "./core";
 
 export function createLayers(
@@ -70,13 +71,13 @@ export function createLayers(
 	function refresh() {
 		const layers = state();
 		const active = layers.find((layer) => layer.active)!;
-		toggle.textContent = `Layers · ${layers.length}`;
-		toggle.title = `Drawing on ${active.name}`;
+		toggle.textContent = t("vector.layersCount", {count: layers.length});
+		toggle.title = t("vector.drawingOn", {name: active.name});
 		message.textContent = !active.visible
-			? `${active.name} is hidden. Show it or select another layer to draw.`
+			? t("vector.hiddenLayer", {name: active.name})
 			: active.locked
-				? `${active.name} is locked. Unlock it or select another layer to draw.`
-				: `Drawing on ${active.name}`;
+				? t("vector.lockedLayer", {name: active.name})
+				: t("vector.drawingOn", {name: active.name});
 		blocked.hidden = !!core.can_draw();
 		blocked.textContent = message.textContent;
 		if (panel.hidden) return;
@@ -129,36 +130,36 @@ export function createLayers(
 			};
 			const select = button(
 				layer.name,
-				"Select",
+				t("vector.select"),
 				() => actions.select(layer.id),
 				primary,
 			);
 			select.className = "layer-name";
 			select.setAttribute("aria-pressed", String(layer.active));
 			button(
-				layer.visible ? "Hide" : "Show",
-				layer.visible ? "Hide" : "Show",
+				layer.visible ? t("vector.hide") : t("vector.show"),
+				layer.visible ? t("vector.hide") : t("vector.show"),
 				() => actions.visible(layer.id, !layer.visible),
 				primary,
 			);
 			button(
-				layer.locked ? "Unlock" : "Lock",
-				layer.locked ? "Unlock" : "Lock",
+				layer.locked ? t("vector.unlock") : t("vector.lock"),
+				layer.locked ? t("vector.unlock") : t("vector.lock"),
 				() => actions.locked(layer.id, !layer.locked),
 				primary,
 			);
-			button("↑", "Move up", () =>
+			button("↑", t("vector.moveUp"), () =>
 				actions.move(layer.id, layer.rank + 1),
 			).disabled = layer.rank === layers.length - 1;
-			button("↓", "Move down", () =>
+			button("↓", t("vector.moveDown"), () =>
 				actions.move(layer.id, layer.rank - 1),
 			).disabled = layer.rank === 0;
-			button("Rename", "Rename", () => {
+			button(t("vector.rename"), t("vector.rename"), () => {
 				const input = document.createElement("input");
 				input.type = "text";
 				input.value = name(layer.id);
 				input.maxLength = 128;
-				input.setAttribute("aria-label", `Name for ${name(layer.id)}`);
+				input.setAttribute("aria-label", t("vector.nameFor", {name: name(layer.id)}));
 				select.replaceWith(input);
 				let canceled = false;
 				input.addEventListener("keydown", (event) => {
@@ -181,7 +182,7 @@ export function createLayers(
 				input.focus();
 				input.select();
 			});
-			button("Delete", "Delete", () => actions.remove(layer.id)).disabled =
+			button(t("vector.delete"), t("vector.delete"), () => actions.remove(layer.id)).disabled =
 				layers.length === 1;
 			row.append(primary, controls);
 			list.append(row);

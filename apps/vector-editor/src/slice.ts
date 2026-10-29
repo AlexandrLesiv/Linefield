@@ -1,3 +1,4 @@
+import { t } from "../../web/src/locale";
 import type { Camera } from "./camera";
 import type { Core } from "./core";
 import type { GeometryCache } from "./geometry-cache";
@@ -70,7 +71,7 @@ export function createSlice(
 		lastPoint = null;
 		gestureSize = size;
 		drawing = !!core.slice_begin(gestureSize, Number(activeLayer.checked));
-		status.textContent = "Slicing · Esc restores this gesture";
+		status.textContent = t("vector.slicing");
 		if (drawing) append(e);
 	}
 	function move(e: PointerEvent) {
@@ -90,8 +91,8 @@ export function createSlice(
 			changed();
 		}
 		status.textContent = count
-			? `${count} stroke${count === 1 ? "" : "s"} cut · Undo restores the originals`
-			: "No editable strokes crossed";
+			? t("vector.cutCount", {count})
+			: t("vector.noCuts");
 	}
 	function cancel() {
 		drawing = false;

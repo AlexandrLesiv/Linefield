@@ -1,3 +1,4 @@
+import { t } from "../../web/src/locale";
 // UI state never rewrites accepted input. Rust snapshots this response at down.
 export function createPressureControls() {
 	const toggle = document.querySelector<HTMLButtonElement>("#pressure-toggle")!;
@@ -21,8 +22,8 @@ export function createPressureControls() {
 		return { minimum: Number(minimum.value) / 100, gamma: Number(curve.value) };
 	}
 	function fraction(pressure: number) {
-		const { minimum, gamma } = settings();
-		return minimum + (1 - minimum) * pressure ** gamma;
+		const { minimum: minimumFraction, gamma } = settings();
+		return minimumFraction + (1 - minimumFraction) * pressure ** gamma;
 	}
 	function update() {
 		curveValue.value = Number(curve.value).toFixed(2);
@@ -34,7 +35,7 @@ export function createPressureControls() {
 				return `${i ? "L" : "M"}${(24 + 124 * p).toFixed(2)} ${(114 - 104 * fraction(p)).toFixed(2)}`;
 			}).join(" "),
 		);
-		example.textContent = `At 50% pressure: ${Math.round(100 * fraction(0.5))}% of selected width. Full pressure always gives full width.`;
+		example.textContent = t("vector.pressureExample", {value: Math.round(100 * fraction(0.5))});
 		displayed = undefined;
 	}
 	toggle.addEventListener("click", () => {

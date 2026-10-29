@@ -7,6 +7,7 @@ function run(command: string, args: string[], cwd = root) {
   if (result.error || result.status !== 0)
     throw Error("Vector editor build failed", { cause: result.error });
 }
+run(process.execPath, [root + "scripts/localization.ts"]);
 run(process.execPath, [root + "scripts/vector-editor-boundary.ts", "--check"]);
 run("cargo", [
   "build",

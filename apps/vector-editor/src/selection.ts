@@ -1,3 +1,4 @@
+import { t } from "../../web/src/locale";
 import type { Camera } from "./camera";
 import type { Core } from "./core";
 import type { Bounds, GeometryCache } from "./geometry-cache";
@@ -178,12 +179,12 @@ export function createSelection(
 			world = camera.screenToWorld(...screen);
 		const f = frame();
 		if (f && !forceLasso) {
-			const near = (world: [number, number]) => {
-				const p = project(world);
+			const near = (target: [number, number]) => {
+				const p = project(target);
 				return Math.hypot(p[0] - screen[0], p[1] - screen[1]) <= 12;
 			};
-			const distances = f.corners.map((world) => {
-				const p = project(world);
+			const distances = f.corners.map((cornerWorld) => {
+				const p = project(cornerWorld);
 				return Math.hypot(p[0] - screen[0], p[1] - screen[1]);
 			});
 			const nearest = Math.min(...distances);
@@ -327,14 +328,14 @@ export function createSelection(
 		const f = enabled ? frame() : null;
 		overlay.style.display = enabled && (f || lasso?.moved) ? "block" : "none";
 		label.textContent = lasso?.moved
-			? "Release to select · Lasso again to add or remove strokes"
+			? t("vector.lassoRelease")
 			: forceLasso
-				? "Draw another lasso to add or remove strokes"
+				? t("vector.lassoAgain")
 				: ids.size
-					? `${ids.size} stroke${ids.size === 1 ? "" : "s"} selected · Drag to move · Corners resize · Round handle rotates · Delete / Backspace removes`
+					? t("vector.selectedCount", {count: ids.size})
 					: mode === "lasso"
-						? "Drag around or across strokes to select · Click empty space to clear"
-						: "Click a stroke to select · Shift-click for multiple strokes";
+						? t("vector.lassoHelp")
+						: t("vector.pickHelp");
 		const r = canvas.getBoundingClientRect(),
 			c = Math.cos(camera.rotation),
 			s = Math.sin(camera.rotation);
