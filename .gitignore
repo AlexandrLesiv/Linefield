@@ -79,3 +79,7 @@ node_modules/
 !/apps/web/quality/memory/
 /apps/web/quality/memory/*
 !/apps/web/quality/memory/README.md
+
+/apps/vector-editor/core/target/
+/apps/vector-editor/public/
+/apps/web/public/vector-editor/

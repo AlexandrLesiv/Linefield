@@ -1,4 +1,4 @@
-import { hasTemporary, temporaryFailed } from "./memory/document.ts";
+import { hasVectorSession } from "./vector-editor.ts";
 import { gallery as galleryStyle, srOnly, prototypeLabel } from "./styles.css.ts";
 import { createOverlayScrollbar } from "./overlay-scrollbar.ts";
 import { t } from "./locale.ts";
@@ -53,8 +53,7 @@ function creationOrigin(): HTMLElement | null {
 }
 function render(): void {
   renderGallery(gallery, drawings, actions);
-  if (hasTemporary())
-    notice.textContent = t(temporaryFailed() ? "memory.fatal" : "memory.retained");
+  if (hasVectorSession()) notice.textContent = t("memory.retained");
 }
 function open(drawing: Drawing, origin: HTMLElement): void {
   if (navigation.active) return;

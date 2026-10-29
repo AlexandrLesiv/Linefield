@@ -14,3 +14,11 @@ Execution order:
 Measurements: cold/warm, sparse/dense opaque/translucent Ink/Hard/Soft, Retina rapid zoom and continuous rotation, pending-job edits, all layer/edit tools. Report median/tail frame times, correct-image delay, input responsiveness, main-thread stalls, worker turnaround, reliable GPU timings, memory and transfers. Never exchange quality, accepted input or blending for speed. No claim that moving CPU work speeds up the GPU.
 
 Retired work snapshots are local ignored recovery material, not integration dependencies. Prior checks and performance outcomes do not certify this restart. The earlier AGENTS instructions were revoked by the owner; direct current instructions and actual repository constraints govern.
+
+## 2026-10-29 route-level checkpoint
+
+The complete approved donor renderer and Rust core now build from source under apps/vector-editor and are hosted as a persistent same-origin embedded editor from the Linefield temporary drawing route. Preview: http://127.0.0.1:65281/ (New drawing). Reference remains on 65280. Back/Resume retains the same editor instance. This is an intermediate manual comparison surface, not completed architectural integration or adoption.
+
+Full production build and both TypeScript checks passed. Initial browser smoke verified three brush commits, Back/Resume retaining document/camera and no uncaught errors. Current checks are in apps/web/tests/vector-integration-smoke.mjs; evidence is local .build-cache/restart. No performance parity claim yet.
+
+Remaining: replace the isolation boundary with the final host adapter; map shared authoritative editing/geometry and regional precision without changing rendering behavior; localized/themed Linefield controls; complete feature/image/performance comparison; independently evaluate the five worker variants. Donor f32 coordinates and its diagnostic global are not final shipping contracts. No new worker experiment adopted.

@@ -1,5 +1,6 @@
 [workspace]
 members = ["crates/editor-engine", "apps/web/wasm"]
+exclude = ["apps/vector-editor/core"]
 resolver = "3"
 
 [profile.release]

@@ -1,0 +1,33 @@
+import { spawnSync } from "node:child_process";
+import { mkdirSync, copyFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+const root = fileURLToPath(new URL("../", import.meta.url));
+function run(command: string, args: string[], cwd = root) {
+  const result = spawnSync(command, args, { cwd, stdio: "inherit" });
+  if (result.error || result.status !== 0)
+    throw Error("Vector editor build failed", { cause: result.error });
+}
+run("cargo", [
+  "build",
+  "--locked",
+  "--manifest-path",
+  "apps/vector-editor/core/Cargo.toml",
+  "--target",
+  "wasm32-unknown-unknown",
+  "--release",
+]);
+mkdirSync(root + "apps/vector-editor/public", { recursive: true });
+copyFileSync(
+  root + "apps/vector-editor/core/target/wasm32-unknown-unknown/release/vector_core.wasm",
+  root + "apps/vector-editor/public/core.wasm",
+);
+run(process.execPath, [
+  root + "node_modules/typescript/bin/tsc",
+  "--project",
+  "apps/vector-editor/tsconfig.json",
+]);
+run(
+  process.execPath,
+  [root + "apps/web/node_modules/vite/bin/vite.js", "build"],
+  root + "apps/vector-editor",
+);

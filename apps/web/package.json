@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node ../../scripts/web-memory/build.ts && node ../../scripts/localization.ts && vite --host 127.0.0.1 --port 65142 --strictPort",
-    "build": "node ../../scripts/web-memory/build.ts && node ../../scripts/localization.ts && tsc --noEmit && vite build",
+    "dev": "node ../../scripts/build-vector-editor.ts && node ../../scripts/web-memory/build.ts && node ../../scripts/localization.ts && vite --host 127.0.0.1 --port 65142 --strictPort",
+    "build": "node ../../scripts/build-vector-editor.ts && node ../../scripts/web-memory/build.ts && node ../../scripts/localization.ts && tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1 --port 65142 --strictPort",
     "typecheck": "node ../../scripts/localization.ts && tsc --noEmit",
     "test": "node ../../scripts/web-memory/test.ts",
