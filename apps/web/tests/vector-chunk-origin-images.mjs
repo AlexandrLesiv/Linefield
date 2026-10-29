@@ -35,12 +35,17 @@ try {
       await host.locator("#brush").selectOption(String(brush));
       const frame = page.frames().find((item) => item.url().includes("/vector-editor/"));
       await frame.waitForFunction(() => !!window.lab);
+      if (process.env.LINEFIELD_WIDE_UNCACHED === "1")
+        await frame.evaluate(() => {
+          lab.setCompositeCaching(false);
+          lab.setSparseCoverage(false);
+        });
       if (process.env.LINEFIELD_FORCE_WORKER_FAILURE === "1")
         await frame.waitForFunction(() => window.geometryWorkerRetired);
       await panToRegionalOrigin(frame, extent);
       const blank = await captureDrawing(frame, clip);
       await frame.evaluate(
-        ({ extent: sourceExtent, compact: compactSource }) => {
+        ({ extent: sourceExtent, compact: compactSource, curved }) => {
           document.querySelector("#pen").click();
           const canvas = document.querySelector("canvas"),
             r = canvas.getBoundingClientRect();
@@ -62,21 +67,22 @@ try {
                 clientY: r.y + y,
               }),
             );
+          const xAt = (i) => (curved ? 40 + 25 * Math.sin(i / 18) : i / 16);
           try {
             for (let i = 0; i < 385; i++)
               send(
                 i ? "pointermove" : "pointerdown",
-                !compactSource && !i ? -sourceExtent : i / 16,
+                !compactSource && !i ? -sourceExtent : xAt(i),
                 100 + i,
               );
-            send("pointerup", 24, 484);
+            send("pointerup", xAt(384), 484);
           } finally {
             names.forEach((name, i) =>
               saved[i] ? Object.defineProperty(canvas, name, saved[i]) : delete canvas[name],
             );
           }
         },
-        { extent, compact },
+        { extent, compact, curved: process.env.LINEFIELD_WIDE_CURVE === "1" },
       );
       const before = await captureDrawing(frame, clip);
       if (JSON.stringify(before) === JSON.stringify(blank)) throw Error("Tail stayed blank");
@@ -112,7 +118,13 @@ try {
       const visible = await frame.evaluate(() =>
         Array.from({ length: lab.core.count() }, (_, i) => i).filter((i) => lab.core.visible(i)),
       );
-      if (visible.length !== 2 || JSON.stringify(sliced) !== JSON.stringify(before))
+      // Curved Slice changes tessellation pixels in the approved donor too;
+      // vector-curve-slice verifies that output exactly. Straight tails stay exact.
+      if (
+        visible.length !== 2 ||
+        (process.env.LINEFIELD_WIDE_CURVE !== "1" &&
+          JSON.stringify(sliced) !== JSON.stringify(before))
+      )
         throw Error("Zero-width Slice changed tail pixels or failed to split");
       await host.locator("#undo").click();
       const restored = await captureDrawing(frame, clip);
@@ -120,7 +132,7 @@ try {
         throw Error("Slice Undo changed tail pixels");
       const rotated =
         process.env.LINEFIELD_WIDE_CAMERA === "1"
-          ? await checkWideCamera(page, frame, clip, before)
+          ? await checkWideCamera(page, frame, clip, before, `${extent}-${brush}-${compact}`)
           : null;
       const worker = await frame.evaluate(() => window.geometryWorkerStats);
       if (
@@ -150,6 +162,7 @@ try {
       )
         throw Error("Worker-input allocation failure did not recover through retirement");
       results.push({
+        curved: process.env.LINEFIELD_WIDE_CURVE === "1",
         rotated,
         moved,
         extent,
@@ -167,6 +180,8 @@ try {
       await page.close();
     }
     const pair = results.slice(-2);
+    if (JSON.stringify(pair[0].sliced) !== JSON.stringify(pair[1].sliced))
+      throw Error(`Compact and long-source Slice images differ at ${extent}`);
     if (JSON.stringify(pair[0].rotated) !== JSON.stringify(pair[1].rotated))
       throw Error(`Compact and long-source rotated tail images differ at ${extent}`);
     if (JSON.stringify(pair[0].moved) !== JSON.stringify(pair[1].moved))

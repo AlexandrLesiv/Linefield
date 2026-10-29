@@ -1,7 +1,8 @@
+import { writeFile } from "node:fs/promises";
 import { captureDrawing } from "./vector-drawing-capture.mjs";
 
 /** Rotate through actual browser input; compare only the common visible tail. */
-export async function checkWideCamera(page, frame, clip, original) {
+export async function checkWideCamera(page, frame, clip, original, label = "tail") {
   const host = page.frameLocator("iframe");
   const raw = () =>
     frame.evaluate(() =>
@@ -24,7 +25,14 @@ export async function checkWideCamera(page, frame, clip, original) {
     await page.mouse.down();
     await page.mouse.move(cx + 250 * Math.cos(angle), cy + 250 * Math.sin(angle), { steps: 8 });
     await page.mouse.up();
-    const rotated = await captureDrawing(frame, clip);
+    const details = process.env.LINEFIELD_CAPTURE_WIDE_PIXELS === "1";
+    const capture = await captureDrawing(frame, clip, details);
+    const rotated = details ? capture.hash : capture;
+    if (details)
+      await writeFile(
+        `${process.env.LINEFIELD_EVIDENCE_DIR}/${label}-${angle}.json`,
+        JSON.stringify(capture),
+      );
     if (JSON.stringify(rotated) === JSON.stringify(original))
       throw Error("Camera rotation did not change tail pixels");
     views.push(rotated);
