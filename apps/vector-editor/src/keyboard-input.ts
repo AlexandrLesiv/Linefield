@@ -13,6 +13,7 @@ export interface KeyboardCommands {
 export function installKeyboardInput(commands: KeyboardCommands): void {
   window.addEventListener("keydown", (e) => {
     if (e.defaultPrevented || e.isComposing) return;
+    if (e.target instanceof Element && e.target.closest("dialog[open]")) return;
     if (e.key === "Escape") {
       commands.escape();
       return;
@@ -32,6 +33,13 @@ export function installKeyboardInput(commands: KeyboardCommands): void {
       e.preventDefault();
       if (!e.repeat) commands.deleteSelection();
       return;
+    }
+    if (e.code === "Digit0" && !e.metaKey && !e.ctrlKey && !e.altKey) {
+      e.preventDefault();
+      if (!e.repeat)
+        document
+          .querySelector<HTMLButtonElement>(e.shiftKey ? "#rotation-reset" : "#reset")!
+          .click();
     }
     if (e.code === "KeyS" && !e.metaKey && !e.ctrlKey && !e.altKey) {
       e.preventDefault();
