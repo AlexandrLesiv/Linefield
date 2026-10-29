@@ -10,7 +10,28 @@ try {
   await host.locator("#brush").waitFor();
   const frame = page.frames().find((candidate) => candidate.url().includes("/vector-editor/"));
   await frame.waitForFunction(() => !!window.lab);
-  await frame.evaluate(() => (window.sessionMarker = {}));
+  await frame.evaluate(() => {
+    window.sessionMarker = {};
+    const session = window.linefieldEditorSession;
+    if (session?.version !== 1 || typeof session.suspendInput !== "function")
+      throw Error("Missing versioned editor session boundary");
+    window.suspendCalls = 0;
+    window.linefieldEditorSession = {
+      version: 1,
+      suspendInput() {
+        window.suspendCalls++;
+        session.suspendInput();
+      },
+    };
+    // Route suspension must not depend on manufacturing a browser blur event.
+    window.addEventListener(
+      "blur",
+      (event) => {
+        if (!event.isTrusted) event.stopImmediatePropagation();
+      },
+      true,
+    );
+  });
   const marker = await frame.evaluateHandle(() => window.sessionMarker);
   const box = await host.locator("canvas").boundingBox();
   async function stroke(y) {
@@ -66,6 +87,8 @@ try {
   await host.locator("#redo").click();
   if ((await frame.evaluate(() => lab.core.visible(1))) !== 1)
     throw Error("Retained history failed");
+  if ((await frame.evaluate(() => window.suspendCalls)) !== 2)
+    throw Error("Back did not use the explicit session boundary exactly once per exit");
   if (errors.length) throw Error(errors.join("\n"));
   console.log(
     "PASS retained layers/raw/history, same engine instance, gallery isolation and active-stroke cancellation",

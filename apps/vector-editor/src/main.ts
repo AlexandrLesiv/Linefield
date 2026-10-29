@@ -1,4 +1,5 @@
 import "./style.css";
+import { installEditorSession } from "../../web/src/editor-session";
 import { t as hostMessage } from "../../web/src/locale";
 import { installHostTheme } from "./host-theme";
 import { installHostLocale } from "./host-locale";
@@ -780,15 +781,14 @@ canvas.addEventListener("lostpointercapture", (e) => {
 	if (e.pointerId === pointer && !canvas.hasPointerCapture(e.pointerId))
 		cancel();
 });
-window.addEventListener("blur", () => {
+function suspendInput() {
 	space = rotateHeld = false;
 	cancel();
-});
+}
+installEditorSession(suspendInput);
+window.addEventListener("blur", suspendInput);
 document.addEventListener("visibilitychange", () => {
-	if (document.hidden) {
-		space = rotateHeld = false;
-		cancel();
-	}
+	if (document.hidden) suspendInput();
 });
 canvas.addEventListener(
 	"wheel",

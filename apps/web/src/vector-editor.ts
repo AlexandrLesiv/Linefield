@@ -1,3 +1,4 @@
+import { suspendEditorSession } from "./editor-session.ts";
 import { element, button } from "./dom.ts";
 import { t } from "./locale.ts";
 import * as styles from "./vector-editor.css.ts";
@@ -26,7 +27,7 @@ export function createVectorShell(name: string, back: () => void) {
       frame.hidden = !ready;
     },
     dispose() {
-      frame.contentWindow?.dispatchEvent(new Event("blur"));
+      suspendEditorSession(frame.contentWindow);
       frame.hidden = true;
     },
   };

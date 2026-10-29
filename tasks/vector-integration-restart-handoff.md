@@ -94,3 +94,7 @@ Preview 65316 delegates selection eligibility and Pick precedence to Rust; the 1
 ## Distant transformed-selection evidence
 
 Unchanged preview 65316 passes actual-input group move/15-degree rotation and Lasso comparisons at origin zero versus x=3×2^76. All 216 queries, settled artwork hashes and canonical position/pressure preservation pass across three brushes. This covers compact distant drawings, not arbitrary-span source geometry. Next priorities are the explicit host/session boundary and UI factoring, broader regional/resource checks and final reviews; optional workers remain deferred.
+
+## Latest browser lifecycle checkpoint
+
+Preview 65317 replaces manufactured blur events on Back with a typed version-1 session suspension endpoint. The editor keeps ownership and uses the same cancellation logic for true blur/visibility. Retained-session/active-input cancellation, startup-failure Retry/Back, exact reference images/raw and static/build checks pass. This does not remove the persistent iframe or complete broader UI/gesture architecture; those and regional/resource/review gaps remain. No worker experiment or merge.
