@@ -26,6 +26,8 @@ import { PencilGrain } from "./pencil-grain";
 import { releasePointer, tryCapturePointer } from "./pointer-capture";
 import { createBrushControls } from "./brush-controls";
 import { PointerSamples } from "./pointer-samples";
+import { PointerRelease } from "./pointer-release";
+import { InputDiagnostics } from "./input-diagnostics";
 import { installKeyboardInput } from "./keyboard-input";
 import { createSelection } from "./selection";
 import { createSlice } from "./slice";
@@ -645,12 +647,16 @@ setInterval(() => {
 		cache.warning ||
 		`${Math.round(camera.zoom * 100)}% · ${metrics.accepted.toLocaleString()} samples · ${metrics.backlog} chunks pending · ${(metrics.gpuBytes / 1048576).toFixed(1)} MB geometry · ${(metrics.coverageBytes / 1048576).toFixed(1)} MB coverage · ${(metrics.compositeCacheBytes / 1048576).toFixed(1)} MB region cache · Antialiased · Rust/Wasm + WebGL2`;
 }, 250);
+const pointerRelease = new PointerRelease();
+const inputDiagnostics = new InputDiagnostics();
 const pointerSamples = new PointerSamples(canvas, (x, y, pressure) => {
     if (camera.appendSample(x, y, pressure)) metrics.accepted++;
     else runtimeFailure = "Input position or pressure is outside the supported range; existing accepted samples are retained.";
     if (active !== null) cache.note(active);
 }, (pressure) => brushControls.receive(pressure));
-function cancel() {
+function cancel(reason = "interaction-cancelled") {
+	if (pointer !== null) inputDiagnostics.note("cancel", undefined, active === null ? undefined : core.raw_length(active), reason);
+	pointerRelease.clear();
 	const releasedPointer = pointer;
 	pointer = null;
 	slice.cancel();
@@ -676,6 +682,7 @@ function selectionInput(action: () => void): boolean {
 	}
 }
 canvas.addEventListener("pointerdown", (e) => {
+	if (pointerRelease.pending) cancel("new-contact-before-release");
 	if (lost || pointer !== null || e.button !== 0) return;
 	e.preventDefault();
 	canvas.focus();
@@ -683,6 +690,8 @@ canvas.addEventListener("pointerdown", (e) => {
 	if (!tryCapturePointer(canvas, e.pointerId)) return;
 	selection.cancelQuery();
 	pointer = e.pointerId;
+	pointerRelease.begin(e);
+	inputDiagnostics.note("begin", e);
 	lastX = e.clientX;
 	lastY = e.clientY;
 	gesture = space ? "pan" : rotateHeld ? "rotate" : tool;
@@ -721,7 +730,11 @@ canvas.addEventListener("pointerdown", (e) => {
 });
 canvas.addEventListener("pointermove", (e) => {
 	if (pointer === null && tool === "slice") slice.hover(e);
-	if (e.pointerId !== pointer) return;
+	if (e.pointerId !== pointer || !pointerRelease.matches(e)) return;
+	if (pointerRelease.pending) {
+		if (e.buttons !== 0) cancel("pressed-move-after-release-pending");
+		return;
+	}
 	const t = performance.now();
 	if (gesture === "pan") {
 		panAt ||= t;
@@ -746,12 +759,14 @@ canvas.addEventListener("pointermove", (e) => {
 	dirty = true;
 	record(metrics.inputMs, performance.now() - t);
 });
-canvas.addEventListener("pointerup", (e) => {
-	if (e.pointerId !== pointer) return;
+function finishPointer(e: PointerEvent) {
+	if (e.pointerId !== pointer || !pointerRelease.canRelease(e)) return;
+	inputDiagnostics.note("release", e, active === null ? undefined : core.raw_length(active));
 	brushControls.receive(null);
 	if (gesture === "draw") {
 		pointerSamples.release(e);
 		core.commit();
+		inputDiagnostics.note("commit", e, active === null ? undefined : core.raw_length(active));
 		cache.historyChanged();
 	}
 	if (gesture === "select" && !selectionInput(() => selection.up(e))) return;
@@ -763,18 +778,34 @@ canvas.addEventListener("pointerup", (e) => {
 	pointer = null;
 	updateCursor();
 	dirty = true;
+	pointerRelease.clear();
 	releasePointer(canvas, e.pointerId);
-});
+}
+canvas.addEventListener("pointerup", finishPointer);
 canvas.addEventListener("pointercancel", (e) => {
-	if (e.pointerId === pointer) cancel();
+	if (pointerRelease.matches(e)) cancel("pointer-cancel");
 });
 canvas.addEventListener("lostpointercapture", (e) => {
-	if (e.pointerId === pointer && !canvas.hasPointerCapture(e.pointerId))
-		cancel();
+	if (!pointerRelease.matches(e) || canvas.hasPointerCapture(e.pointerId)) return;
+	inputDiagnostics.note("capture-loss", e);
+	if (gesture === "draw" && pointerRelease.defer(e)) {
+		inputDiagnostics.note("release-pending", e, active === null ? undefined : core.raw_length(active));
+	} else cancel("capture-loss-during-contact");
 });
+// Capture is gone: the matching release may target another element in this document.
+for (const kind of ["pointerup", "pointercancel", "pointerdown", "pointermove", "gotpointercapture"] as const) {
+  document.addEventListener(kind, (event) => {
+    if (!pointerRelease.pending) return;
+    if (kind === "pointerdown") { cancel("new-contact-before-release"); return; }
+    if (!pointerRelease.matches(event)) return;
+    if (kind === "pointerup") finishPointer(event);
+    else if (kind === "pointercancel" || kind === "gotpointercapture" || event.buttons !== 0)
+      cancel(`pending-${kind}`);
+  }, true);
+}
 function suspendInput() {
 	space = rotateHeld = false;
-	cancel();
+	cancel("session-blur-or-hidden");
 }
 installEditorSession(suspendInput);
 window.addEventListener("blur", suspendInput);
@@ -902,6 +933,8 @@ installGpuRecovery(canvas, () => {
 Object.assign(window, {
 	lab: {
 		metrics,
+		inputDiagnostics: () => inputDiagnostics.snapshot(),
+		downloadInputDiagnostics: () => inputDiagnostics.download(),
 		brushStats: () => ({ textureBytes: pencilGrain.textureBytes, materialPreparation: { ...materialPreparation } }),
 		backgroundStats: () => ({
 			...paperBackground.stats,

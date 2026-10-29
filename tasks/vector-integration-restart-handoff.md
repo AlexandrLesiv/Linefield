@@ -196,3 +196,7 @@ Root static/type/lint/format/source-size and source/Wasm/web builds pass; scoped
 
 
 Final combined acceptance on frozen65347 passes all120 approved checks (22 paper-contact behavior,8 material rendering/recovery,30 editing checks per brush). Cached/atlas comparisons remain exact; existing zero-width-vs-intact antialiasing tolerance remains max1 channel value, unchanged. Evidence: lasso-adoption-acceptance/results.json. Twenty-case final recovery supersedes the earlier18-case run by adding owner-transform setup and actual Back/Resume cancellation. No remaining blocking independent/design finding for this bounded adoption.
+
+## Latest release recovery checkpoint
+
+Preview65349 contains the state-based mouse/pen release safeguard and bounded lifecycle log.65347 remains unchanged. Read the task's Pointer release recovery section for event policy, checks and export instructions. Independent review passed; physical Wacom confirmation remains manual. Pending-release recovery does not use an elapsed-time threshold. Rust remains authoritative; rendering/quality paths are unchanged. New browser recovery runner: apps/web/tests/vector-release-recovery.mjs.
