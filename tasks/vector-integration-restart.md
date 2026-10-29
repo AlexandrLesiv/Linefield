@@ -614,3 +614,30 @@ Three alternating unchanged65336 versus test-only timing-storage omission, six16
 Independent source/evidence review found no production or input mutation issue in these probes and required the above coverage/timing qualifications. Performance acceptance remains open. Next investigation should capture a reproduced stall with correlated CPU/frame/camera and GL traces; avoid a speculative renderer rewrite or dropping samples. Single-event layout acquisition remains a measured cost, but globally freezing coordinates is unsafe and was not adopted.
 
 Validation for this diagnostic checkpoint: root static/types/lint/format/source-size checks and scoped diagnostic checks pass. New65337 browser smoke passes three brushes, pan, Back/Resume and Undo/Redo with no uncaught errors. No production assets changed;16 files match65336 exactly.
+
+
+## Accepted limitations; worker experiment 1 — pencil materials
+
+Owner accepts the previously documented zoom tail, artificial synchronous input-burst, dense-Lasso, extreme-span tolerance and manual/platform limitations for now, and authorizes proceeding with the five independent worker experiments. These limitations remain recorded, not fixed. Preserve65337; no merge.
+
+**Adopted bounded material warm-up** in separate preview65341: one optional worker generates the unchanged deterministic16MiB deposited-graphite table, transfers its exact backing buffer, and exits immediately on first reply. Version/shape/backing size and SHA256(b95350973d88b284919349b4d69bd50ca0394174e4117652d1060d4b60b7283b) are checked before cache installation. A5s preparation timer retires failure; first pencil use cancels unfinished preparation and uses the original synchronous generator. Late replies/digests cannot replace fallback. Input and gallery navigation never await this optional work. No document samples enter this worker.
+
+Empty/Ink-only frames bind a complete1-byte placeholder sampler; it is never used for pencil fragments. The first plan containing pencil geometry uploads the exact original512×512×64 R8 material, unchanged mip generation, linear/trilinear filtering and repeat modes. Full texture allocation remains22,369,600B. Context restoration follows the same rule. This changes resource initialization only, not brush math, quality, input, ordered blending or caches. First-pencil use before preparation finishes can retain the original synchronous stall; no universal first-use guarantee.
+
+Five alternating isolated samples/variant, AppleM2Pro/16GiB/Chrome156.0.8078.48 headless: synchronous median material-ready199.1ms, worker203.7ms, local prebuilt asset32.7ms. Synchronous max frame gap200ms; worker/asset16.8ms. All15 material hashes and64-layer GPU readbacks match exactly. Submission medians1.9/1.8/2.5ms, fence/rAF completion proxies30.0/13.4/12.9ms: these are not GPU timestamps or a GPU-speedup claim. Readback/hash validation occurs after isolated timing; integrated worker includes its validation. Asset fetch is loopback/uncompressed, not a real cold-network benchmark.
+
+Five alternating integrated65337/65341 sessions: median New-drawing-to-render-settled917.8→912.4ms (includes shell transitions), max per-run startup rAF gaps216.6–250ms→16.8–33.3ms. This measures the combined worker/deferred-upload change, not worker-only causation. Current snapshot and source rebuild assets match. No physical-display latency claim.
+
+| Variant | Decision | Cost/qualification |
+| --- | --- | --- |
+| Original synchronous bake | Retained fallback/baseline | Same exact output; approximately199ms UI bake in this fixture. |
+| Worker bake | Adopted optional warm-up | Approximately204ms total isolated readiness, no observed bake-sized UI gap; one worker, disposable16MiB transfer. |
+| Versioned prebuilt asset | Not adopted for shipping | Approximately33ms localhost readiness but16,777,216B raw /8,019,463B gzip payload; remote-network benefit not established. |
+
+Payload size is not peak memory: the generator uses2MiB scratch, plus worker runtime, browser digest/transfer/driver allocations. Transfer avoids a deliberate extra full-buffer copy; browser allocation reclamation is not immediate. The timer guards settlement and cache publication, not cancellation of browser WebCrypto itself. Material workers are not document owners.
+
+Validation: all120 approved browser checks; exact approved-reference pixels/raw through pan/rotation/zoom/history;12 all-brush context reconstruction cases; eight material modes (normal, thrown worker, malformed length, corrupt bytes, correctly hashed bytes in oversized backing/subview, hang timeout, early-pencil cancellation, delayed checksum). Exact three-brush images and raw samples survive every fallback, one worker is terminated per session, and Ink plus Back/Resume remain usable while the worker hangs. Independent review found no remaining source blocker after startup gating/lifetime/backing-buffer fixes; no visual-control change. Root static/types/lint/format and source build pass.
+
+Evidence: .build-cache/restart/worker-material/{results.json,nonblocking-startup,final-reference,final-acceptance,final-context,final-back-corrected,preview-manifest.json}. Earlier gated candidate65339 is rejected;65340 accidentally contained those prior assets after a failed typecheck and was not used for final acceptance. Failed runs are retained. The Back/Resume fixture originally included gallery animation in its Ink timing assertion; corrected evidence measures Ink before navigation and checks navigation separately.
+
+Remaining experiments, not yet completed:2 extended completed-geometry preparation;3 visibility/overlap/tile planning;4 Lasso/Slice calculations;5 OffscreenCanvas rendering. Baseline each independently against the accepted integration; do not claim current geometry worker covers these. Keep successful variants separate until their correctness and benefit are measured.

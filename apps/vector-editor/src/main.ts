@@ -1,3 +1,4 @@
+import { preparePaperContact, materialPreparation } from "./paper-contact-preparation";
 import "./style.css";
 import { buildGpuResources, installGpuRecovery } from "./gpu-restore";
 import { installStatusAnnouncements } from "./status-announcements";
@@ -41,6 +42,7 @@ const canvas = document.querySelector("canvas")!;
 const status = document.querySelector<HTMLElement>("#status")!;
 const announceStatus = installStatusAnnouncements(status);
 const brushControls = createBrushControls();
+void preparePaperContact();
 const core = await loadCore().catch((error: unknown) => {
 	showStartupFailure(status);
 	throw error;
@@ -309,7 +311,7 @@ function draw() {
 	gpu.uniform2f(ink.viewport, rect.width, rect.height);
 	gpu.uniform2f(ink.deviceViewport, w, h);
 	gpu.uniform1i(ink.atlasRoutes, 1);
-	pencilGrain.bind();
+
 	gpu.uniform1i(ink.pencilGrain, 2);
 	gpu.uniform1i(ink.pencilParticles, 3);
 	gpu.uniform1i(ink.routeCount, 0);
@@ -323,6 +325,7 @@ function draw() {
 	);
 	cache.resetDrawStats();
 	const completePlan = cache.planDraw(1 / (camera.zoom * dpr));
+  pencilGrain.bind(completePlan.records.some(record => (record.brush ?? 0) !== 0));
 	// A translucent stroke on the frontmost visible layer can composite over
 	// exact cached completed pixels. Opaque union and middle-layer cases retain
 	// the full painter-ordered path, including all upper-layer ink.
@@ -898,7 +901,7 @@ installGpuRecovery(canvas, () => {
 Object.assign(window, {
 	lab: {
 		metrics,
-		brushStats: () => ({ textureBytes: pencilGrain.textureBytes }),
+		brushStats: () => ({ textureBytes: pencilGrain.textureBytes, materialPreparation: { ...materialPreparation } }),
 		backgroundStats: () => ({
 			...paperBackground.stats,
 			texture: selectedPaper(),

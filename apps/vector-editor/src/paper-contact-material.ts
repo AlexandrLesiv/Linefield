@@ -90,6 +90,17 @@ export type PaperContactMaterial = {
 };
 let cached: PaperContactMaterial | undefined;
 
+export const hasPaperContactData = () => cached !== undefined;
+
+/** Install only the version/hash-validated disposable worker result. */
+export function installPaperContactData(data: Uint8Array): void {
+  if (data.byteLength !== PAPER_CONTACT_SIZE * PAPER_CONTACT_SIZE * PAPER_CONTACT_LEVELS * 2)
+    throw Error("Invalid paper material size");
+  cached ??= { data, size: PAPER_CONTACT_SIZE, levels: PAPER_CONTACT_LEVELS * 2,
+    levelsPerGrade: PAPER_CONTACT_LEVELS, period: PAPER_CONTACT_PERIOD,
+    thresholdMin: 0, thresholdMax: PAPER_CONTACT_THRESHOLD_MAX };
+}
+
 /** Bake deposited graphite before mip filtering, never filtered paper height. */
 export function createPaperContactMaterial(): PaperContactMaterial {
 	if (cached) return cached;
@@ -118,8 +129,8 @@ export function createPaperContactMaterial(): PaperContactMaterial {
 				data[offset + at] = Math.round(
 					255 *
 						paperContactOpacity(
-							heights[at],
-							materials[at],
+							heights[at]!,
+							materials[at]!,
 							threshold,
 							grade === 0,
 						),
