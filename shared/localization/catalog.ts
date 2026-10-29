@@ -3,6 +3,202 @@ export const catalog = {
   version: 1,
   sourceLanguage: "en",
   messages: {
+    "vector.adjustPressure": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.fixedWidth": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.pressureRecorded": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.pressureCurve": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.pressureHelp": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.minimumWidth": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.pressureChart": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.pressureChartDesc": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.pressureAxis": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.widthAxis": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.incomingPressure": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.incomingPenPressure": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.pressureNote": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.layersTitle": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.newLayer": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.closeLayers": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.layersHelp": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.lasso": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.pick": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.partialStrokes": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.activeLayerOnly": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.lassoMore": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.clearSelection": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.sliceWidth": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.sliceWidthUnits": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.zeroCut": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.zeroCutHelp": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.sliceHelp": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.navigationHelp": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.selectHelp": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.sliceToolHelp": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.rotateHelp": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.resetRotation": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.resetRotationHelp": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.opacityHelp": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.gridHelp": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.partialHelp": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.selectionOptions": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+    "vector.sliceOptions": {
+      kind: "plain",
+      context: "Vector editor panel explanation or accessible label",
+      arguments: {},
+    },
+
     "vector.brush": {
       kind: "plain",
       context: "Vector editor host controls and feedback",

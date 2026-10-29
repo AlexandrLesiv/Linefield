@@ -21,6 +21,18 @@ try {
       throw Error("Brush translation missing");
     if ((await frame.evaluate(() => document.documentElement.lang)) !== (uk ? "uk" : "en"))
       throw Error("Editor language missing");
+    if ((await host.locator("#layer-add").innerText()) !== (uk ? "Новий шар" : "New layer"))
+      throw Error("Layer panel translation missing");
+    if (
+      (await host.locator("#selection-controls").getAttribute("aria-label")) !==
+      (uk ? "Параметри вибору" : "Selection options")
+    )
+      throw Error("Selection accessibility translation missing");
+    await host.locator("#pressure-toggle").click();
+    await host.locator("#pressure-help").waitFor();
+    if (uk && !(await host.locator("#pressure-help").innerText()).startsWith("Більші значення"))
+      throw Error("Pressure help translation missing");
+    await host.locator("#pressure-toggle").click();
     await host.locator("#brush").selectOption("2");
     const box = await host.locator("canvas").boundingBox();
     await page.mouse.move(box.x + 200, box.y + 300);

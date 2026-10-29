@@ -86,3 +86,11 @@ Added 50 English/Ukrainian semantic messages through the existing shared localiz
 Separate preview: 65286. E2E checks pass for both en-US and uk-UA: translated labels, document language, drawing, layer hide and Undo. Visual inspection confirms usable Ukrainian primary controls. Exact artwork readback/raw reference comparison and all 120 approved browser checks pass. Shared catalogue generation/check, both host TypeScript checks and scoped lint pass. Existing shadowed locals in two touched donor modules were renamed without changing expressions. Evidence: .build-cache/restart/locale-parity, locale-acceptance and locale-uk-UA.png.
 
 Localization is NOT complete: static panel explanations, tooltips/accessibility descriptions, navigation help, default engine-generated layer names and diagnostics remain English. These must be handled before claiming complete localization. Final UI adaptation, regional coordinate semantics and the five worker experiments remain pending.
+
+## 2026-10-29 localized panels and accessibility
+
+Added 39 shared English/Ukrainian messages for pressure explanation/chart labels, layer headings/help, selection/Slice options, tooltips, accessible labels and navigation gestures. The integrated editor identifies itself as Linefield. Binding changes only copy and attributes; input listeners, geometry, rendering and history remain unchanged. New preview 65287 is isolated from earlier builds.
+
+Both language browser paths pass, including pressure-panel explanations and accessible selection labels. Exact artwork-buffer/raw reference parity and all 120 approved browser checks pass. Shared generation/check, TypeScript, scoped lint and diff checks pass. Evidence: .build-cache/restart/panel-parity and panel-acceptance.
+
+Remaining copy is the developer metrics/failure detail and default engine-created layer names; existing/user-authored names must never be translated as if they were UI labels. The final host component layout, session architecture, regional coordinate authority and performance/worker work are still not complete.

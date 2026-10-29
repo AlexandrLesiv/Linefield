@@ -1,5 +1,51 @@
 import type { Translation } from "./catalog.ts";
 export const en = {
+  "vector.adjustPressure": "Adjust the width response for new strokes.",
+  "vector.fixedWidth": "Fixed width for new strokes",
+  "vector.pressureRecorded":
+    "Leave fixed width off for pressure-sensitive drawing. Incoming pressure is always recorded.",
+  "vector.pressureCurve": "Pressure curve",
+  "vector.pressureHelp":
+    "Higher values keep light strokes thin, then build width faster as you press harder. Lower values give fuller strokes with a light touch.",
+  "vector.minimumWidth": "Minimum width",
+  "vector.pressureChart": "Pressure to line width",
+  "vector.pressureChartDesc": "Solid line: current response. Dashed line: original response.",
+  "vector.pressureAxis": "Pressure →",
+  "vector.widthAxis": "Width →",
+  "vector.incomingPressure": "Incoming pressure",
+  "vector.incomingPenPressure": "Incoming pen pressure",
+  "vector.pressureNote":
+    "Dashed line shows the original response. Mouse stays full width. Existing strokes keep their settings.",
+  "vector.layersTitle": "Layers",
+  "vector.newLayer": "New layer",
+  "vector.closeLayers": "Close layers",
+  "vector.layersHelp": "Top layer appears in front. Select a layer to draw on it.",
+  "vector.lasso": "Lasso",
+  "vector.pick": "Pick",
+  "vector.partialStrokes": "Partial strokes",
+  "vector.activeLayerOnly": "Active layer only",
+  "vector.lassoMore": "Lasso more",
+  "vector.clearSelection": "Clear selection",
+  "vector.sliceWidth": "Slice width",
+  "vector.sliceWidthUnits": "Slice width in canvas units",
+  "vector.zeroCut": "Zero-width cut",
+  "vector.zeroCutHelp": "Split strokes without removing length",
+  "vector.sliceHelp":
+    "Drag across strokes to cut immediately · Hidden and locked layers are protected",
+  "vector.navigationHelp":
+    "Space + drag to pan · Scroll to zoom · R + drag around center to rotate · Shift snaps 15° · Esc to cancel",
+  "vector.selectHelp": "Select strokes (V); drag a lasso around or across strokes",
+  "vector.sliceToolHelp": "Slice strokes (S)",
+  "vector.rotateHelp": "Rotate canvas (hold R and drag around the center; Shift snaps to 15°)",
+  "vector.resetRotation": "Reset rotation",
+  "vector.resetRotationHelp": "Return canvas upright, keeping the center and zoom",
+  "vector.opacityHelp": "Opacity for new strokes",
+  "vector.gridHelp": "Grid follows the canvas; fades out at very small zoom levels",
+  "vector.partialHelp":
+    "Select an entire stroke if any of its ink touches the lasso. Turn off to require the whole stroke inside.",
+  "vector.selectionOptions": "Selection options",
+  "vector.sliceOptions": "Slice options",
+
   "vector.brush": "Brush",
   "vector.width": "Width",
   "vector.color": "Color",

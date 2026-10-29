@@ -1,5 +1,52 @@
 import type { Translation } from "./catalog.ts";
 export const uk = {
+  "vector.adjustPressure": "Налаштуйте реакцію ширини нових штрихів на натиск.",
+  "vector.fixedWidth": "Стала ширина нових штрихів",
+  "vector.pressureRecorded":
+    "Вимкніть сталу ширину для малювання з урахуванням натиску. Вхідний натиск завжди записується.",
+  "vector.pressureCurve": "Крива натиску",
+  "vector.pressureHelp":
+    "Більші значення зберігають легкі штрихи тонкими, а зі зростанням натиску швидше збільшують ширину. Менші значення дають ширші штрихи за легкого дотику.",
+  "vector.minimumWidth": "Мінімальна ширина",
+  "vector.pressureChart": "Залежність ширини лінії від натиску",
+  "vector.pressureChartDesc": "Суцільна лінія — поточна реакція. Пунктирна — початкова.",
+  "vector.pressureAxis": "Натиск →",
+  "vector.widthAxis": "Ширина →",
+  "vector.incomingPressure": "Вхідний натиск",
+  "vector.incomingPenPressure": "Вхідний натиск пера",
+  "vector.pressureNote":
+    "Пунктирна лінія показує початкову реакцію. Миша дає повну ширину. Наявні штрихи зберігають свої налаштування.",
+  "vector.layersTitle": "Шари",
+  "vector.newLayer": "Новий шар",
+  "vector.closeLayers": "Закрити шари",
+  "vector.layersHelp": "Верхній шар показано попереду. Виберіть шар для малювання.",
+  "vector.lasso": "Ласо",
+  "vector.pick": "Точковий вибір",
+  "vector.partialStrokes": "Частково охоплені штрихи",
+  "vector.activeLayerOnly": "Лише активний шар",
+  "vector.lassoMore": "Додати ласо",
+  "vector.clearSelection": "Зняти вибір",
+  "vector.sliceWidth": "Ширина розрізу",
+  "vector.sliceWidthUnits": "Ширина розрізу в одиницях полотна",
+  "vector.zeroCut": "Розріз без ширини",
+  "vector.zeroCutHelp": "Розділити штрихи, не скорочуючи їх",
+  "vector.sliceHelp":
+    "Проведіть поперек штрихів для негайного розрізу · Приховані та заблоковані шари захищено",
+  "vector.navigationHelp":
+    "Пробіл + перетягування — переміщення · Прокручування — масштаб · R + перетягування навколо центра — обертання · Shift — крок 15° · Esc — скасування",
+  "vector.selectHelp": "Вибір штрихів (V); обведіть або перетніть їх ласо",
+  "vector.sliceToolHelp": "Розрізання штрихів (S)",
+  "vector.rotateHelp":
+    "Обертайте полотно: утримуйте R і перетягуйте навколо центра; Shift задає крок 15°",
+  "vector.resetRotation": "Скинути обертання",
+  "vector.resetRotationHelp": "Повернути полотно у вертикальне положення, зберігши центр і масштаб",
+  "vector.opacityHelp": "Непрозорість нових штрихів",
+  "vector.gridHelp": "Сітка рухається разом із полотном і зникає за дуже малого масштабу",
+  "vector.partialHelp":
+    "Вибирати весь штрих, якщо будь-яка його частина торкається ласо. Вимкніть, щоб вимагати повного охоплення штриха.",
+  "vector.selectionOptions": "Параметри вибору",
+  "vector.sliceOptions": "Параметри розрізу",
+
   "vector.brush": "Пензель",
   "vector.width": "Ширина",
   "vector.color": "Колір",
