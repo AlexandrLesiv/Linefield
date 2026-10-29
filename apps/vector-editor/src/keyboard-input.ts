@@ -42,6 +42,8 @@ export function installKeyboardInput(commands: KeyboardCommands): void {
       document.querySelector<HTMLButtonElement>("#select")!.click();
     }
     if (e.code === "Space") {
+      // Focused buttons retain native Space activation instead of temporary pan.
+      if (e.target instanceof Element && e.target.closest("button, [role=button]")) return;
       e.preventDefault();
       commands.setPanHeld(true);
       commands.updateCursor();
