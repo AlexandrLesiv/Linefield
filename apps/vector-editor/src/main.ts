@@ -658,6 +658,16 @@ function cancel() {
 	dirty = true;
 	releasePointer(canvas, releasedPointer);
 }
+function selectionInput(action: () => void): boolean {
+	try {
+		action();
+		return true;
+	} catch (failure) {
+		runtimeFailure = String(failure);
+		cancel();
+		return false;
+	}
+}
 canvas.addEventListener("pointerdown", (e) => {
 	if (lost || pointer !== null || e.button !== 0) return;
 	e.preventDefault();
@@ -679,7 +689,7 @@ canvas.addEventListener("pointerdown", (e) => {
 		};
 		rotate(e);
 	}
-	if (gesture === "select") selection.down(e);
+	if (gesture === "select" && !selectionInput(() => selection.down(e))) return;
 	if (gesture === "slice") slice.down(e);
 	if (gesture === "draw") {
 		zoomDetail.settle(camera.zoom * devicePixelRatio);
@@ -717,7 +727,8 @@ canvas.addEventListener("pointermove", (e) => {
 		slice.move(e);
 		return;
 	} else if (gesture === "select") {
-		const moved = selection.move(e);
+		let moved = false;
+		if (!selectionInput(() => { moved = selection.move(e); })) return;
 		updateCursor();
 		if (!moved) return;
 	} else if (gesture === "draw") {
@@ -735,7 +746,7 @@ canvas.addEventListener("pointerup", (e) => {
 		core.commit();
 		cache.historyChanged();
 	}
-	if (gesture === "select") selection.up(e);
+	if (gesture === "select" && !selectionInput(() => selection.up(e))) return;
 	if (gesture === "slice") slice.up(e);
 	if (gesture === "rotate") rotate(e);
 	active = null;
