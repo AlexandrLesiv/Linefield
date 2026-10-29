@@ -1,8 +1,11 @@
+import { installGlDiagnostic } from "./vector-gl-diagnostic.mjs";
 import { chromium } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
 import { cpus, platform, release, totalmem } from "node:os";
 const output = process.env.LINEFIELD_EVIDENCE_DIR || ".build-cache/restart/performance-baseline";
 const freezeBoundsProbe = process.env.LINEFIELD_FREEZE_BOUNDS_PROBE === "1";
+const inputMetricsProbe = process.env.LINEFIELD_INPUT_METRICS_PROBE === "1";
+const glDiagnostic = process.env.LINEFIELD_GL_DIAGNOSTIC === "1";
 const profileCpu = process.env.LINEFIELD_CPU_PROFILE === "1";
 const referenceIntegrated = process.env.LINEFIELD_REFERENCE_INTEGRATED === "1";
 const workload = {
@@ -41,6 +44,7 @@ try {
         viewport: { width: 1440, height: embedded ? 1000 : 948 },
         deviceScaleFactor: 2,
       });
+      if (glDiagnostic) await page.addInitScript(installGlDiagnostic);
       const errors = [];
       page.on("pageerror", (error) => errors.push(error.message));
       const started = performance.now();
@@ -66,6 +70,7 @@ try {
       const measurementWorkload = {
         ...workload,
         freezeInputBounds: freezeBoundsProbe && integrated,
+        skipInputMetrics: inputMetricsProbe && integrated,
       };
       const measurement = await frame.evaluate(async (scenario) => {
         const canvas = document.querySelector("canvas"),
@@ -75,6 +80,9 @@ try {
         const renderer = debug
           ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL)
           : gl.getParameter(gl.RENDERER);
+        // Diagnostic only: omit bounded telemetry storage, never accepted input.
+        // This fresh page is closed after the scenario; no shipping path is changed.
+        if (scenario.skipInputMetrics) lab.metrics.inputMs.push = () => 0;
         const next = () => new Promise((resolve) => requestAnimationFrame(resolve));
         const quantiles = (values) => {
           const sorted = [...values].sort((a, b) => a - b);
@@ -103,6 +111,7 @@ try {
         observer.observe({ type: "longtask" });
         async function phase(name, action) {
           await settled();
+          if (window.glDiagnostic) window.glDiagnostic.phase = name;
           for (const value of Object.values(lab.metrics))
             if (Array.isArray(value)) value.length = 0;
           phaseTasks = [];
@@ -350,6 +359,7 @@ try {
               cache: lab.cacheState(),
             },
             rawPreserved: true,
+            glDiagnostic: window.glDiagnostic ?? null,
           };
         } finally {
           observer.disconnect();
@@ -376,6 +386,8 @@ try {
           {
             workload,
             referenceIntegrated,
+            previewUrl: process.env.LINEFIELD_PREVIEW_URL || "http://127.0.0.1:65283/",
+            referenceUrl: process.env.LINEFIELD_REFERENCE_URL || "http://127.0.0.1:65280/",
             hardware: {
               cpu: cpus()[0]?.model,
               logicalCpus: cpus().length,
@@ -387,7 +399,9 @@ try {
             headless: true,
             gpuQueries: false,
             cpuProfileDiagnostic: profileCpu,
+            glCallDiagnostic: glDiagnostic,
             staticInputBoundsDiagnostic: freezeBoundsProbe,
+            inputMetricsStorageDiagnostic: inputMetricsProbe,
             notes:
               "Synthetic DOM input; readiness includes navigation and shell animation. Frame submission and rAF are not physical input-to-display or GPU duration. Render settlement is the engine pending-state proxy, not measured time to correct displayed pixels. No worker transfer/turnaround instrumentation in this baseline.",
             results,
