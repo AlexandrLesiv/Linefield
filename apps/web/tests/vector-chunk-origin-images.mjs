@@ -1,4 +1,5 @@
-import { checkWideCamera } from "./vector-wide-camera.mjs";
+import { compareWidePair } from "./vector-wide-pair.mjs";
+import { checkWideCamera, captureWideStage } from "./vector-wide-camera.mjs";
 import { checkWideTranslation } from "./vector-wide-transform.mjs";
 import { observeGeometryWorker } from "./vector-worker-observation.mjs";
 import { chromium } from "@playwright/test";
@@ -10,6 +11,7 @@ const output = process.env.LINEFIELD_EVIDENCE_DIR || ".build-cache/restart/chunk
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 const results = [];
+const failures = [];
 const clip = { x: 0, y: 220, width: 100, height: 330 };
 try {
   for (const [extent, brush] of [1048576, 4294967296].flatMap((value) =>
@@ -84,7 +86,7 @@ try {
         },
         { extent, compact, curved: process.env.LINEFIELD_WIDE_CURVE === "1" },
       );
-      const before = await captureDrawing(frame, clip);
+      const before = await captureWideStage(frame, clip, `${extent}-${brush}-${compact}-before`);
       if (JSON.stringify(before) === JSON.stringify(blank)) throw Error("Tail stayed blank");
       const raw = await frame.evaluate(() =>
         Array.from({ length: lab.core.raw_length(0) }, (_, i) => [
@@ -114,7 +116,7 @@ try {
       await page.mouse.down();
       await page.mouse.move(box.x + 80, box.y + 400, { steps: 8 });
       await page.mouse.up();
-      const sliced = await captureDrawing(frame, clip);
+      const sliced = await captureWideStage(frame, clip, `${extent}-${brush}-${compact}-sliced`);
       const visible = await frame.evaluate(() =>
         Array.from({ length: lab.core.count() }, (_, i) => i).filter((i) => lab.core.visible(i)),
       );
@@ -179,16 +181,9 @@ try {
       if (errors.length) throw Error(errors.join("; "));
       await page.close();
     }
-    const pair = results.slice(-2);
-    if (JSON.stringify(pair[0].sliced) !== JSON.stringify(pair[1].sliced))
-      throw Error(`Compact and long-source Slice images differ at ${extent}`);
-    if (JSON.stringify(pair[0].rotated) !== JSON.stringify(pair[1].rotated))
-      throw Error(`Compact and long-source rotated tail images differ at ${extent}`);
-    if (JSON.stringify(pair[0].moved) !== JSON.stringify(pair[1].moved))
-      throw Error(`Compact and long-source translated images differ at ${extent}`);
-    if (JSON.stringify(pair[0].before) !== JSON.stringify(pair[1].before))
-      throw Error(`Compact and long-source tail images differ at ${extent}`);
+    failures.push(...compareWidePair(results.slice(-2)));
   }
+  if (failures.length) throw Error(failures.join("; "));
   console.log(
     "PASS exact visible chunk-seam/tail pixels and history for compact versus long sources at two origins",
   );
