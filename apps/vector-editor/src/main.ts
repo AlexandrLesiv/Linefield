@@ -107,7 +107,7 @@ try {
 	throw error;
 }
 type Tool = "draw" | "select" | "slice" | "pan" | "rotate";
-const selection = createSelection(core, cache, camera, canvas);
+const selection = createSelection(core, cache, camera, canvas, failure => { runtimeFailure = String(failure); cancel(); });
 const slice = createSlice(core, cache, camera, canvas, () => {
 	selection.clear();
 	compositeCache.invalidate();
@@ -681,6 +681,7 @@ canvas.addEventListener("pointerdown", (e) => {
 	canvas.focus();
 	if (!space && !rotateHeld && tool === "draw" && !core.can_draw()) return;
 	if (!tryCapturePointer(canvas, e.pointerId)) return;
+	selection.cancelQuery();
 	pointer = e.pointerId;
 	lastX = e.clientX;
 	lastY = e.clientY;
@@ -920,6 +921,7 @@ Object.assign(window, {
 		// Checked regional boundary diagnostics; view-origin adoption remains pending.
 		regional: createRegionalAddressAdapter(core),
 		selection: () => selection.ids(),
+    lassoWorker: () => ({...selection.queryStats}),
 		layers,
 		view: () => camera.state(),
 		viewOrigin: () => [String(camera.regionX), String(camera.regionY)],

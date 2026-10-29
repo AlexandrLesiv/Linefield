@@ -1,3 +1,4 @@
+import { LASSO_SNAPSHOT_BYTES, type LassoSnapshot, type LassoStroke } from "./lasso-snapshot";
 import { readGeometry, readGeometryBounds, type GeometryData } from "./derived-geometry";
 import type { Core } from "./core";
 import { GeometryPreparer } from "./geometry-preparer";
@@ -438,6 +439,42 @@ export class GeometryCache {
 		}
 		return null;
 	}
+
+  lassoState(activeLayerOnly: boolean): string {
+    const core = this.core;
+    return [core.count(), core.transform_revision(), core.layer_revision(),
+      core.layer_render_revision(), core.session_selection_revision(), core.layer_active(),
+      ...this.origin(), ...Array.from({length:core.count()}, (_,id) =>
+        [core.visible(id), core.selection_eligible(id, Number(activeLayerOnly)), core.length(id), core.raw_length(id)].join(","))].join(":");
+  }
+  lassoSnapshot(points: readonly LassoPoint[], partial: boolean, activeLayerOnly: boolean): LassoSnapshot | null {
+    // Scheduling only: measured small/partial queries are faster inline. Both paths use Rust.
+    if(partial) return null;
+    let samples=0;
+    for(const id of this.strokes.keys())
+      if(this.core.selection_eligible(id,Number(activeLayerOnly))) samples+=this.core.length(id);
+    if(samples*points.length < 500000) return null;
+    let bytes = points.length * 16;
+    if (bytes > LASSO_SNAPSHOT_BYTES || points.length < 2) return null;
+    const strokes: LassoStroke[] = [];
+    for (const [id, stroke] of this.strokes) {
+      if (!this.core.selection_eligible(id, Number(activeLayerOnly))) continue;
+      bytes += 64;
+      if(bytes > LASSO_SNAPSHOT_BYTES) return null;
+      const transform = readTransform(this.core,id,...this.origin());
+      const chunks: LassoStroke["chunks"] = [];
+      for(let k=0;k<Math.ceil(this.core.length(id)/RAW_CHUNK);k++) {
+        const c=stroke.chunks.get(k), e=c ? this.selected(c) : undefined;
+        const source=e?.capsules ? e.localCapsules ?? e.capsules :
+          readGeometry(this.core,id,k,2 ** transformedDetailLevel(this.level,transform));
+        bytes += source.byteLength + 32;
+        if(bytes > LASSO_SNAPSHOT_BYTES) return null;
+        chunks.push({data:source.slice(),stride:e?.capsules ? e.capsuleStride ?? 6 : 6});
+      }
+      strokes.push({id,transform,chunks});
+    }
+    return {strokes,points,partial};
+  }
 	lassoHitTest(
 		points: readonly LassoPoint[],
 		partial: boolean,

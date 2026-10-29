@@ -88,6 +88,11 @@ try {
           ])
             event("pointermove", ...p);
           event("pointerup", 250, 250);
+
+          for (let n = 0; window.lab.lassoWorker?.().pending; n++) {
+            if (n > 300) throw Error("Lasso worker did not settle");
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+          }
           const enclosed = lab.selection();
           if (
             JSON.stringify(picked) !== JSON.stringify(pick) ||

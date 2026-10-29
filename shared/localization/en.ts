@@ -71,6 +71,7 @@ export const en = {
   "vector.slicing": "Slicing · Esc restores this gesture",
   "vector.cutCount": "Strokes cut: {count} · Undo restores the originals",
   "vector.noCuts": "No editable strokes crossed",
+  "vector.lassoPreparing": "Updating selection…",
   "vector.lassoRelease": "Release to select · Lasso again to add or remove strokes",
   "vector.lassoAgain": "Draw another lasso to add or remove strokes",
   "vector.selectedCount":

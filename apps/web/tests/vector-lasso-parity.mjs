@@ -146,6 +146,11 @@ try {
           window.lassoEvent("pointerdown", ...outer[0]);
           for (const p of outer.slice(1)) window.lassoEvent("pointermove", ...p);
           window.lassoEvent("pointerup", ...outer.at(-1));
+
+          for (let n = 0; window.lab.lassoWorker?.().pending; n++) {
+            if (n > 300) throw Error("Lasso worker did not settle");
+            await new Promise((resolve) => requestAnimationFrame(resolve));
+          }
           await paint();
           if (lab.selection().length !== 3) throw Error("Transform setup failed to select all");
           window.lassoEvent("pointerdown", 400, 300);
@@ -198,12 +203,17 @@ try {
               for (const p of path.slice(1)) window.lassoEvent("pointermove", ...p);
               const start = performance.now();
               window.lassoEvent("pointerup", ...path.at(-1));
+
+              for (let n = 0; window.lab.lassoWorker?.().pending; n++) {
+                if (n > 300) throw Error("Lasso worker did not settle");
+                await new Promise((resolve) => requestAnimationFrame(resolve));
+              }
               queries.push({
                 repeat,
                 partial,
                 shape,
                 ids: lab.selection(),
-                completionHandlerMs: performance.now() - start,
+                resultReadyMs: performance.now() - start,
               });
             }
         return {

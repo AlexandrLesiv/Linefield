@@ -1,3 +1,5 @@
+import { queryLasso } from "./lasso-snapshot";
+import { LassoPreparer } from "./lasso-preparer";
 import { SessionSelection } from "./session-selection";
 import { t } from "../../web/src/locale";
 import type { Camera } from "./camera";
@@ -10,8 +12,14 @@ export function createSelection(
 	cache: GeometryCache,
 	camera: Camera,
 	canvas: HTMLCanvasElement,
+  reportFailure: (error: unknown) => void,
 ) {
 	const ids = new SessionSelection(core);
+  const queries = new LassoPreparer();
+  let queryGeneration = 0;
+  let releasedLasso: readonly LassoPoint[] | null = null;
+  let releasedOrigin = 0;
+  function cancelQuery() { queryGeneration++; queries.cancel(); releasedLasso=null; pending=true; }
 	const overlay = document.querySelector<SVGSVGElement>("#selection-overlay")!;
 	const outline = overlay.querySelector<SVGPathElement>("#selection-outline")!;
 	const lassoPath = overlay.querySelector<SVGPathElement>("#selection-lasso")!;
@@ -57,6 +65,7 @@ export function createSelection(
 	};
 	function prune() { ids.prune(); }
 	function cancel() {
+    cancelQuery();
 		if (drag) orientation = drag.orientation;
 		core.move_cancel();
 		drag = null;
@@ -166,6 +175,7 @@ export function createSelection(
 		return true;
 	}
 	function down(e: PointerEvent) {
+    cancelQuery();
 		prune();
 		pending = true;
 		const screen = point(e),
@@ -271,16 +281,21 @@ export function createSelection(
 			if (lasso.moved) {
 				// Include the exact release point, then implicitly close the loop.
 				lasso.points.push(camera.screenToWorld(...point(e)));
-				for (const id of cache.lassoHitTest(
-					lasso.points,
-					partial.checked,
-					activeLayer.checked,
-				)) {
-					if (ids.has(id)) ids.delete(id);
-					else ids.add(id);
-					orientation = 0;
-					frameReference = null;
-				}
+        const points = lasso.points, isPartial = partial.checked, activeOnly = activeLayer.checked;
+        releasedLasso=points; releasedOrigin=camera.originRevision;
+        const generation = ++queryGeneration, state = cache.lassoState(activeOnly);
+        const current = () => generation === queryGeneration && state === cache.lassoState(activeOnly);
+        const publish = (found: number[]) => {
+          if(!current()) return;
+          for(const id of found) { if(ids.has(id)) ids.delete(id); else ids.add(id); }
+          if(found.length) { orientation=0; frameReference=null; }
+          pending=true;
+        };
+        const fallback = () => cache.lassoHitTest(points,isPartial,activeOnly);
+        let snapshot;
+        try { snapshot=cache.lassoSnapshot(points,isPartial,activeOnly); } catch { snapshot=null; }
+        if(snapshot) queries.run(snapshot,current,()=>queryLasso(core,snapshot),publish,reportFailure);
+        else publish(fallback());
 			} else pick(camera.screenToWorld(...point(e)), lasso.shift);
 			lasso = null;
 		}
@@ -288,8 +303,10 @@ export function createSelection(
 		pending = true;
 	}
 	function renderNow(enabled: boolean) {
+    if(releasedLasso && releasedOrigin!==camera.originRevision) cancelQuery();
 		const key = [
 			enabled,
+      queries.stats.pending,
 			camera.cx,
 			camera.cy,
 			camera.zoom,
@@ -304,6 +321,7 @@ export function createSelection(
 		pending = false;
 		lastView = key;
 		prune();
+    if(!queries.stats.pending) releasedLasso=null;
 		controls.hidden = label.hidden = !enabled;
 		moreButton.hidden = !ids.size;
 		lassoButton.setAttribute("aria-pressed", String(mode === "lasso"));
@@ -311,10 +329,12 @@ export function createSelection(
 		moreButton.setAttribute("aria-pressed", String(forceLasso));
 		partial.disabled = mode === "pick" && !forceLasso;
 		const f = enabled ? frame() : null;
-		overlay.style.display = enabled && (f || lasso?.moved) ? "block" : "none";
+		overlay.style.display = enabled && (f || lasso?.moved || releasedLasso) ? "block" : "none";
 		label.textContent = lasso?.moved
 			? t("vector.lassoRelease")
-			: forceLasso
+			: queries.stats.pending
+        ? t("vector.lassoPreparing")
+      : forceLasso
 				? t("vector.lassoAgain")
 				: ids.size
 					? t("vector.selectedCount", {count: ids.size})
@@ -357,7 +377,7 @@ export function createSelection(
 		}
 		lassoPath.setAttribute(
 			"d",
-			lasso?.moved ? `${screenPath(lasso.points)} Z` : "",
+			lasso?.moved ? `${screenPath(lasso.points)} Z` : releasedLasso ? `${screenPath(releasedLasso)} Z` : "",
 		);
 	}
 	function render(enabled: boolean) {
@@ -392,6 +412,8 @@ export function createSelection(
 	});
 	return {
 		down,
+    cancelQuery,
+    queryStats: queries.stats,
 		move,
 		up,
 		cancel,

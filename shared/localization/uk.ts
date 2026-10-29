@@ -74,6 +74,7 @@ export const uk = {
   "vector.slicing": "Розрізання · Esc скасовує цей жест",
   "vector.cutCount": "Розрізано штрихів: {count} · Скасування відновить оригінали",
   "vector.noCuts": "Немає перетинів зі штрихами, доступними для редагування",
+  "vector.lassoPreparing": "Оновлення вибору…",
   "vector.lassoRelease": "Відпустіть для вибору · Повторне ласо додає або вилучає штрихи",
   "vector.lassoAgain": "Намалюйте ще одне ласо, щоб додати або вилучити штрихи",
   "vector.selectedCount":

@@ -319,6 +319,11 @@ export const catalog = {
       context: "Vector editor host controls and feedback",
       arguments: {},
     },
+    "vector.lassoPreparing": {
+      kind: "plain",
+      context: "Pending asynchronous Lasso query",
+      arguments: {},
+    },
     "vector.lassoRelease": {
       kind: "plain",
       context: "Vector editor host controls and feedback",

@@ -262,10 +262,22 @@ try {
                     }
                   const start = performance.now();
                   pointer("pointerup", ...corners.at(-1));
+                  const releaseHandlerMs = performance.now() - start;
+
+                  for (let n = 0; window.lab.lassoWorker?.().pending; n++) {
+                    if (n > 300) throw Error("Lasso worker did not settle");
+                    await new Promise((resolve) => requestAnimationFrame(resolve));
+                  }
                   const completionMs = performance.now() - start;
                   const ids = lab.selection();
                   if (ids.length !== scenario.strokes) throw Error("Lasso missed accepted strokes");
-                  selectionQueries.push({ partial, dense: steps > 1, completionMs, ids });
+                  selectionQueries.push({
+                    partial,
+                    dense: steps > 1,
+                    completionMs,
+                    releaseHandlerMs,
+                    ids,
+                  });
                   await next();
                 }
               });
