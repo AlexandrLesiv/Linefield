@@ -7,7 +7,7 @@ This remains a draft integration, not completed M1–M9 adoption. The owner auth
 - Worktree: `/Users/oleksandr/.codex/worktrees/vector-integration-restart/linefield`
 - Branch: `codex/vector-integration-restart`; draft PR https://github.com/AlexandrLesiv/Linefield/pull/21.
 - Last verified integrated main: `b101a7e`. Check remote state before integration changes. The restart reverted discarded PR16; PR17–20 are closed.
-- Latest adopted application preview: http://127.0.0.1:65335/ (New drawing), frozen under `.build-cache/restart/review-complete-preview`. Check Git HEAD for latest source/evidence commit.
+- Latest adopted application preview: http://127.0.0.1:65336/ (New drawing), frozen under `.build-cache/restart/coalesced-bounds-preview`. Check Git HEAD for latest source/evidence commit.
 - Preserve reference65280, initial65281, owner sessions including65294, and every other existing preview. Candidate65308–65310 and65322 were rejected; do not adopt their production changes.
 - Authoritative donor: `/Users/oleksandr/Documents/Codex/2026-10-20/files-pasted-by-the-user-build/outputs/linefield-handoff/source-app/`. Verified77-file manifest SHA256 `474873d88d00f498105fc2fbb8eed754cc01ba93f6a3f9bcde7dfd78a853ca1d`. Never substitute current vector-canvas-lab HEAD or modify it.
 - Detailed decisions/evidence: `tasks/vector-integration-restart.md`; current boundary semantics: `crates/vector-engine/README.md`.
@@ -62,6 +62,17 @@ Wide-source evidence refreshed: six normal/delayed f64-worker sessions at2^32 pr
 ## Latest performance attribution (no production change)
 
 Optional CPU profiling and timestamped long-task attribution are now available in the existing performance fixture. Read the latest task entry before further optimization. Bounds reads are a measured opportunity: test-only frozen-layout65335 probe reduced six synchronous16k-sample-stroke phase median342.8→281.3ms, but still had83.4ms rAF gaps. Frozen bounds are not adopted; real layout must stay correct. A safe first candidate is one bounds read per coalesced input batch, with fresh reads between dispatched events and explicit layout/order/pressure E2E. This does not by itself resolve the single-event synthetic burst. Profiled dense zoom did not reproduce the56ms task; that does not close it. All current previews unchanged.
+
+
+## Coalesced input bounds acquisition (65336)
+
+Adopted a narrow host-only acquisition change: read the canvas rectangle once per synchronous coalesced PointerEvent batch, rather than once per accepted sample. Every dispatched event and changed-position release reads fresh bounds. No rectangle is retained across events, and no input sample, pressure, Rust mapping/policy or rendering work is removed. The synchronous callbacks only admit Rust data/update metrics/pressure state; they cannot mutate layout in the current adapter. Re-review this assumption if callbacks gain DOM writes.
+
+Independent technical source/evidence review approves the bounded change. Browser E2E changes actual canvas offsets between events and before release:130 canonical samples/pressures and history match65335 exactly;32 bounds reads per batch become1. Existing all-brush mouse/pen coalesced/style/release/history checks and exact approved-reference pixels/raw pass. Production/web builds, vector types, root static and scoped lint pass. Existing previews unchanged; new frozen preview65336 at .build-cache/restart/coalesced-bounds-preview.
+
+Unprofiled three alternating65335/65336 paced synthetic runs, M2Pro/16GiB Chrome156 headless DPR2/2880×1632:96 batches×64 samples plus3 stroke starts/run,6147 samples with identical canonical checksums. Total timed dispatch work per run baseline6.9/8.5/10.9ms versus5.2/5.3/4.5ms; runp95 batch durations0.2ms versus0.1/0.1/0.2ms. Both retain33.3–33.4ms max rAF gaps. Timings are near timer granularity; this is a modest acquisition-cost reduction, not a demonstrated physical input/display-latency improvement. Event construction is excluded from timed dispatch. Evidence: coalesced-{layout,pointer-parity,reference,paced-performance}.
+
+The original16k separate-event burst and rare dense-zoom tail remain open; this coalesced-batch optimization does not address single-event bounds calls or claim full latency acceptance. Worker experiments remain deferred.
 
 ## Remaining work, in order
 

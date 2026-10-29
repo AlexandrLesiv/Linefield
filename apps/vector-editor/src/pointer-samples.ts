@@ -10,8 +10,7 @@ export class PointerSamples {
     private append: (x: number, y: number, pressure: number) => void,
     private showPressure: (pressure: number | null) => void,
   ) {}
-  sample(event: PointerEvent): void {
-    const bounds = this.canvas.getBoundingClientRect();
+  sample(event: PointerEvent, bounds = this.canvas.getBoundingClientRect()): void {
     const pressure = event.pointerType === "pen" ? event.pressure : 1;
     this.append(event.clientX - bounds.left, event.clientY - bounds.top, pressure);
     this.lastX = event.clientX;
@@ -22,7 +21,10 @@ export class PointerSamples {
   move(event: PointerEvent): void {
     const samples = event.getCoalescedEvents?.();
     if (samples?.length) {
-      for (const sample of samples) this.sample(sample);
+      // The synchronous batch cannot change layout: append/pressure only update state.
+      // Read again for every dispatched event; never cache across layout/scroll changes.
+      const bounds = this.canvas.getBoundingClientRect();
+      for (const sample of samples) this.sample(sample, bounds);
     } else this.sample(event);
   }
   release(event: PointerEvent): void {
