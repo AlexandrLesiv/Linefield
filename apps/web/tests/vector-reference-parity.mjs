@@ -2,6 +2,7 @@ import { chromium } from "@playwright/test";
 
 import { mkdir, writeFile } from "node:fs/promises";
 
+const sparse = process.env.LINEFIELD_PARITY_SPARSE === "1";
 const output = process.env.LINEFIELD_EVIDENCE_DIR || ".build-cache/restart/parity";
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({ channel: "chrome", headless: true });
@@ -71,19 +72,66 @@ async function capture(url, integrated, variant) {
     images[label] = Buffer.from(pixels).toString("hex");
     await writeFile(`${output}/${variant}-${label}.png`, png);
   }
-  for (const brush of [0, 1, 2]) {
-    await host.locator("#brush").selectOption(String(brush));
-    await host.locator("#opacity").fill("65");
-    await host.locator("#width").fill("35");
-    await page.mouse.move(box.x + 220, box.y + 260 + brush * 35);
-    await page.mouse.down();
-    for (let step = 1; step <= 48; step++) {
-      await page.mouse.move(
-        box.x + 220 + step * 10,
-        box.y + 260 + brush * 35 + Math.round(Math.sin(step / 5) * 60),
-      );
+  for (let cluster = 0; cluster < (sparse ? 4 : 1); cluster++) {
+    if (cluster > 0) {
+      await host.locator("#pan").click();
+      await page.mouse.move(box.x + 1000, box.y + 450);
+      await page.mouse.down();
+      await page.mouse.move(box.x + 300, box.y + 450, { steps: 20 });
+      await page.mouse.up();
     }
-    await page.mouse.up();
+    await host.locator("#pen").click();
+    for (const brush of [0, 1, 2]) {
+      await host.locator("#brush").selectOption(String(brush));
+      await host.locator("#opacity").fill("65");
+      await host.locator("#width").fill("35");
+      await page.mouse.move(box.x + 220, box.y + 260 + brush * 35);
+      await page.mouse.down();
+      for (let step = 1; step <= 48; step++) {
+        await page.mouse.move(
+          box.x + 220 + step * 10,
+          box.y + 260 + brush * 35 + Math.round(Math.sin(step / 5) * 60),
+        );
+      }
+      await page.mouse.up();
+    }
+  }
+  if (sparse) {
+    await settled("sparse-last-region");
+    await host.locator("#pan").click();
+    for (let region = 0; region < 3; region++) {
+      await page.mouse.move(box.x + 300, box.y + 450);
+      await page.mouse.down();
+      await page.mouse.move(box.x + 650, box.y + 450, { steps: 10 });
+      await settled(`sparse-held-${region}-half`);
+      await page.mouse.move(box.x + 1000, box.y + 450, { steps: 10 });
+      await settled(`sparse-held-${region}-full`);
+      await page.mouse.up();
+    }
+    for (const target of [0.05, 16, 0.1, 4, 1]) {
+      await page.mouse.move(box.x + 720, box.y + 400);
+      const previous = await frame.evaluate(() => lab.view().zoom);
+      // Deliver the requested f64 wheel delta identically on both sides; CDP
+      // mouse.wheel narrows its delta and can miss an exact boundary target.
+      await frame.evaluate(
+        ({ targetZoom, previousZoom }) => {
+          const canvas = document.querySelector("canvas");
+          const rect = canvas.getBoundingClientRect();
+          canvas.dispatchEvent(
+            new WheelEvent("wheel", {
+              bubbles: true,
+              cancelable: true,
+              clientX: rect.x + 720,
+              clientY: rect.y + 400,
+              deltaY: -Math.log(targetZoom / previousZoom) / 0.001,
+            }),
+          );
+        },
+        { targetZoom: target, previousZoom: previous },
+      );
+      await frame.waitForFunction((zoom) => Math.abs(lab.view().zoom - zoom) < 1e-8, target);
+      await settled(`sparse-zoom-${target}`);
+    }
   }
   await settled("brushes");
   await host.locator("#pan").click();
@@ -143,6 +191,7 @@ try {
     "integrated",
   );
   const result = {
+    workload: sparse ? "four-separated-regions-held-pan-and-full-zoom-range" : "nearby-brushes",
     browser: browser.version(),
     dpr: 2,
     reference,

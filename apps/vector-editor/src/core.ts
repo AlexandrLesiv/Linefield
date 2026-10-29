@@ -4,6 +4,7 @@ export type Core = {
   begin_fixed_width(w: number, c: number, opacity: number): number;
   begin_with_pressure(w: number, c: number, minimum: number, gamma: number): number;
   begin_with_style(w: number, c: number, minimum: number, gamma: number, opacity: number): number;
+  boundary_fingerprint_word(index: number): number;
   brush(id: number): number;
   camera_map(x: number, y: number, cx: number, cy: number, zoom: number, angle: number): number;
   camera_normalize(angle: number): number;
@@ -81,6 +82,7 @@ export const coreExportArity = {
   "begin_fixed_width": 3,
   "begin_with_pressure": 4,
   "begin_with_style": 5,
+  "boundary_fingerprint_word": 1,
   "brush": 1,
   "camera_map": 6,
   "camera_normalize": 1,
@@ -151,3 +153,5 @@ export const coreExportArity = {
   "undo": 0,
   "visible": 1
 } as const;
+
+export const coreAbiFingerprint = [1669665423,211497131,3354424982,106357598,2240725964,3595572660,1452783999,204453359] as const;

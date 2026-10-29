@@ -1,6 +1,6 @@
 # Shared approved vector engine — integration checkpoint
 
-This crate owns the approved prototype's document, raw samples, brush response, editing, layers, history and geometry. It builds for Wasm and native targets without browser dependencies. Rust source is unchanged from the verified complete 5207 handoff at this relocation checkpoint. The browser adapter and rendering implementation remain under `apps/vector-editor`.
+This crate owns the approved prototype's document, raw samples, brush response, editing, layers, history and geometry. It builds for Wasm and native targets without browser dependencies. The document/rendering algorithms originate from the verified complete 5207 handoff; subsequent integration changes add checked transport capacities, shared camera arithmetic and a generated ABI identity. The browser adapter and rendering implementation remain under `apps/vector-editor`.
 
 Build Wasm with `cargo build --locked -p linefield-vector-engine --target wasm32-unknown-unknown --profile vector-editor`. The dedicated profile retains the donor's optimization level 3 and LTO instead of inheriting Linefield's size-focused release optimization. Browser ABI declarations are generated from the Rust exports by `scripts/vector-editor-boundary.ts`.
 
@@ -17,3 +17,9 @@ This contract covers the existing geometry worker only. It does not approve any 
 `camera_map`, `camera_zoom`, and `camera_rotate` accept finite f64 view coordinates and a positive zoom. They return 1 on success and 0 on invalid/overflowed results; failure leaves output unchanged. `camera_output_ptr` borrows three f64 values until the next successful camera operation on the same thread. Copy them immediately, and recreate typed views after Wasm memory growth. `camera_normalize` implements the same signed-turn normalization as the donor; its caller supplies a finite angle.
 
 The host retains current view state, acquires local input coordinates and renders its derived GPU projections. Rust owns inverse input mapping and pointer-anchored zoom/rotation arithmetic. This is a reusable numerical boundary, not a regional-coordinate implementation: document samples still use the donor's f32 representation, which remains an explicit integration gap.
+
+## Scalar ABI deployment identity
+
+The boundary generator hashes the sorted Rust export signatures, including original argument and return types before mapping them to JavaScript numbers. It emits the same eight SHA-256 words into Rust and the TypeScript contract. Both main and geometry-worker loaders validate these words once after checking exports and arities. This detects a stale deployment where, for example, f32 became f64 but the JavaScript function arity stayed the same. It adds no per-sample or rendering wrapper.
+
+This fingerprint identifies scalar signature shape only. It is not code authentication, a semantic compatibility guarantee, a saved-document version or runtime argument validation. Functions with unchanged signatures can still change semantics and require review and deployment coordination. Unknown fingerprint word indices return zero; loaders always compare exactly eight words. Generated outputs are checked during the build.

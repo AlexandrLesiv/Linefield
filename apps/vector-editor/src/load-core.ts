@@ -1,4 +1,4 @@
-import { coreExportArity, type Core } from "./core";
+import { coreExportArity, coreAbiFingerprint, type Core } from "./core";
 
 /** Validate once at startup; never wrap the hot input or rendering calls. */
 export async function loadCore(): Promise<Core> {
@@ -14,5 +14,10 @@ export async function loadCore(): Promise<Core> {
       throw new Error(`Drawing engine ABI mismatch: ${name}`);
     }
   }
-  return exports as unknown as Core;
+  const core = exports as unknown as Core;
+  if (
+    coreAbiFingerprint.some((word, index) => core.boundary_fingerprint_word(index) >>> 0 !== word)
+  )
+    throw new Error("Drawing engine ABI fingerprint mismatch");
+  return core;
 }

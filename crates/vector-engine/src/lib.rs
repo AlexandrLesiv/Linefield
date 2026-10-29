@@ -1,5 +1,12 @@
 use std::{cell::RefCell, rc::Rc};
 mod geometry;
+mod boundary_generated;
+/// Generated scalar ABI shape identity, checked once by host and worker loaders.
+/// This is not a trust signature or a document-format version.
+#[cfg_attr(target_arch = "wasm32", no_mangle)]
+pub extern "C" fn boundary_fingerprint_word(index: usize) -> u32 {
+    boundary_generated::ABI_FINGERPRINT.get(index).copied().unwrap_or(0)
+}
 pub mod camera;
 pub mod layers;
 pub mod selection;
