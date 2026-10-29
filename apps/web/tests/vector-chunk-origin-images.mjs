@@ -1,3 +1,4 @@
+import { checkWideTranslation } from "./vector-wide-transform.mjs";
 import { observeGeometryWorker } from "./vector-worker-observation.mjs";
 import { chromium } from "@playwright/test";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -94,6 +95,10 @@ try {
         JSON.stringify(blank) !== JSON.stringify(undone)
       )
         throw Error("History changed tail pixels");
+      const moved =
+        process.env.LINEFIELD_WIDE_TRANSLATION === "1"
+          ? await checkWideTranslation(page, frame, clip, before)
+          : null;
       await host.locator("#slice").click();
       await host.locator("#slice-width-number").fill("0");
       await host.locator("#slice-width-number").dispatchEvent("change");
@@ -140,6 +145,7 @@ try {
       )
         throw Error("Worker-input allocation failure did not recover through retirement");
       results.push({
+        moved,
         extent,
         brush,
         compact,
@@ -155,6 +161,8 @@ try {
       await page.close();
     }
     const pair = results.slice(-2);
+    if (JSON.stringify(pair[0].moved) !== JSON.stringify(pair[1].moved))
+      throw Error(`Compact and long-source translated images differ at ${extent}`);
     if (JSON.stringify(pair[0].before) !== JSON.stringify(pair[1].before))
       throw Error(`Compact and long-source tail images differ at ${extent}`);
   }

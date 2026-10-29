@@ -118,3 +118,7 @@ Preview 65321 catches disposable worker-input copy/allocation failure inside the
 ## Latest performance decision
 
 Same-region arithmetic candidate65322 was rejected: three alternating four-cycle comparisons did not show a repeatable rapid-zoom benefit. Production arithmetic is restored;65321 remains the adopted preview. The performance runner now supports integrated-versus-integrated comparison and bounded repeated zoom cycles. See latest task entry for measurements and ignored evidence. Continue broader wide/transformed correctness and architecture acceptance; do not treat candidate65322 as adopted.
+
+## Latest wide-edit evidence
+
+Actual mouse Pick/translation, exact compact-versus-wide moved-tail images, canonical position/pressure preservation and Undo/Redo pass for12 scenes at2^20/2^32 across all brushes; all12 also pass with worker failure. Existing Slice/history remains passing afterward. Production remains65321. Wide rotation/resize, broader resource evidence, architecture/review acceptance and later worker experiments remain open.
