@@ -62,7 +62,7 @@ impl Checkpoint {
             match self.phase {
                 0 => {
                     out.extend_from_slice(b"LFC4");
-                    wire::word(&mut out, 2);
+                    wire::word(&mut out, 3);
                     wire::wide(&mut out, 0);
                     wire::wide(&mut out, m.revision);
                     wire::word(

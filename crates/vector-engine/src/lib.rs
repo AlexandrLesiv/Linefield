@@ -24,6 +24,8 @@ mod save_delta_wire;
 mod image_save;
 #[cfg(feature="save-idle")]
 mod image_assets;
+#[cfg(feature="save-app")]
+mod image_cleanup;
 #[cfg(feature = "save-incremental")]
 mod save_delta_transport;
 #[cfg(feature = "save-incremental")]

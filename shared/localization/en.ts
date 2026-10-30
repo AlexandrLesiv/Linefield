@@ -1,7 +1,7 @@
 import type { Translation } from "./catalog.ts";
 export const en = {
   "image.import": "Import image",
-  "image.formats": "PNG, JPEG or static WebP · up to 16 MiB and 16.8 million pixels",
+  "image.formats": "PNG, JPEG or static WebP · up to 32 MiB and 16.8 million pixels",
   "image.cancel": "Cancel import",
   "image.busy": "Finish the current gesture before importing.",
   "image.decoding": "Preparing image…",

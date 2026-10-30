@@ -20,7 +20,19 @@ function validateChunkSchema(sql, version) {
           ["save_batches_storage", storageSql.createStorageIndex],
         ]
       : []),
-    ...(version === 4 ? [["image_assets", storageSql.createImageAssets]] : []),
+    ...(version >= 4 ? [["image_assets", storageSql.createImageAssets]] : []),
+    ...(version >= 5
+      ? [
+          ["image_asset_leases", storageSql.createAssetLeases],
+          ["image_asset_roots", storageSql.createAssetRoots],
+        ]
+      : []),
+    ...(version >= 6
+      ? [
+          ["image_assets_large", storageSql.createLargeImageAssets],
+          ["image_asset_leases_digest", storageSql.createAssetLeaseDigestIndex],
+        ]
+      : []),
   ]);
   const rows = sql(storageSql.inspectSchema);
   if (
@@ -35,8 +47,9 @@ function validateChunkSchema(sql, version) {
 }
 function installChunkSchema(sql) {
   const version = sql(storageSql.version)[0]?.[0];
-  if (version === 4) return;
-  if (version !== 1 && version !== 2 && version !== 3) throw Error("storage-version");
+  if (version === 6) return;
+  if (version !== 1 && version !== 2 && version !== 3 && version !== 4 && version !== 5)
+    throw Error("storage-version");
   sql(storageSql.begin);
   try {
     if (version === 1) {
@@ -54,9 +67,15 @@ function installChunkSchema(sql) {
       sql(storageSql.createStorageIndex);
       sql(storageSql.discoverGarbage);
     }
-    sql(storageSql.createImageAssets);
-    sql(storageSql.versionImages);
-    validateChunkSchema(sql, 4);
+    if (version < 4) sql(storageSql.createImageAssets);
+    if (version < 5) {
+      sql(storageSql.createAssetLeases);
+      sql(storageSql.createAssetRoots);
+    }
+    sql(storageSql.createLargeImageAssets);
+    sql(storageSql.createAssetLeaseDigestIndex);
+    sql(storageSql.versionLargeImageAssets);
+    validateChunkSchema(sql, 6);
     sql(storageSql.commit);
   } catch (error) {
     sql(storageSql.rollback);

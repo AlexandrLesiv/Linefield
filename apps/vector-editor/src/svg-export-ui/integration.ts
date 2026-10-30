@@ -10,6 +10,7 @@ export function installSvgExport(
   gestureActive: () => boolean,
   note: (event: ExportDiagnostic) => void,
   resolveAsset?: (digest: string) => Promise<Blob>,
+  holdAssets?: () => Promise<() => Promise<void>>,
 ) {
   const canvas = document.querySelector("canvas")!;
   let activityUntil = 0;
@@ -20,6 +21,7 @@ export function installSvgExport(
       isInputActive: active,
       onDiagnostic: note,
       resolveAsset,
+      holdAssets,
       onProgress: (progress) => ui.progress(progress),
     });
     return controller;

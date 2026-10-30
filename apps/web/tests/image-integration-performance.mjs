@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { mkdir, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { inputSession } from "./vector-svg-input-session.mjs";
+import { paddedPng } from "./image-cleanup-fixtures.mjs";
 const origin = process.env.LINEFIELD_PREVIEW_URL;
 if (!origin) throw Error("Isolated preview required");
 const out = process.env.LINEFIELD_EVIDENCE_DIR || "../../.build-cache/img02/performance";
@@ -48,6 +49,11 @@ try {
     mimeType: "image/png",
     buffer: Buffer.from(png, "base64"),
   };
+  if (process.env.LINEFIELD_IMAGE_ENCODED_MIB)
+    file.buffer = paddedPng(
+      Number(process.env.LINEFIELD_IMAGE_ENCODED_MIB) * 1024 * 1024,
+      file.buffer,
+    );
   const editor = async () => {
     for (let i = 0; i < 100; i++) {
       const f = page.frames().find((candidate) => candidate.url().includes("/vector-editor/"));

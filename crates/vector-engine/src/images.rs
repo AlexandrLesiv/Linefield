@@ -4,6 +4,7 @@ use std::collections::BTreeMap;
 pub const TAG: usize = 0x8000_0000;
 pub const CAP: usize = 10_000;
 pub const GPU_CAP: usize = 128 * 1024 * 1024;
+pub const ENCODED_CAP: u32 = 32 * 1024 * 1024;
 #[derive(Clone)]
 pub(super) struct Image {
     pub digest: [u8; 64],
@@ -18,6 +19,8 @@ pub(super) struct Image {
     pub offset: [f64; 2],
     pub opacity: f64,
     pub visible: bool,
+    pub retired: bool,
+    pub abandoned: bool,
 }
 pub(super) fn mip_bytes(mut w: usize, mut h: usize) -> Option<usize> {
     let mut total = 0usize;
@@ -31,8 +34,31 @@ pub(super) fn mip_bytes(mut w: usize, mut h: usize) -> Option<usize> {
     }
 }
 impl Image {
+    pub fn tombstone() -> Self {
+        Self {
+            digest: [0; 64],
+            mime: 0,
+            width: 0,
+            height: 0,
+            bytes: 0,
+            layer: 0,
+            before_source: 0,
+            anchor: [Address {
+                region: 0,
+                local: 0.0,
+            }; 2],
+            basis: [1.0, 0.0],
+            offset: [0.0; 2],
+            opacity: 0.0,
+            visible: false,
+            retired: true,
+            abandoned: false,
+        }
+    }
     pub fn same_asset(&self, other: &Self) -> bool {
-        self.digest != other.digest
+        self.retired
+            || other.retired
+            || self.digest != other.digest
             || (self.mime, self.width, self.height, self.bytes)
                 == (other.mime, other.width, other.height, other.bytes)
     }
@@ -41,7 +67,7 @@ impl Image {
             && self.width > 0
             && self.height > 0
             && u64::from(self.width) * u64::from(self.height) <= 16_777_216
-            && (1..=16_777_216).contains(&self.bytes)
+            && (1..=ENCODED_CAP).contains(&self.bytes)
             && self
                 .digest
                 .iter()
@@ -73,7 +99,7 @@ impl Image {
 }
 impl Engine {
     pub(super) fn image(&self, id: usize) -> Option<&Image> {
-        self.images.get(id.checked_sub(TAG)?)
+        self.images.get(id.checked_sub(TAG)?).filter(|i| !i.retired)
     }
     pub(super) fn image_visible(&self, id: usize) -> bool {
         self.image(id).is_some_and(|i| {
@@ -99,7 +125,11 @@ impl Engine {
             let alpha = opacity
                 .filter(|(handle, _)| *handle == TAG + id)
                 .map_or(i.opacity, |(_, a)| a);
-            if i.visible && alpha > 0.0 && l.is_some_and(|l| l.visible && l.rank.is_some()) {
+            if !i.retired
+                && i.visible
+                && alpha > 0.0
+                && l.is_some_and(|l| l.visible && l.rank.is_some())
+            {
                 let shape = (i.width, i.height);
                 if assets
                     .insert(i.digest, shape)

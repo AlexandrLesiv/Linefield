@@ -68,6 +68,29 @@ pub const REFERENCED_STORAGE: &str = r#"SELECT 1 FROM save_batches WHERE storage
 // IMG02 immutable originals are separate from journal chunk cleanup.
 pub const CREATE_IMAGE_ASSETS: &str = r#"CREATE TABLE image_assets(document_id TEXT NOT NULL,digest TEXT NOT NULL CHECK(length(digest)=64),version INTEGER NOT NULL CHECK(version=1),mime INTEGER NOT NULL CHECK(mime IN (1,2,3)),width INTEGER NOT NULL CHECK(width>0),height INTEGER NOT NULL CHECK(height>0),bytes INTEGER NOT NULL CHECK(bytes>0 AND bytes<=16777216),payload BLOB NOT NULL CHECK(length(payload)=bytes),PRIMARY KEY(document_id,digest)) STRICT"#;
 pub const INSERT_IMAGE_ASSET: &str = r#"INSERT OR IGNORE INTO image_assets(document_id,digest,version,mime,width,height,bytes,payload) VALUES(?,?,1,?,?,?,?,?)"#;
-pub const READ_IMAGE_ASSET: &str = r#"SELECT version,mime,width,height,bytes,payload FROM image_assets WHERE document_id=? AND digest=?"#;
-pub const IMAGE_ASSET_EXISTS: &str = r#"SELECT version,mime,width,height,bytes FROM image_assets WHERE document_id=? AND digest=?"#;
+pub const READ_IMAGE_ASSET: &str = r#"SELECT version,mime,width,height,bytes,payload FROM image_assets WHERE document_id=?1 AND digest=?2 UNION ALL SELECT version,mime,width,height,bytes,payload FROM image_assets_large WHERE document_id=?1 AND digest=?2"#;
+pub const IMAGE_ASSET_EXISTS: &str = r#"SELECT version,mime,width,height,bytes FROM image_assets WHERE document_id=?1 AND digest=?2 UNION ALL SELECT version,mime,width,height,bytes FROM image_assets_large WHERE document_id=?1 AND digest=?2"#;
 pub const VERSION_IMAGES: &str = r#"PRAGMA user_version=4"#;
+// IMG03 leases and proof-scoped roots; each DELETE repeats the candidate predicates.
+pub const CREATE_ASSET_LEASES: &str = r#"CREATE TABLE image_asset_leases(token TEXT PRIMARY KEY,grant TEXT NOT NULL,digest TEXT NOT NULL,kind TEXT NOT NULL CHECK(kind IN ('stage','published','export')),revision TEXT NOT NULL DEFAULT '') STRICT"#;
+pub const CREATE_ASSET_ROOTS: &str = r#"CREATE TABLE image_asset_roots(proof TEXT NOT NULL,digest TEXT NOT NULL,PRIMARY KEY(proof,digest)) STRICT"#;
+pub const INSERT_ASSET_LEASE: &str = r#"INSERT INTO image_asset_leases(token,grant,digest,kind) VALUES(?,?,?,?)"#;
+pub const PUBLISH_ASSET_LEASE: &str = r#"UPDATE image_asset_leases SET kind='published',revision=? WHERE token=? AND grant=? AND kind='stage'"#;
+pub const RELEASE_ASSET_LEASE: &str = r#"DELETE FROM image_asset_leases WHERE token=? AND grant=?"#;
+pub const INSERT_ASSET_ROOT: &str = r#"INSERT OR IGNORE INTO image_asset_roots(proof,digest) VALUES(?,?)"#;
+pub const ASSET_GC_CANDIDATE: &str = r#"SELECT digest,bytes FROM image_assets WHERE document_id=?1 AND digest>?2 UNION ALL SELECT digest,bytes FROM image_assets_large WHERE document_id=?1 AND digest>?2 ORDER BY digest LIMIT 1"#;
+pub const DELETE_ASSET_CANDIDATE: &str = r#"DELETE FROM image_assets WHERE document_id=? AND digest=? AND digest NOT IN (SELECT digest FROM image_asset_roots WHERE proof=?) AND NOT EXISTS(SELECT 1 FROM image_asset_leases WHERE digest=image_assets.digest OR digest='*')"#;
+pub const RELEASE_ROOTED_LEASES: &str = r#"DELETE FROM image_asset_leases WHERE token IN (SELECT token FROM image_asset_leases WHERE kind='published' AND digest IN (SELECT digest FROM image_asset_roots WHERE proof=?) LIMIT 32)"#;
+pub const RELEASE_OLD_ASSET_LEASES: &str = r#"DELETE FROM image_asset_leases WHERE token IN (SELECT token FROM image_asset_leases WHERE grant!=? AND kind!='export' LIMIT 32)"#;
+pub const DELETE_OLD_ROOTS: &str = r#"DELETE FROM image_asset_roots WHERE rowid IN (SELECT rowid FROM image_asset_roots WHERE proof!=? LIMIT 32)"#;
+pub const ASSET_GC_STATUS: &str = r#"SELECT sum(n),sum(bytes) FROM (SELECT count(*) AS n,coalesce(sum(bytes),0) AS bytes FROM image_assets WHERE document_id=?1 UNION ALL SELECT count(*) AS n,coalesce(sum(bytes),0) AS bytes FROM image_assets_large WHERE document_id=?1)"#;
+pub const VERSION_ASSET_LEASES: &str = r#"PRAGMA user_version=5"#;
+
+pub const RELEASE_SETTLED_LEASES: &str = r#"DELETE FROM image_asset_leases WHERE token IN (SELECT token FROM image_asset_leases WHERE grant=? AND kind='published' AND revision!='' AND (length(revision)<length(?) OR (length(revision)=length(?) AND revision<=?)) LIMIT 32)"#;
+pub const CREATE_ASSET_LEASE_DIGEST_INDEX: &str = r#"CREATE INDEX image_asset_leases_digest ON image_asset_leases(digest)"#;
+
+// IMG03 additive large-original partition: old image_assets bytes are never copied.
+pub const CREATE_LARGE_IMAGE_ASSETS: &str = r#"CREATE TABLE image_assets_large(document_id TEXT NOT NULL,digest TEXT NOT NULL CHECK(length(digest)=64),version INTEGER NOT NULL CHECK(version=1),mime INTEGER NOT NULL CHECK(mime IN (1,2,3)),width INTEGER NOT NULL CHECK(width>0),height INTEGER NOT NULL CHECK(height>0),bytes INTEGER NOT NULL CHECK(bytes>16777216 AND bytes<=33554432),payload BLOB NOT NULL CHECK(length(payload)=bytes),PRIMARY KEY(document_id,digest)) STRICT"#;
+pub const INSERT_LARGE_IMAGE_ASSET: &str = r#"INSERT OR IGNORE INTO image_assets_large(document_id,digest,version,mime,width,height,bytes,payload) VALUES(?,?,1,?,?,?,?,?)"#;
+pub const DELETE_LARGE_ASSET_CANDIDATE: &str = r#"DELETE FROM image_assets_large WHERE document_id=? AND digest=? AND digest NOT IN (SELECT digest FROM image_asset_roots WHERE proof=?) AND NOT EXISTS(SELECT 1 FROM image_asset_leases WHERE digest=image_assets_large.digest OR digest='*')"#;
+pub const VERSION_LARGE_IMAGE_ASSETS: &str = r#"PRAGMA user_version=6"#;

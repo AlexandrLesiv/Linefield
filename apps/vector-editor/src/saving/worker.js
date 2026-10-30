@@ -14,7 +14,9 @@ importScripts(
   "./legacy-validation.js",
   "./chunk-validation.js",
   "./database.js",
+  "./image-model.js",
   "./image-assets.js",
+  "./image-gc.js",
   "./staging.js",
   "./maintenance.js",
   "./pools.js",
@@ -57,9 +59,11 @@ async function open(grant, document, reopen = false) {
           return receipt;
         };
         stage = staging(database);
-        assets = imageAssets(db, document);
+        const garbage = imageGarbage(db, database, document, grant);
+        assets = imageAssets(db, document, grant, garbage.changed);
         database.verifyImageModel = assets.verifyModel;
-        maintenance = checkpointMaintenance(database);
+        database.verifyImageModelSteps = assets.verifyModelSteps;
+        maintenance = checkpointMaintenance(database, garbage);
         const held = new Promise((done) => {
           releaseLock = done;
         });
@@ -92,8 +96,12 @@ onmessage = async ({ data: m }) => {
     } else if (m.kind === "open") value = await open(m.grant, m.document, m.reopen === true);
     else if (!db) throw Error("storage-closed");
     else if (m.kind === "maintain") value = await maintenance.step();
+    else if (m.kind === "asset-maintain") value = await maintenance.step(m.revision);
     else if (m.kind === "maintenance-status") value = maintenance.status();
     else if (m.kind === "asset-stage") value = await assets.stage(m.blob, m.metadata);
+    else if (m.kind === "asset-finish") value = assets.finish(m.lease, m.revision);
+    else if (m.kind === "asset-hold") value = assets.hold();
+    else if (m.kind === "asset-release") value = assets.release(m.lease);
     else if (m.kind === "asset-verify") value = await assets.verify(m.references);
     else if (m.kind === "asset-read") value = await assets.read(m.digest);
     else if (m.kind === "load") value = await database.load();

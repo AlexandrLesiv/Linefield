@@ -90,7 +90,10 @@ export class SvgExportController {
     this.diagnostic("start");
     const output = new SvgOutput();
     let session: ExportSession | undefined;
+    let releaseAssets: (() => Promise<void>) | undefined;
     try {
+      releaseAssets = await this.options.holdAssets?.();
+      await this.gate();
       session = new ExportSession(this.core);
       const view = await session.prepare(options, () => this.gate());
       await this.gate();
@@ -159,6 +162,7 @@ export class SvgExportController {
       output.clear();
       try {
         if (session) await session.retire();
+        await releaseAssets?.().catch(() => this.diagnostic("cleanup-failure", "worker"));
       } finally {
         this.running = false;
       }
