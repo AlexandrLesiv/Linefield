@@ -125,6 +125,9 @@ try {
         readinessMs = Date.now() - importedAt;
       }
       await frame.evaluate(() => lab.saving.flush(true));
+      const ownership = await frame.evaluate(() => lab.saving.maintenanceStatus());
+      if (ownership.owners)
+        assert.equal(ownership.owners.live, 0, "Durable imports release ownership");
       const inputFrames = raw.frames.filter((_, i) => raw.frameAt[i] <= raw.inputEnd),
         inputLong = raw.longTasks.filter((_, i) => raw.longTaskAt[i] <= raw.inputEnd);
       runs.push({

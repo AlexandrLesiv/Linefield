@@ -1,3 +1,4 @@
+import { ownedAssets } from "./owned-assets";
 import { storageClient } from "./client";
 import type { Identity, Loaded, Context, Part, Receipt } from "./types";
 export async function storage(document: string) {
@@ -12,25 +13,11 @@ export async function storage(document: string) {
     throw error;
   }
   let expected: Context | undefined;
+  const assets = ownedAssets(document, (kind, fields) => client.call(kind, fields));
   return {
     identity,
-    stageAsset: (
-      blob: Blob,
-      metadata: { mime: number; width: number; height: number; version: number },
-    ) =>
-      client.call<{
-        lease: string;
-        digest: string;
-        mime: number;
-        width: number;
-        height: number;
-        bytes: number;
-        version: number;
-      }>("asset-stage", { blob, metadata }),
-    finishAsset: (lease: string, revision: string | null) =>
-      client.call<void>("asset-finish", { lease, revision }),
-    holdAssets: () => client.call<string>("asset-hold"),
-    releaseAssets: (lease: string) => client.call<void>("asset-release", { lease }),
+    durable: assets.durable,
+    ...assets.api,
     verifyAssets: (references: import("./image-references").AssetReference[]) =>
       client.call("asset-verify", { references }),
     readAsset: (digest: string) =>
@@ -72,7 +59,8 @@ export async function storage(document: string) {
         )
       )
         throw Error("save-seal");
-      return client.call<Receipt>("commit");
+      const receipt = await client.call<Receipt>("commit");
+      return receipt;
     },
     async read(operation: string, stream: number, chunk: number) {
       return client.call<{ bytes: Uint8Array<ArrayBuffer>; length: number; last: boolean }>(
@@ -81,15 +69,21 @@ export async function storage(document: string) {
       );
     },
     maintainAssets: (revision: string) =>
-      client.call<{ pending: boolean; phase: string }>("asset-maintain", { revision }),
+      client.call<{ pending: boolean; phase: string; retryAfterMs?: number }>("asset-maintain", {
+        revision,
+      }),
     async maintain() {
       return client.call<{ pending: boolean; phase: string }>("maintain");
     },
     async maintenanceStatus() {
-      return client.call("maintenance-status");
+      return {
+        ...(await client.call<Record<string, unknown>>("maintenance-status")),
+        owners: assets.status(),
+      };
     },
     async load() {
-      return client.call<Loaded>("load");
+      const loaded = await client.call<Loaded>("load");
+      return loaded;
     },
     async recover() {
       client.terminate();
@@ -104,6 +98,7 @@ export async function storage(document: string) {
         client.terminate();
         throw Error("save-identity");
       }
+      await assets.retry();
     },
     async close() {
       try {

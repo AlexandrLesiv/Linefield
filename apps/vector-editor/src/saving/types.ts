@@ -40,3 +40,5 @@ export function checkedSaveCore(value: unknown): SaveCore {
     throw Error("save-boundary");
   return core;
 }
+
+export type SaveWaiter = { promise: Promise<void>; resolve(): void; reject(error: Error): void };

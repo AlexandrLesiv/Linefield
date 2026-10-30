@@ -78,4 +78,5 @@ export async function submit(
   const receipt = await storage.commit();
   if (measure("receipt", () => core.save_receipt(token, writeJson(core, receipt))) !== 1)
     throw Error("save-receipt");
+  storage.durable(receipt.result);
 }

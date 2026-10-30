@@ -1,13 +1,12 @@
 import { imageCleanup } from "./image-cleanup";
 import { assetApi } from "./asset-api";
 import { measurements } from "./measure";
-import type { SaveCore, State } from "./types";
+import type { SaveCore, State, SaveWaiter } from "./types";
 import type { Storage } from "./adapter";
 import { submit, inputPending } from "./prepare";
 import { idleYield } from "./idle-yield";
-type Waiter = { promise: Promise<void>; resolve(): void; reject(error: Error): void };
 export function scheduler(core: SaveCore, store: Storage) {
-  const waiters = new Map<bigint, Waiter>(),
+  const waiters = new Map<bigint, SaveWaiter>(),
     listeners = new Set<(state: State) => void>();
   const { metrics, measure } = measurements();
   const cleanImages = imageCleanup(core, store);
@@ -46,10 +45,11 @@ export function scheduler(core: SaveCore, store: Storage) {
   }
   function scheduleMaintenance() {
     if (failure || closed || !maintenanceWanted || timer || maintenanceTimer) return;
+    const delay = Math.max(16, cleanImages.delay());
     maintenanceTimer = setTimeout(() => {
       maintenanceTimer = undefined;
       startPump();
-    }, 16);
+    }, delay);
   }
   const settle = () => {
     for (const [revision, waiter] of waiters)

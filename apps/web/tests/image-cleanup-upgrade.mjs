@@ -48,6 +48,10 @@ try {
     };
   });
   let worker = page.workers().find((w) => w.url().includes("/saving/worker.js"));
+  const priorVersion = await worker.evaluate(
+    () =>
+      db.exec({ sql: "PRAGMA user_version", rowMode: "array", returnValue: "resultRows" })[0][0],
+  );
   await worker.evaluate(() => {
     globalThis.savedExec = db.exec;
     db.exec = function (options) {
@@ -109,7 +113,13 @@ try {
   assert.equal(restored.actual, retained.digest);
   assert.equal(restored.size, retained.size);
   assert.equal(restored.count, 1);
-  checks.push("schema5 16MiB original survives schema6 byte-exact");
+  const nextWorker = page.workers().find((w) => w.url().includes("/saving/worker.js"));
+  const nextVersion = await nextWorker.evaluate(
+    () =>
+      db.exec({ sql: "PRAGMA user_version", rowMode: "array", returnValue: "resultRows" })[0][0],
+  );
+  assert.ok(nextVersion > priorVersion);
+  checks.push(`schema${priorVersion} 16MiB original survives schema${nextVersion} byte-exact`);
   await frame.waitForFunction(
     async (digest) => {
       const status = await lab.saving.maintenanceStatus();

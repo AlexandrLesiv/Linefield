@@ -12,14 +12,20 @@ function imageGarbage(db, database, document, grant) {
   const check = (revision) => {
     if (!validRevision(revision) || !matches(revision)) throw Error("storage-conflict");
   };
+  const owners = abandonedOwners(sql, document, grant, check);
   return {
     hasAssets() {
-      return sql(storageSql.assetGcCandidate, [document, ""]).length > 0;
+      return (
+        sql(storageSql.assetGcCandidate, [document, ""]).length > 0 ||
+        sql(storageSql.assetLeaseCandidate, [""]).length > 0
+      );
     },
     changed() {
+      owners.reset();
       cursor = "";
     },
     begin(revision) {
+      owners.reset();
       cursor = "";
       check(revision);
       proof = { id: crypto.randomUUID(), revision };
@@ -57,8 +63,9 @@ function imageGarbage(db, database, document, grant) {
     pending(revision) {
       return !!proof && proof.revision === revision && ready && matches(revision);
     },
-    step(revision) {
+    async step(revision) {
       if (!ready || !proof || proof.revision !== revision) throw Error("storage-conflict");
+      if (await owners.step(revision)) return { pending: true, phase: "asset-owners" };
       sql(storageSql.begin);
       try {
         check(revision);
@@ -66,7 +73,6 @@ function imageGarbage(db, database, document, grant) {
         // holds remain conservative because the old main thread may still exist.
         for (const [query, bind] of [
           [storageSql.releaseOldAssetLeases, [grant]],
-          [storageSql.releaseRootedLeases, [proof.id]],
           [storageSql.releaseSettledLeases, [grant, revision, revision, revision]],
           [storageSql.deleteOldRoots, [proof.id]],
         ]) {
@@ -95,6 +101,12 @@ function imageGarbage(db, database, document, grant) {
             bytes += candidate[1];
           }
         }
+        const waiting = !candidate && owners.live();
+        if (!candidate) {
+          cursor = "";
+          owners.reset();
+        }
+        if (waiting) return { pending: true, phase: "asset-owner-wait", retryAfterMs: 1000 };
         return { pending: !!candidate, phase: candidate ? "asset-cleanup" : "idle" };
       } catch (error) {
         sql(storageSql.rollback);

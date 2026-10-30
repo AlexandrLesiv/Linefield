@@ -74,14 +74,13 @@ pub const VERSION_IMAGES: &str = r#"PRAGMA user_version=4"#;
 // IMG03 leases and proof-scoped roots; each DELETE repeats the candidate predicates.
 pub const CREATE_ASSET_LEASES: &str = r#"CREATE TABLE image_asset_leases(token TEXT PRIMARY KEY,grant TEXT NOT NULL,digest TEXT NOT NULL,kind TEXT NOT NULL CHECK(kind IN ('stage','published','export')),revision TEXT NOT NULL DEFAULT '') STRICT"#;
 pub const CREATE_ASSET_ROOTS: &str = r#"CREATE TABLE image_asset_roots(proof TEXT NOT NULL,digest TEXT NOT NULL,PRIMARY KEY(proof,digest)) STRICT"#;
-pub const INSERT_ASSET_LEASE: &str = r#"INSERT INTO image_asset_leases(token,grant,digest,kind) VALUES(?,?,?,?)"#;
+pub const INSERT_ASSET_LEASE: &str = r#"INSERT INTO image_asset_leases(token,grant,digest,kind,owner) VALUES(?,?,?,?,?)"#;
 pub const PUBLISH_ASSET_LEASE: &str = r#"UPDATE image_asset_leases SET kind='published',revision=? WHERE token=? AND grant=? AND kind='stage'"#;
 pub const RELEASE_ASSET_LEASE: &str = r#"DELETE FROM image_asset_leases WHERE token=? AND grant=?"#;
 pub const INSERT_ASSET_ROOT: &str = r#"INSERT OR IGNORE INTO image_asset_roots(proof,digest) VALUES(?,?)"#;
 pub const ASSET_GC_CANDIDATE: &str = r#"SELECT digest,bytes FROM image_assets WHERE document_id=?1 AND digest>?2 UNION ALL SELECT digest,bytes FROM image_assets_large WHERE document_id=?1 AND digest>?2 ORDER BY digest LIMIT 1"#;
 pub const DELETE_ASSET_CANDIDATE: &str = r#"DELETE FROM image_assets WHERE document_id=? AND digest=? AND digest NOT IN (SELECT digest FROM image_asset_roots WHERE proof=?) AND NOT EXISTS(SELECT 1 FROM image_asset_leases WHERE digest=image_assets.digest OR digest='*')"#;
-pub const RELEASE_ROOTED_LEASES: &str = r#"DELETE FROM image_asset_leases WHERE token IN (SELECT token FROM image_asset_leases WHERE kind='published' AND digest IN (SELECT digest FROM image_asset_roots WHERE proof=?) LIMIT 32)"#;
-pub const RELEASE_OLD_ASSET_LEASES: &str = r#"DELETE FROM image_asset_leases WHERE token IN (SELECT token FROM image_asset_leases WHERE grant!=? AND kind!='export' LIMIT 32)"#;
+pub const RELEASE_OLD_ASSET_LEASES: &str = r#"DELETE FROM image_asset_leases WHERE token IN (SELECT token FROM image_asset_leases WHERE grant!=? AND kind!='export' AND owner='' LIMIT 32)"#;
 pub const DELETE_OLD_ROOTS: &str = r#"DELETE FROM image_asset_roots WHERE rowid IN (SELECT rowid FROM image_asset_roots WHERE proof!=? LIMIT 32)"#;
 pub const ASSET_GC_STATUS: &str = r#"SELECT sum(n),sum(bytes) FROM (SELECT count(*) AS n,coalesce(sum(bytes),0) AS bytes FROM image_assets WHERE document_id=?1 UNION ALL SELECT count(*) AS n,coalesce(sum(bytes),0) AS bytes FROM image_assets_large WHERE document_id=?1)"#;
 pub const VERSION_ASSET_LEASES: &str = r#"PRAGMA user_version=5"#;
@@ -94,3 +93,13 @@ pub const CREATE_LARGE_IMAGE_ASSETS: &str = r#"CREATE TABLE image_assets_large(d
 pub const INSERT_LARGE_IMAGE_ASSET: &str = r#"INSERT OR IGNORE INTO image_assets_large(document_id,digest,version,mime,width,height,bytes,payload) VALUES(?,?,1,?,?,?,?,?)"#;
 pub const DELETE_LARGE_ASSET_CANDIDATE: &str = r#"DELETE FROM image_assets_large WHERE document_id=? AND digest=? AND digest NOT IN (SELECT digest FROM image_asset_roots WHERE proof=?) AND NOT EXISTS(SELECT 1 FROM image_asset_leases WHERE digest=image_assets_large.digest OR digest='*')"#;
 pub const VERSION_LARGE_IMAGE_ASSETS: &str = r#"PRAGMA user_version=6"#;
+
+// IMG04 explicit owner-lock identity. Legacy empty owners are never guessed.
+pub const ADD_ASSET_LEASE_OWNER: &str = r#"ALTER TABLE image_asset_leases ADD COLUMN owner TEXT NOT NULL DEFAULT '' CHECK(length(owner)<=256)"#;
+pub const ASSET_LEASE_LOOKUP: &str = r#"SELECT grant,digest,kind,revision,owner FROM image_asset_leases WHERE token=?"#;
+pub const ASSET_LEASE_CANDIDATE: &str = r#"SELECT token,grant,digest,kind,revision,owner FROM image_asset_leases WHERE token>? ORDER BY token LIMIT 1"#;
+pub const DELETE_ABANDONED_ASSET_LEASE: &str = r#"DELETE FROM image_asset_leases WHERE token=? AND grant=? AND digest=? AND kind=? AND revision=? AND owner=? AND owner!=''"#;
+pub const VERSION_ASSET_OWNERS: &str = r#"PRAGMA user_version=7"#;
+pub const ASSET_OWNER_LOCK_PREFIX: &str = r#"linefield-asset-owner-v1:"#;
+
+pub const CREATE_ASSET_LEASES_OWNED: &str = r#"CREATE TABLE image_asset_leases(token TEXT PRIMARY KEY,grant TEXT NOT NULL,digest TEXT NOT NULL,kind TEXT NOT NULL CHECK(kind IN ('stage','published','export')),revision TEXT NOT NULL DEFAULT '',owner TEXT NOT NULL DEFAULT '' CHECK(length(owner)<=256)) STRICT"#;
