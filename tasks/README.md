@@ -1,3 +1,5 @@
+Current image checkpoint: [IMG-01](IMG-01.md), isolated quality/performance and capacity verification before product integration.
+
 # Current verification policy
 
 Task files retain the original plain Markdown format. Historical results in older briefs are not current pass claims. Quality links lead to maintained guidance, not archived run payloads. The owner selects E2E tests only; static type, lint, format, generation and build checks remain. Approval records cover their identified proposals, not automatically a newer document at a replacement link.

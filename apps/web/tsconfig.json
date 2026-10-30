@@ -12,5 +12,5 @@
     }
   },
   "include": ["src/**/*.ts", "tests/**/*.ts", "*.ts"],
-  "exclude": ["node_modules", "dist", "tests/fixtures/svg-export"]
+  "exclude": ["node_modules", "dist", "tests/fixtures/svg-export", "tests/fixtures/image-import"]
 }
