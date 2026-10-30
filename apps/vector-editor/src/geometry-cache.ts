@@ -204,6 +204,8 @@ export class GeometryCache {
 		}
 	}
 	private strokes = new Map<number, Stroke>();
+	private restoreCursor = 0;
+	private readonly restoreCount: number;
 	private grid = new Map<string, Set<Chunk>>();
 	private oversized = new Set<Chunk>();
 	private changed = new Set<number>();
@@ -252,9 +254,11 @@ export class GeometryCache {
 		private origin: () => readonly [bigint, bigint] = () => [0n, 0n],
 	) {
 		this.arena = new GpuArena(gl);
+		this.restoreCount = core.count();
+		this.stats.backlog = this.restoreCount;
 	}
 	get framePending() {
-		return this.arena.framePending;
+		return this.restoreCursor < this.restoreCount || this.arena.framePending;
 	}
 	get validationStats() {
 		return this.arena.stats;
@@ -876,6 +880,15 @@ export class GeometryCache {
 		}
 		// Disposal is independent of upload success, so memory pressure cannot starve reclamation.
 		const cleanupUntil = Math.min(until, performance.now() + 0.5);
+		// Reload publishes canonical strokes before this disposable cache exists.
+		// Discover them within the frame budget; live input already calls note().
+		let discovered = 0;
+		while (this.restoreCursor < this.restoreCount && discovered < 64 && performance.now() < cleanupUntil) {
+			const id = this.restoreCursor;
+			if (!this.strokes.has(id) && this.core.length(id) > 0) this.note(id);
+			this.restoreCursor++;
+			discovered++;
+		}
 		while (this.sweep && performance.now() < cleanupUntil) {
 			const next = this.sweep.next();
 			if (next.done) {
@@ -983,6 +996,7 @@ export class GeometryCache {
 		this.stats.geometryBytes = this.geometryBytes;
 		this.stats.cpuGeometryBytes = this.cpuGeometryBytes;
 		this.stats.backlog =
+			(this.restoreCount - this.restoreCursor) +
 			this.changed.size +
 			this.registering.size +
 			this.rebuilding.size +

@@ -8,7 +8,7 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 # Task board
 
-Current approved follow-on: [SAVE-07](SAVE-07.md), streaming reload, Undo-safe checkpoint compaction and capacity scaling, stacked on [SAVE-06](SAVE-06.md)'s real saved-drawing gallery. Existing previews remain frozen; PR28 awaits owner review and no merge is authorized.
+Current approved follow-on: [SAVE-08](SAVE-08.md), persistent tile Rename and Delete/Undo, stacked on verified [SAVE-07](SAVE-07.md) capacity scaling and [SAVE-06](SAVE-06.md) saved-drawing gallery. Existing previews remain frozen; no merge is authorized.
 
 Current owner-authorized saving integration: [SAVE-05](SAVE-05.md), full-app local saving, separate preview and responsiveness/recovery checks, following bounded [SAVE-04](SAVE-04.md), following incremental [SAVE-03](SAVE-03.md) and [SAVE-02](SAVE-02.md) and the transferred-buffer baseline approved after [SAVE-01](SAVE-01.md). Saving is enabled only in the separate integrated candidate pending owner review; existing integration previews remain unchanged.
 

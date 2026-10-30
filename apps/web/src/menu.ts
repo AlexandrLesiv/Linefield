@@ -7,7 +7,7 @@ type MenuItem = {
   label: string;
   destructive?: boolean;
   handoff?: boolean;
-  run: (bounds: DOMRect) => HTMLElement | void;
+  run: (bounds: DOMRect) => HTMLElement | void | Promise<HTMLElement | void>;
 };
 type Menu = {
   origin: HTMLElement;
@@ -141,7 +141,7 @@ export function showMenu(origin: HTMLElement, items: readonly MenuItem[]): void 
     if (item.destructive) button.classList.add("destructive", destructive);
     button.addEventListener(
       "click",
-      () => {
+      async () => {
         if (active !== menu) return;
         // Commit intent before animation completion; closing/re-render cannot drop or repeat it.
         const bounds = menu.box.getBoundingClientRect();
@@ -156,7 +156,8 @@ export function showMenu(origin: HTMLElement, items: readonly MenuItem[]): void 
           menu.origin.setAttribute("aria-expanded", "false");
           menu.card?.removeAttribute("data-menu-open");
         } else closeMenu();
-        const target = item.run(bounds);
+        menu.box.inert = true;
+        const target = await item.run(bounds);
         if (item.destructive) {
           menu.backdrop.close();
           finishClosing = morphDeleteMenu(box, content, bounds, target, () => box.remove());

@@ -15,7 +15,7 @@ import { morphRename } from "./rename-motion.ts";
 import { button, element } from "./dom.ts";
 export function renameDrawing(
   name: string,
-  save: (name: string) => void,
+  save: (name: string) => Promise<void> | void,
   restore: () => void,
   sourceBounds: DOMRect,
   sourceCard: HTMLElement | null,
@@ -29,19 +29,20 @@ export function renameDrawing(
   const label = element("label", dialogLabel, t("rename.label"));
   const input = element("input", dialogInput);
   input.value = name;
-  input.maxLength = 240;
+  input.maxLength = 512;
   input.required = true;
   label.append(input);
   const error = element("p", `error ${errorStyle}`);
   error.setAttribute("role", "alert");
   const actions = element("div", `dialog-actions ${dialogActions}`);
-  let closed = false;
+  let closed = false,
+    pending = false;
   let disposeMotion = () => {};
   const cardId = sourceCard?.dataset.id;
   const liveCard = () =>
     cardId ? document.querySelector<HTMLElement>(`[data-id="${CSS.escape(cardId)}"]`) : sourceCard;
   const close = () => {
-    if (closed) return;
+    if (closed || pending) return;
     closed = true;
     backdrop.close(260);
     const trigger = liveCard()?.querySelector<HTMLElement>(".more") ?? null;
@@ -59,20 +60,37 @@ export function renameDrawing(
   };
   const submit = element("button", `primary ${primary} ${dialogButton}`, t("action.rename"));
   submit.type = "submit";
-  actions.append(button(t("action.cancel"), dialogButton, close), submit);
+  const cancel = button(t("action.cancel"), dialogButton, close);
+  actions.append(cancel, submit);
   form.append(heading, label, error, actions);
   dialog.append(form);
   document.body.append(dialog);
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (closed) return;
+    if (closed || pending) return;
     const value = input.value.trim();
     if (!value) {
       error.textContent = t("rename.required");
       return;
     }
-    save(value);
-    close();
+    pending = true;
+    submit.disabled = true;
+    cancel.disabled = true;
+    input.readOnly = true;
+    dialog.setAttribute("aria-busy", "true");
+    try {
+      await save(value);
+      pending = false;
+      close();
+    } catch (cause) {
+      error.textContent = cause instanceof Error ? cause.message : t("library.renameFailed");
+    } finally {
+      pending = false;
+      submit.disabled = false;
+      cancel.disabled = false;
+      input.readOnly = false;
+      dialog.removeAttribute("aria-busy");
+    }
   });
   dialog.addEventListener("cancel", (event) => {
     event.preventDefault();

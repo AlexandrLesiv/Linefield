@@ -49,6 +49,8 @@ for (const name of [
   "staging.js",
   "maintenance.js",
   "pools.js",
+  "catalog-schema.js",
+  "catalog-actions.js",
   "catalog.js",
   "library-worker.js",
 ])

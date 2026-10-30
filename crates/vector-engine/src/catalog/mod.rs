@@ -2,7 +2,7 @@
 //! browser adapters only bind validated fields and execute under exclusive ownership.
 //! Creation reserves a stable identity before touching its separate drawing file.
 //! Publication requires the validated incarnation; missing/corrupt files never become blank.
-pub const VERSION: u32 = 1;
+pub const VERSION: u32 = 2;
 pub const PAGE_SIZE: usize = 128;
 pub const TITLE_BYTES: usize = 1024;
 pub const TITLE_SCALARS: usize = 256;
@@ -16,10 +16,9 @@ pub const SQL_INITIALIZE_LIBRARY: &str = r#"INSERT INTO library(singleton,next_n
 pub const SQL_CREATE_ENTRIES: &str = r#"CREATE TABLE drawings(document TEXT PRIMARY KEY NOT NULL CHECK(length(document) BETWEEN 1 AND 64),title TEXT NOT NULL CHECK(length(CAST(title AS BLOB)) BETWEEN 1 AND 1024 AND instr(title,char(0))=0),created INTEGER NOT NULL CHECK(created BETWEEN 0 AND 8640000000000000),updated INTEGER NOT NULL CHECK(updated BETWEEN 0 AND 8640000000000000),state TEXT NOT NULL CHECK(state IN ('pending','ready')),incarnation TEXT,CHECK((state='pending' AND incarnation IS NULL) OR (state='ready' AND incarnation IS NOT NULL AND length(incarnation) BETWEEN 1 AND 64))) STRICT"#;
 pub const SQL_CREATE_INDEX: &str =
     r#"CREATE INDEX drawings_activity ON drawings(state,updated DESC,document)"#;
-pub const SQL_LIST: &str = r#"SELECT document,title,created,updated,state,incarnation FROM drawings WHERE state='ready' ORDER BY updated DESC,document LIMIT ? OFFSET ?"#;
-pub const SQL_PENDING: &str = r#"SELECT document,title,created,updated,state,incarnation FROM drawings WHERE state='pending' ORDER BY created,document LIMIT ? OFFSET ?"#;
-pub const SQL_GET: &str =
-    r#"SELECT document,title,created,updated,state,incarnation FROM drawings WHERE document=?"#;
+pub const SQL_LIST: &str = r#"SELECT document,title,created,updated,state,incarnation FROM drawings WHERE state='ready' AND NOT EXISTS(SELECT 1 FROM tombstones WHERE tombstones.document=drawings.document) ORDER BY updated DESC,document LIMIT ? OFFSET ?"#;
+pub const SQL_PENDING: &str = r#"SELECT document,title,created,updated,state,incarnation FROM drawings WHERE state='pending' AND NOT EXISTS(SELECT 1 FROM tombstones WHERE tombstones.document=drawings.document) ORDER BY created,document LIMIT ? OFFSET ?"#;
+pub const SQL_GET: &str = r#"SELECT document,title,created,updated,state,incarnation FROM drawings WHERE document=? AND NOT EXISTS(SELECT 1 FROM tombstones WHERE tombstones.document=drawings.document)"#;
 pub const SQL_INSERT_PENDING: &str = r#"INSERT INTO drawings(document,title,created,updated,state,incarnation) VALUES(?,?,?,?,'pending',NULL)"#;
 pub const SQL_PUBLISH: &str =
     r#"UPDATE drawings SET state='ready',incarnation=? WHERE document=? AND state='pending'"#;
@@ -64,3 +63,21 @@ pub fn default_title(ukrainian: bool, ordinal: u64) -> Option<String> {
         (if ukrainian { DEFAULT_UK } else { DEFAULT_EN }).replace("{number}", &ordinal.to_string()),
     )
 }
+
+pub const SQL_CREATE_TOMBSTONES: &str = r#"CREATE TABLE tombstones(document TEXT PRIMARY KEY NOT NULL,incarnation TEXT NOT NULL,token TEXT UNIQUE NOT NULL,deleted INTEGER NOT NULL) STRICT"#;
+pub const SQL_CREATE_RECEIPTS: &str = r#"CREATE TABLE action_receipts(operation TEXT PRIMARY KEY NOT NULL,kind TEXT NOT NULL,document TEXT NOT NULL,incarnation TEXT NOT NULL,expected TEXT NOT NULL,value TEXT NOT NULL) STRICT"#;
+pub const SQL_RAW_GET: &str =
+    r#"SELECT document,title,created,updated,state,incarnation FROM drawings WHERE document=?"#;
+pub const SQL_TOMBSTONE: &str =
+    r#"SELECT incarnation,token,deleted FROM tombstones WHERE document=?"#;
+pub const SQL_RECEIPT: &str =
+    r#"SELECT kind,document,incarnation,expected,value FROM action_receipts WHERE operation=?"#;
+pub const SQL_INSERT_RECEIPT: &str = r#"INSERT INTO action_receipts VALUES(?,?,?,?,?,?)"#;
+pub const SQL_RENAME: &str =
+    r#"UPDATE drawings SET title=? WHERE document=? AND incarnation=? AND title=?"#;
+pub const SQL_REMOVE: &str = r#"INSERT INTO tombstones VALUES(?,?,?,?)"#;
+pub const SQL_UNDO: &str =
+    r#"DELETE FROM tombstones WHERE document=? AND incarnation=? AND token=?"#;
+
+pub const SQL_TOMBSTONE_PAGE: &str = r#"SELECT t.document,t.incarnation,t.token,t.deleted,d.state,d.incarnation FROM tombstones t LEFT JOIN drawings d ON d.document=t.document ORDER BY t.document LIMIT ? OFFSET ?"#;
+pub const SQL_ALL_ENTRIES: &str = r#"SELECT document,title,created,updated,state,incarnation FROM drawings ORDER BY document LIMIT ? OFFSET ?"#;

@@ -3,6 +3,21 @@ export const catalog = {
   version: 1,
   sourceLanguage: "en",
   messages: {
+    "library.renameFailed": {
+      kind: "plain",
+      context: "Durable saved drawing action error",
+      arguments: {},
+    },
+    "library.actionFailed": {
+      kind: "plain",
+      context: "Durable saved drawing action error",
+      arguments: {},
+    },
+    "library.invalidTitle": {
+      kind: "plain",
+      context: "Durable saved drawing action error",
+      arguments: {},
+    },
     "library.back": {
       kind: "plain",
       context: "Return from missing drawing to gallery",

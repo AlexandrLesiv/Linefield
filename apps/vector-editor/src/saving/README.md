@@ -71,3 +71,22 @@ candidate origin. Faults are injected by the test process, never shipped as prod
 Capacity, checkpoint/Undo/retry/epoch recovery, raw-data/image parity, main-thread responsiveness,
 worker duration and memory must be evaluated separately. See `tasks/SAVE-07.md` for exact measured
 results, limitations and acceptance status; implementation here alone does not imply acceptance.
+
+## Saved gallery actions
+
+Catalog v2 adds reversible deletion markers and exact mutation receipts without changing drawing
+files. Rename uses the shared Rust UTF-8 title validator and compares the expected title. Rename,
+Delete and Undo preserve the drawing's content-modified timestamp and gallery order. Retried
+operations return the current catalog projection, so an older successful rename cannot overwrite
+a newer displayed name and an old delete retry cannot delete an already restored drawing again.
+
+Deletion obtains drawing ownership and is bound to incarnation and a unique token. The host first
+flushes and closes only the matching cached editor; a failed flush preserves that editor and its
+accepted data. A different tab holding the drawing blocks deletion. Undo must match the current
+deletion token; a later deletion cannot be undone by an earlier token. List, direct admission,
+creation retry and legacy discovery all respect validated deletion markers.
+
+The UI changes after durable acknowledgement. Rename keeps its dialog/input on failure; deletion
+and Undo keep the existing card/removal slot with Retry. The original menu, focus and motion are
+retained. There is no permanent file purge or Trash screen: removed drawing files and action
+receipts remain stored, and the in-place Undo is a current-gallery-session affordance.
