@@ -11,7 +11,7 @@ pub(super) struct Selection {
     revision: u32,
 }
 impl Selection {
-    fn remove(&mut self, id: usize) {
+    pub(super) fn remove(&mut self, id: usize) {
         if let Some(slot) = self.index.remove(&id) {
             self.slots[slot] = None;
             self.revision = self.revision.wrapping_add(1);

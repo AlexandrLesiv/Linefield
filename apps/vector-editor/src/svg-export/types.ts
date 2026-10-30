@@ -16,10 +16,11 @@ export type ControllerOptions = {
   onProgress: (progress: ExportProgress) => void;
   wasmUrl?: string;
   resolveAsset?: (digest: string) => Promise<Blob>;
+  holdAssets?: () => Promise<() => Promise<void>>;
   onDiagnostic?: (event: ExportDiagnostic) => void;
 };
 export type ExportDiagnostic = {
-  kind: "start" | "paused" | "resumed" | "complete" | "cancel" | "failure";
+  kind: "start" | "paused" | "resumed" | "complete" | "cancel" | "failure" | "cleanup-failure";
   job: number;
   elapsedMs: number;
   packets: number;

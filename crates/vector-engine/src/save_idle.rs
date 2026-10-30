@@ -87,7 +87,7 @@ pub extern "C" fn idle_begin() -> u32 {
             };
             let mut header = [0u8; 32];
             header[..4].copy_from_slice(b"LFD3");
-            header[4..8].copy_from_slice(&2u32.to_le_bytes());
+            header[4..8].copy_from_slice(&3u32.to_le_bytes());
             header[8..16].copy_from_slice(&j.durable.to_le_bytes());
             header[16..24].copy_from_slice(&j.revision.to_le_bytes());
             header[24..28].copy_from_slice(&(j.operations as u32).to_le_bytes());

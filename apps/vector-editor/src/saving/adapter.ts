@@ -19,6 +19,7 @@ export async function storage(document: string) {
       metadata: { mime: number; width: number; height: number; version: number },
     ) =>
       client.call<{
+        lease: string;
         digest: string;
         mime: number;
         width: number;
@@ -26,6 +27,10 @@ export async function storage(document: string) {
         bytes: number;
         version: number;
       }>("asset-stage", { blob, metadata }),
+    finishAsset: (lease: string, revision: string | null) =>
+      client.call<void>("asset-finish", { lease, revision }),
+    holdAssets: () => client.call<string>("asset-hold"),
+    releaseAssets: (lease: string) => client.call<void>("asset-release", { lease }),
     verifyAssets: (references: import("./image-references").AssetReference[]) =>
       client.call("asset-verify", { references }),
     readAsset: (digest: string) =>
@@ -75,6 +80,8 @@ export async function storage(document: string) {
         { operation, stream, chunk },
       );
     },
+    maintainAssets: (revision: string) =>
+      client.call<{ pending: boolean; phase: string }>("asset-maintain", { revision }),
     async maintain() {
       return client.call<{ pending: boolean; phase: string }>("maintain");
     },

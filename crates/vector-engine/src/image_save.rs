@@ -6,6 +6,11 @@ use crate::{
 };
 pub(super) const RECORD_BYTES: usize = 169;
 pub(super) fn encode(out: &mut Vec<u8>, id: usize, i: &Image) {
+    if i.retired {
+        out.push(8);
+        word(out, id - TAG);
+        return;
+    }
     out.push(7);
     word(out, id - TAG);
     out.extend_from_slice(&i.digest);
@@ -44,6 +49,8 @@ pub(super) fn decode(r: &mut Read<'_>) -> Option<(usize, Image)> {
         layer: r.word()?,
         before_source: r.word()?,
         visible: r.boolean()?,
+        retired: false,
+        abandoned: false,
         opacity: r.number()?,
         anchor: [r.address()?, r.address()?],
         basis: [r.number()?, r.number()?],
@@ -58,6 +65,9 @@ pub(super) fn validate_update(
     image: &Image,
 ) -> Option<()> {
     if let Some(old) = images.get(&id) {
+        if old.retired {
+            return None;
+        }
         if old.digest != image.digest
             || !old.same_asset(image)
             || old.layer != image.layer

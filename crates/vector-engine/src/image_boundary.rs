@@ -82,6 +82,8 @@ pub extern "C" fn image_add(
             ],
             opacity: 1.0,
             visible: true,
+            retired: false,
+            abandoned: false,
         };
         if !image.valid() || e.images.iter().any(|old| !image.same_asset(old)) {
             return Err(1);
@@ -186,7 +188,7 @@ pub extern "C" fn image_asset_validate(
         && width > 0
         && height > 0
         && u64::from(width) * u64::from(height) <= 16_777_216
-        && (1..=16_777_216).contains(&bytes)) as u32
+        && (1..=crate::images::ENCODED_CAP).contains(&bytes)) as u32
 }
 #[cfg_attr(target_arch = "wasm32", no_mangle)]
 pub extern "C" fn image_fingerprint_word(index: usize) -> u32 {

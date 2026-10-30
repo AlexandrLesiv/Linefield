@@ -41,7 +41,7 @@ impl Scan {
                 self.checkpoint = magic == b"LFC4";
                 self.version = r.word()?;
                 if (magic != b"LFD3" && !self.checkpoint)
-                    || !(1..=2).contains(&self.version)
+                    || !(1..=3).contains(&self.version)
                     || r.wide()? != base
                     || r.wide()? != result
                 {
@@ -108,6 +108,7 @@ impl Scan {
                     }
                     if (available[0] == 6 && !self.checkpoint)
                         || (available[0] == 7 && self.version < 2)
+                        || (available[0] == 8 && self.version < 3)
                     {
                         return None;
                     }
@@ -165,6 +166,7 @@ fn record_size(bytes: &[u8]) -> Option<Option<usize>> {
     let size = match tag {
         1 => 121,
         7 => crate::image_save::RECORD_BYTES,
+        8 => 5,
         2 => 5,
         6 => 5,
         3 => {

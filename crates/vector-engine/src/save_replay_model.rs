@@ -96,11 +96,9 @@ impl Model {
         {
             return None;
         }
-        if self
-            .images
-            .values()
-            .any(|i| !self.layers.contains_key(&i.layer) || i.before_source > self.high)
-        {
+        if self.images.values().any(|i| {
+            !i.retired && (!self.layers.contains_key(&i.layer) || i.before_source > self.high)
+        }) {
             return None;
         }
         self.revision = result;
@@ -108,6 +106,16 @@ impl Model {
     }
     pub fn record(&mut self, r: &mut Read<'_>) -> Option<()> {
         match r.byte()? {
+            8 => {
+                let id = r.word()?;
+                if id >= crate::images::CAP
+                    || id > self.images.len()
+                    || self.images.get(&id).is_some_and(|image| image.visible)
+                {
+                    return None;
+                }
+                self.images.insert(id, crate::images::Image::tombstone());
+            }
             7 => {
                 let (id, image) = crate::image_save::decode(r)?;
                 crate::image_save::validate_update(&self.images, id, &image)?;

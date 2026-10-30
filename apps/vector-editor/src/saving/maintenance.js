@@ -1,10 +1,15 @@
 // Bounded storage maintenance. This independent codec never owns the editing document.
-function checkpointMaintenance(database) {
+function checkpointMaintenance(database, assetsGc) {
   let job,
     phase = "idle",
     codec,
     error;
-  async function* run(plan) {
+  async function* run(plan, assetRevision) {
+    if (assetRevision !== undefined) assetsGc.begin(assetRevision);
+    if (assetRevision === "0" && plan.batches.length === 0) {
+      assetsGc.finish(assetRevision);
+      return;
+    }
     codec ||= await storageCodec(true);
     const core = codec,
       token = core.restore_begin(),
@@ -60,7 +65,8 @@ function checkpointMaintenance(database) {
         yield* prune();
       }
       if (!pruned || revision !== plan.revision) throw Error("storage-replay");
-      await database.verifyImageModel(core, token);
+      yield* database.verifyImageModelSteps(core, token);
+      if (assetRevision !== undefined) yield* assetsGc.collect(core, token, assetRevision);
       phase = "prepare";
       if (core.restore_checkpoint_begin(token) !== 1) throw Error("storage-replay");
       for (;;) {
@@ -105,6 +111,7 @@ function checkpointMaintenance(database) {
         }
       }
       phase = "publish";
+      if (assetRevision !== undefined) assetsGc.check(assetRevision);
       database.publishCheckpoint(
         { operation: crypto.randomUUID(), result: revision, digest: hash.finish() },
         storage,
@@ -121,6 +128,7 @@ function checkpointMaintenance(database) {
       database.protect("");
       phase = published ? "cleanup" : "abandon";
       while (database.cleanup() > 0) yield;
+      if (published && assetRevision !== undefined) assetsGc.finish(assetRevision);
     }
   }
   return {
@@ -134,14 +142,21 @@ function checkpointMaintenance(database) {
         baseline: plan.baseline,
         phase,
         error,
+        assets: assetsGc.status(),
       };
     },
-    async step() {
+    async step(assetRevision) {
+      if (assetRevision !== undefined && !assetsGc.hasAssets()) assetRevision = undefined;
+      if (assetRevision !== undefined && !job && assetsGc.pending(assetRevision))
+        return assetsGc.step(assetRevision);
       if (!job) {
         const plan = database.maintenancePlan();
-        if (plan.tail < 128) return { pending: false, phase: "idle" };
+        if (assetRevision !== undefined && plan.revision !== assetRevision)
+          throw Error("storage-conflict");
+        if (assetRevision === undefined && plan.tail < 128)
+          return { pending: false, phase: "idle" };
         error = undefined;
-        job = run(plan);
+        job = run(plan, assetRevision);
       }
       try {
         const result = await job.next();
@@ -149,7 +164,10 @@ function checkpointMaintenance(database) {
           job = undefined;
           phase = "idle";
         }
-        return { pending: !result.done, phase };
+        return {
+          pending: !result.done || assetRevision !== undefined,
+          phase,
+        };
       } catch (cause) {
         job = undefined;
         phase = "failed";

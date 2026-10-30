@@ -22,7 +22,7 @@ export async function verifyImageReferences(
     await yieldWork();
     const references: AssetReference[] = [];
     let done = false;
-    while (references.length < 32) {
+    for (let inspected = 0; inspected < 32; inspected++) {
       const state = restore
         ? core.image_restore_asset(token, index++)
         : core.image_idle_asset_next(token, first ? 1 : 0);
@@ -31,6 +31,7 @@ export async function verifyImageReferences(
         done = true;
         break;
       }
+      if (restore && state === 3) continue;
       if (state !== 1) throw Error("storage-image-boundary");
       const values = new Float64Array(core.memory.buffer, core.image_asset_output_ptr(), 5);
       const digest = new TextDecoder().decode(

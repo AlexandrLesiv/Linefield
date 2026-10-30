@@ -1166,10 +1166,12 @@ status.textContent = "Ready";
 editorPanels.setCanOpen(() => pointer === null);
 installSvgExport(core, () => pointer !== null || lost || savingLifecycle.leaving,
   (event) => inputDiagnostics.note(`svg-${event.kind}`, undefined, undefined, JSON.stringify(event)),
-  async digest => (await saving.readAsset(digest)).blob);
+  async digest => (await saving.readAsset(digest)).blob,
+  async () => { const lease = await saving.holdAssets(); return () => saving.releaseAssets(lease); });
 installImageImport(core, camera, canvas, saving, {
   active: imageScene.active, unavailable: () => lost || savingLifecycle.leaving,
   wait: imageScene.wait, cache: imageScene.cache,
+  cleanupDeferred: () => inputDiagnostics.note("image-lease-release-deferred"),
   published: id => { document.querySelector<HTMLButtonElement>("#select")!.click(); selection.select(id); compositeCache.invalidate(); dirty = true; },
 });
 startupComplete = true;

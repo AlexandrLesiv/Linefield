@@ -89,6 +89,7 @@ impl Journal {
             Command::Stroke(id) | Command::Image(id) | Command::ImageOpacity(id, _, _) => {
                 ids.push(*id)
             }
+            Command::ImageRetire(retired) => ids.extend(retired),
             Command::Move(moves) => ids.extend(moves.iter().map(|m| m.id)),
             Command::Delete(deleted) => ids.extend(deleted),
             Command::Slice(changes) => {
@@ -127,9 +128,14 @@ impl Journal {
             }
         }
         for id in ids {
-            if let Some(image) = e.image(id) {
+            if let Some(image) = id
+                .checked_sub(crate::images::TAG)
+                .and_then(|index| e.images.get(index))
+            {
                 crate::image_save::encode(&mut out, id, image);
-                self.assets.insert(image.digest, image.clone());
+                if !image.retired {
+                    self.assets.insert(image.digest, image.clone());
+                }
                 self.records += 1;
                 continue;
             }

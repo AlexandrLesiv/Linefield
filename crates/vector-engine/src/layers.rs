@@ -26,6 +26,7 @@ pub(super) enum Command {
     Settings([u32; 2], [u32; 2]),
     Stroke(usize),
     Image(usize),
+    ImageRetire(Vec<usize>),
     ImageOpacity(usize, f64, f64),
     Move(Vec<super::selection::Translation>),
     Delete(Vec<usize>),
@@ -64,6 +65,7 @@ impl Engine {
                     }
                 }
             }
+            if let Command::Image(id) = abandoned { self.images[id-crate::images::TAG].abandoned=true; }
             if let Command::Stroke(id) = abandoned {
                 self.strokes[id].points = Default::default();
             }
@@ -74,6 +76,7 @@ impl Engine {
         match command {
             #[cfg(feature = "save-app")]
             Command::Settings(before, after) => self.settings = if forward { *after } else { *before },
+            Command::ImageRetire(_) => unreachable!("maintenance is not user history"),
             Command::Stroke(id) => self.strokes[*id].visible = forward,
             Command::Image(id) => { self.object_set_visible(*id, forward); self.layer_render_revision = self.layer_render_revision.wrapping_add(1); },
             Command::ImageOpacity(id, before, after) => { self.images[*id-crate::images::TAG].opacity = if forward {*after} else {*before}; self.layer_render_revision = self.layer_render_revision.wrapping_add(1); },

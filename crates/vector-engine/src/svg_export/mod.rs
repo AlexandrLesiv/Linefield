@@ -192,3 +192,7 @@ pub extern "C" fn svg_prepare(token: u32) -> u32 {
         j.state
     })
 }
+
+pub(crate) fn owned() -> bool {
+    STATE.with(|s| s.borrow().job.is_some())
+}

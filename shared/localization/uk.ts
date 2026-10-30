@@ -1,7 +1,7 @@
 import type { Translation } from "./catalog.ts";
 export const uk = {
   "image.import": "Імпортувати зображення",
-  "image.formats": "PNG, JPEG або статичний WebP · до 16 МіБ і 16,8 мільйона пікселів",
+  "image.formats": "PNG, JPEG або статичний WebP · до 32 МіБ і 16,8 мільйона пікселів",
   "image.cancel": "Скасувати імпорт",
   "image.busy": "Завершіть поточний жест перед імпортом.",
   "image.decoding": "Підготовка зображення…",

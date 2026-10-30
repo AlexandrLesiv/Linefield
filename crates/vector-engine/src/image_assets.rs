@@ -68,6 +68,12 @@ pub extern "C" fn image_restore_asset(token: u32, index: usize) -> u32 {
         };
         m.images
             .get(&index)
-            .map_or(if index == m.images.len() { 2 } else { 0 }, publish)
+            .map_or(if index == m.images.len() { 2 } else { 0 }, |i| {
+                if i.retired {
+                    3
+                } else {
+                    publish(i)
+                }
+            })
     })
 }

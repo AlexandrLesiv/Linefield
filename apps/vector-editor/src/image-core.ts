@@ -26,6 +26,8 @@ export type ImageCore = {
     version: number,
   ): number;
   image_bounds(id: number, rx: bigint, ry: bigint, angle: number, index: number): number;
+  image_cleanup_revision(): bigint;
+  image_cleanup_step(cursor: number, budget: number): number;
   image_count(): number;
   image_digest_input_ptr(): number;
   image_digest_ptr(id: number): number;
@@ -46,6 +48,8 @@ export const imageArity = {
   image_asset_output_ptr: 0,
   image_asset_validate: 5,
   image_bounds: 5,
+  image_cleanup_revision: 0,
+  image_cleanup_step: 2,
   image_count: 0,
   image_digest_input_ptr: 0,
   image_digest_ptr: 1,
@@ -61,5 +65,5 @@ export const imageArity = {
   image_restore_asset: 2,
 } as const;
 export const imageFingerprint = [
-  3449632800, 2915337051, 2217616934, 3115011248, 696104336, 648806755, 2677639428, 2668397670,
+  3830912002, 849170602, 945050625, 499552067, 579447467, 1940153618, 2453138898, 388600969,
 ] as const;

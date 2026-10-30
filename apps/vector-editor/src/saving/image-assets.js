@@ -1,5 +1,5 @@
 /** Opaque immutable asset storage. Rust owns metadata admission, schema and SHA-256. */
-function imageAssets(db, document) {
+function imageAssets(db, document, grant, changed) {
   const sql = (query, bind = []) =>
     db.exec({ sql: query, bind, rowMode: "array", returnValue: "resultRows" });
   let verifiedCore;
@@ -58,29 +58,30 @@ function imageAssets(db, document) {
   };
   return {
     read,
+    finish(lease, revision) {
+      if (!validId(lease) || (revision !== null && !validRevision(revision)))
+        throw Error("storage-image-lease");
+      changed();
+      sql(
+        revision === null ? storageSql.releaseAssetLease : storageSql.publishAssetLease,
+        revision === null ? [lease, grant] : [revision, lease, grant],
+      );
+    },
+    hold() {
+      const lease = crypto.randomUUID();
+      sql(storageSql.insertAssetLease, [lease, grant, "*", "export"]);
+      return lease;
+    },
+    release(lease) {
+      if (!validId(lease)) throw Error("storage-image-lease");
+      sql(storageSql.releaseAssetLease, [lease, grant]);
+      changed();
+    },
+    verifyModelSteps: (core, token) => imageModelReferences(core, token, read),
     async verifyModel(core, token) {
-      if (
-        imageStorageFingerprint.some(
-          (word, index) => core.image_fingerprint_word(index) >>> 0 !== word,
-        )
-      )
-        throw Error("storage-image-boundary");
-      for (let index = 0; ; index++) {
-        const state = core.image_restore_asset(token, index);
-        if (state === 2) return;
-        if (state !== 1) throw Error("storage-image-boundary");
-        const v = new Float64Array(core.memory.buffer, core.image_asset_output_ptr(), 5),
-          expected = Array.from(v),
-          digest = new TextDecoder().decode(
-            new Uint8Array(core.memory.buffer, core.image_asset_digest_ptr(), 64),
-          );
-        const actual = await read(digest);
-        if (
-          ["version", "mime", "width", "height", "bytes"].some(
-            (key, i) => actual[key] !== expected[i],
-          )
-        )
-          throw Error("storage-image-conflict");
+      for await (const step of imageModelReferences(core, token, read)) {
+        void step;
+        await new Promise((resolve) => setTimeout(resolve, 0));
       }
     },
     async verify(references) {
@@ -111,15 +112,10 @@ function imageAssets(db, document) {
         digest = await hash(bytes);
       sql(storageSql.begin);
       try {
-        sql(storageSql.insertImageAsset, [
-          document,
-          digest,
-          checked.mime,
-          checked.width,
-          checked.height,
-          checked.bytes,
-          bytes,
-        ]);
+        sql(
+          checked.bytes > 16777216 ? storageSql.insertLargeImageAsset : storageSql.insertImageAsset,
+          [document, digest, checked.mime, checked.width, checked.height, checked.bytes, bytes],
+        );
         const result = await read(digest);
         if (
           ["mime", "width", "height", "bytes", "version"].some(
@@ -127,8 +123,11 @@ function imageAssets(db, document) {
           )
         )
           throw Error("storage-image-conflict");
+        const lease = crypto.randomUUID();
+        sql(storageSql.insertAssetLease, [lease, grant, digest, "stage"]);
         sql(storageSql.commit);
-        return { ...checked, digest };
+        changed();
+        return { ...checked, digest, lease };
       } catch (error) {
         sql(storageSql.rollback);
         throw error;

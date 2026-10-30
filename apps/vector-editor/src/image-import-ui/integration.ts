@@ -17,6 +17,7 @@ export function installImageImport(
     wait(signal: AbortSignal): Promise<void>;
     cache(): ImageCache;
     published(id: number): void;
+    cleanupDeferred(): void;
   },
 ) {
   const images = checkedImageCore(core),
@@ -39,6 +40,8 @@ export function installImageImport(
         if (core.layer_active() !== layer || !core.can_draw()) throw Error("image-layer-changed");
       };
       let bitmap: ImageBitmap | undefined;
+      let lease: string | undefined,
+        publication: string | null = null;
       try {
         const decoded = await decoder.decode(file, job.signal);
         bitmap = decoded.image;
@@ -51,6 +54,7 @@ export function installImageImport(
           height: decoded.height,
           version: 1,
         });
+        lease = asset.lease;
         valid();
         ui.phase("waiting");
         await host.wait(job.signal);
@@ -84,6 +88,7 @@ export function installImageImport(
           ) >>> 0;
         if (id === 0xffffffff)
           throw Error(images.image_error() === 3 ? "image-visible-budget" : "image-layer-changed");
+        publication = saving.state().revision.toString();
         // Publication is synchronous and cannot be reported as an import failure afterward.
         try {
           host.published(id);
@@ -93,6 +98,7 @@ export function installImageImport(
       } finally {
         bitmap?.close();
         controller = undefined;
+        if (lease) await saving.finishAsset(lease, publication).catch(() => host.cleanupDeferred());
       }
     },
   });
