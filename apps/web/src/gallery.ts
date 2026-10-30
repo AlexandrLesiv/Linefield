@@ -1,5 +1,4 @@
-import { modifiedLabel } from "./library-metadata.ts";
-import { savedName, savedDate, whiteThumbnail } from "./saved-cards.css.ts";
+import { savedName, whiteThumbnail } from "./saved-cards.css.ts";
 import { creationClearance } from "./memory/creation-clearance.ts";
 import { newCell, mobileCreate, newTile, newLabel } from "./gallery-creation.css.ts";
 import { empty, removed } from "./states.css.ts";
@@ -31,11 +30,6 @@ export function renderGallery(root: HTMLElement, drawings: Drawing[], actions: A
     const art = element("div", `artwork ${artwork} ${whiteThumbnail}`);
     art.setAttribute("aria-hidden", "true");
     open.append(art, element("span", `drawing-name ${savedName}`, drawing.name));
-    if (drawing.updated) {
-      const date = element("span", savedDate, modifiedLabel(drawing.updated));
-      date.dataset.modified = "";
-      open.append(date);
-    }
     card.append(open);
     if (drawing.deleted) {
       card.classList.add("removed", removed);
