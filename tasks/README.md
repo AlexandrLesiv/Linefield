@@ -8,6 +8,10 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 # Task board
 
+Current export checkpoint: [SVG-01](SVG-01.md), owner-approved appearance-preserving
+hybrid SVG fidelity/performance experiments only. Product integration remains gated;
+existing previews remain unchanged and no merge is authorized.
+
 Current input fix: [INPUT-04](INPUT-04-pending-device.md), narrowly recover a pending
 drawing on a fresh separate-device canvas press and report document-level Saved truth.
 Stacked on INPUT-02; rejected INPUT-03 behavior is excluded. Existing previews stay frozen.

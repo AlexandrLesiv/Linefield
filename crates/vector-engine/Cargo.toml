@@ -5,6 +5,7 @@ edition = "2021"
 publish = false
 
 [features]
+svg-checkpoint = ["save-app"]
 save-checkpoint = []
 save-incremental = ["save-checkpoint"]
 save-idle = ["save-incremental"]
