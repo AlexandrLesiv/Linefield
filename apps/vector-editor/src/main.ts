@@ -690,10 +690,12 @@ window.addEventListener("keydown", (event) => {
   }
 }, true);
 const pointerSamples = new PointerSamples(canvas, (x, y, pressure) => {
-    if (camera.appendSample(x, y, pressure)) metrics.accepted++;
+    const accepted = camera.appendSample(x, y, pressure);
+    inputDiagnostics.traffic.sample(accepted);
+    if (accepted) metrics.accepted++;
     else runtimeFailure = "Input position or pressure is outside the supported range; existing accepted samples are retained.";
     if (active !== null) cache.note(active);
-}, (pressure) => brushControls.receive(pressure));
+}, (pressure) => brushControls.receive(pressure), (count) => inputDiagnostics.traffic.coalesced(count));
 function cancel(reason = "interaction-cancelled") {
 	if (pointer !== null) inputDiagnostics.note("cancel", undefined, active === null ? undefined : core.raw_length(active), reason);
 	pointerRelease.clear();
@@ -721,11 +723,12 @@ function selectionInput(action: () => void): boolean {
 		return false;
 	}
 }
-function recoverDrawing(event: PointerEvent, reason: string) {
+function recoverDrawing(event: PointerEvent | undefined, reason: string) {
   if (gesture !== "draw" || active === null || pointer === null) return;
   const released = pointer;
   // Commit only already accepted data. Another contact/hover is not a stroke endpoint.
   core.commit();
+  saving.changed();
   inputDiagnostics.note("commit", event, core.raw_length(active), reason);
   cache.historyChanged();
   active = null;
@@ -789,12 +792,17 @@ canvas.addEventListener("pointerdown", (e) => {
 });
 function movePointer(e: PointerEvent) {
 	if (pointer === null && tool === "slice") slice.hover(e);
-	if (e.pointerId !== pointer || !pointerRelease.matches(e)) return;
+	if (e.pointerId !== pointer || !pointerRelease.matches(e)) {
+    inputDiagnostics.move(e, pointer === null ? "no-owner" : e.pointerId !== pointer ? "different-pointer" : "source-or-timestamp");
+    return;
+  }
   pointerRelease.observe(e);
 	if (pointerRelease.pending) {
-		if (e.buttons !== 0) cancel("pressed-move-after-release-pending");
+    inputDiagnostics.move(e, "release-pending");
+		if (e.buttons !== 0 && gesture !== "draw") cancel("pressed-move-after-release-pending");
 		return;
 	}
+  inputDiagnostics.move(e, null);
 	const t = performance.now();
 	if (gesture === "pan") {
 		panAt ||= t;
@@ -847,19 +855,23 @@ function finishPointer(e: PointerEvent) {
 }
 canvas.addEventListener("pointerup", finishPointer);
 canvas.addEventListener("pointercancel", (e) => {
-	if (pointerRelease.matches(e)) cancel("pointer-cancel");
+	if (pointerRelease.matches(e)) interruptInput("pointer-cancel", e);
 });
 canvas.addEventListener("lostpointercapture", (e) => {
 	if (!pointerRelease.matches(e) || canvas.hasPointerCapture(e.pointerId)) return;
 	inputDiagnostics.note("capture-loss", e);
 	if (gesture === "draw" && pointerRelease.defer(e)) {
 		inputDiagnostics.note("release-pending", e, active === null ? undefined : core.raw_length(active));
-	} else cancel("capture-loss-during-contact");
+	} else interruptInput("capture-loss-during-contact", e);
 });
 // Capture is gone: the matching release may target another element in this document.
 for (const kind of ["pointerup", "pointercancel", "pointerdown", "pointermove", "gotpointercapture"] as const) {
   document.addEventListener(kind, (event) => {
     if (gesture === "draw") {
+      if (kind === "pointermove" && pointerRelease.resume(event)) {
+        const captured = canvas.hasPointerCapture(event.pointerId) || tryCapturePointer(canvas, event.pointerId);
+        inputDiagnostics.note("owner-contact-resumed", event, active === null ? undefined : core.raw_length(active), `capture:${captured}`);
+      }
       if (kind === "pointermove" && event.target === canvas && pointerRelease.transitionPen(event)) {
         const former = pointer;
         pointer = event.pointerId;
@@ -875,7 +887,7 @@ for (const kind of ["pointerup", "pointercancel", "pointerdown", "pointermove", 
         recoverDrawing(event, "contact-ended-hover");
       }
       else if (kind === "pointerup" && pointerRelease.canRelease(event)) finishPointer(event);
-      else if (kind === "pointercancel" && pointerRelease.matches(event)) cancel("document-pointer-cancel");
+      else if (kind === "pointercancel" && pointerRelease.matches(event)) interruptInput("document-pointer-cancel", event);
       if (kind === "pointermove" && event.target !== canvas && !pointerRelease.pending)
         movePointer(event);
     }
@@ -886,16 +898,21 @@ for (const kind of ["pointerup", "pointercancel", "pointerdown", "pointermove", 
     }
     if (!pointerRelease.matches(event)) return;
     if (kind === "pointerup") finishPointer(event);
-    else if (kind === "pointercancel") cancel(`pending-${kind}`);
+    else if (kind === "pointercancel") interruptInput(`pending-${kind}`, event);
     else if (kind === "gotpointercapture" || event.buttons !== 0) {
-      if (gesture === "draw") recoverDrawing(event, `pending-${kind}`);
+      if (gesture === "draw") inputDiagnostics.note("pending-event-ignored", event, undefined, kind === "gotpointercapture" ? "await-owner-contact" : "stale-or-ineligible-contact");
       else cancel(`pending-${kind}`);
     }
   }, true);
 }
+function interruptInput(reason: string, event?: PointerEvent) {
+  if (gesture === "draw") recoverDrawing(event, reason);
+  else cancel(reason);
+}
 function suspendInput() {
 	space = rotateHeld = false;
-	cancel("session-blur-or-hidden");
+	interruptInput("session-blur-or-hidden");
+  savingLifecycle.tick();
 }
 const savingLifecycle = saveLifecycle(Object.assign({}, core, saveCore), saving, saveUi, () => pointer !== null, canvas);
 inputDiagnostics.setState(() => ({
@@ -913,7 +930,7 @@ sessionReady = true;
 window.addEventListener("blur", suspendInput);
 document.addEventListener("visibilitychange", () => {
 	if (document.hidden) suspendInput();
-});
+}, true);
 canvas.addEventListener(
 	"wheel",
 	(e) => {

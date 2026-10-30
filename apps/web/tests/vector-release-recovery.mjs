@@ -119,18 +119,17 @@ try {
         { pointerType: source, scenario: caseName },
       );
       assert.deepEqual(result.live, { raw: 51, visible: 1, undo: 0 });
-      const cancelled = ["cancel", "blur", "pressed-loss"].includes(caseName);
       if (caseName !== "pressed-loss") assert.deepEqual(result.pending, result.live);
       if (["wrong-source", "stale", "delayed"].includes(caseName))
         assert.deepEqual(result.beforeRelease, result.live);
-      assert.equal(result.committed.raw, cancelled ? 0 : 51);
-      assert.equal(result.committed.visible, cancelled ? 0 : 1);
-      assert.equal(result.committed.undo, cancelled && caseName !== "reuse" ? 0 : 1);
+      assert.equal(result.committed.raw, 51);
+      assert.equal(result.committed.visible, 1);
+      assert.equal(result.committed.undo, 1);
       assert.equal(result.undone, 0);
-      assert.equal(result.redone, cancelled && caseName !== "reuse" ? 0 : 1);
+      assert.equal(result.redone, 1);
       assert.equal(
         result.log.entries.filter((e) => e.kind === "commit").length,
-        caseName === "reuse" ? 2 : cancelled ? 0 : 1,
+        caseName === "reuse" ? 2 : 1,
       );
       if (caseName === "reuse") assert.equal(result.reusedRaw, 2);
       assert(!JSON.stringify(result.log).match(/clientX|clientY|pressure|points|coordinates/));
