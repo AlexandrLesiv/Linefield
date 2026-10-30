@@ -26,7 +26,8 @@ async function drawingDatabase(
     }
   }
   const version = sql(storageSql.version)[0]?.[0];
-  if (version !== 1 && version !== 2 && version !== 3) throw Error("storage-version");
+  if (version !== 1 && version !== 2 && version !== 3 && version !== 4)
+    throw Error("storage-version");
   if (sql(storageSql.quickCheck)[0]?.[0] !== "ok") throw Error("storage-corrupt");
   validateChunkSchema(sql, version);
   const rows = sql(storageSql.head);

@@ -9,6 +9,7 @@ export function installSvgExport(
   core: Core,
   gestureActive: () => boolean,
   note: (event: ExportDiagnostic) => void,
+  resolveAsset?: (digest: string) => Promise<Blob>,
 ) {
   const canvas = document.querySelector("canvas")!;
   let activityUntil = 0;
@@ -18,6 +19,7 @@ export function installSvgExport(
     controller ??= new SvgExportController(checkedSvgExportCore(core), {
       isInputActive: active,
       onDiagnostic: note,
+      resolveAsset,
       onProgress: (progress) => ui.progress(progress),
     });
     return controller;

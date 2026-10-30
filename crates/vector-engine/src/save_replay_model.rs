@@ -14,6 +14,7 @@ pub(super) struct Model {
     pub revision: u64,
     pub sources: BTreeMap<usize, Rc<Points>>,
     pub strokes: BTreeMap<usize, Stroke>,
+    pub images: BTreeMap<usize, crate::images::Image>,
     pub layers: BTreeMap<usize, Layer>,
     pub order: Vec<usize>,
     pub high: usize,
@@ -32,6 +33,7 @@ impl Default for Model {
             revision: 0,
             sources: BTreeMap::new(),
             strokes: BTreeMap::new(),
+            images: BTreeMap::new(),
             layers: BTreeMap::from([(0, Layer::new("Layer 1".into()))]),
             order: vec![0],
             high: 0,
@@ -51,7 +53,8 @@ impl Model {
                 if points.blocks.pop().is_none() {
                     self.retiring = None;
                 }
-            } else if self.strokes.pop_first().is_some()
+            } else if self.images.pop_first().is_some()
+                || self.strokes.pop_first().is_some()
                 || self.layers.pop_first().is_some()
                 || self.reserved.pop_first().is_some()
                 || self.members.pop_first().is_some()
@@ -93,11 +96,24 @@ impl Model {
         {
             return None;
         }
+        if self
+            .images
+            .values()
+            .any(|i| !self.layers.contains_key(&i.layer) || i.before_source > self.high)
+        {
+            return None;
+        }
         self.revision = result;
         Some(())
     }
     pub fn record(&mut self, r: &mut Read<'_>) -> Option<()> {
         match r.byte()? {
+            7 => {
+                let (id, image) = crate::image_save::decode(r)?;
+                crate::image_save::validate_update(&self.images, id, &image)?;
+                self.high = self.high.max(image.before_source);
+                self.images.insert(id, image);
+            }
             6 => {
                 let high = r.word()?;
                 if high < self.high || high > 100_000 {

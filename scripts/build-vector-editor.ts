@@ -11,6 +11,7 @@ run(process.execPath, [root + "scripts/localization.ts"]);
 run(process.execPath, [root + "scripts/vector-editor-boundary.ts", "--check"]);
 run(process.execPath, [root + "scripts/vector-editor-save-boundary.ts", "--check"]);
 run(process.execPath, [root + "scripts/svg-export-boundary.ts", "--check"]);
+run(process.execPath, [root + "scripts/image-boundary.ts", "--check"]);
 run("cargo", [
   "build",
   "--locked",

@@ -64,3 +64,10 @@ pub const QUEUE_BATCHES: &str = r#"INSERT OR IGNORE INTO save_garbage SELECT sto
 pub const RECEIPT_COUNT: &str = r#"SELECT count(*) FROM save_receipts"#;
 pub const CREATE_STORAGE_INDEX: &str = r#"CREATE INDEX save_batches_storage ON save_batches(storage)"#;
 pub const REFERENCED_STORAGE: &str = r#"SELECT 1 FROM save_batches WHERE storage=? LIMIT 1"#;
+
+// IMG02 immutable originals are separate from journal chunk cleanup.
+pub const CREATE_IMAGE_ASSETS: &str = r#"CREATE TABLE image_assets(document_id TEXT NOT NULL,digest TEXT NOT NULL CHECK(length(digest)=64),version INTEGER NOT NULL CHECK(version=1),mime INTEGER NOT NULL CHECK(mime IN (1,2,3)),width INTEGER NOT NULL CHECK(width>0),height INTEGER NOT NULL CHECK(height>0),bytes INTEGER NOT NULL CHECK(bytes>0 AND bytes<=16777216),payload BLOB NOT NULL CHECK(length(payload)=bytes),PRIMARY KEY(document_id,digest)) STRICT"#;
+pub const INSERT_IMAGE_ASSET: &str = r#"INSERT OR IGNORE INTO image_assets(document_id,digest,version,mime,width,height,bytes,payload) VALUES(?,?,1,?,?,?,?,?)"#;
+pub const READ_IMAGE_ASSET: &str = r#"SELECT version,mime,width,height,bytes,payload FROM image_assets WHERE document_id=? AND digest=?"#;
+pub const IMAGE_ASSET_EXISTS: &str = r#"SELECT version,mime,width,height,bytes FROM image_assets WHERE document_id=? AND digest=?"#;
+pub const VERSION_IMAGES: &str = r#"PRAGMA user_version=4"#;

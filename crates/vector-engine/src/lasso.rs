@@ -101,3 +101,27 @@ pub extern "C" fn lasso_capsules(count: usize, partial: u32) -> u32 {
         })
     })
 }
+/// Filled rectangle includes the case of a small lasso entirely inside the image.
+pub(super) fn image_match(points: [[f64; 2]; 4], partial: bool) -> bool {
+    QUERY.with(|q| {
+        let q = q.borrow();
+        if !q.ready {
+            return false;
+        }
+        let matches = (0..4).map(|i| {
+            let a = points[i];
+            let b = points[(i + 1) % 4];
+            lasso_math::matches(&q.edges, &[a[0], a[1], 0.0, b[0], b[1], 0.0], partial)
+        });
+        if !partial {
+            return matches.into_iter().all(|m| m);
+        }
+        if matches.into_iter().any(|m| m) {
+            return true;
+        }
+        let edges: Vec<_> = (0..4)
+            .map(|i| Edge::new(points[i], points[(i + 1) % 4]))
+            .collect();
+        q.first.is_some_and(|p| lasso_math::contains(&edges, p))
+    })
+}

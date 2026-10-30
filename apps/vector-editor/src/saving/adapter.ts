@@ -14,6 +14,30 @@ export async function storage(document: string) {
   let expected: Context | undefined;
   return {
     identity,
+    stageAsset: (
+      blob: Blob,
+      metadata: { mime: number; width: number; height: number; version: number },
+    ) =>
+      client.call<{
+        digest: string;
+        mime: number;
+        width: number;
+        height: number;
+        bytes: number;
+        version: number;
+      }>("asset-stage", { blob, metadata }),
+    verifyAssets: (references: import("./image-references").AssetReference[]) =>
+      client.call("asset-verify", { references }),
+    readAsset: (digest: string) =>
+      client.call<{
+        blob: Blob;
+        digest: string;
+        mime: number;
+        width: number;
+        height: number;
+        bytes: number;
+        version: number;
+      }>("asset-read", { digest }),
     async begin(context: Context, streams: number) {
       if (
         Object.keys(identity).some(

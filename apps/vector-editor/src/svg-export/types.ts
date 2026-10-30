@@ -15,6 +15,7 @@ export type ControllerOptions = {
   isInputActive: () => boolean;
   onProgress: (progress: ExportProgress) => void;
   wasmUrl?: string;
+  resolveAsset?: (digest: string) => Promise<Blob>;
   onDiagnostic?: (event: ExportDiagnostic) => void;
 };
 export type ExportDiagnostic = {
@@ -43,6 +44,7 @@ export type WorkerCommand =
   | { kind: "init"; view: ExportView; wasmUrl: string }
   | { kind: "background" }
   | { kind: "packet"; values: Float64Array; last: boolean }
+  | { kind: "image"; values: Float64Array; blob: Blob }
   | { kind: "png" }
   | { kind: "pull" }
   | { kind: "finish" };

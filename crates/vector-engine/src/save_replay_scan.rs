@@ -12,6 +12,7 @@ pub(super) struct Scan {
     pub done: bool,
     samples: usize,
     checkpoint: bool,
+    version: usize,
 }
 impl Scan {
     pub fn append(
@@ -38,8 +39,9 @@ impl Scan {
                 };
                 let magic = r.take(4)?;
                 self.checkpoint = magic == b"LFC4";
+                self.version = r.word()?;
                 if (magic != b"LFD3" && !self.checkpoint)
-                    || r.word()? != 1
+                    || !(1..=2).contains(&self.version)
                     || r.wide()? != base
                     || r.wide()? != result
                 {
@@ -48,7 +50,7 @@ impl Scan {
                 self.operations = r.word()?;
                 self.descriptors = r.word()?;
                 if self.operations == 0
-                    || self.operations > if self.checkpoint { 110_000 } else { 100_000 }
+                    || self.operations > if self.checkpoint { 120_000 } else { 100_000 }
                     || self.descriptors + 1 != streams
                     || (!self.checkpoint && base.checked_add(self.operations as u64)? != result)
                     || (self.checkpoint && base != 0)
@@ -104,7 +106,9 @@ impl Scan {
                     if size > self.body {
                         return None;
                     }
-                    if available[0] == 6 && !self.checkpoint {
+                    if (available[0] == 6 && !self.checkpoint)
+                        || (available[0] == 7 && self.version < 2)
+                    {
                         return None;
                     }
                     let mut r = Read {
@@ -160,6 +164,7 @@ fn record_size(bytes: &[u8]) -> Option<Option<usize>> {
     };
     let size = match tag {
         1 => 121,
+        7 => crate::image_save::RECORD_BYTES,
         2 => 5,
         6 => 5,
         3 => {

@@ -25,6 +25,8 @@ pub(super) enum Command {
     #[cfg(feature = "save-app")]
     Settings([u32; 2], [u32; 2]),
     Stroke(usize),
+    Image(usize),
+    ImageOpacity(usize, f64, f64),
     Move(Vec<super::selection::Translation>),
     Delete(Vec<usize>),
     Slice(Vec<super::slice::Replacement>),
@@ -73,10 +75,15 @@ impl Engine {
             #[cfg(feature = "save-app")]
             Command::Settings(before, after) => self.settings = if forward { *after } else { *before },
             Command::Stroke(id) => self.strokes[*id].visible = forward,
+            Command::Image(id) => { self.object_set_visible(*id, forward); self.layer_render_revision = self.layer_render_revision.wrapping_add(1); },
+            Command::ImageOpacity(id, before, after) => { self.images[*id-crate::images::TAG].opacity = if forward {*after} else {*before}; self.layer_render_revision = self.layer_render_revision.wrapping_add(1); },
             Command::Move(changes) => self.apply_translations(changes, forward),
             Command::Delete(ids) => {
+                if ids.iter().any(|id| *id >= crate::images::TAG) {
+                    self.layer_render_revision = self.layer_render_revision.wrapping_add(1);
+                }
                 for &id in ids {
-                    self.strokes[id].visible = !forward;
+                    self.object_set_visible(id, !forward);
                 }
             }
             Command::Slice(changes) => {
@@ -120,6 +127,7 @@ impl Engine {
         }
     }
     fn change_layer(&mut self, id: usize, after: Layer, active_after: usize) -> bool {
+        if !self.image_budget(None, Some((id, &after)), None) { return false; }
         let before = self.layers[id].clone();
         if before == after {
             return false;

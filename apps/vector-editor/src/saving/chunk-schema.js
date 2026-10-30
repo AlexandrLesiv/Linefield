@@ -11,7 +11,7 @@ function validateChunkSchema(sql, version) {
         : batchSchema.slice(0, -1) + ", storage TEXT, streams INTEGER, bytes INTEGER)",
     ],
     ...(version >= 2 ? [["save_chunks", chunksSchema]] : []),
-    ...(version === 3
+    ...(version >= 3
       ? [
           ["save_receipts", storageSql.createReceipts],
           ["save_checkpoint", storageSql.createCheckpoint],
@@ -20,6 +20,7 @@ function validateChunkSchema(sql, version) {
           ["save_batches_storage", storageSql.createStorageIndex],
         ]
       : []),
+    ...(version === 4 ? [["image_assets", storageSql.createImageAssets]] : []),
   ]);
   const rows = sql(storageSql.inspectSchema);
   if (
@@ -34,8 +35,8 @@ function validateChunkSchema(sql, version) {
 }
 function installChunkSchema(sql) {
   const version = sql(storageSql.version)[0]?.[0];
-  if (version === 3) return;
-  if (version !== 1 && version !== 2) throw Error("storage-version");
+  if (version === 4) return;
+  if (version !== 1 && version !== 2 && version !== 3) throw Error("storage-version");
   sql(storageSql.begin);
   try {
     if (version === 1) {
@@ -44,15 +45,18 @@ function installChunkSchema(sql) {
       sql(storageSql.addBytes);
       sql(chunksSchema);
     }
-    sql(storageSql.createReceipts);
-    sql(storageSql.createCheckpoint);
-    sql(storageSql.copyReceipts);
-    sql(storageSql.createEpoch);
-    sql(storageSql.createGarbage);
-    sql(storageSql.createStorageIndex);
-    sql(storageSql.discoverGarbage);
-    sql(storageSql.versionCheckpoint);
-    validateChunkSchema(sql, 3);
+    if (version < 3) {
+      sql(storageSql.createReceipts);
+      sql(storageSql.createCheckpoint);
+      sql(storageSql.copyReceipts);
+      sql(storageSql.createEpoch);
+      sql(storageSql.createGarbage);
+      sql(storageSql.createStorageIndex);
+      sql(storageSql.discoverGarbage);
+    }
+    sql(storageSql.createImageAssets);
+    sql(storageSql.versionImages);
+    validateChunkSchema(sql, 4);
     sql(storageSql.commit);
   } catch (error) {
     sql(storageSql.rollback);

@@ -35,7 +35,7 @@ pub extern "C" fn delta_prepare() -> u32 {
             return 0;
         }
         let mut bytes = b"LFD3".to_vec();
-        wire::word(&mut bytes, 1);
+        wire::word(&mut bytes, 2);
         wire::wide(&mut bytes, j.durable);
         wire::wide(&mut bytes, j.revision);
         wire::word(&mut bytes, j.operations);

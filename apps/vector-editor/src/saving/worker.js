@@ -4,6 +4,7 @@ importScripts(
   "./catalog-generated.js",
   "./admission.js",
   "./hash-boundary.js",
+  "./image-boundary-generated.js",
   "./worker-hash.js",
   "./chunk-generated.js",
   "./chunk-schema.js",
@@ -13,6 +14,7 @@ importScripts(
   "./legacy-validation.js",
   "./chunk-validation.js",
   "./database.js",
+  "./image-assets.js",
   "./staging.js",
   "./maintenance.js",
   "./pools.js",
@@ -27,6 +29,7 @@ let db,
   releaseLock,
   database,
   stage,
+  assets,
   maintenance,
   busy = false,
   activeTransfer = false;
@@ -54,6 +57,8 @@ async function open(grant, document, reopen = false) {
           return receipt;
         };
         stage = staging(database);
+        assets = imageAssets(db, document);
+        database.verifyImageModel = assets.verifyModel;
         maintenance = checkpointMaintenance(database);
         const held = new Promise((done) => {
           releaseLock = done;
@@ -88,6 +93,9 @@ onmessage = async ({ data: m }) => {
     else if (!db) throw Error("storage-closed");
     else if (m.kind === "maintain") value = await maintenance.step();
     else if (m.kind === "maintenance-status") value = maintenance.status();
+    else if (m.kind === "asset-stage") value = await assets.stage(m.blob, m.metadata);
+    else if (m.kind === "asset-verify") value = await assets.verify(m.references);
+    else if (m.kind === "asset-read") value = await assets.read(m.digest);
     else if (m.kind === "load") value = await database.load();
     else if (m.kind === "read") value = database.read(m.operation, m.stream, m.chunk);
     else if (m.kind === "close") {

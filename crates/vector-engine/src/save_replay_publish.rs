@@ -33,6 +33,11 @@ impl Model {
             };
             e.strokes.push(stroke);
         }
+        for (id,image) in &self.images {
+            if *id != e.images.len() { return None; }
+            e.images.push(image.clone());
+        }
+        if !e.image_budget(None,None,None) { return None; }
         e.refresh_blend_groups();
         Some(e)
     }

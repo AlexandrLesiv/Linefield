@@ -37,6 +37,8 @@ for (const name of [
   "worker.js",
   "admission.js",
   "hash-boundary.js",
+  "image-boundary-generated.js",
+  "image-assets.js",
   "worker-hash.js",
   "chunk-generated.js",
   "chunk-schema.js",

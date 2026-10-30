@@ -1,3 +1,4 @@
+import { imageRaster } from "../images/svg-raster";
 import { createInkProgram } from "../ink-program";
 import { CoverageRenderer } from "../coverage-renderer";
 import { PencilGrain } from "../pencil-grain";
@@ -54,7 +55,9 @@ export async function createGpu(view: ExportView, wasmUrl: string, permit: () =>
       gl.clear(gl.COLOR_BUFFER_BIT);
     };
     clear();
+    const images = imageRaster(gl, view, permit, clear);
     return {
+      image: images.draw,
       healthy,
       async background() {
         await permit();
@@ -135,6 +138,7 @@ export async function createGpu(view: ExportView, wasmUrl: string, permit: () =>
         return blob;
       },
       dispose() {
+        images.dispose();
         coverage.dispose();
         gl.deleteProgram(ink.program);
         gl.deleteBuffer(buffer);

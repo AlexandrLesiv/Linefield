@@ -9,6 +9,7 @@ pub(super) struct Checkpoint {
     descriptor: usize,
     layer: Option<usize>,
     stroke: Option<usize>,
+    image: Option<usize>,
     pending: Vec<u8>,
     at: usize,
     next_chunk: usize,
@@ -24,6 +25,7 @@ impl Checkpoint {
             descriptor: 0,
             layer: None,
             stroke: None,
+            image: None,
             pending: vec![],
             at: 0,
             next_chunk: 0,
@@ -60,10 +62,13 @@ impl Checkpoint {
             match self.phase {
                 0 => {
                     out.extend_from_slice(b"LFC4");
-                    wire::word(&mut out, 1);
+                    wire::word(&mut out, 2);
                     wire::wide(&mut out, 0);
                     wire::wide(&mut out, m.revision);
-                    wire::word(&mut out, m.layers.len() + m.strokes.len() + 3);
+                    wire::word(
+                        &mut out,
+                        m.layers.len() + m.strokes.len() + m.images.len() + 3,
+                    );
                     wire::word(&mut out, self.ids.len());
                     self.phase = 1;
                 }
@@ -131,6 +136,20 @@ impl Checkpoint {
                     out.push(6);
                     wire::word(&mut out, m.high);
                     self.phase = 7;
+                }
+                7 => {
+                    let entry = if let Some(last) = self.image {
+                        m.images.range((Excluded(last), Unbounded)).next()
+                    } else {
+                        m.images.iter().next()
+                    };
+                    if let Some((&id, image)) = entry {
+                        crate::image_save::encode(&mut out, crate::images::TAG + id, image);
+                        self.image = Some(id);
+                    } else {
+                        self.phase = 8;
+                        continue;
+                    }
                 }
                 _ => return Some(vec![]),
             }

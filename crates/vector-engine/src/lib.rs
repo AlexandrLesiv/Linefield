@@ -7,6 +7,11 @@ pub mod catalog;
 #[cfg(feature = "save-app")]
 mod save_catalog_boundary;
 mod geometry;
+pub mod images;
+mod image_boundary;
+mod image_objects;
+mod image_queries;
+mod image_generated;
 #[cfg(feature = "save-checkpoint")]
 mod save_checkpoint;
 #[cfg(feature = "save-checkpoint")]
@@ -15,6 +20,10 @@ mod save_metadata;
 mod save_delta;
 #[cfg(feature = "save-incremental")]
 mod save_delta_wire;
+#[cfg(feature = "save-incremental")]
+mod image_save;
+#[cfg(feature="save-idle")]
+mod image_assets;
 #[cfg(feature = "save-incremental")]
 mod save_delta_transport;
 #[cfg(feature = "save-incremental")]
@@ -252,6 +261,7 @@ struct Engine {
     #[cfg(feature = "save-app")]
     settings: [u32; 2],
     strokes: Vec<Stroke>,
+    images: Vec<images::Image>,
     active: Option<usize>,
     undo: Vec<Command>,
     redo: Vec<Command>,
@@ -272,6 +282,7 @@ impl Default for Engine {
             #[cfg(feature = "save-app")]
             settings: [1, 0],
             strokes: Vec::new(),
+            images: Vec::new(),
             active: None,
             undo: Vec::new(),
             redo: Vec::new(),

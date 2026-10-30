@@ -26,6 +26,7 @@ pub(super) struct Journal {
     pub batch: Option<Batch>,
     pub output: Vec<u8>,
     pub pending: Vec<u8>,
+    pub assets: BTreeMap<[u8; 64], crate::images::Image>,
     pub operations: usize,
     pub records: usize,
     pub sources: BTreeMap<usize, Rc<Points>>,
@@ -85,7 +86,9 @@ impl Journal {
                     wire::word(&mut out, value as usize);
                 }
             }
-            Command::Stroke(id) => ids.push(*id),
+            Command::Stroke(id) | Command::Image(id) | Command::ImageOpacity(id, _, _) => {
+                ids.push(*id)
+            }
             Command::Move(moves) => ids.extend(moves.iter().map(|m| m.id)),
             Command::Delete(deleted) => ids.extend(deleted),
             Command::Slice(changes) => {
@@ -124,6 +127,12 @@ impl Journal {
             }
         }
         for id in ids {
+            if let Some(image) = e.image(id) {
+                crate::image_save::encode(&mut out, id, image);
+                self.assets.insert(image.digest, image.clone());
+                self.records += 1;
+                continue;
+            }
             let s = &e.strokes[id];
             if s.visible && !s.width.is_finite() {
                 self.overflow = true;

@@ -57,5 +57,10 @@ const storageSql = Object.freeze({
   "queueBatches": "INSERT OR IGNORE INTO save_garbage SELECT storage FROM (SELECT storage FROM save_batches WHERE sequence <= (SELECT cutoff FROM save_checkpoint WHERE singleton=1) AND operation != (SELECT operation FROM save_checkpoint WHERE singleton=1) ORDER BY sequence LIMIT 16) WHERE storage IS NOT NULL",
   "receiptCount": "SELECT count(*) FROM save_receipts",
   "createStorageIndex": "CREATE INDEX save_batches_storage ON save_batches(storage)",
-  "referencedStorage": "SELECT 1 FROM save_batches WHERE storage=? LIMIT 1"
+  "referencedStorage": "SELECT 1 FROM save_batches WHERE storage=? LIMIT 1",
+  "createImageAssets": "CREATE TABLE image_assets(document_id TEXT NOT NULL,digest TEXT NOT NULL CHECK(length(digest)=64),version INTEGER NOT NULL CHECK(version=1),mime INTEGER NOT NULL CHECK(mime IN (1,2,3)),width INTEGER NOT NULL CHECK(width>0),height INTEGER NOT NULL CHECK(height>0),bytes INTEGER NOT NULL CHECK(bytes>0 AND bytes<=16777216),payload BLOB NOT NULL CHECK(length(payload)=bytes),PRIMARY KEY(document_id,digest)) STRICT",
+  "insertImageAsset": "INSERT OR IGNORE INTO image_assets(document_id,digest,version,mime,width,height,bytes,payload) VALUES(?,?,1,?,?,?,?,?)",
+  "readImageAsset": "SELECT version,mime,width,height,bytes,payload FROM image_assets WHERE document_id=? AND digest=?",
+  "imageAssetExists": "SELECT version,mime,width,height,bytes FROM image_assets WHERE document_id=? AND digest=?",
+  "versionImages": "PRAGMA user_version=4"
 });

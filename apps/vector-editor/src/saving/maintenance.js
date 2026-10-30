@@ -60,6 +60,7 @@ function checkpointMaintenance(database) {
         yield* prune();
       }
       if (!pruned || revision !== plan.revision) throw Error("storage-replay");
+      await database.verifyImageModel(core, token);
       phase = "prepare";
       if (core.restore_checkpoint_begin(token) !== 1) throw Error("storage-replay");
       for (;;) {

@@ -8,7 +8,9 @@ pub(super) struct Layout {
     chunk: usize,
     group: Option<Group>,
     pub groups: usize,
-    bounds: Option<[f64; 4]>,
+    pub bounds: Option<[f64; 4]>,
+    pub image_key: Option<(usize, usize, usize)>,
+    pub images_done: bool,
     pub view: [f64; 9],
 }
 pub(super) fn fail(j: &mut Job, code: u32) -> u32 {
@@ -51,6 +53,9 @@ pub extern "C" fn svg_configure(token: u32, density: f64, background: u32, grid:
     })
 }
 fn step(j: &mut Job) -> Option<()> {
+    if !j.layout.images_done {
+        return super::images::measure(j);
+    }
     let next = match j.layout.key {
         None => j.items.first_key_value(),
         Some(key) if j.layout.chunk > 0 => j.items.get_key_value(&key),

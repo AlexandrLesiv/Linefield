@@ -13,6 +13,7 @@ export function createLayers(
 	const decoder = new TextDecoder();
 	const encoder = new TextEncoder();
 	let renaming = false;
+  let visibilityFailure = false;
 	const name = (id: number) => core.layer_name_is_default(id)
 		? t("vector.defaultLayer", { number: id + 1 })
 		: decoder.decode(
@@ -40,8 +41,12 @@ export function createLayers(
 		select: (id: number) => mutate(() => core.layer_select(id)),
 		remove: (id: number) => mutate(() => core.layer_delete(id)),
 		move: (id: number, rank: number) => mutate(() => core.layer_move(id, rank)),
-		visible: (id: number, value: boolean) =>
-			mutate(() => core.layer_set_visible(id, Number(value))),
+		visible: (id: number, value: boolean) => {
+      const accepted = mutate(() => core.layer_set_visible(id, Number(value)));
+      visibilityFailure = !!value && !accepted;
+      refresh();
+      return accepted;
+    },
 		locked: (id: number, value: boolean) =>
 			mutate(() => core.layer_set_locked(id, Number(value))),
 		rename: (id: number, value: string) => {
@@ -74,7 +79,7 @@ export function createLayers(
 		const active = layers.find((layer) => layer.active)!;
 		toggle.textContent = t("vector.layersCount", {count: layers.length});
 		toggle.title = t("vector.drawingOn", {name: active.name});
-		message.textContent = !active.visible
+		message.textContent = visibilityFailure ? t("image.visibleLimit") : !active.visible
 			? t("vector.hiddenLayer", {name: active.name})
 			: active.locked
 				? t("vector.lockedLayer", {name: active.name})

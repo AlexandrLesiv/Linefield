@@ -1,3 +1,4 @@
+import { verifyImageReferences } from "./image-references";
 import type { Context, Part, SaveCore } from "./types";
 import type { Storage } from "./adapter";
 export const inputPending = () =>
@@ -43,6 +44,7 @@ export async function submit(
     new TextDecoder().decode(new Uint8Array(core.memory.buffer, core.save_request_ptr(token), n)),
   ) as Context;
   const count = core.idle_stream_count(token);
+  await verifyImageReferences(core, token, storage, yieldWork);
   await storage.begin(context, count);
   let stream = 0,
     chunk = 0;

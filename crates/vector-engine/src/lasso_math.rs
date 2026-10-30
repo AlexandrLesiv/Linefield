@@ -57,7 +57,7 @@ fn crosses(a: Point, b: Point, c: Point, d: Point) -> bool {
     );
     ((x > 0.0 && y < 0.0) || (x < 0.0 && y > 0.0)) && ((u > 0.0 && v < 0.0) || (u < 0.0 && v > 0.0))
 }
-fn contains(edges: &[Edge], p: Point) -> bool {
+pub(super) fn contains(edges: &[Edge], p: Point) -> bool {
     if edges.len() < 3 {
         return false;
     }

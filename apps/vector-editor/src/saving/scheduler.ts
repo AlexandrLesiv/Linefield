@@ -1,3 +1,4 @@
+import { measurements } from "./measure";
 import type { SaveCore, State } from "./types";
 import type { Storage } from "./adapter";
 import { submit, inputPending } from "./prepare";
@@ -6,7 +7,7 @@ type Waiter = { promise: Promise<void>; resolve(): void; reject(error: Error): v
 export function scheduler(core: SaveCore, store: Storage) {
   const waiters = new Map<bigint, Waiter>(),
     listeners = new Set<(state: State) => void>();
-  const metrics: { phase: string; ms: number }[] = [];
+  const { metrics, measure } = measurements();
   let timer: ReturnType<typeof setTimeout> | undefined,
     maintenanceTimer: ReturnType<typeof setTimeout> | undefined,
     running: Promise<void> | undefined;
@@ -33,13 +34,6 @@ export function scheduler(core: SaveCore, store: Storage) {
   });
   const notify = () => {
     for (const listener of listeners) listener(state());
-  };
-  const measure = <T>(phase: string, call: () => T): T => {
-    const start = performance.now(),
-      value = call();
-    metrics.push({ phase, ms: performance.now() - start });
-    if (metrics.length > 2048) metrics.splice(0, metrics.length - 2048);
-    return value;
   };
   const idle = idleYield(() => urgent),
     yieldWork = idle.wait;
@@ -116,6 +110,7 @@ export function scheduler(core: SaveCore, store: Storage) {
   }
   async function maintenanceCall<T>(call: () => Promise<T>): Promise<T> {
     for (let active = running; active; active = running) await active;
+    if (closed || failure) throw failure || Error("save-closed");
     const task = call();
     running = task.then(
       () => {},
@@ -176,6 +171,9 @@ export function scheduler(core: SaveCore, store: Storage) {
       startPump();
       return waiter.promise;
     },
+    stageAsset: (blob: Blob, metadata: Parameters<Storage["stageAsset"]>[1]) =>
+      maintenanceCall(() => store.stageAsset(blob, metadata)),
+    readAsset: (digest: string) => maintenanceCall(() => store.readAsset(digest)),
     maintain: () => maintenanceCall(() => store.maintain()),
     maintenanceStatus: () => maintenanceCall(() => store.maintenanceStatus()),
     async retry() {

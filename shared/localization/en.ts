@@ -1,5 +1,26 @@
 import type { Translation } from "./catalog.ts";
 export const en = {
+  "image.import": "Import image",
+  "image.formats": "PNG, JPEG or static WebP · up to 16 MiB and 16.8 million pixels",
+  "image.cancel": "Cancel import",
+  "image.busy": "Finish the current gesture before importing.",
+  "image.decoding": "Preparing image…",
+  "image.staging": "Storing image…",
+  "image.waiting": "Image preparation paused while you draw",
+  "image.uploading": "Preparing image for display…",
+  "image.added": "Image added",
+  "image.cancelled": "Image import cancelled",
+  "image.limit":
+    "This image or the visible images exceed the current memory limits. No image was added.",
+  "image.targetChanged":
+    "The target layer changed or is protected. Import again into an editable layer.",
+  "image.failed": "Could not import the image. Your drawing is unchanged.",
+  "image.opacity": "Image opacity",
+  "image.preparingView": "Preparing saved images…",
+  "image.viewFailed": "Images could not be displayed. Retry or reopen the drawing.",
+  "image.visibleLimit":
+    "Visible images exceed the memory budget. Hide an image layer and try again.",
+
   "svg.title": "Export SVG",
   "svg.background": "Background",
   "svg.current": "Current paper",
@@ -97,7 +118,7 @@ export const en = {
   "vector.layersHelp": "Top layer appears in front. Select a layer to draw on it.",
   "vector.lasso": "Lasso",
   "vector.pick": "Pick",
-  "vector.partialStrokes": "Partial strokes",
+  "vector.partialStrokes": "Partial objects",
   "vector.activeLayerOnly": "Active layer only",
   "vector.lassoMore": "Lasso more",
   "vector.clearSelection": "Clear selection",
@@ -150,9 +171,9 @@ export const en = {
   "vector.lassoRelease": "Release to select · Lasso again to add or remove strokes",
   "vector.lassoAgain": "Draw another lasso to add or remove strokes",
   "vector.selectedCount":
-    "Selected strokes: {count} · Drag to move · Corners resize · Round handle rotates · Delete / Backspace removes",
-  "vector.lassoHelp": "Drag around or across strokes to select · Click empty space to clear",
-  "vector.pickHelp": "Click a stroke to select · Shift-click for multiple strokes",
+    "Selected objects: {count} · Drag to move · Corners resize · Round handle rotates · Delete / Backspace removes",
+  "vector.lassoHelp": "Drag around or across objects to select · Click empty space to clear",
+  "vector.pickHelp": "Click an object to select · Shift-click for multiple objects",
   "vector.pressureExample":
     "At 50% pressure: {value}% of selected width. Full pressure always gives full width.",
 

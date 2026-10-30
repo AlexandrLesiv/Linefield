@@ -1,3 +1,4 @@
+import { verifyImageReferences } from "./image-references";
 import type { Loaded, SaveCore } from "./types";
 import type { Storage } from "./adapter";
 const yieldTask = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
@@ -55,6 +56,7 @@ export async function restore(core: SaveCore, saved: Loaded, store: Storage) {
       revision = BigInt(batch.result);
       await yieldTask();
     }
+    await verifyImageReferences(core, token, store, yieldTask, true);
     if (revision !== BigInt(saved.revision) || core.restore_publish(token) !== 1)
       throw Error("restore-publish");
   } finally {
