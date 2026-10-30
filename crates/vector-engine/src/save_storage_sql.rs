@@ -27,16 +27,40 @@ pub const CHUNK: &str =
     r#"SELECT data,last FROM save_chunks WHERE storage=? AND stream=? AND chunk=?"#;
 pub const CAPACITY: &str =
     r#"SELECT count(*),coalesce(sum(coalesce(bytes,length(payload))),0) FROM save_batches"#;
-pub const MANIFEST: &str = r#"SELECT operation,base,result,digest,storage,streams,bytes,length(payload) FROM save_batches ORDER BY sequence"#;
+pub const MANIFEST: &str = r#"SELECT operation,base,result,digest,storage,streams,bytes,length(payload) FROM save_batches WHERE sequence>coalesce((SELECT cutoff FROM save_checkpoint WHERE singleton=1),0) OR operation=(SELECT operation FROM save_checkpoint WHERE singleton=1) ORDER BY CASE WHEN operation=(SELECT operation FROM save_checkpoint WHERE singleton=1) THEN 0 ELSE 1 END,sequence"#;
 pub const INSERT_CHUNK: &str =
     r#"INSERT INTO save_chunks(storage,stream,chunk,last,data) VALUES(?,?,?,?,?)"#;
-pub const RECEIPT: &str = r#"SELECT base,result,digest FROM save_batches WHERE operation=?"#;
+pub const RECEIPT: &str = r#"SELECT base,result,digest FROM save_receipts WHERE operation=?"#;
 pub const PUBLISH_BATCH: &str = r#"INSERT INTO save_batches(operation,base,result,digest,payload,storage,streams,bytes) VALUES(?,?,?,?,X'',?,?,?)"#;
 pub const UPDATE_HEAD: &str = r#"UPDATE save_head SET revision=? WHERE singleton=1"#;
-pub const CLEANUP: &str = r#"DELETE FROM save_chunks WHERE rowid IN (SELECT rowid FROM save_chunks WHERE storage NOT IN (SELECT storage FROM save_batches WHERE storage IS NOT NULL) LIMIT 16)"#;
+pub const CLEANUP: &str = r#"DELETE FROM save_chunks WHERE rowid IN (SELECT rowid FROM save_chunks WHERE storage=? LIMIT 16)"#;
 pub const CHANGES: &str = r#"SELECT changes()"#;
 pub const LEGACY_MANIFEST: &str =
     r#"SELECT operation,base,result,digest,length(payload) FROM save_batches ORDER BY sequence"#;
 pub const STREAM_SHAPE: &str = r#"SELECT coalesce(sum(length(data)),0),count(*),min(chunk),max(chunk),sum(last),max(CASE WHEN last=1 THEN chunk ELSE -1 END) FROM save_chunks WHERE storage=? AND stream=?"#;
 pub const BATCH_SHAPE: &str =
     r#"SELECT count(DISTINCT stream),min(stream),max(stream) FROM save_chunks WHERE storage=?"#;
+pub const CREATE_RECEIPTS: &str = r#"CREATE TABLE save_receipts(operation TEXT PRIMARY KEY,base TEXT NOT NULL,result TEXT NOT NULL,digest TEXT NOT NULL) STRICT"#;
+pub const CREATE_CHECKPOINT: &str = r#"CREATE TABLE save_checkpoint(singleton INTEGER PRIMARY KEY CHECK(singleton=1),operation TEXT NOT NULL,cutoff INTEGER NOT NULL,epoch TEXT NOT NULL) STRICT"#;
+pub const COPY_RECEIPTS: &str = r#"INSERT INTO save_receipts SELECT operation,base,result,digest FROM save_batches"#;
+pub const VERSION_CHECKPOINT: &str = r#"PRAGMA user_version=3"#;
+pub const INSERT_RECEIPT: &str = r#"INSERT INTO save_receipts(operation,base,result,digest) VALUES(?,?,?,?)"#;
+pub const CHECKPOINT_HEAD: &str = r#"SELECT operation,cutoff,epoch FROM save_checkpoint WHERE singleton=1"#;
+pub const CHECKPOINT_SET: &str = r#"INSERT INTO save_checkpoint VALUES(1,?,?,?) ON CONFLICT(singleton) DO UPDATE SET operation=excluded.operation,cutoff=excluded.cutoff,epoch=excluded.epoch"#;
+pub const LAST_SEQUENCE: &str = r#"SELECT coalesce(max(sequence),0) FROM save_batches"#;
+pub const GC_BATCHES: &str = r#"DELETE FROM save_batches WHERE sequence IN (SELECT sequence FROM save_batches WHERE sequence <= (SELECT cutoff FROM save_checkpoint WHERE singleton=1) AND operation != (SELECT operation FROM save_checkpoint WHERE singleton=1) ORDER BY sequence LIMIT 16)"#;
+pub const MAINTENANCE_STATUS: &str = r#"SELECT count(*) FROM save_batches WHERE sequence > coalesce((SELECT cutoff FROM save_checkpoint WHERE singleton=1),0) AND operation != coalesce((SELECT operation FROM save_checkpoint WHERE singleton=1),'')"#;
+pub const CREATE_EPOCH: &str = r#"CREATE TABLE save_epoch(singleton INTEGER PRIMARY KEY CHECK(singleton=1),grant TEXT NOT NULL,baseline TEXT NOT NULL) STRICT"#;
+pub const EPOCH: &str = r#"SELECT grant,baseline FROM save_epoch WHERE singleton=1"#;
+pub const EPOCH_SET: &str = r#"INSERT INTO save_epoch VALUES(1,?,?) ON CONFLICT(singleton) DO UPDATE SET grant=excluded.grant,baseline=excluded.baseline"#;
+pub const CHECKPOINT_SEQUENCE: &str = r#"SELECT sequence FROM save_batches WHERE operation=?"#;
+pub const ALL_MANIFEST: &str = r#"SELECT operation,base,result,digest,storage,streams,bytes,length(payload) FROM save_batches ORDER BY sequence"#;
+pub const CREATE_GARBAGE: &str = r#"CREATE TABLE save_garbage(storage TEXT PRIMARY KEY) STRICT"#;
+pub const DISCOVER_GARBAGE: &str = r#"INSERT INTO save_garbage SELECT DISTINCT storage FROM save_chunks WHERE storage NOT IN (SELECT storage FROM save_batches WHERE storage IS NOT NULL)"#;
+pub const QUEUE_STORAGE: &str = r#"INSERT OR IGNORE INTO save_garbage VALUES(?)"#;
+pub const KEEP_STORAGE: &str = r#"DELETE FROM save_garbage WHERE storage=?"#;
+pub const GARBAGE: &str = r#"SELECT storage FROM save_garbage WHERE storage!=? AND storage!=? LIMIT 1"#;
+pub const QUEUE_BATCHES: &str = r#"INSERT OR IGNORE INTO save_garbage SELECT storage FROM (SELECT storage FROM save_batches WHERE sequence <= (SELECT cutoff FROM save_checkpoint WHERE singleton=1) AND operation != (SELECT operation FROM save_checkpoint WHERE singleton=1) ORDER BY sequence LIMIT 16) WHERE storage IS NOT NULL"#;
+pub const RECEIPT_COUNT: &str = r#"SELECT count(*) FROM save_receipts"#;
+pub const CREATE_STORAGE_INDEX: &str = r#"CREATE INDEX save_batches_storage ON save_batches(storage)"#;
+pub const REFERENCED_STORAGE: &str = r#"SELECT 1 FROM save_batches WHERE storage=? LIMIT 1"#;

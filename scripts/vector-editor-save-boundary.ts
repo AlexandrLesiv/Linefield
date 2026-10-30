@@ -4,11 +4,14 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const sources = [
+  "save_catalog_boundary",
   "save_delta_transport",
   "save_idle",
   "save_idle_stream",
   "save_idle_retire",
   "save_replay",
+  "save_compact",
+  "save_replay_prune",
   "save_authority",
   "save_seal",
   "save_settings",

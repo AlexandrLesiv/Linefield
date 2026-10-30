@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const source = readFileSync(root + "crates/vector-engine/src/save_storage_sql.rs", "utf8");
 const entries = [...source.matchAll(/pub const (\w+): &str =\s*r#"([\s\S]*?)"#;/g)];
-if (entries.length !== 34) throw Error("Incomplete storage contract");
+if (entries.length !== 58) throw Error("Incomplete storage contract");
 const camel = (name: string) =>
   name.toLowerCase().replace(/_([a-z])/g, (_, c: string) => c.toUpperCase());
 const statements = Object.fromEntries(entries.map((m) => [camel(m[1]!), m[2]]));

@@ -3,6 +3,21 @@ export const catalog = {
   version: 1,
   sourceLanguage: "en",
   messages: {
+    "library.renameFailed": {
+      kind: "plain",
+      context: "Durable saved drawing action error",
+      arguments: {},
+    },
+    "library.actionFailed": {
+      kind: "plain",
+      context: "Durable saved drawing action error",
+      arguments: {},
+    },
+    "library.invalidTitle": {
+      kind: "plain",
+      context: "Durable saved drawing action error",
+      arguments: {},
+    },
     "svg.title": { kind: "plain", context: "SVG export", arguments: {} },
     "svg.background": { kind: "plain", context: "SVG export", arguments: {} },
     "svg.current": { kind: "plain", context: "SVG export", arguments: {} },

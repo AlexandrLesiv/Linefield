@@ -105,6 +105,13 @@ export function createNavigation(gallery: HTMLElement, onReturn: (restoreFocus: 
           chrome?.back.focus({ preventScroll: true });
       }
     },
+    retarget(source: HTMLElement): void {
+      if (!surface || closing || !source.isConnected) return;
+      if (origin) origin.style.visibility = "";
+      origin = source;
+      source.style.visibility = "hidden";
+      surface.querySelector(".creation-visual")?.remove();
+    },
     async close(): Promise<boolean> {
       if (!surface || !origin || closing) return false;
       if (chrome && "requestLeave" in chrome && !(await chrome.requestLeave())) return false;

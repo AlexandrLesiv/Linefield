@@ -38,6 +38,12 @@ export const en = {
   "editor.developerShortcut": "Developer tools: Ctrl + Alt + D",
   "library.recovery":
     "Some drawings need recovery. Reload the gallery to retry; existing data is preserved.",
+  "library.renameFailed":
+    "Could not rename the drawing. Retry, or reload if it changed in another window.",
+  "library.actionFailed":
+    "Could not finish this action. Your saved drawing is preserved. Try again.",
+  "library.invalidTitle":
+    "Use a name of up to 256 characters without line breaks or control characters.",
   "library.back": "Return to gallery",
   "library.more": "Load more drawings",
   "library.loading": "Loading saved drawings…",

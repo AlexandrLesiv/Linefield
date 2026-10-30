@@ -1,6 +1,6 @@
 let hashCore;
-async function storageCodec() {
-  if (!hashCore) {
+async function storageCodec(isolated = false) {
+  if (!hashCore || isolated) {
     const response = await fetch("/vector-editor/core.wasm");
     if (!response.ok) throw Error("storage-codec");
     const { instance } = await WebAssembly.instantiateStreaming(response, {});
@@ -13,12 +13,13 @@ async function storageCodec() {
       )
     )
       throw Error("storage-codec");
+    if (isolated) return core;
     hashCore = core;
   }
   return hashCore;
 }
-async function storageHasher() {
-  const core = await storageCodec();
+async function storageHasher(supplied) {
+  const core = supplied ?? (await storageCodec());
   core.storage_hash_begin();
   return {
     append(bytes) {

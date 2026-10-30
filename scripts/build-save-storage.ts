@@ -47,7 +47,10 @@ for (const name of [
   "chunk-validation.js",
   "database.js",
   "staging.js",
+  "maintenance.js",
   "pools.js",
+  "catalog-schema.js",
+  "catalog-actions.js",
   "catalog.js",
   "library-worker.js",
 ])
