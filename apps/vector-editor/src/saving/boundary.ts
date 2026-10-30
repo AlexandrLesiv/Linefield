@@ -27,7 +27,16 @@ export type SaveCore = {
   restore_batch_begin(token: number, count: number, base: bigint, result: bigint): number;
   restore_batch_end(token: number): number;
   restore_begin(): number;
+  restore_cancel(token: number): number;
+  restore_checkpoint_begin(token: number): number;
+  restore_checkpoint_chunk(token: number, stream: number, chunk: number): number;
+  restore_checkpoint_count(token: number): number;
+  restore_checkpoint_ptr(token: number): number;
+  restore_checkpoint_step(token: number, budget: number): number;
+  restore_cleanup(token: number, budget: number): number;
   restore_input_ptr(): number;
+  restore_metadata_replay(token: number): number;
+  restore_prune_sources(token: number, revision: bigint, budget: number): number;
   restore_publish(token: number): number;
   save_boundary_fingerprint(index: number): number;
   save_configure(length: number): number;
@@ -37,6 +46,10 @@ export type SaveCore = {
   save_request_ptr(token: number): number;
   save_seal_begin(token: number): number;
   save_seal_step(token: number): number;
+  storage_hash_append(length: number): number;
+  storage_hash_begin(): void;
+  storage_hash_finish(): number;
+  storage_hash_input_ptr(): number;
   memory: WebAssembly.Memory;
 };
 export const saveArity = {
@@ -67,7 +80,16 @@ export const saveArity = {
   restore_batch_begin: 4,
   restore_batch_end: 1,
   restore_begin: 0,
+  restore_cancel: 1,
+  restore_checkpoint_begin: 1,
+  restore_checkpoint_chunk: 3,
+  restore_checkpoint_count: 1,
+  restore_checkpoint_ptr: 1,
+  restore_checkpoint_step: 2,
+  restore_cleanup: 2,
   restore_input_ptr: 0,
+  restore_metadata_replay: 1,
+  restore_prune_sources: 3,
   restore_publish: 1,
   save_boundary_fingerprint: 1,
   save_configure: 1,
@@ -77,7 +99,11 @@ export const saveArity = {
   save_request_ptr: 1,
   save_seal_begin: 1,
   save_seal_step: 1,
+  storage_hash_append: 1,
+  storage_hash_begin: 0,
+  storage_hash_finish: 0,
+  storage_hash_input_ptr: 0,
 } as const;
 export const saveFingerprint = [
-  376003106, 4227565261, 2120825348, 2041121265, 1912343286, 12230632, 1041225779, 1261472658,
+  3813924134, 3595450660, 1715565225, 2219474412, 523110861, 465756606, 2611947954, 1767042036,
 ] as const;

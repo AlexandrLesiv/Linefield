@@ -7,7 +7,7 @@ export async function createSaving(rawCore: unknown) {
   const core = checkedSaveCore(rawCore),
     store = await storage(new URL(location.href).searchParams.get("document") || "");
   try {
-    await restore(core, await store.load());
+    await restore(core, await store.load(), store);
     if (
       core.save_configure(writeJson(core, { ...store.identity, session: crypto.randomUUID() })) !==
       1

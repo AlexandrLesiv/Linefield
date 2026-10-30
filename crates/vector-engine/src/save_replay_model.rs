@@ -1,22 +1,28 @@
+//! Unpublished replay state. Failed sessions are discarded, never rolled back by cloning.
 use super::{
     layers::Layer,
     save_decode::{self as decode, Read},
-    Engine, Points, Stroke,
+    Points, Stroke,
 };
 use std::{
     collections::{BTreeMap, BTreeSet},
     rc::Rc,
 };
-#[derive(Clone)]
 pub(super) struct Model {
     #[cfg(feature = "save-app")]
-    settings: [u32; 2],
+    pub settings: [u32; 2],
     pub revision: u64,
     pub sources: BTreeMap<usize, Rc<Points>>,
-    strokes: BTreeMap<usize, Stroke>,
-    layers: BTreeMap<usize, Layer>,
-    order: Vec<usize>,
-    high: usize,
+    pub strokes: BTreeMap<usize, Stroke>,
+    pub layers: BTreeMap<usize, Layer>,
+    pub order: Vec<usize>,
+    pub high: usize,
+    pub samples: usize,
+    pub retiring: Option<Points>,
+    reserved: BTreeSet<usize>,
+    members: BTreeMap<usize, usize>,
+    pub source_refs: BTreeMap<usize, usize>,
+    pub prune_after: Option<usize>,
 }
 impl Default for Model {
     fn default() -> Self {
@@ -29,86 +35,87 @@ impl Default for Model {
             layers: BTreeMap::from([(0, Layer::new("Layer 1".into()))]),
             order: vec![0],
             high: 0,
+            samples: 0,
+            retiring: None,
+            reserved: BTreeSet::new(),
+            members: BTreeMap::new(),
+            source_refs: BTreeMap::new(),
+            prune_after: None,
         }
     }
 }
 impl Model {
-    pub fn apply(
-        &self,
-        streams: &[Vec<u8>],
-        expected_base: u64,
-        expected_result: u64,
-    ) -> Option<Self> {
-        let mut r = Read {
-            bytes: streams.first()?,
-            at: 0,
-        };
-        if expected_base != self.revision
-            || r.take(4)? != b"LFD3"
-            || r.word()? != 1
-            || r.wide()? != expected_base
-        {
-            return None;
-        }
-        let result = r.wide()?;
-        if result != expected_result {
-            return None;
-        }
-        let operations = r.word()?;
-        let source_count = r.word()?;
-        if operations == 0
-            || operations > 100_000
-            || self.revision.checked_add(operations as u64)? != result
-            || source_count + 1 != streams.len()
-        {
-            return None;
-        }
-        let mut next = self.clone();
-        let mut samples: usize = next.sources.values().map(|p| p.len()).sum();
-        for stream in 1..=source_count {
-            let id = r.word()?;
-            let count = r.word()?;
-            samples = samples.checked_add(count)?;
-            if id >= 100_000 || samples > 1_000_000 || next.sources.contains_key(&id) {
-                return None;
-            }
-            next.high = next.high.max(id + 1);
-            next.sources
-                .insert(id, decode::points(&streams[stream], count)?);
-        }
-        for index in 0..operations {
-            if r.wide()? != self.revision + index as u64 + 1 {
-                return None;
-            }
-            let size = r.word()?;
-            let mut body = Read {
-                bytes: r.take(size)?,
-                at: 0,
-            };
-            while body.at < body.bytes.len() {
-                next.record(&mut body)?;
+    pub fn retire(&mut self, budget: usize) -> bool {
+        for _ in 0..budget {
+            if let Some(points) = self.retiring.as_mut() {
+                if points.blocks.pop().is_none() {
+                    self.retiring = None;
+                }
+            } else if self.strokes.pop_first().is_some()
+                || self.layers.pop_first().is_some()
+                || self.reserved.pop_first().is_some()
+                || self.members.pop_first().is_some()
+                || self.source_refs.pop_first().is_some()
+            {
+                continue;
+            } else if let Some((_, points)) = self.sources.pop_first() {
+                self.retiring = Rc::try_unwrap(points).ok();
+            } else {
+                return true;
             }
         }
-        if r.at != r.bytes.len() || next.order.is_empty() || next.order.len() > 4096 {
-            return None;
-        }
-        let unique: BTreeSet<_> = next.order.iter().copied().collect();
-        if unique.len() != next.order.len()
-            || unique.iter().any(|id| !next.layers.contains_key(id))
-            || next.strokes.values().any(|s| !unique.contains(&s.layer))
-        {
-            return None;
-        }
-        next.revision = result;
-        Some(next)
+        false
     }
-    fn record(&mut self, r: &mut Read<'_>) -> Option<()> {
+    pub fn reserve_source(&mut self, id: usize) -> bool {
+        self.reserved.insert(id)
+    }
+    pub fn add_source(&mut self, id: usize, points: Rc<Points>) -> Option<()> {
+        if id >= 100_000 || self.sources.contains_key(&id) || !self.reserved.remove(&id) {
+            return None;
+        }
+        self.samples = self.samples.checked_add(points.len())?;
+        self.samples.checked_mul(40)?;
+        self.high = self.high.max(id.checked_add(1)?);
+        self.sources.insert(id, points);
+        Some(())
+    }
+    pub fn finish(&mut self, result: u64) -> Option<()> {
+        if self.order.is_empty() || self.order.len() > 4096 {
+            return None;
+        }
+        let unique: BTreeSet<_> = self.order.iter().copied().collect();
+        if unique.len() != self.order.len()
+            || unique.iter().any(|id| !self.layers.contains_key(id))
+            || self
+                .members
+                .iter()
+                .any(|(layer, count)| *count > 0 && !unique.contains(layer))
+        {
+            return None;
+        }
+        self.revision = result;
+        Some(())
+    }
+    pub fn record(&mut self, r: &mut Read<'_>) -> Option<()> {
         match r.byte()? {
+            6 => {
+                let high = r.word()?;
+                if high < self.high || high > 100_000 {
+                    return None;
+                }
+                self.high = high;
+            }
             #[cfg(feature = "save-app")]
             5 => self.settings = super::save_settings::decode(r)?,
             1 => {
                 let (id, s) = decode::stroke(r, &self.sources)?;
                 self.high = self.high.max(id + 1);
+                *self.members.entry(s.layer).or_default() += 1;
+                *self.source_refs.entry(s.source).or_default() += 1;
+                if let Some(old) = self.strokes.get(&id) {
+                    *self.members.get_mut(&old.layer)? -= 1;
+                    *self.source_refs.get_mut(&old.source)? -= 1;
+                }
                 self.strokes.insert(id, s);
             }
             2 => {
@@ -117,7 +124,10 @@ impl Model {
                     return None;
                 }
                 self.high = self.high.max(id + 1);
-                self.strokes.remove(&id);
+                if let Some(old) = self.strokes.remove(&id) {
+                    *self.members.get_mut(&old.layer)? -= 1;
+                    *self.source_refs.get_mut(&old.source)? -= 1;
+                }
             }
             3 => {
                 let id = r.word()?;
@@ -156,40 +166,5 @@ impl Model {
             _ => return None,
         }
         Some(())
-    }
-    pub fn engine(&self) -> Option<Engine> {
-        let mut e = Engine::default();
-        #[cfg(feature = "save-app")]
-        {
-            e.settings = self.settings;
-        }
-        let max = self.layers.keys().next_back().copied()?;
-        e.layers = (0..=max)
-            .map(|id| {
-                self.layers.get(&id).cloned().unwrap_or(Layer {
-                    rank: None,
-                    ..Layer::new("".into())
-                })
-            })
-            .collect();
-        for layer in &mut e.layers {
-            layer.rank = None;
-        }
-        e.layer_order = self.order.clone();
-        for (rank, id) in self.order.iter().enumerate() {
-            e.layers[*id].rank = Some(rank);
-        }
-        e.active_layer = *self.order.first()?;
-        // Empty invisible slots retain stable IDs without restoring Undo history.
-        for id in 0..self.high {
-            let stroke = if let Some(s) = self.strokes.get(&id) {
-                s.clone()
-            } else {
-                decode::empty_stroke(id, e.active_layer)
-            };
-            e.strokes.push(stroke);
-        }
-        e.refresh_blend_groups();
-        Some(e)
     }
 }

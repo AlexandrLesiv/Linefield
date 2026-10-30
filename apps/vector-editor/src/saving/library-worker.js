@@ -16,7 +16,12 @@ async function directories() {
 async function validateDrawing(id, allowCreate) {
   const opened = await openPool(drawingLocation(id), "/drawing.sqlite", allowCreate);
   try {
-    const document = drawingDatabase(opened.connection, opened.fresh, crypto.randomUUID(), id);
+    const document = await drawingDatabase(
+      opened.connection,
+      opened.fresh,
+      crypto.randomUUID(),
+      id,
+    );
     await document.load(); // Validate the complete durable chain before catalog publication.
     return document.identity.incarnation;
   } finally {

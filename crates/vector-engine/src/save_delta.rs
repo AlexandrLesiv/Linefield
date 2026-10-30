@@ -47,9 +47,14 @@ impl Journal {
             out.push(1);
             out.extend_from_slice(&s.bytes);
             if self.known.insert(s.source) {
-                self.samples += s.points.len();
-                if self.samples > 1_000_000 {
+                let Some(total) = self.samples.checked_add(s.points.len()) else {
                     self.overflow = true;
+                    return;
+                };
+                self.samples = total;
+                if s.points.len() > u32::MAX as usize / 40 {
+                    self.overflow = true;
+                    return;
                 }
                 self.sources.insert(s.source, Rc::clone(&s.points));
             }

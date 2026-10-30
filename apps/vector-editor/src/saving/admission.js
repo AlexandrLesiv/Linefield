@@ -10,13 +10,11 @@ async function inspectDrawingPool(directory = ".linefield-save-v1", filename = "
   }
   const opaque = await dir.getDirectoryHandle(".opaque");
   const paths = new Set();
-  let files = 0,
-    total = 0;
+  let files = 0;
   for await (const [, handle] of opaque) {
     if (handle.kind !== "file" || ++files > 32) throw Error("storage-layout");
     const file = await handle.getFile();
-    if (file.size < 4096 || (total += file.size) > 128 * 1024 * 1024)
-      throw Error("storage-capacity");
+    if (file.size < 4096 || !Number.isSafeInteger(file.size)) throw Error("storage-capacity");
     const bytes = new Uint8Array(await file.slice(0, 4096).arrayBuffer());
     const view = new DataView(bytes.buffer),
       flags = view.getUint32(512),

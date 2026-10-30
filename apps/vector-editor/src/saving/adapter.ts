@@ -4,7 +4,7 @@ export async function storage(document: string) {
   let client = storageClient();
   const grant = crypto.randomUUID();
   let identity: Identity;
-  const open = async () => client.call<Identity>("open", { grant, document });
+  const open = async (reopen = false) => client.call<Identity>("open", { grant, document, reopen });
   try {
     identity = await open();
   } catch (error) {
@@ -32,7 +32,10 @@ export async function storage(document: string) {
       );
     },
     async commit() {
-      const seal = await client.call<Receipt>("seal");
+      let seal: Receipt | { pending: true };
+      do {
+        seal = await client.call<Receipt | { pending: true }>("seal");
+      } while ("pending" in seal);
       if (
         !expected ||
         Object.keys(expected).some(
@@ -42,6 +45,18 @@ export async function storage(document: string) {
         throw Error("save-seal");
       return client.call<Receipt>("commit");
     },
+    async read(operation: string, stream: number, chunk: number) {
+      return client.call<{ bytes: Uint8Array<ArrayBuffer>; length: number; last: boolean }>(
+        "read",
+        { operation, stream, chunk },
+      );
+    },
+    async maintain() {
+      return client.call<{ pending: boolean; phase: string }>("maintain");
+    },
+    async maintenanceStatus() {
+      return client.call("maintenance-status");
+    },
     async load() {
       return client.call<Loaded>("load");
     },
@@ -49,7 +64,7 @@ export async function storage(document: string) {
       client.terminate();
       // Reopening is admitted only once the old worker's real Web Lock is released.
       client = storageClient();
-      const next = await open();
+      const next = await open(true);
       if (
         Object.keys(identity).some(
           (key) => next[key as keyof Identity] !== identity[key as keyof Identity],

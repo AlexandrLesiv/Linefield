@@ -17,6 +17,18 @@ mod save_delta_transport;
 mod save_replay;
 #[cfg(feature = "save-incremental")]
 mod save_replay_model;
+#[cfg(feature = "save-incremental")]
+mod save_replay_publish;
+#[cfg(feature = "save-incremental")]
+mod save_replay_prune;
+#[cfg(feature = "save-incremental")]
+mod save_replay_scan;
+#[cfg(feature = "save-incremental")]
+mod save_replay_stream;
+#[cfg(feature = "save-incremental")]
+mod save_compact_stream;
+#[cfg(feature = "save-incremental")]
+mod save_compact;
 #[cfg(feature = "save-idle")]
 mod save_idle;
 #[cfg(feature = "save-idle")]
@@ -27,6 +39,10 @@ mod save_idle_retire;
 mod save_authority;
 #[cfg(feature = "save-app")]
 mod save_seal;
+#[cfg(feature = "save-app")]
+mod save_storage_hash;
+#[cfg(feature = "save-app")]
+pub mod save_storage_sql;
 #[cfg(feature = "save-app")]
 mod save_settings;
 #[cfg(feature = "save-app")]
@@ -130,6 +146,18 @@ struct Points {
     len: usize,
 }
 impl Points {
+    #[cfg(feature = "save-incremental")]
+    fn try_push(&mut self, p: Point) -> Option<()> {
+        if self.len.is_multiple_of(256) {
+            self.blocks.try_reserve(1).ok()?;
+            let mut block = Vec::new();
+            block.try_reserve_exact(256).ok()?;
+            self.blocks.push(block);
+        }
+        self.blocks.last_mut()?.push(p);
+        self.len = self.len.checked_add(1)?;
+        Some(())
+    }
     fn push(&mut self, p: Point) {
         if self.len.is_multiple_of(256) {
             self.blocks.push(Vec::with_capacity(256));
