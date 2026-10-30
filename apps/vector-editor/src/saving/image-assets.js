@@ -2,6 +2,7 @@
 function imageAssets(db, document, grant, changed) {
   const sql = (query, bind = []) =>
     db.exec({ sql: query, bind, rowMode: "array", returnValue: "resultRows" });
+  const ownership = imageOwner(sql, document, grant);
   let verifiedCore;
   const codec = async () => {
     if (!verifiedCore) {
@@ -62,19 +63,16 @@ function imageAssets(db, document, grant, changed) {
       if (!validId(lease) || (revision !== null && !validRevision(revision)))
         throw Error("storage-image-lease");
       changed();
-      sql(
-        revision === null ? storageSql.releaseAssetLease : storageSql.publishAssetLease,
-        revision === null ? [lease, grant] : [revision, lease, grant],
-      );
+      ownership.finish(lease, revision);
     },
-    hold() {
-      const lease = crypto.randomUUID();
-      sql(storageSql.insertAssetLease, [lease, grant, "*", "export"]);
+    async hold(lease, owner) {
+      await ownership.held(lease, owner);
+      ownership.insert(lease, owner, "*", "export");
       return lease;
     },
     release(lease) {
       if (!validId(lease)) throw Error("storage-image-lease");
-      sql(storageSql.releaseAssetLease, [lease, grant]);
+      ownership.release(lease);
       changed();
     },
     verifyModelSteps: (core, token) => imageModelReferences(core, token, read),
@@ -94,7 +92,8 @@ function imageAssets(db, document, grant, changed) {
       }
       return null;
     },
-    async stage(blob, metadata) {
+    async stage(blob, metadata, lease, owner) {
+      await ownership.held(lease, owner);
       if (
         !(blob instanceof Blob) ||
         !metadata ||
@@ -123,8 +122,7 @@ function imageAssets(db, document, grant, changed) {
           )
         )
           throw Error("storage-image-conflict");
-        const lease = crypto.randomUUID();
-        sql(storageSql.insertAssetLease, [lease, grant, digest, "stage"]);
+        ownership.insert(lease, owner, digest, "stage");
         sql(storageSql.commit);
         changed();
         return { ...checked, digest, lease };

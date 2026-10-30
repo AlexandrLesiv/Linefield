@@ -23,7 +23,10 @@ function validateChunkSchema(sql, version) {
     ...(version >= 4 ? [["image_assets", storageSql.createImageAssets]] : []),
     ...(version >= 5
       ? [
-          ["image_asset_leases", storageSql.createAssetLeases],
+          [
+            "image_asset_leases",
+            version >= 7 ? storageSql.createAssetLeasesOwned : storageSql.createAssetLeases,
+          ],
           ["image_asset_roots", storageSql.createAssetRoots],
         ]
       : []),
@@ -47,8 +50,15 @@ function validateChunkSchema(sql, version) {
 }
 function installChunkSchema(sql) {
   const version = sql(storageSql.version)[0]?.[0];
-  if (version === 6) return;
-  if (version !== 1 && version !== 2 && version !== 3 && version !== 4 && version !== 5)
+  if (version === 7) return;
+  if (
+    version !== 1 &&
+    version !== 2 &&
+    version !== 3 &&
+    version !== 4 &&
+    version !== 5 &&
+    version !== 6
+  )
     throw Error("storage-version");
   sql(storageSql.begin);
   try {
@@ -72,10 +82,13 @@ function installChunkSchema(sql) {
       sql(storageSql.createAssetLeases);
       sql(storageSql.createAssetRoots);
     }
-    sql(storageSql.createLargeImageAssets);
-    sql(storageSql.createAssetLeaseDigestIndex);
-    sql(storageSql.versionLargeImageAssets);
-    validateChunkSchema(sql, 6);
+    if (version < 6) {
+      sql(storageSql.createLargeImageAssets);
+      sql(storageSql.createAssetLeaseDigestIndex);
+    }
+    sql(storageSql.addAssetLeaseOwner);
+    sql(storageSql.versionAssetOwners);
+    validateChunkSchema(sql, 7);
     sql(storageSql.commit);
   } catch (error) {
     sql(storageSql.rollback);

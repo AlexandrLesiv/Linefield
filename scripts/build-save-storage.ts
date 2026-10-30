@@ -39,6 +39,7 @@ for (const name of [
   "hash-boundary.js",
   "image-boundary-generated.js",
   "image-model.js",
+  "image-owner.js",
   "image-assets.js",
   "image-gc.js",
   "worker-hash.js",

@@ -59,6 +59,7 @@ export async function restore(core: SaveCore, saved: Loaded, store: Storage) {
     await verifyImageReferences(core, token, store, yieldTask, true);
     if (revision !== BigInt(saved.revision) || core.restore_publish(token) !== 1)
       throw Error("restore-publish");
+    store.durable(saved.revision);
   } finally {
     core.restore_cancel(token);
     while (core.restore_cleanup(token, 64) === 1) await yieldTask();

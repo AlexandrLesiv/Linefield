@@ -1,3 +1,5 @@
+Current image recovery: [IMG-04](IMG-04.md), owner-authorized abandoned import/export ownership recovery; stacks on [IMG-03](IMG-03.md) safe cleanup and 32 MiB capacity. Existing previews remain frozen; no merge authorized.
+
 Current image integration: [IMG-02](IMG-02.md), owner-authorized canonical images, editing, durable assets and appearance-preserving SVG; stacks on IMG-01 and verified SAVE08 dependencies.
 
 Current image checkpoint: [IMG-01](IMG-01.md), isolated quality/performance and capacity verification before product integration.

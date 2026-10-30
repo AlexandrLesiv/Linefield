@@ -15,6 +15,7 @@ importScripts(
   "./chunk-validation.js",
   "./database.js",
   "./image-model.js",
+  "./image-owner.js",
   "./image-assets.js",
   "./image-gc.js",
   "./staging.js",
@@ -98,9 +99,10 @@ onmessage = async ({ data: m }) => {
     else if (m.kind === "maintain") value = await maintenance.step();
     else if (m.kind === "asset-maintain") value = await maintenance.step(m.revision);
     else if (m.kind === "maintenance-status") value = maintenance.status();
-    else if (m.kind === "asset-stage") value = await assets.stage(m.blob, m.metadata);
+    else if (m.kind === "asset-stage")
+      value = await assets.stage(m.blob, m.metadata, m.lease, m.owner);
     else if (m.kind === "asset-finish") value = assets.finish(m.lease, m.revision);
-    else if (m.kind === "asset-hold") value = assets.hold();
+    else if (m.kind === "asset-hold") value = await assets.hold(m.lease, m.owner);
     else if (m.kind === "asset-release") value = assets.release(m.lease);
     else if (m.kind === "asset-verify") value = await assets.verify(m.references);
     else if (m.kind === "asset-read") value = await assets.read(m.digest);
