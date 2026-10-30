@@ -13,6 +13,7 @@ function staging(database) {
         chunk: 0,
         bytes: 4 + m.streams * 4,
       };
+      database.protectActive(state.storage);
       return null;
     }
     if (!state || state.poisoned) throw Error("storage-state");
@@ -51,7 +52,7 @@ function staging(database) {
           chunk = 0;
         }
       }
-      if (added > 262080 || bytes > 48 * 1024 * 1024) throw Error("storage-capacity");
+      if (added > 262080 || !Number.isSafeInteger(bytes)) throw Error("storage-capacity");
       try {
         database.put(state.storage, accepted);
       } catch (error) {
@@ -115,6 +116,7 @@ function staging(database) {
       state = undefined;
       // Reclaim only unreferenced staging rows, in a bounded transaction after durable publication.
       try {
+        database.protectActive("");
         database.cleanup();
       } catch {}
       return receipt;

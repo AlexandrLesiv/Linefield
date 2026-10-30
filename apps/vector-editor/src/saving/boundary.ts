@@ -28,7 +28,15 @@ export type SaveCore = {
   restore_batch_end(token: number): number;
   restore_begin(): number;
   restore_cancel(token: number): number;
+  restore_checkpoint_begin(token: number): number;
+  restore_checkpoint_chunk(token: number, stream: number, chunk: number): number;
+  restore_checkpoint_count(token: number): number;
+  restore_checkpoint_ptr(token: number): number;
+  restore_checkpoint_step(token: number, budget: number): number;
+  restore_cleanup(token: number, budget: number): number;
   restore_input_ptr(): number;
+  restore_metadata_replay(token: number): number;
+  restore_prune_sources(token: number, revision: bigint, budget: number): number;
   restore_publish(token: number): number;
   save_boundary_fingerprint(index: number): number;
   save_configure(length: number): number;
@@ -73,7 +81,15 @@ export const saveArity = {
   restore_batch_end: 1,
   restore_begin: 0,
   restore_cancel: 1,
+  restore_checkpoint_begin: 1,
+  restore_checkpoint_chunk: 3,
+  restore_checkpoint_count: 1,
+  restore_checkpoint_ptr: 1,
+  restore_checkpoint_step: 2,
+  restore_cleanup: 2,
   restore_input_ptr: 0,
+  restore_metadata_replay: 1,
+  restore_prune_sources: 3,
   restore_publish: 1,
   save_boundary_fingerprint: 1,
   save_configure: 1,
@@ -89,5 +105,5 @@ export const saveArity = {
   storage_hash_input_ptr: 0,
 } as const;
 export const saveFingerprint = [
-  3986242056, 3016834820, 2629716453, 1582678436, 633267750, 3986221465, 3257820831, 3871905883,
+  3813924134, 3595450660, 1715565225, 2219474412, 523110861, 465756606, 2611947954, 1767042036,
 ] as const;

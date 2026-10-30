@@ -1,6 +1,6 @@
 # SAVE-07 — bounded durable checkpoints and capacity scaling
 
-Owner approved capacity work after SAVE-06 gallery/reload on2026-10-30. In progress on codex/save07-capacity-checkpoint from SAVE-06 commit6b9ef43 (draftPR27).
+Owner approved capacity work after SAVE-06 gallery/reload on2026-10-30. Implemented and verified on codex/save07-capacity-checkpoint from SAVE-06 commit6b9ef43 (draftPR27); draftPR28 awaits owner review.
 Keep previous previews unchanged; no merge. Start from frozen SAVE-06 source and separate branch.
 
 ## Scope and sequence
@@ -37,19 +37,6 @@ checkpointing. Paired isolated input-delay/frame-tail, peak-memory and restore m
 no performance claims from moving CPU work alone. E2E only, static/build, specialist and independent
 review. Update one task PR and open a frozen actual-app preview after verified progress.
 
-## Current baseline
-
-Frozen65354, Chromium156.0.8078.48, AppleM2Pro16GiB,1200x1000CSS/DPR2. Three fresh-context
-runs each inject40alternatingmouse/pen strokes of61accepted samples while saving. All samples
-and durable revisions retained. Frame maximum16.8ms in each run; measured preparation-call
-maximum0.9–1.1ms; finalflush29.1–34.3ms. Timer schedulingp955.1–5.2ms includes browser
-timerclamping and is not physicalinputlatency. No GPU timing or universalregressionclaim.
-Evidence .build-cache/save07-baseline/results.json; scripts/probes/saved-gallery/performance.ts.
-
-First implementation increment changes chunk staging/loading while retaining existing capacity
-guards. It is an enabling checkpoint, not completedcapacityscaling. Large-limit success cases
-remain gated on sharedRust compaction, sourceepoch/Undo safety and bounded restoration.
-
 ## Review gates
 
 CAP-001: checkpoint/GC followed by Undo/Redo, including a frozen next batch; retain exact sources.
@@ -62,26 +49,70 @@ CAP-007: sparse/high IDs and checked allocation/framing; preserve allocator high
 CAP-008: beyond old limits with whole-process memory, tail responsiveness and maximum work-slice
 measurement. Bounded messages alone do not establish bounded decode, SQL scan or final cleanup.
 
-## Verified chunk-storage checkpoint
+## Implementation and acceptance
 
-Durable chunks are at most 65,520 bytes, with incremental shared Rust hashing and bounded
-seal steps. Restore pulls chunks; legacy reads use SQL substr. Canonical v1 replay and
-incarnation validation precede transactional schema migration. Validated reopen reclaims
-unreferenced staging. The aggregate 128 MiB admission cap is removed; all other capacity
-guards remain until compaction and incremental decode acceptance.
+Incremental Rust replay decodes raw samples into unpublished point blocks and rereads metadata
+with an exact digest check; it no longer clones the entire model per batch. Cancellation and
+retirement are bounded. LFC4 checkpoints preserve allocator high-water and current-epoch sources,
+including deleted sources needed by Undo. New-epoch pruning occurs only at the exact baseline.
+Fresh opens and worker recovery use different epoch admission rules.
 
-Actual-app 13 checks and 15 storage/migration/admission groups pass. Recovery preserves a
-real saved stroke and every raw sample after reclaiming 2,100 abandoned chunks exceeding
-128 MiB; single observed reopen 5.37 s. Invalid incarnation and semantic corruption leave
-legacy pool bytes unchanged. Independent source review closed both blockers. Root static,
-scoped Rust/Wasm/web build, contract generation and lint/format checks pass.
+The worker publishes a checkpoint atomically before retiring old rows. Retry receipts survive
+payload reclamation. Garbage storage is explicitly queued and indexed; cleanup deletes at most
+16 chunks from one queued storage and refuses any queue entry referencing published data.
+Autosave and maintenance use separate timers; pending maintenance cannot suppress new-edit saves.
+Both v1 and v2 receive canonical validation before schema migration. No renderer/input changes.
 
-Three candidate runs retain all 40 x 61 samples and durable revision 40. Maximum frame gap
-16.8 ms; preparation-call maxima 0.5–1.1 ms; final flush 35.6–37.8 ms versus baseline
-29.1–34.3 ms. No whole-process-memory, physical Wacom latency or large-document performance
-claim. Evidence: ignored save07-{app,chunks,migration,admission,candidate} reports.
-Frozen manual preview: http://127.0.0.1:65355/. Existing previews unchanged.
+Verified on the final candidate: fragmented replay/corruption/stale publication; exact v1/v2
+migration; hash-valid semantic-corrupt v2 rejection without modifying stored bytes; retry after
+compaction; automatic maintenance and no-op flush liveness; UI drawing autosave during maintenance;
+current-epoch Undo retention; fresh-epoch unused-source reclamation; stale epoch refusal; corrupt
+cleanup queue refusal without data mutation. Worker loss before/after publication, during GC and
+quota failure preserve exact raw/image state and permit continued saving. Separate integrated
+preview additionally passes primary-pen identity and mouse/pen contact-recovery checks.
 
-Remaining: incremental Rust decode (current complete-stream buffers and Model clone remain),
-validated current-state checkpoint, bounded delta-tail compaction, Undo/source reachability,
-retry receipts, sparse allocator handling, then former-limit workloads and ceiling removal.
+The former 48 MiB payload, 10,000 lifetime-batch and one-million retained-sample ceilings are
+removed from the production path. Tests crossed 10,001 separately acknowledged saves and saved/
+reloaded 1,050,016 and 1,350,016 samples with exact digests and image parity. Final-candidate
+reruns passed: 10,001 receipts leave a16-batch tail; the large cases store42,001,300 and54,001,300
+bytes, save in3337.7/3970ms and reopen in2830/3327ms. These single-trial offscreen large-source
+workloads establish storage capacity, not million-sample rendering speed. Sampled aggregate
+browser-process RSS during save/restore was1.22–1.31GB; shared pages may be counted twice and
+GPU/private allocations are not isolated. Fresh-epoch reclamation reduces82,071 to2,844 bytes
+while retaining the newer drawing exactly. Layer names/order/flags and paper/grid also match;
+active layer resets to the first ordered layer on reload, unchanged from the prior implementation.
+
+## Performance and retained limits
+
+Apple M2 Pro, 16 GiB RAM, Chromium156.0.8078.48, 1200x1000 CSS pixels, DPR2. Three matched
+runs prefill127 separately acknowledged batches, then inject40 alternating mouse/pen strokes of61
+samples. Candidate and quiet repeated baseline preserve every sample and durable revision167.
+Both have maximum frame gap16.8ms in all three runs. Candidate preparation-call maximum0.2–0.8ms;
+final flush40.2–45.3ms versus baseline39.4–44.4ms. Timer schedulingp955.3–5.4ms in both is
+not physical input latency. Maintenance was pending/advancing in prune/replay and deliberately
+yielded to busy input; this does not measure a full compaction finishing during continuous input.
+An earlier baseline trial had a133.4ms frame outlier while builds may have overlapped; retained
+as evidence and not used to claim a speedup. No GPU speedup or universal latency claim.
+
+Browser quota, Wasm/process allocation and u32 stream framing remain real bounds. Dense source/
+stroke IDs below100,000, layers below4,096 and bounded pending operation/record counts remain;
+sparse allocator redesign is not silently substituted. Final publication traverses visible state;
+old-engine destruction, metadata admission and legacy migration are not strict1ms operations.
+Compaction temporarily requires another decoded model and another durable checkpoint payload.
+Wasm high-water memory can persist; retry receipt metadata grows with lifetime saves. A128-batch
+threshold triggers maintenance; it is not a hard tail bound under sustained input or failed
+maintenance. Local browser storage remains origin-specific and is not an external backup.
+
+## Delivery
+
+Draft PR28 remains stacked on SAVE06/PR27; no merge authorized. Keep65363 and all existing
+previews unchanged. Candidate checks use frozen65370. Separate actual-app preview65371 combines
+the SAVE07 changes with the latest pen/UI fixes solely for review; those unrelated changes are
+not included in PR28. Exact measurements and generated artifacts remain in ignored .build-cache.
+Independent source/design and test reviews found no remaining blockers after fixes. Root and
+scoped type/lint/format, generated boundaries/SQL, Rust/Wasm and web builds pass. Final evidence
+is in save07-{maintenance,capacity,autosave-passive,epoch,v2-admission,corruption,document}-final
+and save07-perf-checked-{final,baseline}. Current streaming, chunks, migration and gallery-route
+runners pass. The pre-gallery SAVE05 runner still targets the removed preview-new route and is
+not current acceptance evidence; current gallery/pen recovery runners cover the actual app.
+No physical Wacom latency measurement or browser shutdown durability guarantee is claimed.

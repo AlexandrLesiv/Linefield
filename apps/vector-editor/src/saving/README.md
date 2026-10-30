@@ -1,27 +1,73 @@
 # Local browser saving
 
-One Rust editor owns completed state, regional samples, settings, history and revision tracking.
-`save-app` supplies a separately generated checked ABI. `scheduler.ts` requests bounded capture,
-SHA sealing and retirement; `prepare.ts` transfers disposable chunks to the storage worker.
-The Rust authority validates exact sealed receipt fields before acknowledging durability.
+Rust owns completed editing state, raw regional samples, settings, history and revisions. The
+`save-app` feature supplies a separately generated checked ABI. `scheduler.ts` requests bounded
+idle capture, SHA sealing and retirement; `prepare.ts` transfers disposable chunks to the storage
+worker. Rust validates the exact receipt before acknowledging durability. Accepted input is not
+removed on a storage failure.
 
-`createSaving(core)` opens and restores before input/render handlers are installed. The worker
-holds one origin Web Lock through SQLite lifetime, inspects pinned SAH metadata before opening
-existing data, validates the stored revision/digest chain, and commits opaque incremental batches
-atomically. Unknown/corrupt storage refuses admission. No silent reset or generic SQL endpoint.
+The gallery lists real locally saved drawings with white thumbnails. Each drawing has its own
+SQLite database and exclusive Web Lock. `createSaving(core)` restores before input/render handlers
+are installed. The worker inspects pinned storage metadata, validates revision/digest chains and
+commits opaque incremental batches atomically. Corrupt storage refuses admission; there is no
+silent reset or generic SQL endpoint. Data belongs to the browser origin, so isolated preview
+ports have separate libraries. Local browser storage is not an external backup.
 
-The current preview deliberately stores one local drawing per browser origin. It has no journal
-compaction or gallery/import/export/cloud integration. Limits48MiB/10,000batches and Rust capture
-limits are explicit failures: canonical unsaved edits remain in memory and drawing is allowed,
-but Retry cannot solve a permanent capacity limit. Reload starts a fresh Undo/Redo session.
-See tasks/SAVE-05.md for exact evidence, limitations and review state.
+## Incremental reload and maintenance
+
+Reload decodes source streams directly into unpublished Rust point blocks. Metadata is read twice:
+first to validate descriptors, then to apply records after sources are available. Both passes must
+have the same SHA256 digest. No whole raw batch or per-batch document clone is required. A malformed
+later batch poisons the entire unpublished session. Cancellation and retirement release point
+blocks and map entries in bounded calls. Final engine construction/publication still traverses the
+visible model; its cost is measured separately from streaming decode.
+
+At 128 tail batches, background maintenance captures a fixed durable revision and replays it in an
+independent worker codec. It emits an explicit LFC4 current-state checkpoint, preserving canonical
+settings, layers, stroke references, source data and allocator high-water. Newer saves may append
+while maintenance advances one bounded step at a time. Atomic checkpoint publication preserves the
+newer tail; obsolete batches and their chunks are retired afterward. Garbage storage is explicitly
+queued, so each cleanup seeks one queued storage and deletes at most 16 chunks instead of scanning
+all live chunks. Migration may perform a one-time orphan discovery. Both legacy schemas are
+canonically validated before extension to schema v3.
+
+Exact operation/base/result/digest receipts live separately from reclaimed payloads. Lost-ack retries
+remain idempotent after compaction; conflicting digests fail. Receipt metadata is retained rather
+than expired without an acknowledgement horizon. This small metadata grows with lifetime saves.
+
+An editor epoch is a fresh drawing open, not a worker restart. All sources introduced in the current
+epoch survive compaction, including deleted strokes needed by Undo/Redo or frozen batches. At a new
+epoch's exact durable baseline, unused previous-epoch sources can be pruned before later deltas are
+replayed. Reload starts a fresh Undo/Redo session. Worker recovery must match the stored epoch grant;
+an older editor cannot silently recover after another editor has replaced its epoch.
+
+## Capacity and failure policy
+
+The production idle-capture/streaming-reload path no longer imposes the former 48 MiB document,
+10,000 lifetime batch or one-million retained-sample ceilings. This is not unlimited storage:
+browser quota, available Wasm/process memory and checked numeric representation still apply.
+Each source stream has a u32 byte length (40 bytes per sample); source/stroke IDs remain below
+100,000, layers below 4,096, and pending batch operation/record counts remain bounded at 100,000.
+Messages contain at most 262,080 bytes and individual chunks at most 65,520 bytes. Old experimental
+LFS2 metadata/direct-delta APIs retain their separate one-million-sample guards; production saving
+does not use those capture/reload paths.
+
+Maintenance uses an additional unpublished worker model, so large live documents increase worker
+memory while checkpointing. Old and replacement payloads coexist until publication and cleanup,
+so checkpointing temporarily needs additional disk space; quota failure keeps the old durable state. Same-epoch Undo sources are intentionally retained; new epochs can
+reclaim unreachable sources. Receipt metadata and Wasm linear-memory high-water are separate costs.
+Maintenance failure does not revoke already durable saves. Failed/abandoned staging is reclaimable;
+retry and reopen preserve the previous valid checkpoint/tail. Storage failures remain explicit.
+
+## Validation
 
 Build: `node scripts/build-vector-editor.ts` compiles save-app, verifies generated boundaries and
-copies pinned SQLite3.54.1 runtime assets. If absent, the existing acquisition script downloads
-and SHA3-verifies the official archive; copied runtime files are separately SHA256-checked.
-Assets stay in ignored public/build directories. Runtime permissions are same-origin OPFS and
-Web Locks; supported browser/storage failure is visible before admitting editing.
+copies pinned SQLite 3.54.1 runtime assets. Acquisition verifies the official archive and copied
+runtime hashes. Assets remain in ignored build directories. Runtime capabilities are same-origin
+OPFS and Web Locks.
 
-E2E runners: apps/web/tests/vector-saving*.mjs, with explicit LINEFIELD_PREVIEW_URL pointing to a
-separate candidate origin. Faults are injected by test-process worker interception, never by a
-shipped command. Drawing responsiveness is distinct from durable completion and physical input.
+E2E runners: `apps/web/tests/vector-saving*.mjs`, with `LINEFIELD_PREVIEW_URL` selecting an isolated
+candidate origin. Faults are injected by the test process, never shipped as production commands.
+Capacity, checkpoint/Undo/retry/epoch recovery, raw-data/image parity, main-thread responsiveness,
+worker duration and memory must be evaluated separately. See `tasks/SAVE-07.md` for exact measured
+results, limitations and acceptance status; implementation here alone does not imply acceptance.

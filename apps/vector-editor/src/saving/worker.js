@@ -14,6 +14,7 @@ importScripts(
   "./chunk-validation.js",
   "./database.js",
   "./staging.js",
+  "./maintenance.js",
   "./pools.js",
   "./catalog.js",
   "./library-worker.js",
@@ -24,11 +25,12 @@ let db,
   releaseLock,
   database,
   stage,
+  maintenance,
   busy = false,
   activeTransfer = false;
 const safeError = (error) =>
   /^(storage-[a-z-]+|in-use)$/.test(error?.message) ? error.message : "storage-failed";
-async function open(grant, document) {
+async function open(grant, document, reopen = false) {
   if (!validId(grant) || !drawingId(document) || db) throw Error("storage-state");
   return new Promise((resolve, reject) => {
     targetLock(document, async () => {
@@ -38,7 +40,7 @@ async function open(grant, document) {
         const opened = await openPool(drawingLocation(document), "/drawing.sqlite", false);
         pool = opened.pool;
         db = opened.connection;
-        database = await drawingDatabase(db, false, grant, document, entry.incarnation);
+        database = await drawingDatabase(db, false, grant, document, entry.incarnation, reopen);
         if (database.identity.incarnation !== entry.incarnation) throw Error("storage-conflict");
         const originalCommit = database.commitChunks;
         database.commitChunks = async (...args) => {
@@ -50,6 +52,7 @@ async function open(grant, document) {
           return receipt;
         };
         stage = staging(database);
+        maintenance = checkpointMaintenance(database);
         const held = new Promise((done) => {
           releaseLock = done;
         });
@@ -79,8 +82,10 @@ onmessage = async ({ data: m }) => {
     if (m.kind?.startsWith("library-")) {
       if (db) throw Error("storage-state");
       value = await libraryCommand(m);
-    } else if (m.kind === "open") value = await open(m.grant, m.document);
+    } else if (m.kind === "open") value = await open(m.grant, m.document, m.reopen === true);
     else if (!db) throw Error("storage-closed");
+    else if (m.kind === "maintain") value = await maintenance.step();
+    else if (m.kind === "maintenance-status") value = maintenance.status();
     else if (m.kind === "load") value = await database.load();
     else if (m.kind === "read") value = database.read(m.operation, m.stream, m.chunk);
     else if (m.kind === "close") {

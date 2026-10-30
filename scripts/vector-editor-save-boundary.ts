@@ -9,6 +9,8 @@ const sources = [
   "save_idle_stream",
   "save_idle_retire",
   "save_replay",
+  "save_compact",
+  "save_replay_prune",
   "save_authority",
   "save_seal",
   "save_settings",
