@@ -56,6 +56,7 @@ export function textProperties(
               ry: camera.regionY,
               x: 0,
               y: 0,
+              rotation: camera.rotation,
               layer: 0,
               color: targetColor,
               opacity: targetOpacity,

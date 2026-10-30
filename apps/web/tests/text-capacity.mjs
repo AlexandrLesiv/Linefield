@@ -70,14 +70,14 @@ try {
     const data = new TextEncoder().encode("x".repeat(16384));
     new Uint8Array(c.memory.buffer, c.text_input_ptr(), data.length).set(data);
     for (let i = 0; i < 8192; i++) {
-      const id = c.text_create(data.length, 0, 1, 100, 40, 2, 34, 0, 0n, 0, 0n, 0) >>> 0;
+      const id = c.text_create(data.length, 0, 1, 100, 40, 2, 34, 0, 0n, 0, 0n, 0, 0) >>> 0;
       if (id !== 0x40000000 + i) throw Error(`create ${i}: ${c.text_error()}`);
       if ((i + 1) % 1000 === 0) flush();
     }
     check(c.text_retained_bytes() === 128 * 1024 * 1024, "retained UTF8 exactly128MiB");
     const rev = c.delta_revision();
     check(
-      c.text_create(data.length, 0, 1, 100, 40, 2, 34, 0, 0n, 0, 0n, 0) >>> 0 === 0xffffffff &&
+      c.text_create(data.length, 0, 1, 100, 40, 2, 34, 0, 0n, 0, 0n, 0, 0) >>> 0 === 0xffffffff &&
         c.text_error() === 3 &&
         c.delta_revision() === rev,
       "capacity rejects before mutation",

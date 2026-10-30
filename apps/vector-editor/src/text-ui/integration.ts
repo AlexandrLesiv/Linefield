@@ -82,6 +82,7 @@ export function installText(
       ry: camera.regionY,
       x,
       y,
+      rotation: camera.rotation,
       layer: core.layer_active(),
       color: record?.color ?? settings.color,
       opacity: record?.opacity ?? settings.opacity,

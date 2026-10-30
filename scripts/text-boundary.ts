@@ -9,7 +9,7 @@ function scalar(type: string): string {
   if (/^(u32|usize|f64|\*const f64|\*const u8|\*mut u8)$/.test(type.trim())) return "number";
   throw Error(`Unsupported export scalar: ${type}`);
 }
-for (const file of ["text_boundary", "text_queries", "text_read"]) {
+for (const file of ["text_boundary", "text_create", "text_queries", "text_read"]) {
   const source = readFileSync(`${root}crates/vector-engine/src/${file}.rs`, "utf8");
   for (const match of source.matchAll(/pub extern "C" fn (\w+)\(([^)]*)\)\s*->\s*([^{]+)\{/g)) {
     const args = match[2]!

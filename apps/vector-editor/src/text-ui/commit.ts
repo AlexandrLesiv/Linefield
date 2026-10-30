@@ -13,6 +13,7 @@ export type Draft = {
   ry: bigint;
   x: number;
   y: number;
+  rotation: number;
   layer: number;
   color: number;
   opacity: number;
@@ -40,8 +41,8 @@ export async function commitText(
     camera.regionY === draft.ry;
   if (!current()) throw Error("text-stale");
   const old = draft.record,
-    a = old?.a ?? 1,
-    b = old?.b ?? 0;
+    a = old?.a ?? Math.cos(-draft.rotation),
+    b = old?.b ?? Math.sin(-draft.rotation);
   const record: TextRecord = {
     id: draft.id ?? 0,
     revision: old?.revision ?? 0,
@@ -50,10 +51,10 @@ export async function commitText(
     opacity: draft.opacity,
     x: old
       ? old.x + (a * (old.width - layout.width)) / 2 - (b * (old.height - layout.height)) / 2
-      : draft.x - layout.width / 2,
+      : draft.x - (a * layout.width - b * layout.height) / 2,
     y: old
       ? old.y + (b * (old.width - layout.width)) / 2 + (a * (old.height - layout.height)) / 2
-      : draft.y - layout.height / 2,
+      : draft.y - (b * layout.width + a * layout.height) / 2,
     a,
     b,
     width: layout.width,
@@ -85,6 +86,7 @@ export async function commitText(
             draft.x,
             draft.ry,
             draft.y,
+            draft.rotation,
           ) >>> 0
         : text.text_edit(
               draft.id,

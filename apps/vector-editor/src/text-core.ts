@@ -17,6 +17,7 @@ export type TextCore = {
     x: number,
     ry: bigint,
     y: number,
+    rotation: number,
   ): number;
   text_edit(
     id: number,
@@ -45,7 +46,7 @@ export const textArity = {
   text_bounds: 5,
   text_content_ptr: 1,
   text_count: 0,
-  text_create: 12,
+  text_create: 13,
   text_edit: 10,
   text_error: 0,
   text_exists: 1,
@@ -59,5 +60,5 @@ export const textArity = {
   text_retained_bytes: 0,
 } as const;
 export const textFingerprint = [
-  152586422, 3142226993, 1936634152, 3494156578, 4270105745, 3705112363, 494379988, 2522971377,
+  2332483180, 3496155354, 1786176590, 2149413879, 2793517536, 2919622822, 2254660108, 3836836260,
 ] as const;

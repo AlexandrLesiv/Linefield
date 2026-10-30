@@ -25,7 +25,10 @@ creation via that tool is not claimed as a direct observation.
 
 Implement Text tool → canvas position → native editing sheet → Done. Selecting
 one text object exposes Edit Text. Preserve explicit line breaks with no automatic
-canvas wrapping. Place a new label centered on the canvas press, and preserve its
+canvas wrapping. Place a new label centered on the canvas press and upright relative to the view
+rotation captured when its editor opens. Rust stores the inverse initial camera
+rotation in the label transform as part of the single Add operation. Later camera
+rotation continues to move the label with the drawing. Preserve its
 transformed center when editing changes its bounds, matching the observed label
 expansion on the phone. Use existing color, opacity, layer and selection transforms;
 do not add a rich-text editor, font picker or recreate Concepts' tool wheel.
@@ -100,7 +103,7 @@ quota/fault, stale edit and resource exhaustion preserve prior document/history.
 
 ## Verification and known limits
 
-The isolated web candidate is `http://127.0.0.1:65435/`; existing 65429 assets
+The current isolated web candidate is `http://127.0.0.1:65436/`; existing 65429 and 65435 assets
 remain byte-identical. No native app implementation or physical Wacom latency
 claim is included in this web task. Automated pen coverage uses trusted CDP
 input for UI recovery and explicitly injected events for the timing workload.
@@ -155,3 +158,13 @@ Re-editing its content and confirming remeasures it on that device; unchanged
 Done is a no-op. Cross-device fallback equivalence is not accepted by this task.
 Physical Wacom and real operating-system IME candidate-window interaction remain
 manual validation; synthetic composition tests establish draft isolation only.
+
+Initial orientation acceptance: new labels in clockwise and counterclockwise
+rotated/zoomed views start screen-upright at the clicked center, retain natural
+scale, and preserve their canonical orientation through Edit, one-step Undo/Redo
+and exact save/reload. The inverse captured camera rotation is part of the atomic
+Rust Add operation, with nonfinite angles rejected before mutation. Updated
+generated boundaries, production build, scoped lint/format,58 boundary checks
+and14 actual-app regression checks pass. Independent review found no remaining
+orientation findings. Timing evidence above remains from the same renderer on
+65435; the orientation correction changes creation only, not frame scheduling.

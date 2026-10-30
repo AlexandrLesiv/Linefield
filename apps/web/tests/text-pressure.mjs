@@ -34,7 +34,21 @@ try {
     for (let i = 0; i < 260; i++) {
       new Uint8Array(c.memory.buffer, c.text_input_ptr(), bytes.length).set(bytes);
       if (
-        c.text_create(bytes.length, v[5], v[6], v[13], v[14], v[18], v[19], 0, 0n, 500, 0n, 350) >>>
+        c.text_create(
+          bytes.length,
+          v[5],
+          v[6],
+          v[13],
+          v[14],
+          v[18],
+          v[19],
+          0,
+          0n,
+          500,
+          0n,
+          350,
+          0,
+        ) >>>
           0 ===
         0xffffffff
       )

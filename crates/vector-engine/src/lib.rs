@@ -11,6 +11,7 @@ pub mod images;
 mod texts;
 mod text_content;
 mod text_boundary;
+mod text_create;
 mod text_read;
 mod text_queries;
 mod text_generated;

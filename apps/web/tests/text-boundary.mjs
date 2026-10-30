@@ -36,7 +36,7 @@ try {
           new Uint8Array(c.memory.buffer, c.text_content_ptr(id), d[17]),
         );
       };
-      const add = (c, s = "Привіт café 😀\n\n") =>
+      const add = (c, s = "Привіт café 😀\n\n", rotation = 0) =>
         c.text_create(
           input(c, s),
           0x123456,
@@ -50,9 +50,17 @@ try {
           200,
           0n,
           300,
+          rotation,
         ) >>> 0;
       const edit = (c, id, s, w = 200, doc = c.delta_revision(), rev = read(c, id)[15]) =>
         c.text_edit(id, rev, doc, input(c, s), 0x123456, 0.7, w, 124, 3, 34);
+      const invalidRotation = await fresh();
+      check(
+        add(invalidRotation, "angle", NaN) === 0xffffffff &&
+          invalidRotation.text_count() === 0 &&
+          invalidRotation.delta_revision() === 0n,
+        "nonfinite creation rotation rejects atomically",
+      );
       const c = await fresh();
       for (const [n, a] of Object.entries(arity)) check(c[n].length === a, `ABI ${n}`);
       check(
@@ -81,7 +89,7 @@ try {
       check(add(c, "x\n".repeat(256)) === 0xffffffff, "257 explicit lines reject");
       new Uint8Array(c.memory.buffer, c.text_input_ptr(), 1)[0] = 255;
       check(
-        c.text_create(1, 0, 1, 10, 10, 0, 1, 0, 0n, 0, 0n, 0) >>> 0 === 0xffffffff,
+        c.text_create(1, 0, 1, 10, 10, 0, 1, 0, 0n, 0, 0n, 0, 0) >>> 0 === 0xffffffff,
         "invalid UTF8 reject",
       );
       check(
