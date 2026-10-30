@@ -8,6 +8,18 @@ export async function sendImageOrInk(
   last: boolean,
   resolveAsset?: (digest: string) => Promise<Blob>,
 ) {
+  if (values[0] === 3) {
+    if (values.length !== 26 || !last || !Number.isSafeInteger(values[21]) || values[21] > 16384)
+      throw Error("svg-text-boundary");
+    const pointer = core.svg_text_content_ptr(token);
+    if (!pointer || pointer + values[21] > core.memory.buffer.byteLength)
+      throw Error("svg-text-boundary");
+    const text = new TextDecoder("utf-8", { fatal: true }).decode(
+      new Uint8Array(core.memory.buffer, pointer, values[21]),
+    );
+    await worker.send({ kind: "text", values, text }, [values.buffer]);
+    return;
+  }
   if (values[0] !== 2) {
     await worker.send({ kind: "packet", values, last }, [values.buffer]);
     return;

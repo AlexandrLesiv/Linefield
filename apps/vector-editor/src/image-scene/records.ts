@@ -1,7 +1,14 @@
+import type { TextRecord } from "../text/records";
 import type { ImageCore } from "../image-core";
 import type { Camera } from "../camera";
 import type { Core } from "../core";
-export type ImageRecord = { id: number; digest: string; opacity: number; corners: number[] };
+export type ImageRecord = {
+  id: number;
+  digest: string;
+  opacity: number;
+  corners: number[];
+  text?: TextRecord;
+};
 const decoder = new TextDecoder();
 /** Disposable projection of authoritative regional image objects. */
 export function imageRecords(core: Core, images: ImageCore, camera: Camera): ImageRecord[] {

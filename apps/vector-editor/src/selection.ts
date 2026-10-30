@@ -1,5 +1,5 @@
 import { queryLasso } from "./lasso-snapshot";
-import { IMAGE_HANDLE, imageSelection } from "./image-selection";
+import { TEXT_HANDLE, imageSelection } from "./image-selection";
 import { LassoPreparer } from "./lasso-preparer";
 import { SessionSelection } from "./session-selection";
 import { t } from "../../web/src/locale";
@@ -121,7 +121,7 @@ export function createSelection(
 		const angleOf = objects.angle;
 		if (!frameReference || !ids.has(frameReference.id)) {
 			const id = ids.values().next().value!;
-			frameReference = { id, offset: id >= IMAGE_HANDLE ? 0 : -angleOf(id) };
+			frameReference = { id, offset: id >= TEXT_HANDLE ? 0 : -angleOf(id) };
 		}
 		// Derive the frame from document metadata, including undo/redo. Keeping
 		// only a UI angle would leave a stale diamond after undoing a rotation.

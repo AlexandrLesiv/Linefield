@@ -83,3 +83,6 @@ node_modules/
 /apps/vector-editor/core/target/
 /apps/vector-editor/public/
 /apps/web/public/vector-editor/
+
+# Generated web copies of shared drawing fonts.
+/apps/web/public/fonts/

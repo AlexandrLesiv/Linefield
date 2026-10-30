@@ -15,6 +15,10 @@ const storageContract = spawnSync(
   { stdio: "inherit" },
 );
 if (storageContract.status !== 0) throw Error("Storage contract drift");
+const textContract = spawnSync(process.execPath, [root + "scripts/text-boundary.ts", "--check"], {
+  stdio: "inherit",
+});
+if (textContract.status !== 0) throw Error("Text contract drift");
 const output = root + "apps/vector-editor/public/saving/";
 mkdirSync(output, { recursive: true });
 const vendor = root + ".build-cache/browser-storage/sqlite-wasm-3540100/jswasm/";
@@ -38,6 +42,7 @@ for (const name of [
   "admission.js",
   "hash-boundary.js",
   "image-boundary-generated.js",
+  "text-boundary-generated.js",
   "image-model.js",
   "image-owner.js",
   "image-assets.js",

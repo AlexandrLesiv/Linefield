@@ -1,3 +1,6 @@
+import { textProperties } from "./text-ui/properties";
+import { textScene as createTextScene } from "./text/scene";
+import { installText } from "./text-ui/integration";
 import { checkedImageCore } from "./image-boundary";
 import { imageRecords } from "./image-scene/records";
 import { mixedSteps } from "./image-scene/order";
@@ -136,7 +139,7 @@ try {
 	showStartupFailure(status);
 	throw error;
 }
-type Tool = "draw" | "select" | "slice" | "pan" | "rotate";
+type Tool = "text" | "draw" | "select" | "slice" | "pan" | "rotate";
 const selection = createSelection(core, cache, camera, canvas, failure => { runtimeFailure = String(failure); cancel(); });
 const slice = createSlice(core, cache, camera, canvas, () => {
 	selection.clear();
@@ -167,11 +170,31 @@ const imageScene = imageLifecycle(gpu, canvas, {
   readAsset: async digest => (await saving.readAsset(digest)).blob,
   changed: () => { compositeCache.invalidate(); dirty = true; },
 });
+const textInputActive = () => lost || gesture === "draw" || gesture === "slice";
+const textScene = createTextScene(core, camera, gpu, {
+  images: imageScene.cache,
+  active: textInputActive,
+  wait: async signal => {
+    do { await new Promise(resolve => setTimeout(resolve, 16)); if (signal.aborted) throw Error("text-cancelled"); }
+    while (textInputActive());
+  },
+  note: kind => inputDiagnostics.note(kind),
+  changed: () => { compositeCache.invalidate(); dirty = true; },
+});
+const textEditor = installText(core, camera, {
+  ids: () => tool === "select" ? selection.ids() : [], settings: brushControls.read,
+  active: () => pointer !== null || lost,
+  prepare: textScene.prepare,
+  select: id => { document.querySelector<HTMLButtonElement>("#select")!.click(); selection.select(id); },
+  changed: () => { compositeCache.invalidate(); dirty = true; },
+  note: (kind, bytes) => inputDiagnostics.note(kind, undefined, undefined, JSON.stringify({ bytes, revision: saveCore.delta_revision().toString() })),
+});
+const updateTextProperties = textProperties(core, camera, () => tool === "select" ? selection.ids() : [], () => { compositeCache.invalidate(); dirty = true; }, textScene.prepare);
 const updateImageProperties = imageProperties(imageCore, () => tool === "select" ? selection.ids() : [], () => { compositeCache.invalidate(); dirty = true; });
 function updateCursor() {
 	const mode = gesture ?? (space ? "pan" : rotateHeld ? "rotate" : tool);
 	canvas.style.cursor =
-		mode === "draw"
+		(mode === "draw" || mode === "text")
 			? core.can_draw()
 				? "crosshair"
 				: "not-allowed"
@@ -369,7 +392,7 @@ function draw() {
 	);
 	cache.resetDrawStats();
 	const completePlan = cache.planDraw(1 / (camera.zoom * dpr));
-  pencilGrain.bind(completePlan.records.some(record => (record.brush ?? 0) !== 0));
+  pencilGrain.bind(completePlan.records.some(plannedRecord => (plannedRecord.brush ?? 0) !== 0));
 	// A translucent stroke on the frontmost visible layer can composite over
 	// exact cached completed pixels. Opaque union and middle-layer cases retain
 	// the full painter-ordered path, including all upper-layer ink.
@@ -394,7 +417,7 @@ function draw() {
 		return { records, groups };
 	};
 	const scenePlan = overlay ? partition(false) : completePlan;
-  const orderedScene = mixedSteps(core, scenePlan, images);
+  const orderedScene = mixedSteps(core, scenePlan, [...images, ...textScene.update(rect.width, rect.height, dpr)].sort((a,b) => core.selection_precedes(a.id,b.id) ? 1 : -1));
 	const livePlan = overlay ? partition(true) : null;
 	const compositeView = {
 		width: w,
@@ -614,14 +637,18 @@ function draw() {
         gpu.viewport(0, 0, w, h);
         gpu.enable(gpu.SCISSOR_TEST);
         gpu.scissor(region[0], h - region[3], region[2] - region[0], region[3] - region[1]);
-        const corners: number[] = [];
+        if (step.image.text) {
+          textScene.draw(step.image.text, w, h, rect.width, rect.height);
+          gpu.bindVertexArray(null); continue;
+        }
+        const imageCorners: number[] = [];
         for (let i = 0; i < 8; i += 2) {
           const x = step.image.corners[i], y = step.image.corners[i + 1];
           const c = Math.cos(camera.rotation), s = Math.sin(camera.rotation);
-          corners.push((camera.cx + camera.zoom * (c * x - s * y)) * w / rect.width,
+          imageCorners.push((camera.cx + camera.zoom * (c * x - s * y)) * w / rect.width,
             (camera.cy + camera.zoom * (s * x + c * y)) * h / rect.height);
         }
-        imageScene.cache().draw(step.image.digest, corners, step.image.opacity, w, h);
+        imageScene.cache().draw(step.image.digest, imageCorners, step.image.opacity, w, h);
         gpu.bindVertexArray(null);
       }
     }
@@ -666,6 +693,8 @@ let error = "";
 function frame() {
   savingLifecycle.tick();
   updateImageProperties();
+  updateTextProperties();
+  textEditor.update(tool === "text");
 	brushControls.render();
 	if (!lost) {
 		const t = performance.now();
@@ -782,6 +811,11 @@ canvas.addEventListener("pointerdown", (e) => {
   }
 	e.preventDefault();
 	canvas.focus();
+  if (!space && !rotateHeld && tool === "text") {
+    const rect = canvas.getBoundingClientRect();
+    const [x,y] = camera.screenToWorld(e.clientX-rect.left,e.clientY-rect.top);
+    textEditor.open(x,y); return;
+  }
 	if (!space && !rotateHeld && tool === "draw" && !core.can_draw()) return;
 	if (!tryCapturePointer(canvas, e.pointerId)) { inputDiagnostics.note("capture-rejected", e); return; }
 	selection.cancelQuery();
@@ -941,7 +975,7 @@ function suspendInput() {
 	space = rotateHeld = false;
 	cancel("session-blur-or-hidden");
 }
-const savingLifecycle = saveLifecycle(Object.assign({}, core, saveCore), saving, saveUi, () => pointer !== null, canvas);
+const savingLifecycle = saveLifecycle(Object.assign({}, core, saveCore), saving, saveUi, () => pointer !== null || textEditor.dirty(), canvas);
 inputDiagnostics.setState(() => ({
   pointer, active, gesture, releasePending: pointerRelease.pending,
   identityRecovery: pointerRelease.identityRecovery,
@@ -1006,11 +1040,11 @@ installKeyboardInput({
 	updateCursor,
 	history,
 });
-for (const mode of ["pen", "select", "slice", "pan", "rotate"])
+for (const mode of ["pen", "select", "slice", "pan", "rotate", "text-tool"])
 	document.querySelector(`#${mode}`)!.addEventListener("click", () => {
 		cancel();
-		tool = mode === "pen" ? "draw" : (mode as Tool);
-		for (const id of ["pen", "select", "slice", "pan", "rotate"])
+		tool = mode === "pen" ? "draw" : mode === "text-tool" ? "text" : (mode as Tool);
+		for (const id of ["pen", "select", "slice", "pan", "rotate", "text-tool"])
 			document
 				.querySelector(`#${id}`)!
 				.setAttribute("aria-pressed", String(id === mode));
@@ -1071,7 +1105,7 @@ installGpuRecovery(canvas, () => {
   compositeCache = resources.composite;
   sparseCoverage = resources.sparse;
   cache.contextLost();
-  imageScene.reset();
+  imageScene.reset(); textScene.reset();
   lost = false;
   dirty = true;
   error = "";
@@ -1105,6 +1139,7 @@ Object.assign(window, {
     lassoWorker: () => ({...selection.queryStats}),
 		layers,
 		view: () => camera.state(),
+    textStatus: textScene.state,
 		viewOrigin: () => [String(camera.regionX), String(camera.regionY)],
 		prepared: () => cache.size,
 		cacheState: () => cache.state(),

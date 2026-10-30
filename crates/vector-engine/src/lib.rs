@@ -8,6 +8,15 @@ pub mod catalog;
 mod save_catalog_boundary;
 mod geometry;
 pub mod images;
+mod texts;
+mod text_content;
+mod text_boundary;
+mod text_create;
+mod text_read;
+mod text_queries;
+mod text_generated;
+#[cfg(feature="save-incremental")]
+mod text_save;
 mod image_boundary;
 mod image_objects;
 mod image_queries;
@@ -264,6 +273,7 @@ struct Engine {
     settings: [u32; 2],
     strokes: Vec<Stroke>,
     images: Vec<images::Image>,
+    texts: Vec<texts::Text>,
     active: Option<usize>,
     undo: Vec<Command>,
     redo: Vec<Command>,
@@ -285,6 +295,7 @@ impl Default for Engine {
             settings: [1, 0],
             strokes: Vec::new(),
             images: Vec::new(),
+            texts: Vec::new(),
             active: None,
             undo: Vec::new(),
             redo: Vec::new(),
@@ -324,6 +335,7 @@ impl Engine {
         if !self.can_draw() {
             return usize::MAX;
         }
+        if self.strokes.len() >= crate::texts::TAG {return usize::MAX;}
         let id = self.strokes.len();
         self.strokes.push(Stroke {
             points: Rc::default(),

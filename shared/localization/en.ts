@@ -1,5 +1,24 @@
 import type { Translation } from "./catalog.ts";
 export const en = {
+  "text.help":
+    "Text does not wrap automatically on the canvas. Use Enter for a new line. Done applies your changes.",
+  "text.tool": "Text",
+  "text.add": "Add a Label",
+  "text.edit": "Edit Text",
+  "text.done": "Done",
+  "text.cancel": "Cancel",
+  "text.draft": "Text draft — not saved yet",
+  "text.fallback":
+    "Some characters use a system font. Their appearance may vary on another device.",
+  "text.empty": "Enter text, or cancel. Use Delete to remove an existing label.",
+  "text.limit":
+    "A label can contain up to 16 KiB of text and 256 lines. This label or the document exceeds the current text capacity. Your draft is preserved.",
+  "text.stale":
+    "The drawing changed while editing. Cancel and reopen this label to avoid overwriting changes.",
+  "text.failed": "Could not apply the text. Your draft is preserved.",
+  "text.preparing": "Preparing text…",
+  "text.renderFailed": "Text could not be displayed at this detail. Retry.",
+  "text.field": "Label text",
   "image.import": "Import image",
   "image.formats": "PNG, JPEG or static WebP · up to 32 MiB and 16.8 million pixels",
   "image.cancel": "Cancel import",

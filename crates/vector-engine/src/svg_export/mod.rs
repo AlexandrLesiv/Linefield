@@ -8,6 +8,9 @@ use std::{
 mod boundary;
 mod contract;
 mod images;
+mod state;
+mod texts;
+use state::Job;
 mod measure;
 mod png;
 mod png_validate;
@@ -34,34 +37,6 @@ impl Item {
             (f64::from(s.width) * s.basis[0].hypot(s.basis[1])).to_bits(),
         )
     }
-}
-pub(super) struct Job {
-    token: u32,
-    revision: u64,
-    cursor: usize,
-    count: usize,
-    image_count: usize,
-    image_cursor: usize,
-    images: BTreeMap<(usize, usize, usize), crate::images::Image>,
-    image_digest: [u8; 64],
-    state: u32,
-    items: BTreeMap<(usize, usize, usize, usize), Item>,
-    current: Option<Item>,
-    sources: BTreeSet<usize>,
-    retained: usize,
-    retired: Vec<Rc<Points>>,
-    dropping: Option<Points>,
-    origin: Option<[Address; 2]>,
-    settings: [u32; 2],
-    tolerance: Option<f64>,
-    chunk: usize,
-    consumed: usize,
-    scratch: geometry_wide::Scratch,
-    output: Vec<f64>,
-    layout: measure::Layout,
-    xml: xml::Writer,
-    error: u32,
-    group_last: bool,
 }
 #[derive(Default)]
 struct State {
@@ -98,9 +73,14 @@ pub extern "C" fn svg_begin() -> u32 {
                 cursor: 0,
                 count: e.strokes.len(),
                 image_count: e.images.len(),
+                text_count: e.texts.len(),
+                text_cursor: 0,
+                texts: BTreeMap::new(),
+                text_content: None,
                 image_cursor: 0,
                 images: BTreeMap::new(),
                 image_digest: [0; 64],
+                image_ids: BTreeMap::new(),
                 state: 1,
                 items: BTreeMap::new(),
                 current: None,
@@ -139,6 +119,10 @@ pub extern "C" fn svg_prepare(token: u32) -> u32 {
             let e = e.borrow();
             if busy(&e) || revision() != j.revision || e.strokes.len() != j.count {
                 j.state = 5;
+                return;
+            }
+            if j.text_cursor < j.text_count {
+                texts::capture(j, &e);
                 return;
             }
             if j.image_cursor < j.image_count {

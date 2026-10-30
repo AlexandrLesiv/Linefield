@@ -7,11 +7,15 @@ function run(command: string, args: string[], cwd = root) {
   if (result.error || result.status !== 0)
     throw Error("Vector editor build failed", { cause: result.error });
 }
+mkdirSync(root + "apps/web/public/fonts", { recursive: true });
+for (const name of ["NotoSans-Regular-v1.ttf", "NotoSans-OFL.txt"])
+  copyFileSync(root + "shared/fonts/" + name, root + "apps/web/public/fonts/" + name);
 run(process.execPath, [root + "scripts/localization.ts"]);
 run(process.execPath, [root + "scripts/vector-editor-boundary.ts", "--check"]);
 run(process.execPath, [root + "scripts/vector-editor-save-boundary.ts", "--check"]);
 run(process.execPath, [root + "scripts/svg-export-boundary.ts", "--check"]);
 run(process.execPath, [root + "scripts/image-boundary.ts", "--check"]);
+run(process.execPath, [root + "scripts/text-boundary.ts", "--check"]);
 run("cargo", [
   "build",
   "--locked",

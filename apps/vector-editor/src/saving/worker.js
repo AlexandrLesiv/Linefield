@@ -5,6 +5,7 @@ importScripts(
   "./admission.js",
   "./hash-boundary.js",
   "./image-boundary-generated.js",
+  "./text-boundary-generated.js",
   "./worker-hash.js",
   "./chunk-generated.js",
   "./chunk-schema.js",

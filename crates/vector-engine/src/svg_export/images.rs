@@ -14,8 +14,9 @@ pub(super) fn capture(j: &mut Job, e: &crate::Engine) {
                 region: a.region,
                 local: 0.0,
             }));
+        j.image_ids.insert(i.order, crate::images::TAG + index);
         j.images.insert(
-            (e.layers[i.layer].rank.unwrap(), i.before_source, index),
+            (e.layers[i.layer].rank.unwrap(), i.before_source, i.order),
             i.clone(),
         );
     }
@@ -40,7 +41,7 @@ pub(super) fn produce(j: &mut Job) -> Option<usize> {
     j.output.clear();
     j.output.extend_from_slice(&[
         2.0,
-        (crate::images::TAG + index) as f64,
+        j.image_ids.remove(&index)? as f64,
         source as f64,
         0.0,
         i.layer as f64,

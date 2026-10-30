@@ -14,6 +14,7 @@ pub(super) struct Image {
     pub bytes: u32,
     pub layer: usize,
     pub before_source: usize,
+    pub order: usize,
     pub anchor: [Address; 2],
     pub basis: [f64; 2],
     pub offset: [f64; 2],
@@ -43,6 +44,7 @@ impl Image {
             bytes: 0,
             layer: 0,
             before_source: 0,
+            order: 0,
             anchor: [Address {
                 region: 0,
                 local: 0.0,

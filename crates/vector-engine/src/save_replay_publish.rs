@@ -37,6 +37,7 @@ impl Model {
             if *id != e.images.len() { return None; }
             e.images.push(image.clone());
         }
+        for (id,t) in &self.texts {if *id!=e.texts.len(){return None;}e.texts.push(t.clone());}
         if !e.image_budget(None,None,None) { return None; }
         e.refresh_blend_groups();
         Some(e)

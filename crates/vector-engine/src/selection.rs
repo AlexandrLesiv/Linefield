@@ -117,7 +117,7 @@ impl Engine {
             let size = t[0].hypot(t[1]);
             !self.object_editable(c.id)
                 || !t.iter().all(|v| v.is_finite())
-                || !(if c.id >= crate::images::TAG {0.000000001} else {0.001}..=1000.0).contains(&size)
+                || !(if c.id >= crate::texts::TAG {0.000000001} else {0.001}..=1000.0).contains(&size)
                 || self.object_anchor(c.id)[0].offset(t[2]).is_none()
                 || self.object_anchor(c.id)[1].offset(t[3]).is_none()
         }) {

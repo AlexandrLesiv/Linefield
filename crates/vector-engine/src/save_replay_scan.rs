@@ -41,7 +41,7 @@ impl Scan {
                 self.checkpoint = magic == b"LFC4";
                 self.version = r.word()?;
                 if (magic != b"LFD3" && !self.checkpoint)
-                    || !(1..=3).contains(&self.version)
+                    || !(1..=4).contains(&self.version)
                     || r.wide()? != base
                     || r.wide()? != result
                 {
@@ -50,7 +50,7 @@ impl Scan {
                 self.operations = r.word()?;
                 self.descriptors = r.word()?;
                 if self.operations == 0
-                    || self.operations > if self.checkpoint { 120_000 } else { 100_000 }
+                    || self.operations > if self.checkpoint { 130_000 } else { 100_000 }
                     || self.descriptors + 1 != streams
                     || (!self.checkpoint && base.checked_add(self.operations as u64)? != result)
                     || (self.checkpoint && base != 0)
@@ -109,6 +109,7 @@ impl Scan {
                     if (available[0] == 6 && !self.checkpoint)
                         || (available[0] == 7 && self.version < 2)
                         || (available[0] == 8 && self.version < 3)
+                        || (matches!(available[0], 9 | 10) && self.version < 4)
                     {
                         return None;
                     }
@@ -153,44 +154,12 @@ impl Scan {
         }
         self.bytes.drain(..at);
         // Largest valid record is the bounded layer-order vector.
-        if self.bytes.len() > 16389 {
+        if self.bytes.len() > 16525 {
             return None;
         }
         Some(())
     }
 }
-fn record_size(bytes: &[u8]) -> Option<Option<usize>> {
-    let Some(tag) = bytes.first() else {
-        return Some(None);
-    };
-    let size = match tag {
-        1 => 121,
-        7 => crate::image_save::RECORD_BYTES,
-        8 => 5,
-        2 => 5,
-        6 => 5,
-        3 => {
-            if bytes.len() < 21 {
-                return Some(None);
-            }
-            let n = u32::from_le_bytes(bytes[17..21].try_into().ok()?) as usize;
-            if n > 512 {
-                return None;
-            }
-            21 + n
-        }
-        4 => {
-            if bytes.len() < 5 {
-                return Some(None);
-            }
-            let n = u32::from_le_bytes(bytes[1..5].try_into().ok()?) as usize;
-            if n == 0 || n > 4096 {
-                return None;
-            }
-            5 + n * 4
-        }
-        5 => 9,
-        _ => return None,
-    };
-    Some((bytes.len() >= size).then_some(size))
-}
+#[path = "save_replay_size.rs"]
+mod sizes;
+use sizes::record_size;

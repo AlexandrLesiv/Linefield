@@ -1,3 +1,4 @@
+import { textExportRaster } from "../text/svg-raster";
 import { imageRaster } from "../images/svg-raster";
 import { createInkProgram } from "../ink-program";
 import { CoverageRenderer } from "../coverage-renderer";
@@ -56,7 +57,9 @@ export async function createGpu(view: ExportView, wasmUrl: string, permit: () =>
     };
     clear();
     const images = imageRaster(gl, view, permit, clear);
+    const texts = textExportRaster(gl, view, permit, clear);
     return {
+      text: texts.draw,
       image: images.draw,
       healthy,
       async background() {
@@ -139,6 +142,7 @@ export async function createGpu(view: ExportView, wasmUrl: string, permit: () =>
       },
       dispose() {
         images.dispose();
+        texts.dispose();
         coverage.dispose();
         gl.deleteProgram(ink.program);
         gl.deleteBuffer(buffer);

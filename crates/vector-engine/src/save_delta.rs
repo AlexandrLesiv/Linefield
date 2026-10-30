@@ -86,9 +86,11 @@ impl Journal {
                     wire::word(&mut out, value as usize);
                 }
             }
-            Command::Stroke(id) | Command::Image(id) | Command::ImageOpacity(id, _, _) => {
-                ids.push(*id)
-            }
+            Command::Text(id)
+            | Command::TextEdit(id, _, _)
+            | Command::Stroke(id)
+            | Command::Image(id)
+            | Command::ImageOpacity(id, _, _) => ids.push(*id),
             Command::ImageRetire(retired) => ids.extend(retired),
             Command::Move(moves) => ids.extend(moves.iter().map(|m| m.id)),
             Command::Delete(deleted) => ids.extend(deleted),
@@ -128,6 +130,11 @@ impl Journal {
             }
         }
         for id in ids {
+            if let Some(t) = e.text(id) {
+                crate::text_save::encode(&mut out, id, t);
+                self.records += 1;
+                continue;
+            }
             if let Some(image) = id
                 .checked_sub(crate::images::TAG)
                 .and_then(|index| e.images.get(index))
@@ -170,30 +177,6 @@ impl Journal {
 pub(super) fn completed(e: &Engine, command: &Command) {
     JOURNAL.with(|j| j.borrow_mut().record(e, command));
 }
-pub(super) fn reset(e: &Engine, revision: u64, sources: &BTreeMap<usize, Rc<Points>>) -> bool {
-    #[cfg(feature = "save-idle")]
-    if super::save_idle::owned() {
-        return false;
-    }
-    JOURNAL.with(|j| {
-        let mut j = j.borrow_mut();
-        let Some(generation) = j.generation.checked_add(1) else {
-            return false;
-        };
-        let mut next = Journal {
-            revision,
-            durable: revision,
-            generation,
-            active: e.layer_order.iter().copied().collect(),
-            known: sources.keys().copied().collect(),
-            samples: sources.values().map(|p| p.len()).sum(),
-            ..Journal::default()
-        };
-        for (id, s) in e.strokes.iter().enumerate().filter(|(_, s)| s.visible) {
-            next.completed.insert(id, wire::stroke(id, s));
-            next.members.entry(s.layer).or_default().insert(id);
-        }
-        *j = next;
-        true
-    })
-}
+#[path = "save_delta_reset.rs"]
+mod resetting;
+pub(super) use resetting::reset;
