@@ -61,6 +61,23 @@ export class PointerRelease {
       event.timeStamp > this.latest
     );
   }
+  isNewDevice(event: PointerEvent): boolean {
+    const contact = this.contact;
+    return (
+      !!contact &&
+      contact.pendingAt !== null &&
+      contact.primary &&
+      ["pen", "mouse"].includes(contact.source) &&
+      ["pen", "mouse"].includes(event.pointerType) &&
+      event.pointerType !== contact.source &&
+      event.isPrimary &&
+      event.type === "pointerdown" &&
+      event.button === 0 &&
+      event.buttons === 1 &&
+      event.timeStamp > this.latest &&
+      event.timeStamp > contact.pendingAt
+    );
+  }
   observe(event: PointerEvent): void {
     if (this.matches(event)) this.latest = Math.max(this.latest, event.timeStamp);
   }

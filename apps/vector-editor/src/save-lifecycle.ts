@@ -38,19 +38,34 @@ export function saveLifecycle(
     }
     update();
   };
+  function state() {
+    const adapter = saving.state();
+    return {
+      phase:
+        adapter.phase === "error" || adapter.phase === "saving"
+          ? adapter.phase
+          : unsaved()
+            ? "pending"
+            : "saved",
+      error: adapter.error,
+      adapterPhase: adapter.phase,
+      active: active(),
+      hasUnsaved: unsaved(),
+    };
+  }
   function update() {
     if (leaving) {
       ui.set(active() ? "waitStroke" : "leaving", undefined, cancel);
       return;
     }
-    const current = saving.state();
-    const state = current.phase;
+    const current = state();
+    const phase = current.phase;
     ui.set(
-      state === "error"
+      phase === "error"
         ? current.error?.includes("capacity")
           ? "capacity"
           : "failed"
-        : state === "saving"
+        : phase === "saving"
           ? "saving"
           : unsaved()
             ? "pending"
@@ -103,6 +118,7 @@ export function saveLifecycle(
   return {
     tick,
     update,
+    state,
     hasUnsaved: unsaved,
     get leaving() {
       return leaving;

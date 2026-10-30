@@ -8,6 +8,10 @@ Current gallery work: apps/web live prototype, decision 214; see ../docs/design/
 
 # Task board
 
+Current input fix: [INPUT-04](INPUT-04-pending-device.md), narrowly recover a pending
+drawing on a fresh separate-device canvas press and report document-level Saved truth.
+Stacked on INPUT-02; rejected INPUT-03 behavior is excluded. Existing previews stay frozen.
+
 Current approved follow-on: [SAVE-06](SAVE-06.md), reload and real saved-drawing gallery with white thumbnails, then bounded capacity scaling. Existing previews remain frozen; no merge authorized.
 
 Current owner-authorized saving integration: [SAVE-05](SAVE-05.md), full-app local saving, separate preview and responsiveness/recovery checks, following bounded [SAVE-04](SAVE-04.md), following incremental [SAVE-03](SAVE-03.md) and [SAVE-02](SAVE-02.md) and the transferred-buffer baseline approved after [SAVE-01](SAVE-01.md). Saving is enabled only in the separate integrated candidate pending owner review; existing integration previews remain unchanged.

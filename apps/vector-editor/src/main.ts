@@ -710,6 +710,7 @@ function cancel(reason = "interaction-cancelled") {
 	updateCursor();
 	dirty = true;
 	releasePointer(canvas, releasedPointer);
+  savingLifecycle.tick();
 }
 function selectionInput(action: () => void): boolean {
 	try {
@@ -736,6 +737,7 @@ function recoverDrawing(event: PointerEvent, reason: string) {
   updateCursor();
   dirty = true;
   releasePointer(canvas, released);
+  savingLifecycle.tick();
 }
 canvas.addEventListener("pointerdown", (e) => {
 	if (pointerRelease.pending && gesture !== "draw") cancel("new-contact-before-release");
@@ -786,6 +788,7 @@ canvas.addEventListener("pointerdown", (e) => {
 		inputAt = performance.now();
 	}
 	dirty = true;
+  savingLifecycle.update();
 });
 function movePointer(e: PointerEvent) {
 	if (pointer === null && tool === "slice") slice.hover(e);
@@ -844,6 +847,7 @@ function finishPointer(e: PointerEvent) {
 	dirty = true;
 	pointerRelease.clear();
 	releasePointer(canvas, e.pointerId);
+  savingLifecycle.tick();
 }
 canvas.addEventListener("pointerup", finishPointer);
 canvas.addEventListener("pointercancel", (e) => {
@@ -854,6 +858,7 @@ canvas.addEventListener("lostpointercapture", (e) => {
 	inputDiagnostics.note("capture-loss", e);
 	if (gesture === "draw" && pointerRelease.defer(e)) {
 		inputDiagnostics.note("release-pending", e, active === null ? undefined : core.raw_length(active));
+    savingLifecycle.update();
 	} else cancel("capture-loss-during-contact");
 });
 // Capture is gone: the matching release may target another element in this document.
@@ -868,6 +873,10 @@ for (const kind of ["pointerup", "pointercancel", "pointerdown", "pointermove", 
           `from:${former};capture:${captured}`);
         releasePointer(canvas, former);
       }
+      if (kind === "pointerdown" && event.target === canvas && pointer !== null &&
+          !savingLifecycle.leaving && !lost && !canvas.hasPointerCapture(pointer) &&
+          pointerRelease.isNewDevice(event))
+        recoverDrawing(event, "new-device-after-release-pending");
       if (kind === "pointerdown" && pointerRelease.isNewContact(event))
         recoverDrawing(event, "new-primary-contact");
       else if (kind === "pointermove" && event.buttons === 0 && pointerRelease.matches(event)) {
@@ -905,7 +914,7 @@ inputDiagnostics.setState(() => ({
   focused: document.hasFocus(), visibility: document.visibilityState,
   leaving: savingLifecycle.leaving, gpuLost: lost,
   revision: String(saveCore.delta_revision()), durable: String(saveCore.delta_durable()),
-  saving: { phase: saving.state().phase, error: saving.state().error },
+  saving: savingLifecycle.state(),
 }));
 saving.subscribe(() => savingLifecycle.update());
 installEditorSession(suspendInput, { ...savingLifecycle, close: () => saving.close() });
