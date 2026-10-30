@@ -9,5 +9,5 @@
     "allowImportingTsExtensions": true,
     "types": []
   },
-  "include": ["main.ts", "worker.ts"]
+  "include": ["*.ts"]
 }

@@ -1,3 +1,4 @@
+import { installSvgExport } from "./svg-export-ui/integration";
 import { installEditorPanels } from "./editor-panels";
 import { createSaving } from "./saving";
 import { checkedSaveCore } from "./saving/types";
@@ -1128,4 +1129,6 @@ Object.assign(window, {
 status.textContent = "Ready";
 
 editorPanels.setCanOpen(() => pointer === null);
+installSvgExport(core, () => pointer !== null || lost || savingLifecycle.leaving,
+  (event) => inputDiagnostics.note(`svg-${event.kind}`, undefined, undefined, JSON.stringify(event)));
 startupComplete = true;

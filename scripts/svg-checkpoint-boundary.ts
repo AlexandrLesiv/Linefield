@@ -8,7 +8,7 @@ function scalar(type: string): string {
   throw Error(`Unsupported checkpoint scalar: ${type}`);
 }
 for (const file of ["mod", "boundary", "stream", "retire"]) {
-  const source = readFileSync(`${root}crates/vector-engine/src/svg_checkpoint/${file}.rs`, "utf8");
+  const source = readFileSync(`${root}crates/vector-engine/src/svg_export/${file}.rs`, "utf8");
   for (const match of source.matchAll(/pub extern "C" fn (\w+)\(([^)]*)\)\s*->\s*([^{]+)\{/g)) {
     const args = match[2]!
       .split(",")

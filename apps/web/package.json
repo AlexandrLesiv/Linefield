@@ -7,7 +7,7 @@
     "dev": "node ../../scripts/build-vector-editor.ts && node ../../scripts/web-memory/build.ts && node ../../scripts/localization.ts && vite --host 127.0.0.1 --port 65142 --strictPort",
     "build": "node ../../scripts/build-vector-editor.ts && node ../../scripts/web-memory/build.ts && node ../../scripts/localization.ts && tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1 --port 65142 --strictPort",
-    "typecheck": "node ../../scripts/localization.ts && tsc --noEmit",
+    "typecheck": "node ../../scripts/localization.ts && tsc --noEmit && tsc -p tests/fixtures/svg-export/tsconfig.json",
     "test": "node ../../scripts/web-memory/test.ts",
     "lint": "oxlint --deny-warnings src tests",
     "format:check": "oxfmt --check src tests *.ts *.json index.html",

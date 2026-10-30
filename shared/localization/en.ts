@@ -1,5 +1,32 @@
 import type { Translation } from "./catalog.ts";
 export const en = {
+  "svg.title": "Export SVG",
+  "svg.background": "Background",
+  "svg.current": "Current paper",
+  "svg.white": "White",
+  "svg.transparent": "Transparent",
+  "svg.density": "Raster detail",
+  "svg.grid": "Include grid",
+  "svg.disclosure":
+    "Preserves the drawing appearance using embedded lossless images. These are not editable vector paths.",
+  "svg.region":
+    "Exports all visible artwork, upright, with a small margin. Hidden layers are excluded.",
+  "svg.transparentGrid": "Grid is unavailable with a transparent background.",
+  "svg.start": "Prepare SVG",
+  "svg.cancel": "Cancel export",
+  "svg.close": "Close",
+  "svg.preparing": "Preparing SVG…",
+  "svg.rendering": "Rendering SVG artwork…",
+  "svg.encoding": "Encoding SVG…",
+  "svg.paused": "Export paused while you draw",
+  "svg.ready": "SVG is ready",
+  "svg.download": "Download SVG",
+  "svg.cancelled": "Export cancelled",
+  "svg.failed": "Could not export. Your drawing is unchanged. Try again from Settings.",
+  "svg.limit":
+    "This export exceeds the current size limit. No file was created and the drawing is unchanged.",
+  "svg.busy": "Finish the current gesture before exporting.",
+
   "editor.renderAttention": "Drawing needs attention",
   "editor.shortcuts":
     "Undo: Ctrl/⌘ + Z · Redo: Shift + Ctrl/⌘ + Z · Reset view: 0 · Reset rotation: Shift + 0",
