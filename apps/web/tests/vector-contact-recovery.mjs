@@ -21,10 +21,10 @@ try {
       await page.goto(url);
       await page.locator(".new-tile").click();
       await page.locator("iframe").waitFor();
-      let f = page.frames().find((candidate) => candidate.url().includes("/vector-editor/"));
+      let f = page.frames().find((f) => f.url().includes("/vector-editor/"));
       await f.waitForFunction(() => !!window.lab);
       const result = await f.evaluate(
-        ({ source: inputSource, scenario: inputScenario }) => {
+        ({ source, scenario }) => {
           const c = document.querySelector("canvas"),
             r = c.getBoundingClientRect();
           c.setPointerCapture = () => {};
@@ -34,7 +34,7 @@ try {
           const event = (type, extra = {}) => {
             const e = new PointerEvent(type, {
               bubbles: true,
-              pointerType: inputSource,
+              pointerType: source,
               pointerId: 2,
               isPrimary: true,
               button: 0,
@@ -61,16 +61,15 @@ try {
           const before = raw(0);
           send("pointerup", { pointerId: 3 }); // Reported mismatch must not commit by itself.
           const afterForeign = lab.inputDiagnostics().state;
-          if (inputScenario === "outside-up")
+          if (scenario === "outside-up")
             send("pointerup", { clientX: r.left + 220 }, document.body);
-          else if (inputScenario.startsWith("pending-")) {
+          else if (scenario.startsWith("pending-")) {
             c.hasPointerCapture = () => false;
             send("lostpointercapture", { buttons: 0, button: -1 });
-            send(inputScenario === "pending-pressed" ? "pointermove" : "gotpointercapture");
-            send("pointerup");
-          } else if (inputScenario.includes("hover")) {
+            send(scenario === "pending-pressed" ? "pointermove" : "gotpointercapture");
+          } else if (scenario.includes("hover")) {
             const samples =
-              inputScenario === "coalesced-hover"
+              scenario === "coalesced-hover"
                 ? [
                     event("pointermove", { clientX: r.left + 221 }),
                     event("pointermove", { clientX: r.left + 222, buttons: 3 }),
@@ -85,16 +84,16 @@ try {
             Object.defineProperty(hover, "getCoalescedEvents", { value: () => samples });
             c.dispatchEvent(hover);
           } else {
-            if (inputScenario === "foreign-pending") {
+            if (scenario === "foreign-pending") {
               c.hasPointerCapture = () => false;
               send("lostpointercapture", { buttons: 0, button: -1 });
               send(
                 "pointerdown",
-                { pointerType: inputSource === "pen" ? "mouse" : "pen" },
+                { pointerType: source === "pen" ? "mouse" : "pen" },
                 document.body,
               );
             }
-            const id = inputScenario === "same-id" ? 2 : 3;
+            const id = scenario === "same-id" ? 2 : 3;
             send("pointerdown", { pointerId: id, clientX: r.left + 400 });
             send("pointermove", { pointerId: id, clientX: r.left + 410 });
             send("pointerup", { pointerId: id, clientX: r.left + 410 });
@@ -115,8 +114,7 @@ try {
       assert.deepEqual(result.after.slice(0, result.before.length), result.before);
       assert.equal(
         result.after.length,
-        result.before.length +
-          (scenario === "coalesced-hover" ? 2 : scenario.startsWith("pending-") ? 1 : 0),
+        result.before.length + (scenario === "coalesced-hover" ? 2 : 0),
       );
       assert.equal(result.log.state.pointer, null);
       const expected = ["new-id", "same-id", "foreign-pending"].includes(scenario) ? 2 : 1;
@@ -167,7 +165,7 @@ try {
       assert.equal(await f.evaluate(() => lab.saving.state().phase), "saved");
       await page.reload();
       await page.locator("iframe").waitFor();
-      f = page.frames().find((candidate) => candidate.url().includes("/vector-editor/"));
+      f = page.frames().find((f) => f.url().includes("/vector-editor/"));
       await f.waitForFunction(() => !!window.lab);
       assert.equal(await digest(f), before);
       console.log(

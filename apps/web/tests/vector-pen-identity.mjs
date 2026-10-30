@@ -13,7 +13,7 @@ try {
     await page.goto(url);
     await page.locator(".new-tile").click();
     await page.locator("iframe").waitFor();
-    let f = page.frames().find((candidate) => candidate.url().includes("/vector-editor/"));
+    let f = page.frames().find((f) => f.url().includes("/vector-editor/"));
     await f.waitForFunction(() => !!window.lab);
     const result = await f.evaluate((failCapture) => {
       const c = document.querySelector("canvas"),
@@ -139,7 +139,7 @@ try {
     await f.evaluate(() => lab.saving.flush(true));
     await page.reload();
     await page.locator("iframe").waitFor();
-    f = page.frames().find((candidate) => candidate.url().includes("/vector-editor/"));
+    f = page.frames().find((f) => f.url().includes("/vector-editor/"));
     await f.waitForFunction(() => !!window.lab);
     assert.equal(await digest(f), before);
     const cancelled = await f.evaluate(() => {
@@ -172,7 +172,7 @@ try {
     });
     assert.equal(cancelled.state.pointer, null);
     assert(
-      cancelled.entries.some((e) => e.kind === "commit" && e.reason === "document-pointer-cancel"),
+      cancelled.entries.some((e) => e.kind === "cancel" && e.reason === "document-pointer-cancel"),
     );
     console.log(
       `pen identity transition captureFailure=${failure}: exact samples, continuity, exclusions, history and reload passed`,

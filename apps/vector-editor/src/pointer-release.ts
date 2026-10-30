@@ -45,26 +45,6 @@ export class PointerRelease {
     if (this.contact && this.contact.pendingAt === null) this.contact.pendingAt = event.timeStamp;
     return true;
   }
-  resume(event: PointerEvent): boolean {
-    const contact = this.contact;
-    if (
-      !contact ||
-      contact.pendingAt === null ||
-      !this.matches(event) ||
-      event.type !== "pointermove" ||
-      event.isPrimary !== contact.primary ||
-      (event.buttons & 1) === 0 ||
-      event.timeStamp <= contact.pendingAt ||
-      event.timeStamp <= this.latest
-    )
-      return false;
-    // Capture loss is ambiguous without an actual release. Newer owner contact
-    // allows continuation; reject queued terminal events from before this evidence.
-    contact.pendingAt = null;
-    contact.started = event.timeStamp;
-    this.latest = event.timeStamp;
-    return true;
-  }
   canRelease(event: PointerEvent): boolean {
     return this.matches(event) && event.button >= 0 && event.buttons === 0;
   }
