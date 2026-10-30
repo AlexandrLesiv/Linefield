@@ -1,3 +1,4 @@
+import { savedDrawingCreation } from "./saved-drawing-creation.ts";
 import { refreshSavedDate } from "./library-metadata.ts";
 import { nextDrawingPage } from "./library-pagination.ts";
 import { libraryRoutes } from "./library-routes.ts";
@@ -18,7 +19,6 @@ let drawings: Drawing[] = [],
 let busy = false,
   ready = false,
   nextOffset: number | null = null;
-let pendingCreate: { id: string; locale: "en" | "uk" } | undefined;
 const { toolbar, gallery, status, notice, card } = createGalleryShell(app);
 const store = library();
 const navigation = createNavigation(gallery, (restoreFocus) => {
@@ -47,13 +47,13 @@ const actions = savedGalleryActions(
 function render() {
   renderGallery(gallery, drawings, {
     open: (drawing, origin) => void open(drawing, origin),
-    create: () => void create(),
+    create: (origin) => void create(origin),
     undo: actions.undo,
   });
   actions.install(drawings);
   if (nextOffset !== null) gallery.append(button(t("library.more"), "", () => void more()));
 }
-async function open(drawing: Drawing, origin: HTMLElement) {
+async function open(drawing: Drawing, origin: HTMLElement, settled?: () => void) {
   if (drawing.deleted || busy || navigation.active || !ready) return;
   busy = true;
   toolbar.inert = true;
@@ -69,36 +69,32 @@ async function open(drawing: Drawing, origin: HTMLElement) {
     currentId = null;
     galleryRoute();
   } finally {
+    settled?.();
     busy = false;
     routes.resume();
   }
 }
-async function create() {
-  if (busy || navigation.active || !ready) return;
-  busy = true;
-  gallery.inert = true;
-  status.textContent = t("library.creating");
-  pendingCreate ??= { id: crypto.randomUUID(), locale };
-  try {
-    const drawing = project(await store.create(pendingCreate));
-    pendingCreate = undefined;
+const create = savedDrawingCreation({
+  store,
+  gallery,
+  status,
+  render,
+  blocked: () => busy || navigation.active || !ready,
+  working: (value) => {
+    busy = value;
+  },
+  open,
+  adopt(drawing) {
     drawings = [drawing, ...drawings.filter((item) => item.id !== drawing.id)];
     render();
-    status.textContent = t("library.created");
-    busy = false;
-    await open(drawing, card(drawing.id)!);
-  } catch {
-    render();
-    gallery.append(
-      element("p", "", t("library.createFailed")),
-      button(t("library.retry"), "", () => void create()),
-    );
-  } finally {
-    busy = false;
+    const target = card(drawing.id);
+    if (target) navigation.retarget(target);
+  },
+  finished() {
     gallery.inert = navigation.active;
     routes.resume();
-  }
-}
+  },
+});
 async function more() {
   if (busy || nextOffset === null || navigation.active) return;
   busy = true;

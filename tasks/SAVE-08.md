@@ -87,3 +87,19 @@ deletion without duplicates/skips, and130 unique cards after Undo.
 All eight SAVE08 E2E suites pass on65377, including deleted legacy drawing discovery (no
 resurrection), transaction rollback, committed-worker loss/lost acknowledgement and exact
 retry recovery. No SAVE08 acceptance failures remain. Task is ready for owner review; not merged.
+
+## Creation-motion correction
+
+Owner reported gallery reflow during new-document expansion. Preserve the clicked desktop
+or mobile creation control and existing card layout through the expansion. Publish the new
+gallery tile only after expansion completes, then retarget the return transition to it before
+reconciling queued route intents. Durable creation remains independent of presentation: an
+open failure must retain the already-created drawing, and retries must not duplicate it.
+Cover normal/reduced motion, mobile creation and Back queued during expansion.
+
+The regression fails on65378 (new card present at the first expansion frame) and passes on
+65379 for desktop, mobile, reduced motion and Back queued during expansion. Each checks
+stable gallery IDs/order through expansion, exactly one subsequent insertion and the correct
+return target. Independent source review and scoped types/lint/format/build checks pass.
+Injected editor-startup failure after durable creation also retains exactly one new card;
+reopening the same document succeeds and reload preserves the identical drawing IDs.
