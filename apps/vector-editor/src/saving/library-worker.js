@@ -41,7 +41,7 @@ async function initializeCatalog(locale) {
     });
   } else if (!found.catalog) await withCatalog(true, () => {});
   // Reconcile a crash between catalog creation and legacy publication without moving its files.
-  if (found.legacy && !(await catalogGet("drawing"))) {
+  if (found.legacy && !(await catalogExists("drawing"))) {
     try {
       await targetLock("drawing", async () => {
         const incarnation = await validateDrawing("drawing", false);
@@ -66,6 +66,8 @@ async function completeCreation(id, locale, existingOnly = false) {
 async function libraryCommand(message) {
   const locale = message.locale === "uk" ? "uk" : "en";
   const recoveryErrors = await initializeCatalog(locale);
+  if (["library-rename", "library-remove", "library-undo"].includes(message.kind))
+    return catalogAction(message);
   if (message.kind === "library-create") {
     if (message.document === "drawing") throw Error("storage-document");
     return completeCreation(message.document, locale);

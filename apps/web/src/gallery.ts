@@ -2,14 +2,15 @@ import { modifiedLabel } from "./library-metadata.ts";
 import { savedName, savedDate, whiteThumbnail } from "./saved-cards.css.ts";
 import { creationClearance } from "./memory/creation-clearance.ts";
 import { newCell, mobileCreate, newTile, newLabel } from "./gallery-creation.css.ts";
-import { empty } from "./states.css.ts";
-import { drawingGrid, drawingCard, drawingTile, artwork } from "./cards.css.ts";
+import { empty, removed } from "./states.css.ts";
+import { drawingGrid, drawingCard, drawingTile, artwork, removal, undo } from "./cards.css.ts";
 import { t } from "./locale.ts";
 import { button, element } from "./dom.ts";
 import type { Drawing } from "./model.ts";
 interface Actions {
   open: (drawing: Drawing, origin: HTMLElement) => void;
   create: (origin: HTMLElement) => void;
+  undo: (drawing: Drawing, origin: HTMLElement) => void;
 }
 export function renderGallery(root: HTMLElement, drawings: Drawing[], actions: Actions): void {
   root.replaceChildren();
@@ -36,6 +37,17 @@ export function renderGallery(root: HTMLElement, drawings: Drawing[], actions: A
       open.append(date);
     }
     card.append(open);
+    if (drawing.deleted) {
+      card.classList.add("removed", removed);
+      open.inert = true;
+      open.setAttribute("aria-hidden", "true");
+      const slot = element("div", `removal ${removal}`);
+      const restore = button(t("action.undo"), `undo ${undo}`, () =>
+        actions.undo(drawing, restore),
+      );
+      slot.append(element("span", "", t("drawing.deleted", { name: drawing.name })), restore);
+      card.append(slot);
+    }
     grid.append(card);
   }
   root.append(grid);

@@ -2,6 +2,8 @@ use std::{cell::RefCell, rc::Rc};
 mod boundary_generated;
 #[cfg(feature = "save-app")]
 pub mod catalog;
+#[cfg(feature = "save-app")]
+mod save_catalog_boundary;
 mod geometry;
 #[cfg(feature = "save-checkpoint")]
 mod save_checkpoint;

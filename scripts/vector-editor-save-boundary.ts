@@ -4,6 +4,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const sources = [
+  "save_catalog_boundary",
   "save_delta_transport",
   "save_idle",
   "save_idle_stream",

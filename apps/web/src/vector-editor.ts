@@ -86,3 +86,15 @@ export async function createVectorShell(id: string, name: string, back: () => vo
     },
   };
 }
+
+/** Deletion releases only this drawing's cached writer after successful durable flushing. */
+export async function releaseVectorSession(id: string): Promise<void> {
+  if (!editor || documentId !== id) return;
+  const current = editor;
+  await closeEditorSession(current.contentWindow);
+  current.remove();
+  if (editor === current) {
+    editor = undefined;
+    documentId = undefined;
+  }
+}
