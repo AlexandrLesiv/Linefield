@@ -283,6 +283,7 @@ impl Engine {
                 g.candidates.push(original);
                 continue;
             };
+            if self.strokes.len().checked_add(ranges.len()).is_none_or(|n| n >= crate::texts::TAG) {g.candidates.push(original);continue;}
             let owner = if let Some(&owner) = g.owners.get(&original) {
                 owner
             } else {

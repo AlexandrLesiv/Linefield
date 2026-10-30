@@ -11,6 +11,8 @@ pub(super) struct Layout {
     pub bounds: Option<[f64; 4]>,
     pub image_key: Option<(usize, usize, usize)>,
     pub images_done: bool,
+    pub text_key: Option<(usize, usize, usize)>,
+    pub texts_done: bool,
     pub view: [f64; 9],
 }
 pub(super) fn fail(j: &mut Job, code: u32) -> u32 {
@@ -53,6 +55,9 @@ pub extern "C" fn svg_configure(token: u32, density: f64, background: u32, grid:
     })
 }
 fn step(j: &mut Job) -> Option<()> {
+    if !j.layout.texts_done {
+        return super::texts::measure(j);
+    }
     if !j.layout.images_done {
         return super::images::measure(j);
     }

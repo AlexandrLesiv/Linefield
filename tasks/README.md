@@ -1,3 +1,5 @@
+Current text integration: [TEXT-01](TEXT-01.md), owner-authorized Concepts-inspired editable labels, with shared Rust history/persistence and bounded canvas rendering. Stacks on IMG-04; existing previews remain frozen and no merge is authorized.
+
 Current image recovery: [IMG-04](IMG-04.md), owner-authorized abandoned import/export ownership recovery; stacks on [IMG-03](IMG-03.md) safe cleanup and 32 MiB capacity. Existing previews remain frozen; no merge authorized.
 
 Current image integration: [IMG-02](IMG-02.md), owner-authorized canonical images, editing, durable assets and appearance-preserving SVG; stacks on IMG-01 and verified SAVE08 dependencies.

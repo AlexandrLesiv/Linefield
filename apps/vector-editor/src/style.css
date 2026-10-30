@@ -532,3 +532,14 @@ button:disabled {
 	font-size: 12px;
 	pointer-events: none;
 }
+
+#text-editor { width: min(36rem, calc(100vw - 3rem)); border: 1px solid #8888; border-radius: 16px; padding: 24px; color: inherit; background: Canvas; }
+#text-editor::backdrop { background: #0005; }
+#text-editor textarea { box-sizing: border-box; width: 100%; resize: vertical; min-height: 8rem; font: 1.1rem system-ui; padding: 12px; border-radius: 8px; }
+#text-editor > div { display: flex; gap: 12px; justify-content: flex-end; }
+#text-editor p { font-size: .9rem; }
+#text-error { color: #b42318; }
+#text-editor h2 { margin-top: 0; }
+#text-editor { max-height: calc(100dvh - 3rem); overflow: auto; }
+#text-editor textarea { max-height: 45dvh; }
+#text-render-notice, #text-style-error { position: absolute; right: 16px; top: 100%; z-index: 3; max-width: 24rem; }

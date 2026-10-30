@@ -71,6 +71,7 @@ pub extern "C" fn image_add(
             bytes,
             layer,
             before_source: e.strokes.len(),
+            order: e.next_object_order(),
             anchor: [
                 Address::normalized(rx, x).ok_or(1u32)?,
                 Address::normalized(ry, y).ok_or(1u32)?,

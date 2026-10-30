@@ -120,8 +120,10 @@ export class SvgExportController {
           if (c.svg_status(t) !== 3 || c.svg_error(t)) throw Error("svg-geometry-failed");
           break;
         }
-        if (length < 24 || length > 6168 || (length - 24) % 6) throw Error("svg-packet-boundary");
+        if (length < 24 || length > 6168 || (length !== 26 && (length - 24) % 6))
+          throw Error("svg-packet-boundary");
         const values = new Float64Array(c.memory.buffer, c.svg_output_ptr(t), length).slice();
+        if (length === 26 && values[0] !== 3) throw Error("svg-packet-boundary");
         const last = c.svg_group_last(t) === 1;
         await sendImageOrInk(c, t, this.worker, values, last, this.options.resolveAsset);
         this.progress.packets++;

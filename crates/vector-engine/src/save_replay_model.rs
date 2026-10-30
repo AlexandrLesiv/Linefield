@@ -15,6 +15,7 @@ pub(super) struct Model {
     pub sources: BTreeMap<usize, Rc<Points>>,
     pub strokes: BTreeMap<usize, Stroke>,
     pub images: BTreeMap<usize, crate::images::Image>,
+    pub texts: BTreeMap<usize, crate::texts::Text>,
     pub layers: BTreeMap<usize, Layer>,
     pub order: Vec<usize>,
     pub high: usize,
@@ -34,6 +35,7 @@ impl Default for Model {
             sources: BTreeMap::new(),
             strokes: BTreeMap::new(),
             images: BTreeMap::new(),
+            texts: BTreeMap::new(),
             layers: BTreeMap::from([(0, Layer::new("Layer 1".into()))]),
             order: vec![0],
             high: 0,
@@ -53,7 +55,8 @@ impl Model {
                 if points.blocks.pop().is_none() {
                     self.retiring = None;
                 }
-            } else if self.images.pop_first().is_some()
+            } else if self.texts.pop_first().is_some()
+                || self.images.pop_first().is_some()
                 || self.strokes.pop_first().is_some()
                 || self.layers.pop_first().is_some()
                 || self.reserved.pop_first().is_some()
@@ -82,30 +85,15 @@ impl Model {
         self.sources.insert(id, points);
         Some(())
     }
-    pub fn finish(&mut self, result: u64) -> Option<()> {
-        if self.order.is_empty() || self.order.len() > 4096 {
-            return None;
-        }
-        let unique: BTreeSet<_> = self.order.iter().copied().collect();
-        if unique.len() != self.order.len()
-            || unique.iter().any(|id| !self.layers.contains_key(id))
-            || self
-                .members
-                .iter()
-                .any(|(layer, count)| *count > 0 && !unique.contains(layer))
-        {
-            return None;
-        }
-        if self.images.values().any(|i| {
-            !i.retired && (!self.layers.contains_key(&i.layer) || i.before_source > self.high)
-        }) {
-            return None;
-        }
-        self.revision = result;
-        Some(())
-    }
     pub fn record(&mut self, r: &mut Read<'_>) -> Option<()> {
-        match r.byte()? {
+        let tag = r.byte()?;
+        match tag {
+            9 => {
+                let (id, t) = crate::text_save::decode(r, &self.texts)?;
+                crate::text_save::validate(&self.texts, id, &t)?;
+                self.high = self.high.max(t.before_source);
+                self.texts.insert(id, t);
+            }
             8 => {
                 let id = r.word()?;
                 if id >= crate::images::CAP
@@ -116,8 +104,8 @@ impl Model {
                 }
                 self.images.insert(id, crate::images::Image::tombstone());
             }
-            7 => {
-                let (id, image) = crate::image_save::decode(r)?;
+            7 | 10 => {
+                let (id, image) = crate::image_save::decode(r, tag == 10)?;
                 crate::image_save::validate_update(&self.images, id, &image)?;
                 self.high = self.high.max(image.before_source);
                 self.images.insert(id, image);
@@ -192,3 +180,6 @@ impl Model {
         Some(())
     }
 }
+
+#[path = "save_replay_finish.rs"]
+mod finish;

@@ -8,6 +8,12 @@ pub extern "C" fn selection_eligible(id: usize, active_layer_only: u32) -> u32 {
     }
     ENGINE.with(|engine| {
         let engine = engine.borrow();
+        if let Some(t) = engine.text(id) {
+            return (engine.object_editable(id)
+                && t.opacity > 0.0
+                && (active_layer_only == 0 || t.layer == engine.active_layer))
+                as u32;
+        }
         if let Some(i) = engine.image(id) {
             return (engine.object_editable(id)
                 && (i.opacity * 255.0).round() != 0.0
@@ -28,10 +34,15 @@ pub extern "C" fn selection_precedes(a: usize, b: usize) -> u32 {
     ENGINE.with(|engine| {
         let engine = engine.borrow();
         let key = |id| {
+            if let Some(t) = engine.text(id) {
+                return engine.layers[t.layer]
+                    .rank
+                    .map(|r| (r, t.before_source, 0, t.order));
+            }
             if let Some(i) = engine.image(id) {
                 return engine.layers[i.layer]
                     .rank
-                    .map(|r| (r, i.before_source, 0, id));
+                    .map(|r| (r, i.before_source, 0, i.order));
             }
             engine.strokes.get(id).and_then(|stroke: &super::Stroke| {
                 engine.layers[stroke.layer]

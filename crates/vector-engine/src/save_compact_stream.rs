@@ -10,6 +10,7 @@ pub(super) struct Checkpoint {
     layer: Option<usize>,
     stroke: Option<usize>,
     image: Option<usize>,
+    text: Option<usize>,
     pending: Vec<u8>,
     at: usize,
     next_chunk: usize,
@@ -26,6 +27,7 @@ impl Checkpoint {
             layer: None,
             stroke: None,
             image: None,
+            text: None,
             pending: vec![],
             at: 0,
             next_chunk: 0,
@@ -62,12 +64,12 @@ impl Checkpoint {
             match self.phase {
                 0 => {
                     out.extend_from_slice(b"LFC4");
-                    wire::word(&mut out, 3);
+                    wire::word(&mut out, 4);
                     wire::wide(&mut out, 0);
                     wire::wide(&mut out, m.revision);
                     wire::word(
                         &mut out,
-                        m.layers.len() + m.strokes.len() + m.images.len() + 3,
+                        m.layers.len() + m.strokes.len() + m.images.len() + m.texts.len() + 3,
                     );
                     wire::word(&mut out, self.ids.len());
                     self.phase = 1;
@@ -151,6 +153,20 @@ impl Checkpoint {
                         continue;
                     }
                 }
+                8 => {
+                    let entry = if let Some(last) = self.text {
+                        m.texts.range((Excluded(last), Unbounded)).next()
+                    } else {
+                        m.texts.iter().next()
+                    };
+                    if let Some((&id, t)) = entry {
+                        crate::text_save::encode(&mut out, crate::texts::TAG + id, t);
+                        self.text = Some(id);
+                    } else {
+                        self.phase = 9;
+                        continue;
+                    }
+                }
                 _ => return Some(vec![]),
             }
             if self.phase > 2 {
@@ -163,33 +179,6 @@ impl Checkpoint {
             return Some(out);
         }
     }
-    pub fn chunk(&mut self, m: &Model, stream: usize, chunk: usize) -> Option<usize> {
-        if !self.ready {
-            return None;
-        }
-        self.output.clear();
-        if stream > 0 {
-            let points = m.sources.get(self.ids.get(stream - 1)?)?;
-            wire::samples(points, chunk, &mut self.output)?;
-        } else {
-            if chunk != self.next_chunk {
-                return None;
-            }
-            while self.output.len() < 65520 {
-                if self.at == self.pending.len() {
-                    self.pending = self.record(m)?;
-                    self.at = 0;
-                    if self.pending.is_empty() {
-                        break;
-                    }
-                }
-                let n = (65520 - self.output.len()).min(self.pending.len() - self.at);
-                self.output
-                    .extend_from_slice(&self.pending[self.at..self.at + n]);
-                self.at += n;
-            }
-            self.next_chunk += 1;
-        }
-        Some(self.output.len())
-    }
 }
+#[path = "save_compact_chunks.rs"]
+mod chunks;

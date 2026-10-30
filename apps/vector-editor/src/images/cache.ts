@@ -15,6 +15,8 @@ export class ImageCache {
   private pins = new Set<string>();
   private clock = 0;
   private bytes = 0;
+  private external = 0;
+  private externalEvict: ((maximum: number) => number) | undefined;
   private stopped = false;
   private active: AbortController | undefined;
   private request:
@@ -36,22 +38,32 @@ export class ImageCache {
   get usedBytes() {
     return this.bytes;
   }
+  reserveExternal(bytes: number) {
+    if (!Number.isSafeInteger(bytes) || bytes < 0) throw Error("image-gpu-budget");
+    if (bytes > this.external) this.room(bytes - this.external, false);
+    this.external = bytes;
+  }
+  setExternalEvict(evict: (maximum: number) => number) {
+    this.externalEvict = evict;
+  }
   has(digest: string) {
     return this.entries.has(digest);
   }
   needsPresentation(digests: readonly string[]) {
     return digests.some((digest) => !this.entries.get(digest)?.presented);
   }
-  private room(bytes: number) {
+  private room(bytes: number, external = true) {
     if (bytes > GPU_BUDGET) throw Error("image-gpu-budget");
     for (const [digest, entry] of [...this.entries].sort((a, b) => a[1].touched - b[1].touched)) {
-      if (this.bytes + bytes <= GPU_BUDGET) break;
+      if (this.bytes + this.external + bytes <= GPU_BUDGET) break;
       if (this.pins.has(digest)) continue;
       this.gl.deleteTexture(entry.texture);
       this.entries.delete(digest);
       this.bytes -= entry.bytes;
     }
-    if (this.bytes + bytes > GPU_BUDGET) throw Error("image-gpu-budget");
+    if (external && this.externalEvict && this.bytes + this.external + bytes > GPU_BUDGET)
+      this.external = this.externalEvict(Math.max(0, GPU_BUDGET - this.bytes - bytes));
+    if (this.bytes + this.external + bytes > GPU_BUDGET) throw Error("image-gpu-budget");
   }
   async prepare(digest: string, image: ImageBitmap, signal: AbortSignal) {
     try {

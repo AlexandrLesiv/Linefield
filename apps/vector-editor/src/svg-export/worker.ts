@@ -47,6 +47,11 @@ self.onmessage = async ({ data }: MessageEvent<WorkerRequest>) => {
         await gpu.image(command.blob, command.values);
         reply();
         break;
+      case "text":
+        if (!gpu || png) throw Error("svg-worker-state");
+        await gpu.text(command.values, command.text);
+        reply();
+        break;
       case "png":
         if (!gpu || png) throw Error("svg-worker-state");
         png = await gpu.png();

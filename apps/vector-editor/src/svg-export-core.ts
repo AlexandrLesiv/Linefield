@@ -21,6 +21,7 @@ export type SvgExportCore = {
   svg_revision(token: number): bigint;
   svg_setting(token: number, index: number): number;
   svg_status(token: number): number;
+  svg_text_content_ptr(token: number): number;
   svg_text_ptr(token: number): number;
   svg_tolerance(token: number): number;
   svg_view(token: number, index: number): number;
@@ -50,6 +51,7 @@ export const svgExportArity = {
   svg_revision: 1,
   svg_setting: 2,
   svg_status: 1,
+  svg_text_content_ptr: 1,
   svg_text_ptr: 1,
   svg_tolerance: 1,
   svg_view: 2,
@@ -59,5 +61,5 @@ export const svgExportArity = {
   svg_xml_image_end: 1,
 } as const;
 export const svgExportFingerprint = [
-  1969950980, 2152542968, 1644938487, 878368959, 2940811925, 2357534229, 1309091428, 371720320,
+  3375986274, 335871225, 3833416171, 3276356655, 3096885555, 2403989652, 1738123656, 1055644146,
 ] as const;

@@ -26,6 +26,8 @@ pub(super) enum Command {
     Settings([u32; 2], [u32; 2]),
     Stroke(usize),
     Image(usize),
+    Text(usize),
+    TextEdit(usize, Box<super::texts::Text>, Box<super::texts::Text>),
     ImageRetire(Vec<usize>),
     ImageOpacity(usize, f64, f64),
     Move(Vec<super::selection::Translation>),
@@ -76,13 +78,15 @@ impl Engine {
         match command {
             #[cfg(feature = "save-app")]
             Command::Settings(before, after) => self.settings = if forward { *after } else { *before },
+            Command::Text(id) => {self.object_set_visible(*id,forward);self.layer_render_revision=self.layer_render_revision.wrapping_add(1);},
+            Command::TextEdit(id,before,after) => {self.texts[*id-crate::texts::TAG]=if forward {(**after).clone()} else {(**before).clone()};self.layer_render_revision=self.layer_render_revision.wrapping_add(1);},
             Command::ImageRetire(_) => unreachable!("maintenance is not user history"),
             Command::Stroke(id) => self.strokes[*id].visible = forward,
             Command::Image(id) => { self.object_set_visible(*id, forward); self.layer_render_revision = self.layer_render_revision.wrapping_add(1); },
             Command::ImageOpacity(id, before, after) => { self.images[*id-crate::images::TAG].opacity = if forward {*after} else {*before}; self.layer_render_revision = self.layer_render_revision.wrapping_add(1); },
             Command::Move(changes) => self.apply_translations(changes, forward),
             Command::Delete(ids) => {
-                if ids.iter().any(|id| *id >= crate::images::TAG) {
+                if ids.iter().any(|id| *id >= crate::texts::TAG) {
                     self.layer_render_revision = self.layer_render_revision.wrapping_add(1);
                 }
                 for &id in ids {

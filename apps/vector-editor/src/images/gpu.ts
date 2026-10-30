@@ -65,7 +65,7 @@ void main(){vec2 dx=dFdx(uv),dy=dFdy(uv);vec2 pixel=max(vec2(length(vec2(dx.x,dy
     if (this.gl.isContextLost() || this.gl.getError() !== this.gl.NO_ERROR)
       throw Error("image-gpu-lost");
   }
-  upload(image: ImageBitmap) {
+  upload(image: ImageBitmap, mipmaps = true) {
     const gl = this.gl;
     this.healthy();
     if (Math.max(image.width, image.height) > gl.getParameter(gl.MAX_TEXTURE_SIZE))
@@ -75,17 +75,21 @@ void main(){vec2 dx=dFdx(uv),dy=dFdy(uv);vec2 pixel=max(vec2(length(vec2(dx.x,dy
     try {
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, texture);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+      gl.texParameteri(
+        gl.TEXTURE_2D,
+        gl.TEXTURE_MIN_FILTER,
+        mipmaps ? gl.LINEAR_MIPMAP_LINEAR : gl.LINEAR,
+      );
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
       // ImageBitmap decoding owns premultiplication; never leak unpack flags into Ink uploads.
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-      gl.generateMipmap(gl.TEXTURE_2D);
+      if (mipmaps) gl.generateMipmap(gl.TEXTURE_2D);
       this.healthy();
       return {
         texture,
-        bytes: textureBytes(image.width, image.height),
+        bytes: mipmaps ? textureBytes(image.width, image.height) : image.width * image.height * 4,
         width: image.width,
         height: image.height,
       };

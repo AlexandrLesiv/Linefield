@@ -46,6 +46,7 @@ export type WorkerCommand =
   | { kind: "background" }
   | { kind: "packet"; values: Float64Array; last: boolean }
   | { kind: "image"; values: Float64Array; blob: Blob }
+  | { kind: "text"; values: Float64Array; text: string }
   | { kind: "png" }
   | { kind: "pull" }
   | { kind: "finish" };

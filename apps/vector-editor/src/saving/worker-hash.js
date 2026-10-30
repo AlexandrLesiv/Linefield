@@ -7,6 +7,10 @@ async function storageCodec(isolated = false) {
     const core = instance.exports;
     if (
       !(core.memory instanceof WebAssembly.Memory) ||
+      textStorageFingerprint.some((word, i) => core.text_fingerprint_word(i) >>> 0 !== word) ||
+      Object.entries(textStorageArity).some(
+        ([name, arity]) => typeof core[name] !== "function" || core[name].length !== arity,
+      ) ||
       storageHashFingerprint.some((word, i) => core.save_boundary_fingerprint(i) >>> 0 !== word) ||
       Object.entries(storageHashArity).some(
         ([name, arity]) => typeof core[name] !== "function" || core[name].length !== arity,

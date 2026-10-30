@@ -88,7 +88,7 @@ export function saveLifecycle(
     document.addEventListener(
       kind,
       (event) => {
-        if (!leaving || (event.target as Element)?.closest("#save-stay")) return;
+        if (!leaving || (event.target as Element)?.closest("#save-stay, #text-editor")) return;
         if (event instanceof KeyboardEvent && event.key === "Tab") return;
         if (event instanceof KeyboardEvent && event.key === "Escape") {
           event.preventDefault();

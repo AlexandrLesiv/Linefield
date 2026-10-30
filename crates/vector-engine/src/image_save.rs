@@ -11,8 +11,9 @@ pub(super) fn encode(out: &mut Vec<u8>, id: usize, i: &Image) {
         word(out, id - TAG);
         return;
     }
-    out.push(7);
+    out.push(10);
     word(out, id - TAG);
+    word(out, i.order);
     out.extend_from_slice(&i.digest);
     for n in [
         i.mime as usize,
@@ -34,11 +35,12 @@ pub(super) fn encode(out: &mut Vec<u8>, id: usize, i: &Image) {
         out.extend_from_slice(&n.to_le_bytes());
     }
 }
-pub(super) fn decode(r: &mut Read<'_>) -> Option<(usize, Image)> {
+pub(super) fn decode(r: &mut Read<'_>, ordered: bool) -> Option<(usize, Image)> {
     let id = r.word()?;
     if id >= CAP {
         return None;
     }
+    let order = if ordered { r.word()? } else { id };
     let digest = r.take(64)?.try_into().ok()?;
     let i = Image {
         digest,
@@ -48,6 +50,7 @@ pub(super) fn decode(r: &mut Read<'_>) -> Option<(usize, Image)> {
         bytes: r.word()? as u32,
         layer: r.word()?,
         before_source: r.word()?,
+        order,
         visible: r.boolean()?,
         retired: false,
         abandoned: false,
@@ -72,6 +75,7 @@ pub(super) fn validate_update(
             || !old.same_asset(image)
             || old.layer != image.layer
             || old.before_source != image.before_source
+            || old.order != image.order
             || (0..2).any(|a| {
                 old.anchor[a].region != image.anchor[a].region
                     || old.anchor[a].local.to_bits() != image.anchor[a].local.to_bits()

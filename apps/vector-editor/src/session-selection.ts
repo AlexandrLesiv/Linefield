@@ -1,6 +1,7 @@
 import type { Core } from "./core";
+import { checkedTextCore } from "./text-boundary";
 import { checkedImageCore } from "./image-boundary";
-import { IMAGE_HANDLE } from "./image-selection";
+import { IMAGE_HANDLE, TEXT_HANDLE } from "./image-selection";
 
 /** Read-only presentation cache of the engine's insertion-ordered selection.
  * No host mutation is applied until the owning engine accepts it.
@@ -9,8 +10,10 @@ export class SessionSelection implements Iterable<number> {
   private revision = -1;
   private snapshot: ReadonlySet<number> = new Set();
   private images;
+  private texts;
   constructor(private core: Core) {
     this.images = checkedImageCore(core);
+    this.texts = checkedTextCore(core);
   }
   private read(): ReadonlySet<number> {
     const revision = this.core.session_selection_revision();
@@ -22,7 +25,7 @@ export class SessionSelection implements Iterable<number> {
     if (
       !Number.isInteger(count) ||
       count < 0 ||
-      count > this.core.count() + this.images.image_count() ||
+      count > this.core.count() + this.images.image_count() + this.texts.text_count() ||
       pointer % 8 !== 0 ||
       pointer + count * 8 > memory.byteLength
     )
@@ -33,9 +36,11 @@ export class SessionSelection implements Iterable<number> {
       if (
         !Number.isSafeInteger(id) ||
         id < 0 ||
-        (id < IMAGE_HANDLE
+        (id < TEXT_HANDLE
           ? id >= this.core.count()
-          : id > 0xffffffff || !this.images.image_exists(id))
+          : id < IMAGE_HANDLE
+            ? !this.texts.text_exists(id)
+            : id > 0xffffffff || !this.images.image_exists(id))
       )
         throw new Error("Invalid selected object identity");
       snapshot.add(id);
