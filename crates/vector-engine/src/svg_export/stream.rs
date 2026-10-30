@@ -1,5 +1,9 @@
 use super::{Job, STATE};
 fn produce(j: &mut Job, tolerance: f64) -> Option<usize> {
+    if j.layout.state != 0 && (j.layout.state != 2 || tolerance != 0.25 / j.layout.view[4]) {
+        return None;
+    }
+    j.group_last = false;
     if !tolerance.is_finite()
         || !(0.0001..=0.25).contains(&tolerance)
         || j.tolerance.is_some_and(|t| t != tolerance)
@@ -59,6 +63,13 @@ fn produce(j: &mut Job, tolerance: f64) -> Option<usize> {
     }
     let last_chunk = crate::geometry_wide::chunk_range(s, j.chunk + 1).is_none();
     let last = end == j.scratch.output.len() && last_chunk;
+    if last {
+        let key = item.group();
+        j.group_last = j
+            .items
+            .first_key_value()
+            .is_none_or(|(_, next)| next.group() != key);
+    }
     j.output.clear();
     j.output.extend_from_slice(&[
         1.0,

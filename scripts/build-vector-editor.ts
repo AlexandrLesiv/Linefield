@@ -10,6 +10,7 @@ function run(command: string, args: string[], cwd = root) {
 run(process.execPath, [root + "scripts/localization.ts"]);
 run(process.execPath, [root + "scripts/vector-editor-boundary.ts", "--check"]);
 run(process.execPath, [root + "scripts/vector-editor-save-boundary.ts", "--check"]);
+run(process.execPath, [root + "scripts/svg-export-boundary.ts", "--check"]);
 run("cargo", [
   "build",
   "--locked",
@@ -20,7 +21,7 @@ run("cargo", [
   "--profile",
   "vector-editor",
   "--features",
-  "save-app",
+  "svg-export",
 ]);
 mkdirSync(root + "apps/vector-editor/public", { recursive: true });
 copyFileSync(

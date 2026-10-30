@@ -1,4 +1,4 @@
-//! Isolated SVG01 snapshot. No product loader enables this feature.
+//! Immutable export capture shared by native and Wasm hosts.
 use crate::{geometry_wide, regional::Address, Engine, Points, Stroke, ENGINE};
 use std::{
     cell::RefCell,
@@ -6,12 +6,33 @@ use std::{
     rc::Rc,
 };
 mod boundary;
+mod contract;
+mod measure;
+mod png;
+mod png_validate;
 mod retire;
 mod stream;
+mod xml;
+type Key = (usize, usize, usize, usize);
+type Group = (usize, usize, usize, u32, u32, u32, u64);
 pub(super) struct Item {
     id: usize,
     rank: usize,
     stroke: Stroke,
+}
+impl Item {
+    fn group(&self) -> Group {
+        let s = &self.stroke;
+        (
+            self.rank,
+            s.source,
+            s.blend_group,
+            s.brush,
+            s.color,
+            s.opacity.to_bits(),
+            (f64::from(s.width) * s.basis[0].hypot(s.basis[1])).to_bits(),
+        )
+    }
 }
 pub(super) struct Job {
     token: u32,
@@ -32,6 +53,10 @@ pub(super) struct Job {
     consumed: usize,
     scratch: geometry_wide::Scratch,
     output: Vec<f64>,
+    layout: measure::Layout,
+    xml: xml::Writer,
+    error: u32,
+    group_last: bool,
 }
 #[derive(Default)]
 struct State {
@@ -81,6 +106,10 @@ pub extern "C" fn svg_begin() -> u32 {
                 consumed: 0,
                 scratch: Default::default(),
                 output: Vec::with_capacity(6168),
+                layout: Default::default(),
+                xml: Default::default(),
+                error: 0,
+                group_last: false,
             });
             token
         })
@@ -111,6 +140,7 @@ pub extern "C" fn svg_prepare(token: u32) -> u32 {
                 }
                 if j.items.len() >= 100_000 {
                     j.state = 5;
+                    j.error = 6;
                     return;
                 }
                 if j.sources.insert(stroke.source) {
@@ -120,11 +150,13 @@ pub extern "C" fn svg_prepare(token: u32) -> u32 {
                         .checked_mul(std::mem::size_of::<crate::Point>())
                     else {
                         j.state = 5;
+                        j.error = 6;
                         return;
                     };
                     j.retained = j.retained.saturating_add(bytes);
                     if j.retained > 128 * 1024 * 1024 {
                         j.state = 5;
+                        j.error = 6;
                         return;
                     }
                 }

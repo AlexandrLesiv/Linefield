@@ -1,7 +1,7 @@
 use std::{cell::RefCell, rc::Rc};
 mod boundary_generated;
-#[cfg(feature = "svg-checkpoint")]
-mod svg_checkpoint;
+#[cfg(feature = "svg-export")]
+mod svg_export;
 #[cfg(feature = "save-app")]
 pub mod catalog;
 mod geometry;
