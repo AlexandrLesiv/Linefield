@@ -37,7 +37,7 @@ async function validateLegacy(sql) {
     work = 0;
   for (const [operation, base, result, digest, size] of rows) {
     total += size;
-    if (total > 48 * 1024 * 1024) throw Error("storage-capacity");
+    if (!Number.isSafeInteger(total)) throw Error("storage-capacity");
     if (
       !validId(operation) ||
       base !== revision ||

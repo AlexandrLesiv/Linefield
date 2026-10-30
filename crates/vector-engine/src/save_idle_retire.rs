@@ -17,6 +17,9 @@ pub extern "C" fn idle_cleanup(budget: usize) -> u32 {
             let Some(batch) = retired.as_mut() else {
                 return 0;
             };
+            if batch.assets.pop_first().is_some() {
+                continue;
+            }
             if let Some(p) = points.as_mut() {
                 if let Some(block) = p.blocks.pop() {
                     p.len -= block.len();

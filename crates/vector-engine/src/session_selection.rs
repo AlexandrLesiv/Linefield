@@ -39,7 +39,7 @@ pub extern "C" fn session_selection_has(id: usize) -> u32 {
 pub extern "C" fn session_selection_set(id: usize, selected: u32) -> u32 {
     ENGINE.with(|e| {
         let mut e = e.borrow_mut();
-        if selected > 1 || id >= e.strokes.len() {
+        if selected > 1 || !e.object_valid(id) {
             return 0;
         }
         let s = &mut e.selected;
@@ -78,11 +78,7 @@ pub extern "C" fn session_selection_prune() {
         let mut e = e.borrow_mut();
         for slot in 0..e.selected.slots.len() {
             if let Some(id) = e.selected.slots[slot] {
-                let keep = e.strokes.get(id).is_some_and(|stroke| {
-                    e.stroke_visible(id)
-                        && stroke.sample_count() != 0
-                        && !e.layers[stroke.layer].locked
-                });
+                let keep = e.object_editable(id);
                 if !keep {
                     e.selected.remove(id);
                 }

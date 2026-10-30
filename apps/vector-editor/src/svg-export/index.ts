@@ -1,3 +1,4 @@
+import { sendImageOrInk } from "../images/svg-source";
 import { ExportWorker } from "./rpc";
 import { ExportSession } from "./session";
 import { SvgOutput } from "./output";
@@ -9,13 +10,7 @@ import {
   type ExportDiagnostic,
   type SvgExportCore,
 } from "./types";
-export type {
-  ControllerOptions,
-  ExportOptions,
-  ExportProgress,
-  ExportDiagnostic,
-  SvgExportCore,
-} from "./types";
+export type * from "./types";
 const nextTask = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
 
 /** Main thread owns snapshot/serialization. The worker owns disposable render resources. */
@@ -125,7 +120,7 @@ export class SvgExportController {
         if (length < 24 || length > 6168 || (length - 24) % 6) throw Error("svg-packet-boundary");
         const values = new Float64Array(c.memory.buffer, c.svg_output_ptr(t), length).slice();
         const last = c.svg_group_last(t) === 1;
-        await this.worker.send({ kind: "packet", values, last }, [values.buffer]);
+        await sendImageOrInk(c, t, this.worker, values, last, this.options.resolveAsset);
         this.progress.packets++;
         if (last) await this.image(session, output);
       }

@@ -1,4 +1,5 @@
 import { queryLasso } from "./lasso-snapshot";
+import { IMAGE_HANDLE, imageSelection } from "./image-selection";
 import { LassoPreparer } from "./lasso-preparer";
 import { SessionSelection } from "./session-selection";
 import { t } from "../../web/src/locale";
@@ -15,6 +16,7 @@ export function createSelection(
   reportFailure: (error: unknown) => void,
 ) {
 	const ids = new SessionSelection(core);
+  const objects = imageSelection(core, cache, camera);
   const queries = new LassoPreparer();
   let queryGeneration = 0;
   let releasedLasso: readonly LassoPoint[] | null = null;
@@ -116,16 +118,15 @@ export function createSelection(
 			orientation = 0;
 			return null;
 		}
-		const angleOf = (id: number) =>
-			Math.atan2(core.stroke_transform(id, 1), core.stroke_transform(id, 0));
+		const angleOf = objects.angle;
 		if (!frameReference || !ids.has(frameReference.id)) {
 			const id = ids.values().next().value!;
-			frameReference = { id, offset: -angleOf(id) };
+			frameReference = { id, offset: id >= IMAGE_HANDLE ? 0 : -angleOf(id) };
 		}
 		// Derive the frame from document metadata, including undo/redo. Keeping
 		// only a UI angle would leave a stale diamond after undoing a rotation.
 		orientation = angleOf(frameReference.id) + frameReference.offset;
-		const bounds = cache.selectionBounds(ids, orientation);
+		const bounds = objects.bounds(ids, orientation);
 		if (!bounds) return null;
 		// Leave a usable move target even for dots and very thin/subpixel strokes.
 		const minimum = 40 / camera.zoom;
@@ -155,7 +156,7 @@ export function createSelection(
 		return x >= bounds[0] && x <= bounds[2] && y >= bounds[1] && y <= bounds[3];
 	}
 	function pick(world: [number, number], shift: boolean) {
-		const hit = cache.hitTest(...world, 6 / camera.zoom, activeLayer.checked);
+		const hit = objects.pick(...world, 6 / camera.zoom, activeLayer.checked);
 		if (hit === null) {
 			if (!shift) ids.clear();
 			return false;
@@ -287,6 +288,7 @@ export function createSelection(
         const current = () => generation === queryGeneration && state === cache.lassoState(activeOnly);
         const publish = (found: number[]) => {
           if(!current()) return;
+          found = [...found, ...objects.lasso(points, isPartial, activeOnly)];
           for(const id of found) { if(ids.has(id)) ids.delete(id); else ids.add(id); }
           if(found.length) { orientation=0; frameReference=null; }
           pending=true;
@@ -411,6 +413,7 @@ export function createSelection(
 		if (event.code === "Space") event.stopPropagation();
 	});
 	return {
+		select(id: number) { clear(); ids.add(id); pending = true; },
 		down,
     cancelQuery,
     queryStats: queries.stats,

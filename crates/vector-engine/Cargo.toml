@@ -8,7 +8,7 @@ publish = false
 svg-checkpoint = ["svg-export"]
 svg-export = ["save-app"]
 save-checkpoint = []
-save-incremental = ["save-checkpoint"]
+save-incremental = ["save-checkpoint", "dep:sha2"]
 save-idle = ["save-incremental"]
 save-app = ["save-idle", "dep:sha2", "dep:serde_json"]
 

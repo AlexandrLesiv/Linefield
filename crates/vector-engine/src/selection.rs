@@ -12,9 +12,7 @@ impl Engine {
         self.cancel();
     }
     fn add_delete(&mut self, id: usize) {
-        if self.stroke_visible(id)
-            && !self.layers[self.strokes[id].layer].locked
-            && !self.strokes[id].points.is_empty()
+        if self.object_editable(id)
         {
             self.deleting.push(id);
         }
@@ -25,9 +23,7 @@ impl Engine {
         ids.dedup();
         // Recheck protection at commit in case a layer changed during collection.
         ids.retain(|&id| {
-            self.stroke_visible(id)
-                && !self.layers[self.strokes[id].layer].locked
-                && !self.strokes[id].points.is_empty()
+            self.object_editable(id)
         });
         let count = ids.len();
         if count != 0 {
@@ -40,8 +36,7 @@ impl Engine {
     pub(super) fn apply_translations(&mut self, changes: &[Translation], forward: bool) {
         for change in changes {
             let t = if forward { change.after } else { change.before };
-            self.strokes[change.id].basis = [t[0], t[1]];
-            self.strokes[change.id].offset = [t[2], t[3]];
+            self.object_set_transform(change.id, t);
         }
         self.refresh_blend_groups();
         self.transform_revision = self.transform_revision.wrapping_add(1);
@@ -57,15 +52,12 @@ impl Engine {
         self.commit();
     }
     fn add_move(&mut self, id: usize) -> bool {
-        if !self.stroke_visible(id)
-            || self.layers[self.strokes[id].layer].locked
-            || self.strokes[id].points.is_empty()
+        if !self.object_editable(id)
             || self.moving.iter().any(|c| c.id == id)
         {
             return false;
         }
-        let s = &self.strokes[id];
-        let before = [s.basis[0], s.basis[1], s.offset[0], s.offset[1]];
+        let before = self.object_transform(id);
         self.moving.push(Translation {
             id,
             before,
@@ -121,24 +113,23 @@ impl Engine {
         // Validate the whole group before changing any stroke. Regional address
         // bounds replace the donor flat-coordinate placement cap.
         if self.moving.iter().any(|c| {
-            let t = compose(self.strokes[c.id].source_anchor, c.before);
+            let t = compose(self.object_anchor(c.id), c.before);
             let size = t[0].hypot(t[1]);
-            !self.stroke_visible(c.id)
-                || self.layers[self.strokes[c.id].layer].locked
+            !self.object_editable(c.id)
                 || !t.iter().all(|v| v.is_finite())
-                || !(0.001..=1000.0).contains(&size)
-                || self.strokes[c.id].source_anchor[0].offset(t[2]).is_none()
-                || self.strokes[c.id].source_anchor[1].offset(t[3]).is_none()
+                || !(if c.id >= crate::images::TAG {0.000000001} else {0.001}..=1000.0).contains(&size)
+                || self.object_anchor(c.id)[0].offset(t[2]).is_none()
+                || self.object_anchor(c.id)[1].offset(t[3]).is_none()
         }) {
             return false;
         }
         let mut changed = false;
-        for c in &mut self.moving {
-            let s = &mut self.strokes[c.id];
-            c.after = compose(s.source_anchor, c.before);
-            changed |= [s.basis[0], s.basis[1], s.offset[0], s.offset[1]] != c.after;
-            s.basis = [c.after[0], c.after[1]];
-            s.offset = [c.after[2], c.after[3]];
+        for index in 0..self.moving.len() {
+            let id = self.moving[index].id;
+            let next = compose(self.object_anchor(id), self.moving[index].before);
+            self.moving[index].after = next;
+            changed |= self.object_transform(id) != next;
+            self.object_set_transform(id, next);
         }
         if changed {
             self.refresh_blend_groups();

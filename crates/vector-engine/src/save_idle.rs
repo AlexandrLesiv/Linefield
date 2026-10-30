@@ -39,6 +39,8 @@ pub(super) struct Batch {
     pub result: u64,
     pub header: [u8; 32],
     pub pending: Vec<u8>,
+    pub assets: BTreeMap<[u8; 64], crate::images::Image>,
+    pub asset_cursor: Option<[u8; 64]>,
     pub remaining: BTreeMap<usize, Rc<Points>>,
     pub sources: Sources,
 }
@@ -85,7 +87,7 @@ pub extern "C" fn idle_begin() -> u32 {
             };
             let mut header = [0u8; 32];
             header[..4].copy_from_slice(b"LFD3");
-            header[4..8].copy_from_slice(&1u32.to_le_bytes());
+            header[4..8].copy_from_slice(&2u32.to_le_bytes());
             header[8..16].copy_from_slice(&j.durable.to_le_bytes());
             header[16..24].copy_from_slice(&j.revision.to_le_bytes());
             header[24..28].copy_from_slice(&(j.operations as u32).to_le_bytes());
@@ -96,6 +98,8 @@ pub extern "C" fn idle_begin() -> u32 {
                 result: j.revision,
                 header,
                 pending: std::mem::take(&mut j.pending),
+                assets: std::mem::take(&mut j.assets),
+                asset_cursor: None,
                 remaining: std::mem::take(&mut j.sources),
                 // Fixed small outer allocation: at most391 source blocks at the100k cap.
                 sources: Sources {

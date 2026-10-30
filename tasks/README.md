@@ -1,3 +1,5 @@
+Current image integration: [IMG-02](IMG-02.md), owner-authorized canonical images, editing, durable assets and appearance-preserving SVG; stacks on IMG-01 and verified SAVE08 dependencies.
+
 Current image checkpoint: [IMG-01](IMG-01.md), isolated quality/performance and capacity verification before product integration.
 
 # Current verification policy

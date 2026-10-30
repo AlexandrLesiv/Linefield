@@ -11,7 +11,7 @@ const integer = (name: string) => {
   return Number(found[1]);
 };
 const names = Object.keys(strings).filter((name) => name.startsWith("SQL_"));
-if (names.length !== 14 || !strings.ID_PATTERN || !strings.DEFAULT_EN || !strings.DEFAULT_UK)
+if (names.length !== 25 || !strings.ID_PATTERN || !strings.DEFAULT_EN || !strings.DEFAULT_UK)
   throw Error("Incomplete catalog contract");
 const camel = (name: string) =>
   name.toLowerCase().replace(/_([a-z])/g, (_, c: string) => c.toUpperCase());

@@ -4,7 +4,14 @@ mod boundary_generated;
 mod svg_export;
 #[cfg(feature = "save-app")]
 pub mod catalog;
+#[cfg(feature = "save-app")]
+mod save_catalog_boundary;
 mod geometry;
+pub mod images;
+mod image_boundary;
+mod image_objects;
+mod image_queries;
+mod image_generated;
 #[cfg(feature = "save-checkpoint")]
 mod save_checkpoint;
 #[cfg(feature = "save-checkpoint")]
@@ -14,11 +21,27 @@ mod save_delta;
 #[cfg(feature = "save-incremental")]
 mod save_delta_wire;
 #[cfg(feature = "save-incremental")]
+mod image_save;
+#[cfg(feature="save-idle")]
+mod image_assets;
+#[cfg(feature = "save-incremental")]
 mod save_delta_transport;
 #[cfg(feature = "save-incremental")]
 mod save_replay;
 #[cfg(feature = "save-incremental")]
 mod save_replay_model;
+#[cfg(feature = "save-incremental")]
+mod save_replay_publish;
+#[cfg(feature = "save-incremental")]
+mod save_replay_prune;
+#[cfg(feature = "save-incremental")]
+mod save_replay_scan;
+#[cfg(feature = "save-incremental")]
+mod save_replay_stream;
+#[cfg(feature = "save-incremental")]
+mod save_compact_stream;
+#[cfg(feature = "save-incremental")]
+mod save_compact;
 #[cfg(feature = "save-idle")]
 mod save_idle;
 #[cfg(feature = "save-idle")]
@@ -136,6 +159,18 @@ struct Points {
     len: usize,
 }
 impl Points {
+    #[cfg(feature = "save-incremental")]
+    fn try_push(&mut self, p: Point) -> Option<()> {
+        if self.len.is_multiple_of(256) {
+            self.blocks.try_reserve(1).ok()?;
+            let mut block = Vec::new();
+            block.try_reserve_exact(256).ok()?;
+            self.blocks.push(block);
+        }
+        self.blocks.last_mut()?.push(p);
+        self.len = self.len.checked_add(1)?;
+        Some(())
+    }
     fn push(&mut self, p: Point) {
         if self.len.is_multiple_of(256) {
             self.blocks.push(Vec::with_capacity(256));
@@ -226,6 +261,7 @@ struct Engine {
     #[cfg(feature = "save-app")]
     settings: [u32; 2],
     strokes: Vec<Stroke>,
+    images: Vec<images::Image>,
     active: Option<usize>,
     undo: Vec<Command>,
     redo: Vec<Command>,
@@ -246,6 +282,7 @@ impl Default for Engine {
             #[cfg(feature = "save-app")]
             settings: [1, 0],
             strokes: Vec::new(),
+            images: Vec::new(),
             active: None,
             undo: Vec::new(),
             redo: Vec::new(),

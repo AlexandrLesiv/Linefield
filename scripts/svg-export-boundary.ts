@@ -9,7 +9,7 @@ function scalar(type: string): string {
   if (/^(u32|usize|f64|\*const f64|\*const u8|\*mut u8)$/.test(type.trim())) return "number";
   throw Error(`Unsupported export scalar: ${type}`);
 }
-for (const file of ["mod", "boundary", "stream", "retire", "measure", "xml", "png", "contract"]) {
+for (const file of ["mod", "boundary", "stream", "retire", "measure", "xml", "png", "contract", "images"]) {
   const source = readFileSync(`${root}crates/vector-engine/src/svg_export/${file}.rs`, "utf8");
   for (const match of source.matchAll(/pub extern "C" fn (\w+)\(([^)]*)\)\s*->\s*([^{]+)\{/g)) {
     const args = match[2]!
@@ -29,7 +29,7 @@ for (const file of ["mod", "boundary", "stream", "retire", "measure", "xml", "pn
   }
 }
 signatures.sort((a, b) => a.name.localeCompare(b.name));
-if (signatures.length !== 26 || new Set(signatures.map((s) => s.name)).size !== 26)
+if (signatures.length !== 27 || new Set(signatures.map((s) => s.name)).size !== 27)
   throw Error("Unexpected SVG export ABI");
 const digest = createHash("sha256")
   .update("SVG02-v1\n" + signatures.map((s) => s.rust).join("\n"))

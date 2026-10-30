@@ -1,25 +1,29 @@
+import { measurements } from "./measure";
 import type { SaveCore, State } from "./types";
 import type { Storage } from "./adapter";
 import { submit, inputPending } from "./prepare";
+import { idleYield } from "./idle-yield";
 type Waiter = { promise: Promise<void>; resolve(): void; reject(error: Error): void };
 export function scheduler(core: SaveCore, store: Storage) {
   const waiters = new Map<bigint, Waiter>(),
     listeners = new Set<(state: State) => void>();
-  const metrics: { phase: string; ms: number }[] = [];
-  let timer: ReturnType<typeof setTimeout> | undefined, running: Promise<void> | undefined;
+  const { metrics, measure } = measurements();
+  let timer: ReturnType<typeof setTimeout> | undefined,
+    maintenanceTimer: ReturnType<typeof setTimeout> | undefined,
+    running: Promise<void> | undefined;
   let failure: Error | undefined,
     closed = false,
-    urgent = false,
-    wake: (() => void) | undefined;
+    urgent = false;
   let target = core.delta_durable(),
     cleaned = target,
-    activeToken = 0;
+    activeToken = 0,
+    maintenanceWanted = false;
   const state = (): State => ({
     phase: closed
       ? "closed"
       : failure || core.delta_status() !== 0
         ? "error"
-        : running
+        : running && core.delta_revision() > core.delta_durable()
           ? "saving"
           : core.delta_revision() > core.delta_durable()
             ? "pending"
@@ -31,32 +35,19 @@ export function scheduler(core: SaveCore, store: Storage) {
   const notify = () => {
     for (const listener of listeners) listener(state());
   };
-  const measure = <T>(phase: string, call: () => T): T => {
-    const start = performance.now(),
-      value = call();
-    metrics.push({ phase, ms: performance.now() - start });
-    if (metrics.length > 2048) metrics.splice(0, metrics.length - 2048);
-    return value;
-  };
-  const yieldWork = () =>
-    new Promise<void>((resolve) => {
-      let done = false;
-      const finish = () => {
-        if (!done) {
-          done = true;
-          wake = undefined;
-          resolve();
-        }
-      };
-      if (urgent || !window.requestIdleCallback) setTimeout(finish, 0);
-      else {
-        const id = requestIdleCallback(finish, { timeout: 50 });
-        wake = () => {
-          cancelIdleCallback(id);
-          setTimeout(finish, 0);
-        };
-      }
-    });
+  const idle = idleYield(() => urgent),
+    yieldWork = idle.wait;
+  function stopMaintenanceWake() {
+    clearTimeout(maintenanceTimer);
+    maintenanceTimer = undefined;
+  }
+  function scheduleMaintenance() {
+    if (failure || closed || !maintenanceWanted || timer || maintenanceTimer) return;
+    maintenanceTimer = setTimeout(() => {
+      maintenanceTimer = undefined;
+      startPump();
+    }, 16);
+  }
   const settle = () => {
     for (const [revision, waiter] of waiters)
       if (revision <= cleaned) {
@@ -85,8 +76,19 @@ export function scheduler(core: SaveCore, store: Storage) {
       if (!activeToken) throw Error("save-capacity");
       await submit(core, store, activeToken, yieldWork, measure);
       activeToken = 0;
+      maintenanceWanted = true;
       notify();
       await cleanup();
+    }
+    if (maintenanceWanted && !urgent && !inputPending()) {
+      await yieldWork();
+      if (core.delta_revision() === core.delta_durable()) {
+        try {
+          maintenanceWanted = (await store.maintain()).pending;
+        } catch {
+          maintenanceWanted = false;
+        } // Durable saves remain valid; maintenance is retryable.
+      }
     }
   }
   function startPump() {
@@ -102,8 +104,25 @@ export function scheduler(core: SaveCore, store: Storage) {
         urgent = false;
         notify();
         if (!failure && waiters.size) startPump();
+        else scheduleMaintenance();
       });
     notify();
+  }
+  async function maintenanceCall<T>(call: () => Promise<T>): Promise<T> {
+    for (let active = running; active; active = running) await active;
+    if (closed || failure) throw failure || Error("save-closed");
+    const task = call();
+    running = task.then(
+      () => {},
+      () => {},
+    );
+    try {
+      return await task;
+    } finally {
+      running = undefined;
+      if (waiters.size && !closed && !failure) startPump();
+      else scheduleMaintenance();
+    }
   }
   const api = {
     metrics,
@@ -116,6 +135,7 @@ export function scheduler(core: SaveCore, store: Storage) {
       };
     },
     changed() {
+      stopMaintenanceWake();
       notify();
       if (closed || failure || core.delta_status() !== 0 || timer) return;
       timer = setTimeout(() => {
@@ -127,12 +147,16 @@ export function scheduler(core: SaveCore, store: Storage) {
       if (closed || failure || core.delta_status() !== 0)
         return Promise.reject(failure || Error(closed ? "save-closed" : "save-capacity"));
       clearTimeout(timer);
+      stopMaintenanceWake();
       timer = undefined;
       const revision = core.delta_revision();
       target = target > revision ? target : revision;
       urgent ||= exit;
-      if (exit) wake?.();
-      if (revision <= cleaned) return Promise.resolve();
+      if (exit) idle.wake();
+      if (revision <= cleaned) {
+        if (!exit) scheduleMaintenance();
+        return Promise.resolve();
+      }
       let waiter = waiters.get(revision);
       if (!waiter) {
         if (waiters.size >= 64) return Promise.reject(Error("save-capacity"));
@@ -147,6 +171,11 @@ export function scheduler(core: SaveCore, store: Storage) {
       startPump();
       return waiter.promise;
     },
+    stageAsset: (blob: Blob, metadata: Parameters<Storage["stageAsset"]>[1]) =>
+      maintenanceCall(() => store.stageAsset(blob, metadata)),
+    readAsset: (digest: string) => maintenanceCall(() => store.readAsset(digest)),
+    maintain: () => maintenanceCall(() => store.maintain()),
+    maintenanceStatus: () => maintenanceCall(() => store.maintenanceStatus()),
     async retry() {
       if (core.delta_status() !== 0) throw Error("save-capacity");
       if (running) await running;
@@ -157,7 +186,9 @@ export function scheduler(core: SaveCore, store: Storage) {
     async close() {
       await api.flush(true);
       closed = true;
+      stopMaintenanceWake();
       clearTimeout(timer);
+      if (running) await running;
       await store.close();
       notify();
     },

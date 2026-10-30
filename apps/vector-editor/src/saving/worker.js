@@ -4,6 +4,7 @@ importScripts(
   "./catalog-generated.js",
   "./admission.js",
   "./hash-boundary.js",
+  "./image-boundary-generated.js",
   "./worker-hash.js",
   "./chunk-generated.js",
   "./chunk-schema.js",
@@ -13,8 +14,12 @@ importScripts(
   "./legacy-validation.js",
   "./chunk-validation.js",
   "./database.js",
+  "./image-assets.js",
   "./staging.js",
+  "./maintenance.js",
   "./pools.js",
+  "./catalog-schema.js",
+  "./catalog-actions.js",
   "./catalog.js",
   "./library-worker.js",
 );
@@ -24,11 +29,13 @@ let db,
   releaseLock,
   database,
   stage,
+  assets,
+  maintenance,
   busy = false,
   activeTransfer = false;
 const safeError = (error) =>
   /^(storage-[a-z-]+|in-use)$/.test(error?.message) ? error.message : "storage-failed";
-async function open(grant, document) {
+async function open(grant, document, reopen = false) {
   if (!validId(grant) || !drawingId(document) || db) throw Error("storage-state");
   return new Promise((resolve, reject) => {
     targetLock(document, async () => {
@@ -38,7 +45,7 @@ async function open(grant, document) {
         const opened = await openPool(drawingLocation(document), "/drawing.sqlite", false);
         pool = opened.pool;
         db = opened.connection;
-        database = await drawingDatabase(db, false, grant, document, entry.incarnation);
+        database = await drawingDatabase(db, false, grant, document, entry.incarnation, reopen);
         if (database.identity.incarnation !== entry.incarnation) throw Error("storage-conflict");
         const originalCommit = database.commitChunks;
         database.commitChunks = async (...args) => {
@@ -50,6 +57,9 @@ async function open(grant, document) {
           return receipt;
         };
         stage = staging(database);
+        assets = imageAssets(db, document);
+        database.verifyImageModel = assets.verifyModel;
+        maintenance = checkpointMaintenance(database);
         const held = new Promise((done) => {
           releaseLock = done;
         });
@@ -79,8 +89,13 @@ onmessage = async ({ data: m }) => {
     if (m.kind?.startsWith("library-")) {
       if (db) throw Error("storage-state");
       value = await libraryCommand(m);
-    } else if (m.kind === "open") value = await open(m.grant, m.document);
+    } else if (m.kind === "open") value = await open(m.grant, m.document, m.reopen === true);
     else if (!db) throw Error("storage-closed");
+    else if (m.kind === "maintain") value = await maintenance.step();
+    else if (m.kind === "maintenance-status") value = maintenance.status();
+    else if (m.kind === "asset-stage") value = await assets.stage(m.blob, m.metadata);
+    else if (m.kind === "asset-verify") value = await assets.verify(m.references);
+    else if (m.kind === "asset-read") value = await assets.read(m.digest);
     else if (m.kind === "load") value = await database.load();
     else if (m.kind === "read") value = database.read(m.operation, m.stream, m.chunk);
     else if (m.kind === "close") {

@@ -11,6 +11,9 @@ fn produce(j: &mut Job, tolerance: f64) -> Option<usize> {
         return None;
     }
     j.tolerance = Some(tolerance);
+    if j.current.is_none() && super::images::next_before_stroke(j) {
+        return super::images::produce(j);
+    }
     if j.current.is_none() {
         let Some((_, item)) = j.items.pop_first() else {
             j.state = 3;

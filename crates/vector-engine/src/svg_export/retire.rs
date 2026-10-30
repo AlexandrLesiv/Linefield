@@ -38,6 +38,8 @@ pub extern "C" fn svg_cleanup(token: u32) -> u32 {
                 if let Ok(points) = Rc::try_unwrap(points) {
                     j.dropping = Some(points);
                 }
+            } else if j.images.pop_first().is_some() {
+                continue;
             } else if j.sources.pop_first().is_none() {
                 s.job = None;
                 return 1;

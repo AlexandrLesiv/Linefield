@@ -8,6 +8,12 @@ pub extern "C" fn selection_eligible(id: usize, active_layer_only: u32) -> u32 {
     }
     ENGINE.with(|engine| {
         let engine = engine.borrow();
+        if let Some(i) = engine.image(id) {
+            return (engine.object_editable(id)
+                && (i.opacity * 255.0).round() != 0.0
+                && (active_layer_only == 0 || i.layer == engine.active_layer))
+                as u32;
+        }
         engine.strokes.get(id).is_some_and(|stroke| {
             engine.stroke_visible(id) && !engine.layers[stroke.layer].locked
                 // Preserve the approved host's f64 byte-opacity rounding.
@@ -22,10 +28,15 @@ pub extern "C" fn selection_precedes(a: usize, b: usize) -> u32 {
     ENGINE.with(|engine| {
         let engine = engine.borrow();
         let key = |id| {
+            if let Some(i) = engine.image(id) {
+                return engine.layers[i.layer]
+                    .rank
+                    .map(|r| (r, i.before_source, 0, id));
+            }
             engine.strokes.get(id).and_then(|stroke: &super::Stroke| {
                 engine.layers[stroke.layer]
                     .rank
-                    .map(|rank| (rank, stroke.source, id))
+                    .map(|rank| (rank, stroke.source, 1, id))
             })
         };
         match (key(a), key(b)) {

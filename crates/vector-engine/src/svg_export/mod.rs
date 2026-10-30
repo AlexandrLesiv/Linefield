@@ -7,6 +7,7 @@ use std::{
 };
 mod boundary;
 mod contract;
+mod images;
 mod measure;
 mod png;
 mod png_validate;
@@ -39,6 +40,10 @@ pub(super) struct Job {
     revision: u64,
     cursor: usize,
     count: usize,
+    image_count: usize,
+    image_cursor: usize,
+    images: BTreeMap<(usize, usize, usize), crate::images::Image>,
+    image_digest: [u8; 64],
     state: u32,
     items: BTreeMap<(usize, usize, usize, usize), Item>,
     current: Option<Item>,
@@ -92,6 +97,10 @@ pub extern "C" fn svg_begin() -> u32 {
                 revision: revision(),
                 cursor: 0,
                 count: e.strokes.len(),
+                image_count: e.images.len(),
+                image_cursor: 0,
+                images: BTreeMap::new(),
+                image_digest: [0; 64],
                 state: 1,
                 items: BTreeMap::new(),
                 current: None,
@@ -130,6 +139,10 @@ pub extern "C" fn svg_prepare(token: u32) -> u32 {
             let e = e.borrow();
             if busy(&e) || revision() != j.revision || e.strokes.len() != j.count {
                 j.state = 5;
+                return;
+            }
+            if j.image_cursor < j.image_count {
+                images::capture(j, &e);
                 return;
             }
             let end = (j.cursor + 64).min(j.count);

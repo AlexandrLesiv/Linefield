@@ -1,3 +1,9 @@
+import { checkedImageCore } from "./image-boundary";
+import { imageRecords } from "./image-scene/records";
+import { mixedSteps } from "./image-scene/order";
+import { imageLifecycle } from "./image-scene/lifecycle";
+import { installImageImport } from "./image-import-ui/integration";
+import { imageProperties } from "./image-import-ui/properties";
 import { installSvgExport } from "./svg-export-ui/integration";
 import { installEditorPanels } from "./editor-panels";
 import { createSaving } from "./saving";
@@ -67,6 +73,7 @@ const saving = await createSaving(core).catch((error: unknown) => {
   throw error;
 });
 const saveCore = checkedSaveCore(core);
+const imageCore = checkedImageCore(core);
 let runtimeFailure = "";
 let startupComplete = false;
 window.addEventListener("error", (e) => {
@@ -155,6 +162,12 @@ let rotationDrag: {
 	pointerAngle: number | null;
 	angle: number;
 } | null = null;
+const imageScene = imageLifecycle(gpu, canvas, {
+  active: () => pointer !== null || lost || savingLifecycle.leaving,
+  readAsset: async digest => (await saving.readAsset(digest)).blob,
+  changed: () => { compositeCache.invalidate(); dirty = true; },
+});
+const updateImageProperties = imageProperties(imageCore, () => tool === "select" ? selection.ids() : [], () => { compositeCache.invalidate(); dirty = true; });
 function updateCursor() {
 	const mode = gesture ?? (space ? "pan" : rotateHeld ? "rotate" : tool);
 	canvas.style.cursor =
@@ -322,6 +335,8 @@ function prepare() {
 }
 
 function draw() {
+  const images = imageRecords(core, imageCore, camera);
+  if (!imageScene.ready(images)) return false;
 	const drawStart = performance.now();
 	const rect = canvas.getBoundingClientRect(),
 		dpr = devicePixelRatio;
@@ -379,11 +394,12 @@ function draw() {
 		return { records, groups };
 	};
 	const scenePlan = overlay ? partition(false) : completePlan;
+  const orderedScene = mixedSteps(core, scenePlan, images);
 	const livePlan = overlay ? partition(true) : null;
 	const compositeView = {
 		width: w,
 		height: h,
-		contentVersion: `${cache.stats.geometryBuilds}:${layerRenderRevision}:${overlay ? active : "full"}`,
+		contentVersion: `${cache.stats.geometryBuilds}:${layerRenderRevision}:${core.transform_revision()}:${overlay ? active : "full"}`,
 		cssWidth: rect.width,
 		cssHeight: rect.height,
 		dpr,
@@ -591,7 +607,24 @@ function draw() {
 				}
 			} else drawLegacy();
 		};
-		drawRegular(scenePlan);
+    for (const step of orderedScene) {
+      if ("ink" in step) drawRegular(step.ink);
+      else {
+        gpu.bindFramebuffer(gpu.FRAMEBUFFER, compositeFrame?.framebuffer ?? null);
+        gpu.viewport(0, 0, w, h);
+        gpu.enable(gpu.SCISSOR_TEST);
+        gpu.scissor(region[0], h - region[3], region[2] - region[0], region[3] - region[1]);
+        const corners: number[] = [];
+        for (let i = 0; i < 8; i += 2) {
+          const x = step.image.corners[i], y = step.image.corners[i + 1];
+          const c = Math.cos(camera.rotation), s = Math.sin(camera.rotation);
+          corners.push((camera.cx + camera.zoom * (c * x - s * y)) * w / rect.width,
+            (camera.cy + camera.zoom * (s * x + c * y)) * h / rect.height);
+        }
+        imageScene.cache().draw(step.image.digest, corners, step.image.opacity, w, h);
+        gpu.bindVertexArray(null);
+      }
+    }
 	}
 	coverageRenderer.end();
 	if (compositeFrame) {
@@ -627,10 +660,12 @@ function draw() {
 		panAt = 0;
 	}
 	dirty = false;
+  return true;
 }
 let error = "";
 function frame() {
   savingLifecycle.tick();
+  updateImageProperties();
 	brushControls.render();
 	if (!lost) {
 		const t = performance.now();
@@ -642,8 +677,7 @@ function frame() {
 			if (cache.beginFrame()) {
 				prepare();
 				if (dirty) {
-					drew = true;
-					draw();
+					drew = draw();
 				}
 				error = "";
 			}
@@ -1037,6 +1071,7 @@ installGpuRecovery(canvas, () => {
   compositeCache = resources.composite;
   sparseCoverage = resources.sparse;
   cache.contextLost();
+  imageScene.reset();
   lost = false;
   dirty = true;
   error = "";
@@ -1130,5 +1165,11 @@ status.textContent = "Ready";
 
 editorPanels.setCanOpen(() => pointer === null);
 installSvgExport(core, () => pointer !== null || lost || savingLifecycle.leaving,
-  (event) => inputDiagnostics.note(`svg-${event.kind}`, undefined, undefined, JSON.stringify(event)));
+  (event) => inputDiagnostics.note(`svg-${event.kind}`, undefined, undefined, JSON.stringify(event)),
+  async digest => (await saving.readAsset(digest)).blob);
+installImageImport(core, camera, canvas, saving, {
+  active: imageScene.active, unavailable: () => lost || savingLifecycle.leaving,
+  wait: imageScene.wait, cache: imageScene.cache,
+  published: id => { document.querySelector<HTMLButtonElement>("#select")!.click(); selection.select(id); compositeCache.invalidate(); dirty = true; },
+});
 startupComplete = true;

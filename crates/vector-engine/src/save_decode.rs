@@ -1,5 +1,5 @@
 //! Strict bounded checkpoint decoder; it never normalizes malformed saved values.
-use super::{regional::Address, Point, Points, PressureCurve, Stroke};
+use super::{regional::Address, Points, PressureCurve, Stroke};
 use std::{collections::BTreeMap, rc::Rc};
 pub(super) struct Read<'a> {
     pub bytes: &'a [u8],
@@ -42,23 +42,6 @@ impl<'a> Read<'a> {
         ((0.0..65536.0).contains(&local) && (local != 0.0 || local.to_bits() == 0))
             .then_some(Address { region, local })
     }
-}
-pub(super) fn points(bytes: &[u8], count: usize) -> Option<Rc<Points>> {
-    if count == 0 || count > 1_000_000 || bytes.len() != count.checked_mul(40)? {
-        return None;
-    }
-    let mut r = Read { bytes, at: 0 };
-    let mut points = Points::default();
-    for _ in 0..count {
-        let x = r.address()?;
-        let y = r.address()?;
-        let pressure = r.float()?;
-        if !(0.0..=1.0).contains(&pressure) || r.word()? != 0 {
-            return None;
-        }
-        points.push(Point { x, y, pressure });
-    }
-    Some(Rc::new(points))
 }
 pub(super) fn stroke(
     r: &mut Read<'_>,

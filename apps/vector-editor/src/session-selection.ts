@@ -1,4 +1,6 @@
 import type { Core } from "./core";
+import { checkedImageCore } from "./image-boundary";
+import { IMAGE_HANDLE } from "./image-selection";
 
 /** Read-only presentation cache of the engine's insertion-ordered selection.
  * No host mutation is applied until the owning engine accepts it.
@@ -6,7 +8,10 @@ import type { Core } from "./core";
 export class SessionSelection implements Iterable<number> {
   private revision = -1;
   private snapshot: ReadonlySet<number> = new Set();
-  constructor(private core: Core) {}
+  private images;
+  constructor(private core: Core) {
+    this.images = checkedImageCore(core);
+  }
   private read(): ReadonlySet<number> {
     const revision = this.core.session_selection_revision();
     if (revision === this.revision) return this.snapshot;
@@ -17,7 +22,7 @@ export class SessionSelection implements Iterable<number> {
     if (
       !Number.isInteger(count) ||
       count < 0 ||
-      count > this.core.count() ||
+      count > this.core.count() + this.images.image_count() ||
       pointer % 8 !== 0 ||
       pointer + count * 8 > memory.byteLength
     )
@@ -25,8 +30,14 @@ export class SessionSelection implements Iterable<number> {
     const ids = new Float64Array(memory, pointer, count);
     const snapshot = new Set<number>();
     for (const id of ids) {
-      if (!Number.isSafeInteger(id) || id < 0 || id >= this.core.count())
-        throw new Error("Invalid selected stroke identity");
+      if (
+        !Number.isSafeInteger(id) ||
+        id < 0 ||
+        (id < IMAGE_HANDLE
+          ? id >= this.core.count()
+          : id > 0xffffffff || !this.images.image_exists(id))
+      )
+        throw new Error("Invalid selected object identity");
       snapshot.add(id);
     }
     if (snapshot.size !== count) throw new Error("Duplicate selected stroke identity");
